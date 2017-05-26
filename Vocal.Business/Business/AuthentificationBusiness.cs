@@ -48,10 +48,10 @@ namespace Vocal.Business
             return response;
         }
 
-        public static Response<UserResponse> Register(string email, string username, string password, string lang)
+        public static Response<UserResponse> Register(string email, string username, string password, string firstname, string lastname, DateTime birthday, string lang)
         {
             var response = new Response<UserResponse>();
-            LogManager.LogDebug(email, username, password, lang);
+            LogManager.LogDebug(email, username, password, firstname, lastname, birthday, lang);
             try
             {
                 var user = _repo.GetUserByEmail(email);
@@ -70,7 +70,10 @@ namespace Vocal.Business
                         Password = pwd,
                         RegistrationDate = DateTime.Now,
                         Username = username,
-                        Token = token
+                        Token = token,
+                        BirthdayDate = birthday,
+                        Firstname = firstname,
+                        Lastname = lastname
                     };
                     _repo.AddUser(user);
                     response.Data = Bind.Bind_User(user);
