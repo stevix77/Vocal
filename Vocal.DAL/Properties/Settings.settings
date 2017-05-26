@@ -2,15 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Vocal.DAL.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="DocumentDBName" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="Host" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="Port" Type="System.Int32" Scope="Application">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
     <Setting Name="DocumentDBUser" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
@@ -19,6 +10,15 @@
     </Setting>
     <Setting Name="CollectionUser" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DocumentDBName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Vocal</Value>
+    </Setting>
+    <Setting Name="Host" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+    <Setting Name="Port" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">27017</Value>
     </Setting>
   </Settings>
 </SettingsFile>

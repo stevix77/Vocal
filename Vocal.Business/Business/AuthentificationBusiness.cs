@@ -3,75 +3,117 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vocal.Business.Binder;
 using Vocal.Business.Properties;
 using Vocal.Business.Security;
+using Vocal.Business.Signalr;
 using Vocal.Business.Tools;
 using Vocal.DAL;
 using Vocal.Model;
 using Vocal.Model.Business;
 using Vocal.Model.DB;
+using Vocal.Model.Response;
 
 namespace Vocal.Business
 {
     public static class AuthentificationBusiness
     {
         private static Repository _repo = new Repository();
+        private static Authorize _authorize = new Authorize(_repo);
+        private static HubService _hubService = new HubService();
 
-        public static Response<User> Login(string login, string pwd, string lang)
+        public static Response<UserResponse> Login(string login, string pwd, string lang)
         {
-            Response<User> response = new Response<User>();
+            Response<UserResponse> response = new Response<UserResponse>();
             try
             {
+                LogManager.LogDebug(login, pwd, lang);
                 string password = Hash.getHash(pwd);
                 var user = _repo.Login(login, password);
                 if (user != null)
-                    response.Data = user;
+                    response.Data = Bind.Bind_User(user);
                 else
-                    response.ErrorMessage = Resource.GetValue(lang, Settings.Default.UserinfoError);
+                    response.ErrorMessage = Resource.GetValue(lang, Resource.UserinfoError);
             }
             catch (TimeoutException tex)
             {
-                //_logManager.Log(ex, Newtonsoft.Json.JsonConvert.SerializeObject(new { login = login }));
-                response.ErrorMessage = Resource.GetValue(lang, Settings.Default.TimeoutError);
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resource.GetValue(lang, Resource.TimeoutError);
             }
             catch (Exception ex)
             {
-                //_logManager.Log(ex, Newtonsoft.Json.JsonConvert.SerializeObject(new { login = login }));
-                response.ErrorMessage = Resource.GetValue(lang, Settings.Default.TechnicalError);
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resource.GetValue(lang, Resource.TechnicalError);
             }
             return response;
         }
 
-        public static Response<User> Register(string email, string username, string password, string lang)
+        public static Response<UserResponse> Register(string email, string username, string password, string lang)
         {
-            var response = new Response<User>();
+            var response = new Response<UserResponse>();
+            LogManager.LogDebug(email, username, password, lang);
             try
             {
-                string id = Guid.NewGuid().ToString();
-                string pwd = Hash.getHash(password);
-                string token = Hash.getHash($"{id}_{Settings.Default.Salt}_{pwd}");
-                var user = new User
+                var user = _repo.GetUserByEmail(email);
+                if (user != null)
+                    response.ErrorMessage = Resource.GetValue(lang, Resource.MailExisting);
+                else
                 {
-                    Id = id,
-                    Email = email,
-                    IsActive = true,
-                    Password = pwd,
-                    RegistrationDate = DateTime.Now,
-                    Username = username,
-                    Token = token
-                };
-                _repo.AddUser(user);
-                response.Data = user;
+                    string id = Guid.NewGuid().ToString();
+                    string pwd = Hash.getHash(password);
+                    string token = Hash.getHash($"{id}_{Settings.Default.Salt}_{password}");
+                    user = new User
+                    {
+                        Id = id,
+                        Email = email,
+                        IsActive = true,
+                        Password = pwd,
+                        RegistrationDate = DateTime.Now,
+                        Username = username,
+                        Token = token
+                    };
+                    _repo.AddUser(user);
+                    response.Data = Bind.Bind_User(user);
+                }
             }
             catch (TimeoutException tex)
             {
-                //_logManager.Log(ex, Newtonsoft.Json.JsonConvert.SerializeObject(new { login = login }));
-                response.ErrorMessage = Resource.GetValue(lang, Settings.Default.TimeoutError);
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resource.GetValue(lang, Resource.TimeoutError);
             }
             catch (Exception ex)
             {
-                //_logManager.Log(ex, Newtonsoft.Json.JsonConvert.SerializeObject(new { login = login }));
-                response.ErrorMessage = Resource.GetValue(lang, Settings.Default.TechnicalError);
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resource.GetValue(lang, Resource.TechnicalError);
+            }
+            return response;
+        }
+
+        public static async Task<Response<bool>> Password(string email, string lang)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                var user = _repo.GetUserByEmail(email);
+                if (user == null)
+                    response.Data = false;
+                else
+                {
+                    var message = Resource.GetValue(lang, Resource.AskPassword);
+                    message = string.Format(message, email);
+                    await MailManager.Send(email, message, lang);
+                    response.Data = true;
+                }
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resource.GetValue(lang, Resource.TimeoutError);
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resource.GetValue(lang, Resource.TechnicalError);
             }
             return response;
         }

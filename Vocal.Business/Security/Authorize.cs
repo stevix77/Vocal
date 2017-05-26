@@ -8,31 +8,38 @@ using Vocal.DAL;
 
 namespace Vocal.Business.Security
 {
-    public static class Authorize
+    public class Authorize
     {
-        private static Repository _repo = new Repository();
+        private Repository _repo;
+
+        public Authorize(Repository repo)
+        {
+            _repo = repo;
+        }
+
         /// <summary>
         /// Check if it's token's id
         /// </summary>
         /// <param name="id">User's Identifiant</param>
-        /// <param name="token">Token's user</param>
+        /// <param name="sign">Signature de la requête</param>
+        /// <param name="timestamp">Timestamp utilisé pour générer la signature</param>
         /// <returns>True if matching</returns>
-        public static bool IsAuthorize(string id, string token)
+        public bool IsAuthorize(string id, string sign, string timestamp)
         {
             bool authorize = false;
-            string t = string.Empty;
-            t = Cache.CacheManager.GetCache<string>($"{Settings.Default.CacheKeyToken}_{id}");
-            if(string.IsNullOrEmpty(t))
+            string token = string.Empty;
+            token = Cache.CacheManager.GetCache<string>($"{Settings.Default.CacheKeyToken}_{id}");
+            if(string.IsNullOrEmpty(token))
             {
                 var user = _repo.GetUserById(id);
-                if(user != null)
-                    t = user.Token;
-            }
-            if (t.Equals(token))
-            {
-                authorize = true;
+                if (user == null)
+                    return authorize;
+                token = user.Token;
                 Cache.CacheManager.SetCache($"{Settings.Default.CacheKeyToken}_{id}", token);
             }
+            string signature = Hash.getHash($"{id}{token}{timestamp}");
+            if (sign.Equals(signature))
+                authorize = true;
             return authorize;
         }
     }

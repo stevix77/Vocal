@@ -70,6 +70,13 @@ namespace Vocal.DAL
             return user;
         }
 
+        public User GetUserByEmail(string email)
+        {
+            var db = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var user = db.Find(x => x.Email == email).SingleOrDefault();
+            return user;
+        }
+
         #endregion
     }
 }
