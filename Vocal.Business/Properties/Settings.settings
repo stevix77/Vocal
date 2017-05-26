@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Vocal.Business.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Salt" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Z4YQN?K/%.7</Value>
+    </Setting>
+    <Setting Name="CacheDuration" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="CacheKeyToken" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CacheToken</Value>
+    </Setting>
+    <Setting Name="HostHub" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://localhost:52847</Value>
+    </Setting>
+    <Setting Name="MailFrom" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="MailHost" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="MailPort" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
