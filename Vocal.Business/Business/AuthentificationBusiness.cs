@@ -19,7 +19,6 @@ namespace Vocal.Business
     public static class AuthentificationBusiness
     {
         private static Repository _repo = new Repository();
-        private static Authorize _authorize = new Authorize(_repo);
         private static HubService _hubService = new HubService();
 
         public static Response<UserResponse> Login(string login, string pwd, string lang)
@@ -61,7 +60,7 @@ namespace Vocal.Business
                 {
                     string id = Guid.NewGuid().ToString();
                     string pwd = Hash.getHash(password);
-                    string token = Hash.getHash($"{id}_{Settings.Default.Salt}_{password}");
+                    string token = Hash.getHash(string.Format(Settings.Default.FormatToken, DateTime.Now.ToString("yyyy"), password, Settings.Default.Salt));
                     user = new User
                     {
                         Id = id,

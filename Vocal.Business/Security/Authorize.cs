@@ -10,13 +10,9 @@ namespace Vocal.Business.Security
 {
     public class Authorize
     {
-        private Repository _repo;
+        private static Repository _repo = new Repository();
 
-        public Authorize(Repository repo)
-        {
-            _repo = repo;
-        }
-
+        
         /// <summary>
         /// Check if it's token's id
         /// </summary>
@@ -27,6 +23,8 @@ namespace Vocal.Business.Security
         public bool IsAuthorize(string id, string sign, string timestamp)
         {
             bool authorize = false;
+            if (IsSignatureExist(sign))
+                return authorize;
             string token = string.Empty;
             token = Cache.CacheManager.GetCache<string>($"{Settings.Default.CacheKeyToken}_{id}");
             if(string.IsNullOrEmpty(token))
@@ -37,10 +35,23 @@ namespace Vocal.Business.Security
                 token = user.Token;
                 Cache.CacheManager.SetCache($"{Settings.Default.CacheKeyToken}_{id}", token);
             }
-            string signature = Hash.getHash($"{id}{token}{timestamp}");
+            string signature = Hash.getHash(string.Format(Settings.Default.FormatSign, id, token, timestamp));
             if (sign.Equals(signature))
+            {
                 authorize = true;
+                Task.Run(() => SaveSignature(sign));
+            }
             return authorize;
+        }
+
+        private void SaveSignature(string sign)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool IsSignatureExist(string sign)
+        {
+            throw new NotImplementedException();
         }
     }
 }

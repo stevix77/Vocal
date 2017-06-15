@@ -85,5 +85,23 @@ namespace Vocal.Business.Properties {
                 return ((int)(this["MailPort"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{0}@{1}@{2}")]
+        public string FormatSign {
+            get {
+                return ((string)(this["FormatSign"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{0}@{1}@{2}")]
+        public string FormatToken {
+            get {
+                return ((string)(this["FormatToken"]));
+            }
+        }
     }
 }

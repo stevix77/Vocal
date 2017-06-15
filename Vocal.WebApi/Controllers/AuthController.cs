@@ -30,7 +30,7 @@ namespace Vocal.WebApi.Controllers
         [Route("register")]
         public Response<UserResponse> Register(RegisterRequest request)
         {
-            return AuthentificationBusiness.Register(request.Email, request.Username, request.Password, request.Lang);
+            return AuthentificationBusiness.Register(request.Email, request.Username, request.Password, request.Firstname, request.Lastname, request.BirthdayDate, request.Lang);
         }
         
         [HttpPost]
