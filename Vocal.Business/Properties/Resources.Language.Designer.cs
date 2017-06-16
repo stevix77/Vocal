@@ -88,6 +88,15 @@ namespace Vocal.Business.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Cet email n&apos;existe pas.
+        /// </summary>
+        internal static string MailNotExisting {
+            get {
+                return ResourceManager.GetString("MailNotExisting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Erreur technique, réessayez plus tard.
         /// </summary>
         internal static string TechnicalError {

@@ -25,5 +25,6 @@ namespace Vocal.Business.Tools
         public const string Unauthorize = "Unauthorize";
         public const string AskPassword = "AskPassword";
         public const string AskPasswordSubject = "AskPasswordSubject";
+        public const string MailNotExisting = "MailNotExisting";
     }
 }

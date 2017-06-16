@@ -31,12 +31,17 @@ namespace Vocal.Business
                 if (user != null)
                     response.Data = Bind.Bind_User(user);
                 else
-                    response.ErrorMessage = Resource.GetValue(lang, Resource.UserinfoError);
+                    throw new CustomException(Resource.GetValue(lang, Resource.UserinfoError));
             }
             catch (TimeoutException tex)
             {
                 LogManager.LogError(tex);
                 response.ErrorMessage = Resource.GetValue(lang, Resource.TimeoutError);
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
             }
             catch (Exception ex)
             {
@@ -54,7 +59,7 @@ namespace Vocal.Business
             {
                 var user = _repo.GetUserByEmail(email);
                 if (user != null)
-                    response.ErrorMessage = Resource.GetValue(lang, Resource.MailExisting);
+                    throw new CustomException(Resource.GetValue(lang, Resource.MailExisting));
                 else
                 {
                     string id = Guid.NewGuid().ToString();
@@ -82,6 +87,11 @@ namespace Vocal.Business
                 LogManager.LogError(tex);
                 response.ErrorMessage = Resource.GetValue(lang, Resource.TimeoutError);
             }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
             catch (Exception ex)
             {
                 LogManager.LogError(ex);
@@ -97,7 +107,7 @@ namespace Vocal.Business
             {
                 var user = _repo.GetUserByEmail(email);
                 if (user == null)
-                    response.Data = false;
+                    throw new CustomException(Resource.GetValue(lang, Resource.MailNotExisting));
                 else
                 {
                     var message = Resource.GetValue(lang, Resource.AskPassword);
@@ -110,6 +120,11 @@ namespace Vocal.Business
             {
                 LogManager.LogError(ex);
                 response.ErrorMessage = Resource.GetValue(lang, Resource.TimeoutError);
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
             }
             catch (Exception ex)
             {

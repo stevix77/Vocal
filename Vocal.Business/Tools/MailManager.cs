@@ -27,7 +27,7 @@ namespace Vocal.Business.Tools
             mail.Subject = Resource.GetValue(lang, Resource.AskPasswordSubject);
             mail.To.Add(email);
             mail.From = new MailAddress(Settings.Default.MailFrom);
-            await client.SendMailAsync(mail);
+            //await client.SendMailAsync(mail);
         }
     }
 }

@@ -79,7 +79,8 @@
   <ItemGroup>
     <Compile Include="Binder\Bind.cs" />
     <Compile Include="Business\AuthentificationBusiness.cs" />
-    <Compile Include="Cache\CacheManager.cs" />
+    <Compile Include="Exception\CustomException.cs" />
+    <Compile Include="Tools\CacheManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Language.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -1,7 +1,10 @@
 import { Component, OnInit } from "@angular/core";
-import { NavParams } from 'ionic-angular';
+import { NavParams, NavController } from 'ionic-angular';
 import { AuthService } from '../../services/authService';
-//import {MyApp} from '../../app/app.component';
+import {params} from '../../services/params';
+import { Response } from '../../models/Response';
+import { HomePage } from '../home/home';
+import { ToastController } from 'ionic-angular';
 
 @Component({
   selector: "app-passwordForgot",
@@ -13,7 +16,7 @@ export class PasswordForgotPage implements OnInit {
   
   Email: string;
 
-  constructor(private navParams: NavParams, /*private myApp: MyApp,*/ private authService: AuthService) { 
+  constructor(private navCtrl: NavController, private navParams: NavParams, private authService: AuthService, private toastCtrl: ToastController) { 
     this.Email = this.navParams.get("email");
   }
 
@@ -23,13 +26,22 @@ export class PasswordForgotPage implements OnInit {
 
   submit() {
     var request = {
-      //Lang: this.myApp.Lang,
+      Lang: params.Lang,
       Email: this.Email
     };
     var response = this.authService.askPasswordForgot(request);
     response.subscribe(
       resp => {
-
+          var data = resp.json() as Response<any>;
+          if(data.HasError || (!data.HasError && !data.Data)) {
+            this.toastCtrl.create({
+              message: data.ErrorMessage,
+              duration: 3000,
+              position: 'top'
+            }).present();
+          }else if(data.Data) {
+            this.navCtrl.push(HomePage);
+          }
       },
       error => console.log(error),
       () => {}

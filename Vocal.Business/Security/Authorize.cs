@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Vocal.Business.Properties;
+using Vocal.Business.Tools;
 using Vocal.DAL;
 
 namespace Vocal.Business.Security
@@ -26,14 +27,14 @@ namespace Vocal.Business.Security
             if (IsSignatureExist(sign))
                 return authorize;
             string token = string.Empty;
-            token = Cache.CacheManager.GetCache<string>($"{Settings.Default.CacheKeyToken}_{id}");
+            token = CacheManager.GetCache<string>($"{Settings.Default.CacheKeyToken}_{id}");
             if(string.IsNullOrEmpty(token))
             {
                 var user = _repo.GetUserById(id);
                 if (user == null)
                     return authorize;
                 token = user.Token;
-                Cache.CacheManager.SetCache($"{Settings.Default.CacheKeyToken}_{id}", token);
+                CacheManager.SetCache($"{Settings.Default.CacheKeyToken}_{id}", token);
             }
             string signature = Hash.getHash(string.Format(Settings.Default.FormatSign, id, token, timestamp));
             if (sign.Equals(signature))

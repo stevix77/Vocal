@@ -12,8 +12,6 @@ import { PasswordForgotPage } from '../pages/passwordForgot/passwordForgot';
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
-  Salt: string = "Z4YQN?K/%.7";
-  Lang: string = "fr";
   rootPage: any = HomePage;
 
   pages: Array<{title: string, component: any}>;

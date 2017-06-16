@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Vocal.Business.Properties;
 
-namespace Vocal.Business.Cache
+namespace Vocal.Business.Tools
 {
     public class CacheManager
     {
