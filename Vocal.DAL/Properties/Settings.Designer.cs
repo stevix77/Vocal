@@ -43,7 +43,7 @@ namespace Vocal.DAL.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("User")]
         public string CollectionUser {
             get {
                 return ((string)(this["CollectionUser"]));
@@ -74,6 +74,15 @@ namespace Vocal.DAL.Properties {
         public int Port {
             get {
                 return ((int)(this["Port"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Talk")]
+        public string CollectionTalk {
+            get {
+                return ((string)(this["CollectionTalk"]));
             }
         }
     }

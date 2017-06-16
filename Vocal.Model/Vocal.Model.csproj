@@ -42,7 +42,7 @@
     <Compile Include="DB\Message.cs" />
     <Compile Include="DB\User.cs" />
     <Compile Include="DB\UserListen.cs" />
-    <Compile Include="DB\Vocal.cs" />
+    <Compile Include="DB\Talk.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\CookieRequest.cs" />
     <Compile Include="Request\LoginRequest.cs" />

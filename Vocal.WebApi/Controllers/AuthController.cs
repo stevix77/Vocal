@@ -9,11 +9,13 @@ using Vocal.Model.Request;
 using System.Web.Http;
 using Vocal.Model.Response;
 using Vocal.WebApi.Attribute;
+using System.Web.Http.Cors;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Vocal.WebApi.Controllers
 {
+    [EnableCors("*", "*", "*")]
     [RoutePrefix("api/auth")]
     public class AuthController : ApiController
     {

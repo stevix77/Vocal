@@ -19,7 +19,6 @@ namespace Vocal.Business
     public static class AuthentificationBusiness
     {
         private static Repository _repo = new Repository();
-        private static HubService _hubService = new HubService();
 
         public static Response<UserResponse> Login(string login, string pwd, string lang)
         {

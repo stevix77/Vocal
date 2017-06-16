@@ -121,7 +121,7 @@
     <value />
   </data>
   <data name="MailExisting" xml:space="preserve">
-    <value />
+    <value>This email is already existing</value>
   </data>
   <data name="TechnicalError" xml:space="preserve">
     <value />

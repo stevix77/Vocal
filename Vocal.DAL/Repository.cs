@@ -78,5 +78,20 @@ namespace Vocal.DAL
         }
 
         #endregion
+
+        #region Vocal
+
+        public List<Talk> GetListTalk(string userId)
+        {
+            var db = _db.GetCollection<Talk>(Settings.Default.CollectionTalk);
+            var list = db.Find(x => x.Users.Exists(y => y.Id == userId))
+                        .SortByDescending(x => x.Messages.Select(y => y.Date))
+                        .Project(x => new Talk { Id = x.Id, VocalName = x.VocalName, Users = x.Users, Messages = x.Messages.OrderByDescending(y => y.Date).Take(1).ToList()})
+                        .ToList();
+            return list;
+        }
+
+        #endregion
+
     }
 }

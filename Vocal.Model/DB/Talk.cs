@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Vocal.Model.DB
 {
-    public class Vocal
+    public class Talk
     {
         public string Id { get; set; }
         public List<User> Users { get; set; } = new List<User>();
