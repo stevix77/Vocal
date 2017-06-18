@@ -9,6 +9,7 @@ import { ListPage } from '../pages/list/list';
 import { PasswordForgotPage } from '../pages/passwordForgot/passwordForgot';
 import { Connexion } from '../pages/connexion/connexion';
 import { Inscription } from '../pages/inscription/inscription';
+import { InscriptionBirthdayPage } from '../pages/inscription-birthday/inscription-birthday';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -21,7 +22,8 @@ import { DatePicker } from '@ionic-native/date-picker';
     ListPage,
     PasswordForgotPage,
     Connexion,
-    Inscription
+    Inscription,
+    InscriptionBirthdayPage
   ],
   imports: [
     BrowserModule,
@@ -35,7 +37,8 @@ import { DatePicker } from '@ionic-native/date-picker';
     ListPage,
     PasswordForgotPage,
     Connexion,
-    Inscription
+    Inscription,
+    InscriptionBirthdayPage
   ],
   providers: [
     StatusBar,

@@ -8,6 +8,7 @@ import { ListPage } from '../pages/list/list';
 import { PasswordForgotPage } from '../pages/passwordForgot/passwordForgot';
 import { Connexion } from '../pages/connexion/connexion';
 import { Inscription } from '../pages/inscription/inscription';
+import { InscriptionBirthdayPage } from '../pages/inscription-birthday/inscription-birthday';
 
 @Component({
   templateUrl: 'app.html'
@@ -27,7 +28,8 @@ export class MyApp {
       { title: 'List', component: ListPage },
       { title: 'PasswordForgot', component: PasswordForgotPage },
       { title: 'Connexion', component: Connexion },
-      { title: 'Inscription', component: Inscription }
+      { title: 'Inscription', component: Inscription },
+      { title: 'InscriptionBirthday', component: InscriptionBirthdayPage }
     ];
 
   }
