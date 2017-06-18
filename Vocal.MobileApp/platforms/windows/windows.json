@@ -24,6 +24,9 @@
         },
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "MyApp"
+        },
+        "cordova-plugin-datepicker": {
+            "PACKAGE_NAME": "MyApp"
         }
     },
     "dependent_plugins": {},
@@ -96,6 +99,22 @@
                 "cordova.plugins.Keyboard"
             ],
             "runs": true
+        },
+        {
+            "id": "cordova-plugin-datepicker.DatePicker",
+            "file": "plugins/cordova-plugin-datepicker/www/windows/DatePicker.js",
+            "pluginId": "cordova-plugin-datepicker",
+            "clobbers": [
+                "datePicker"
+            ]
+        },
+        {
+            "id": "cordova-plugin-datepicker.DatePickerProxy",
+            "file": "plugins/cordova-plugin-datepicker/src/windows/DatePickerProxy.js",
+            "pluginId": "cordova-plugin-datepicker",
+            "merges": [
+                ""
+            ]
         }
     ],
     "plugin_metadata": {
@@ -104,6 +123,7 @@
         "cordova-plugin-splashscreen": "4.0.3",
         "cordova-plugin-statusbar": "2.2.2",
         "cordova-plugin-whitelist": "1.3.1",
-        "ionic-plugin-keyboard": "2.2.1"
+        "ionic-plugin-keyboard": "2.2.1",
+        "cordova-plugin-datepicker": "0.9.3"
     }
 }

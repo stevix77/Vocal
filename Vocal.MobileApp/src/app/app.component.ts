@@ -7,6 +7,7 @@ import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { PasswordForgotPage } from '../pages/passwordForgot/passwordForgot';
 import { Connexion } from '../pages/connexion/connexion';
+import { Inscription } from '../pages/inscription/inscription';
 
 @Component({
   templateUrl: 'app.html'
@@ -25,7 +26,8 @@ export class MyApp {
       { title: 'Home', component: HomePage },
       { title: 'List', component: ListPage },
       { title: 'PasswordForgot', component: PasswordForgotPage },
-      { title: 'Connexion', component: Connexion }
+      { title: 'Connexion', component: Connexion },
+      { title: 'Inscription', component: Inscription }
     ];
 
   }

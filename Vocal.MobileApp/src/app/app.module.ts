@@ -8,9 +8,11 @@ import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
 import { PasswordForgotPage } from '../pages/passwordForgot/passwordForgot';
 import { Connexion } from '../pages/connexion/connexion';
+import { Inscription } from '../pages/inscription/inscription';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { DatePicker } from '@ionic-native/date-picker';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     HomePage,
     ListPage,
     PasswordForgotPage,
-    Connexion
+    Connexion,
+    Inscription
   ],
   imports: [
     BrowserModule,
@@ -31,11 +34,13 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     HomePage,
     ListPage,
     PasswordForgotPage,
-    Connexion
+    Connexion,
+    Inscription
   ],
   providers: [
     StatusBar,
     SplashScreen,
+    DatePicker,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

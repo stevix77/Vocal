@@ -24,6 +24,9 @@
         },
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "MyApp"
+        },
+        "cordova-plugin-datepicker": {
+            "PACKAGE_NAME": "MyApp"
         }
     },
     "dependent_plugins": {}
