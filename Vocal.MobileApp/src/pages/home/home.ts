@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { PasswordForgotPage } from '../passwordForgot/passwordForgot'
+// import { PasswordForgotPage } from '../passwordForgot/passwordForgot'
+import { Connexion } from '../connexion/connexion'
 
 @Component({
   selector: 'page-home',
@@ -12,12 +13,16 @@ export class HomePage {
 
   }
 
-  goToPasswordForgot1() {
-    this.navCtrl.push(PasswordForgotPage);
-  }
+  goToConnexion() {
+    this.navCtrl.push(Connexion);
+  };
 
-  goToPasswordForgot2(email) {
-    this.navCtrl.push(PasswordForgotPage, {email: email});
-  }
+  // goToPasswordForgot1() {
+  //   this.navCtrl.push(PasswordForgotPage);
+  // }
+
+  // goToPasswordForgot2(email) {
+  //   this.navCtrl.push(PasswordForgotPage, {email: email});
+  // }
 
 }

@@ -8,5 +8,23 @@
 </ion-header>
 
 <ion-content padding>
-  <pre>Connexion</pre>
+  <ion-list>
+
+    <ion-item>
+      <ion-input type="text" placeholder="Username"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input type="password" placeholder="Password"></ion-input>
+    </ion-item>
+
+  </ion-list>
+
+  <a href="#" (click)="goToForgotPassword()">Mot de passe oublié ?</a>
+
+  <br>
+  <br>
+
+  <button ion-button (click)="submitConnexion()">Connexion</button>
+
 </ion-content>
