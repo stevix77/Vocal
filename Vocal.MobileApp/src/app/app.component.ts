@@ -9,17 +9,32 @@ import { PasswordForgotPage } from '../pages/passwordForgot/passwordForgot';
 import { Connexion } from '../pages/connexion/connexion';
 import { Inscription } from '../pages/inscription/inscription';
 import { InscriptionBirthdayPage } from '../pages/inscription-birthday/inscription-birthday';
+import { StoreService } from '../services/storeService';
 
 @Component({
-  templateUrl: 'app.html'
+  templateUrl: 'app.html',
+  providers: [StoreService]
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
-  rootPage: any = HomePage;
+  rootPage: any;
 
   pages: Array<{title: string, component: any}>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private storeService: StoreService) {
+    this.storeService.Get("user").then(
+      user => {
+        if(user != null)
+          this.rootPage = ListPage;
+        else
+          this.rootPage = HomePage;
+      }
+    ).catch(error => {
+      console.log(error);
+      this.rootPage = HomePage;
+    });
+    
+    
     this.initializeApp();
 
     // used for an example of ngFor and navigation

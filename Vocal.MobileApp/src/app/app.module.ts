@@ -13,7 +13,7 @@ import { InscriptionBirthdayPage } from '../pages/inscription-birthday/inscripti
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { DatePicker } from '@ionic-native/date-picker';
+//import { DatePicker } from '@ionic-native/date-picker';
 
 @NgModule({
   declarations: [
@@ -43,7 +43,7 @@ import { DatePicker } from '@ionic-native/date-picker';
   providers: [
     StatusBar,
     SplashScreen,
-    DatePicker,
+    //DatePicker,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

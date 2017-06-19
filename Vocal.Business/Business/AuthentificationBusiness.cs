@@ -102,12 +102,14 @@ namespace Vocal.Business
 
         public static async Task<Response<bool>> Password(string email, string lang)
         {
+
+            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             var response = new Response<bool>();
             try
             {
                 var user = _repo.GetUserByEmail(email);
                 if (user == null)
-                    throw new CustomException(Resource.GetValue(lang, Resource.MailNotExisting));
+                    throw new CustomException(Resources_Language.MailNotExisting);
                 else
                 {
                     var message = Resource.GetValue(lang, Resource.AskPassword);

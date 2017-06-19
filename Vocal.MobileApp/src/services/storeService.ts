@@ -1,7 +1,8 @@
 import { Storage } from '@ionic/storage';
 
 export class StoreService {
-    constructor(private storage: Storage) {
+    storage: Storage = new Storage(null);
+    constructor() {
     }
     Get<T>(key: string){
         return this.storage.get(key);
