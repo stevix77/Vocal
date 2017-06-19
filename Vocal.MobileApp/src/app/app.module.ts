@@ -10,10 +10,23 @@ import { PasswordForgotPage } from '../pages/passwordForgot/passwordForgot';
 import { Connexion } from '../pages/connexion/connexion';
 import { Inscription } from '../pages/inscription/inscription';
 import { InscriptionBirthdayPage } from '../pages/inscription-birthday/inscription-birthday';
+import { InscriptionUsernamePage } from '../pages/inscription-username/inscription-username';
+import { InscriptionEmailPage } from '../pages/inscription-email/inscription-email';
+import { InscriptionPasswordPage } from '../pages/inscription-password/inscription-password';
+import { InscriptionFindFriendsPage } from '../pages/inscription-find-friends/inscription-find-friends';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-//import { DatePicker } from '@ionic-native/date-picker';
+
+import { DatePicker } from '@ionic-native/date-picker';
+
+class DatePickerMock extends DatePicker {
+  show(options){
+    return new Promise((resolve, reject) => {
+      console.log('show date picker');
+    })
+  }
+}
 
 @NgModule({
   declarations: [
@@ -23,7 +36,11 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     PasswordForgotPage,
     Connexion,
     Inscription,
-    InscriptionBirthdayPage
+    InscriptionBirthdayPage,
+    InscriptionUsernamePage,
+    InscriptionEmailPage,
+    InscriptionPasswordPage,
+    InscriptionFindFriendsPage
   ],
   imports: [
     BrowserModule,
@@ -38,13 +55,17 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     PasswordForgotPage,
     Connexion,
     Inscription,
-    InscriptionBirthdayPage
+    InscriptionBirthdayPage,
+    InscriptionUsernamePage,
+    InscriptionEmailPage,
+    InscriptionPasswordPage,
+    InscriptionFindFriendsPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    //DatePicker,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    {provide: DatePickerMock, useClass: DatePicker }
   ]
 })
 export class AppModule {}
