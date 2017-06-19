@@ -11,5 +11,8 @@ var url = {
     },
     AskPwd() : string {
         return this.BaseUri + "auth/askpassword"
+    },
+    GetListResources(lang: string) : string {
+        return this.BaseUri + "resource/list" + lang;
     }
 }

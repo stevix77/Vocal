@@ -27,6 +27,9 @@
         },
         "cordova-plugin-datepicker": {
             "PACKAGE_NAME": "MyApp"
+        },
+        "cordova-plugin-globalization": {
+            "PACKAGE_NAME": "MyApp"
         }
     },
     "dependent_plugins": {}

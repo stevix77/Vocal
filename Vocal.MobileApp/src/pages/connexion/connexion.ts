@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, ToastController } from 'ionic-angular';
 import { AuthService } from '../../services/authService';
 import { StoreService } from '../../services/storeService';
-import {params} from '../../services/params';
+// import {params} from '../../services/params';
 import { Response } from '../../models/Response';
 import { UserResponse } from '../../models/response/UserResponse';
 import { LoginRequest } from '../../models/request/LoginRequest';

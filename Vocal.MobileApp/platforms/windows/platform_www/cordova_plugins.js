@@ -84,6 +84,28 @@ module.exports = [
         "merges": [
             ""
         ]
+    },
+    {
+        "id": "cordova-plugin-globalization.GlobalizationError",
+        "file": "plugins/cordova-plugin-globalization/www/GlobalizationError.js",
+        "pluginId": "cordova-plugin-globalization",
+        "clobbers": [
+            "window.GlobalizationError"
+        ]
+    },
+    {
+        "id": "cordova-plugin-globalization.globalization",
+        "file": "plugins/cordova-plugin-globalization/www/globalization.js",
+        "pluginId": "cordova-plugin-globalization",
+        "clobbers": [
+            "navigator.globalization"
+        ]
+    },
+    {
+        "id": "cordova-plugin-globalization.GlobalizationProxy",
+        "file": "plugins/cordova-plugin-globalization/src/windows/GlobalizationProxy.js",
+        "pluginId": "cordova-plugin-globalization",
+        "runs": true
     }
 ];
 module.exports.metadata = 
@@ -95,7 +117,8 @@ module.exports.metadata =
     "cordova-plugin-statusbar": "2.2.2",
     "cordova-plugin-whitelist": "1.3.1",
     "ionic-plugin-keyboard": "2.2.1",
-    "cordova-plugin-datepicker": "0.9.3"
+    "cordova-plugin-datepicker": "0.9.3",
+    "cordova-plugin-globalization": "1.0.7"
 };
 // BOTTOM OF METADATA
 });

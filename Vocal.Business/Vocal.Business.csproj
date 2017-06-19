@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="Binder\Bind.cs" />
     <Compile Include="Business\AuthentificationBusiness.cs" />
+    <Compile Include="Business\ResourceBusiness.cs" />
     <Compile Include="Exception\CustomException.cs" />
     <Compile Include="Tools\CacheManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

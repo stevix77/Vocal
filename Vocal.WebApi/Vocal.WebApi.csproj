@@ -221,6 +221,7 @@
     <Compile Include="Attribute\CustomAuthorizeAttribute.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ResourceController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -246,6 +247,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="Views\Resource\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vocal.Business\Vocal.Business.csproj">

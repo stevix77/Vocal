@@ -49,6 +49,7 @@
     <Compile Include="Request\PasswordRequest.cs" />
     <Compile Include="Request\RegisterRequest.cs" />
     <Compile Include="Request\Request.cs" />
+    <Compile Include="Response\ResourceResponse.cs" />
     <Compile Include="Response\UserResponse.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
