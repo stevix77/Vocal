@@ -22,16 +22,6 @@ import { VocalListPage } from '../pages/vocal-list/vocal-list';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { DatePicker } from '@ionic-native/date-picker';
-
-class DatePickerMock extends DatePicker {
-  show(options){
-    return new Promise((resolve, reject) => {
-      console.log('show date picker');
-    })
-  }
-}
-
 let pages = [
   MyApp,
   HomePage,
@@ -62,8 +52,7 @@ let pages = [
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
-    {provide: DatePickerMock, useClass: DatePicker }
+    {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
 export class AppModule {}
