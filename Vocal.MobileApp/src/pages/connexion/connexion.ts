@@ -9,6 +9,9 @@ import { LoginRequest } from '../../models/request/LoginRequest';
 import { AppUser } from '../../models/AppUser';
 import {functions} from '../../services/functions';
 
+import { VocalListPage } from '../vocal-list/vocal-list';
+import { PasswordForgotPage } from '../passwordForgot/passwordForgot';
+
 @Component({
   selector: 'page-connexion',
   templateUrl: 'connexion.html',
@@ -43,13 +46,17 @@ export class Connexion {
             appUser.Username = response.Data.Username;
             appUser.Token = functions.GenerateToken(response.Data.Username, this.model.Password);
             this.storeService.Set("user", appUser);
-            // this.navCtrl.push()
+            this.navCtrl.push(VocalListPage);
           }
         }
       )
     } else {
       this.showToast("Veuillez remplir les 2 champs");
     }
+  }
+
+  goToForgotPassword() {
+    this.navCtrl.push(PasswordForgotPage);
   }
 
   // showToast(message: string, duration: number, position: string) {
