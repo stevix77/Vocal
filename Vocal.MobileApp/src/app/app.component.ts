@@ -10,10 +10,14 @@ import { Connexion } from '../pages/connexion/connexion';
 import { Inscription } from '../pages/inscription/inscription';
 import { InscriptionBirthdayPage } from '../pages/inscription-birthday/inscription-birthday';
 import { StoreService } from '../services/storeService';
+import { ResourceService } from '../services/resourceService';
+import { Globalization } from '@ionic-native/globalization';
+import {params} from '../services/params';
+
 
 @Component({
   templateUrl: 'app.html',
-  providers: [StoreService]
+  providers: [StoreService, ResourceService, Globalization]
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
@@ -21,7 +25,8 @@ export class MyApp {
 
   pages: Array<{title: string, component: any}>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private storeService: StoreService) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private storeService: StoreService, private resourceService: ResourceService, private globalization: Globalization) {
+    this.GetAllResources();
     this.storeService.Get("user").then(
       user => {
         if(user != null)
@@ -33,7 +38,6 @@ export class MyApp {
       console.log(error);
       this.rootPage = HomePage;
     });
-    
     
     this.initializeApp();
 
@@ -48,6 +52,20 @@ export class MyApp {
     ];
 
   }
+
+  
+    GetAllResources() {
+      this.globalization.getPreferredLanguage()
+      .then(res => {
+        console.log(res);
+        params.Lang = res.value;
+      })
+      .catch(e => {
+        console.log(e)
+        console.log(navigator.language);
+        params.Lang = navigator.language;
+      });
+    }
 
   initializeApp() {
     this.platform.ready().then(() => {
