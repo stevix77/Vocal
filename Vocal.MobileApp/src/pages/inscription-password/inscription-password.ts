@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { InscriptionFindFriendsPage } from '../inscription-find-friends/inscription-find-friends';
 
 /**
  * Generated class for the InscriptionPasswordPage page.
@@ -15,6 +16,10 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 export class InscriptionPasswordPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+  }
+
+  submit(){
+    this.navCtrl.push(InscriptionFindFriendsPage);
   }
 
   ionViewDidLoad() {

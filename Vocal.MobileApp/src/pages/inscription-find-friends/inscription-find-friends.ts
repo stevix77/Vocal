@@ -17,6 +17,10 @@ export class InscriptionFindFriendsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
+  getAccess(){
+    console.log('popin autorisation accès contacts');
+  }
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad InscriptionFindFriendsPage');
   }
