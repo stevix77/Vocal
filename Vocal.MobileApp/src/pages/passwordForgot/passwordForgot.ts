@@ -3,7 +3,7 @@ import { NavParams, NavController } from 'ionic-angular';
 import { AuthService } from '../../services/authService';
 import {params} from '../../services/params';
 import { Response } from '../../models/Response';
-import { HomePage } from '../home/home';
+import { PasswordForgotValidationPage } from '../password-forgot-validation/password-forgot-validation';
 import { ToastController } from 'ionic-angular';
 
 @Component({
@@ -40,7 +40,7 @@ export class PasswordForgotPage implements OnInit {
               position: 'top'
             }).present();
           }else if(data.Data) {
-            this.navCtrl.push(HomePage);
+            this.navCtrl.push(PasswordForgotValidationPage);
           }
       },
       error => console.log(error),

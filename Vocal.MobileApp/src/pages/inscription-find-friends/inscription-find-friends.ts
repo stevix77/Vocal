@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { VocalListPage } from '../vocal-list/vocal-list';
 
 /**
  * Generated class for the InscriptionFindFriendsPage page.
@@ -19,6 +20,7 @@ export class InscriptionFindFriendsPage {
 
   getAccess(){
     console.log('popin autorisation accès contacts');
+    this.navCtrl.push(VocalListPage);
   }
 
   ionViewDidLoad() {

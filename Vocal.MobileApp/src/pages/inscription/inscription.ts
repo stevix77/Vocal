@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { InscriptionBirthdayPage } from '../inscription-birthday/inscription-birthday'
+import { InscriptionBirthdayPage } from '../inscription-birthday/inscription-birthday';
 import { StoreService } from '../../services/storeService';
 import { RegisterRequest } from '../../models/request/registerRequest';
 import { ResourceResponse } from '../../models/response/ResourceResponse';

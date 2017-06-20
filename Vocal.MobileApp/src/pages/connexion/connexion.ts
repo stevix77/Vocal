@@ -10,6 +10,9 @@ import { AppUser } from '../../models/AppUser';
 import {functions} from '../../services/functions';
 import { ResourceResponse } from '../../models/response/ResourceResponse';
 
+import { VocalListPage } from '../vocal-list/vocal-list';
+import { PasswordForgotPage } from '../passwordForgot/passwordForgot';
+
 @Component({
   selector: 'page-connexion',
   templateUrl: 'connexion.html',
@@ -56,7 +59,7 @@ export class Connexion {
             appUser.Username = response.Data.Username;
             appUser.Token = functions.GenerateToken(response.Data.Username, this.model.Password);
             this.storeService.Set("user", appUser);
-            // this.navCtrl.push()
+            this.navCtrl.push(VocalListPage);
           }
         }
       )
@@ -64,6 +67,10 @@ export class Connexion {
       this.model.ErrorUsername = this.model.Username == "" ? this.resources.find(x => x.Key == "UsernameEmpty").Value : "";
       this.model.ErrorPassword = this.model.Password == "" ? this.resources.find(x => x.Key == "PasswordEmpty").Value : "";
     }
+  }
+
+  goToForgotPassword() {
+    this.navCtrl.push(PasswordForgotPage);
   }
 
   // showToast(message: string, duration: number, position: string) {
