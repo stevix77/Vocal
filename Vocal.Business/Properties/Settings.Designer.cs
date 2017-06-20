@@ -61,7 +61,7 @@ namespace Vocal.Business.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("from@example.com")]
         public string MailFrom {
             get {
                 return ((string)(this["MailFrom"]));
@@ -101,6 +101,24 @@ namespace Vocal.Business.Properties {
         public string FormatToken {
             get {
                 return ((string)(this["FormatToken"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ddac79523d5ceb")]
+        public string MailUsername {
+            get {
+                return ((string)(this["MailUsername"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("44509b4d06feb6")]
+        public string MailPassword {
+            get {
+                return ((string)(this["MailPassword"]));
             }
         }
     }

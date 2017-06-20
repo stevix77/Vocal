@@ -118,7 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AskPassword" xml:space="preserve">
-    <value />
+    <value>Valider pour modifier mot de passe</value>
+  </data>
+  <data name="AskPasswordSubject" xml:space="preserve">
+    <value>Mot de passe oublié ?</value>
   </data>
   <data name="MailExisting" xml:space="preserve">
     <value>Cet email existe déja</value>

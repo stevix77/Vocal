@@ -8,23 +8,24 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list>
+  <form #form="ngForm" (ngSubmit)="Submit(form)" novalidate>
+    <ion-list>
 
     <ion-item>
-      <ion-input type="text" placeholder="Prénom" [(ngModel)]="model.Firstname"></ion-input>
+      <ion-input type="text" placeholder="Prénom" name="Firstname" required [(ngModel)]="model.Firstname"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-input type="text" placeholder="Nom" [(ngModel)]="model.Lastname"></ion-input>
+      <ion-input type="text" placeholder="Nom" name="Lastname" required [(ngModel)]="model.Lastname"></ion-input>
     </ion-item>
 
-  </ion-list>
+    </ion-list>
 
-  <p>En appuyant sur je m'inscris et j'accepte, vous acceptez nos <a href="#">conditions d'utilisations du service</a> et notre <a href="#">politique de confidentialité</a>.</p>
+    <p>En appuyant sur je m'inscris et j'accepte, vous acceptez nos <a href="#">conditions d'utilisations du service</a> et notre <a href="#">politique de confidentialité</a>.</p>
 
-  <br>
-  <br>
+    <br>
+    <br>
+    <button ion-button type="submit" [disabled]="!form.valid">Je m'inscris et j'accepte</button>
 
-  <button ion-button (click)="submit()">Je m'inscris et j'accepte</button>
-
+  </form>
 </ion-content>

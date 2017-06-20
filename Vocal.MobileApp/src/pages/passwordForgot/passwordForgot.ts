@@ -14,20 +14,22 @@ import { ToastController } from 'ionic-angular';
 
 export class PasswordForgotPage implements OnInit {
   
-  Email: string;
+  model = {
+    Email: "",
+    ErrorEmail: ""
+  }
 
   constructor(private navCtrl: NavController, private navParams: NavParams, private authService: AuthService, private toastCtrl: ToastController) { 
-    this.Email = this.navParams.get("email");
   }
 
   ngOnInit() {
 
   }
 
-  submit() {
+  Submit() {
     var request = {
       Lang: params.Lang,
-      Email: this.Email
+      Email: this.model.Email
     };
     var response = this.authService.askPasswordForgot(request);
     response.subscribe(

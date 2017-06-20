@@ -61,7 +61,7 @@ namespace Vocal.Business.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à .
+        ///   Recherche une chaîne localisée semblable à Valider pour modifier mot de passe.
         /// </summary>
         internal static string AskPassword {
             get {
@@ -70,7 +70,7 @@ namespace Vocal.Business.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à .
+        ///   Recherche une chaîne localisée semblable à Mot de passe oublié ?.
         /// </summary>
         internal static string AskPasswordSubject {
             get {

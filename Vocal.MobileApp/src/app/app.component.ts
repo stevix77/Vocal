@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
+import { VocalListPage } from '../pages/vocal-list/vocal-list'
 import { PasswordForgotPage } from '../pages/passwordForgot/passwordForgot';
 import { Connexion } from '../pages/connexion/connexion';
 import { Inscription } from '../pages/inscription/inscription';
@@ -32,7 +33,7 @@ export class MyApp {
     this.storeService.Get("user").then(
       user => {
         if(user != null)
-          this.rootPage = ListPage;
+          this.rootPage = VocalListPage;
         else
           this.rootPage = HomePage;
       }

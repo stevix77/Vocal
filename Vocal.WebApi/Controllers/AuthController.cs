@@ -37,9 +37,9 @@ namespace Vocal.WebApi.Controllers
         
         [HttpPost]
         [Route("askpassword")]
-        public async Task<Response<bool>> Password(PasswordRequest request)
+        public Response<bool> Password(PasswordRequest request)
         {
-            return await AuthentificationBusiness.Password(request.Email, request.Lang);
+            return AuthentificationBusiness.Password(request.Email, request.Lang);
         }
     }
 }

@@ -100,7 +100,7 @@ namespace Vocal.Business
             return response;
         }
 
-        public static async Task<Response<bool>> Password(string email, string lang)
+        public static Response<bool> Password(string email, string lang)
         {
 
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
@@ -112,9 +112,9 @@ namespace Vocal.Business
                     throw new CustomException(Resources_Language.MailNotExisting);
                 else
                 {
-                    var message = Resource.GetValue(lang, Resource.AskPassword);
+                    var message = Resources_Language.AskPassword;
                     message = string.Format(message, email);
-                    await MailManager.Send(email, message, lang);
+                    MailManager.Send(email, message, lang);
                     response.Data = true;
                 }
             }

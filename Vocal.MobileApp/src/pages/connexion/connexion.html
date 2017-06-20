@@ -8,23 +8,25 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list>
+  <form #form="ngForm" (ngSubmit)="Submit(form)" novalidate>
+    <ion-list>
 
     <ion-item>
-      <ion-input type="text" placeholder="Username" [(ngModel)]="model.Username" ></ion-input>
+      <ion-input type="text" placeholder="Username" name="Username" required [(ngModel)]="model.Username" ></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-input type="password" placeholder="Password" [(ngModel)]="model.Password"></ion-input>
+      <ion-input type="password" placeholder="Password" name="Password" required minlength="8" [(ngModel)]="model.Password"></ion-input>
     </ion-item>
 
-  </ion-list>
+    </ion-list>
 
-  <a href="#" (click)="goToForgotPassword()">Mot de passe oublié ?</a>
+    <button ion-button type="button" (click)="goToForgotPassword()">Mot de passe oublié ?</button>
 
-  <br>
-  <br>
+    <br>
+    <br>
 
-  <button ion-button (click)="submitConnexion()">Connexion</button>
+    <button ion-button type="submit" [disabled]="!form.valid">Connexion</button>
+  </form>
 
 </ion-content>
