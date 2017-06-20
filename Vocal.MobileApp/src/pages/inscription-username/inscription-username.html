@@ -14,19 +14,21 @@
 
 
 <ion-content padding>
-<h2>Choisissez un nom d'utilisateur</h2>
-<small>Votre nom d'utilisateur permet à vos amis de vous ajouter sur Vocal</small>
+<form #form ="ngForm" (ngSubmit)="submit(form)" novalidate>
+  <h2>Choisissez un nom d'utilisateur</h2>
+  <small>Votre nom d'utilisateur permet à vos amis de vous ajouter sur Vocal</small>
 
-<ion-list>
+  <ion-list>
 
-  <ion-item>
-    <ion-input type="text" placeholder="Nom d'utilisateur" [(ngModel)]="model.Username"></ion-input>
-  </ion-item>
+    <ion-item>
+      <ion-input type="text" placeholder="Nom d'utilisateur" [(ngModel)]="model.Username" name="Username" required></ion-input>
+    </ion-item>
 
-</ion-list>
+  </ion-list>
 
-<div margin>
-  <button ion-button (click)="submit()">Continuer</button>
-</div>
+  <div margin>
+    <button ion-button type="submit" [disabled]="!form.valid">Continuer</button>
+  </div>
+</form>
 
 </ion-content>

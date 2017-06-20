@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { InscriptionBirthdayPage } from '../inscription-birthday/inscription-birthday';
 import { StoreService } from '../../services/storeService';
+import { params } from '../../services/params';
 import { RegisterRequest } from '../../models/request/registerRequest';
 import { ResourceResponse } from '../../models/response/ResourceResponse';
 
@@ -44,6 +45,7 @@ export class Inscription {
   submit() {
     if(this.model.Firstname !== "" && this.model.Lastname != "") {
       let registerObj = new RegisterRequest();
+      registerObj.Lang = params.Lang;
       registerObj.Firstname = this.model.Firstname;
       registerObj.Lastname = this.model.Lastname;
       this.storeService.Set("registerRequest", registerObj);

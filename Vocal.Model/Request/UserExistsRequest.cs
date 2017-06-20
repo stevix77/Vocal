@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Vocal.Model.Request
 {
-    public class Request
+    public class UserExistsRequest : Request
     {
-        public string Lang { get; set; }
+        public string Value { get; set; }
     }
 }

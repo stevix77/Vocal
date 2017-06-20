@@ -4,7 +4,7 @@ import CryptoJS from 'crypto-js';
 export var functions = {
 
     GenerateToken(username, pwd) : string {
-        let token = username + "@" + pwd + "@" + params.Salt;
+        let token = username + "@" + this.Crypt(pwd) + "@" + params.Salt;
         token = this.Crypt(token);
         return token;
     },

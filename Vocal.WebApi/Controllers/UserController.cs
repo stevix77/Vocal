@@ -15,16 +15,16 @@ namespace Vocal.WebApi.Controllers
     [RoutePrefix("api/user")]
     public class UserController : ApiController
     {
-        [HttpPost,Route("IsExistsUsername/{username}")]
-        public Response<bool> IsExistsUsername(string username, Vocal.Model.Request.Request request)
+        [HttpPost,Route("IsExistsUsername")]
+        public Response<bool> IsExistsUsername(UserExistsRequest request)
         {
-            return UserBusiness.IsExistsUsername(username, request.Lang);
+            return UserBusiness.IsExistsUsername(request.Value, request.Lang);
         }
 
-        [HttpPost, Route("IsExistsEmail/{username}")]
-        public Response<bool> IsExistsEmail(string email, Request request)
+        [HttpPost, Route("IsExistsEmail")]
+        public Response<bool> IsExistsEmail(UserExistsRequest request)
         {
-            return UserBusiness.IsExistsEmail(email, request.Lang);
+            return UserBusiness.IsExistsEmail(request.Value, request.Lang);
         }
     }
 }

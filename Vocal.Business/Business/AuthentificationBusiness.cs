@@ -64,7 +64,7 @@ namespace Vocal.Business
                 {
                     string id = Guid.NewGuid().ToString();
                     string pwd = Hash.getHash(password);
-                    string token = Hash.getHash(string.Format(Settings.Default.FormatToken, DateTime.Now.ToString("yyyy"), password, Settings.Default.Salt));
+                    string token = Hash.getHash(string.Format(Settings.Default.FormatToken, username, password, Settings.Default.Salt));
                     user = new User
                     {
                         Id = id,

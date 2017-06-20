@@ -32,12 +32,13 @@ export class InscriptionBirthdayPage {
 
   model = {
     BirthdayDate: new Date(),
+    BirthdayDateString: "",
     ErrorBirthdayDate: ""
   }
   registerRequest: RegisterRequest;
   resources: Array<ResourceResponse>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public datePicker: DatePicker, private storeService: StoreService) {
     this.storeService.Get('resource').then(
       r => {
         if(r != null) {
@@ -60,6 +61,7 @@ export class InscriptionBirthdayPage {
   }
 
   submit(){
+    this.model.BirthdayDate = new Date(this.model.BirthdayDateString)
     this.registerRequest = this.navParams.get('registerRequest');
     this.registerRequest.BirthdayDate = this.model.BirthdayDate;
     this.navCtrl.push(InscriptionUsernamePage, {'registerRequest': this.registerRequest});

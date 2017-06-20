@@ -1,7 +1,7 @@
 export
 var url = {
-    // BaseUri: "http://192.168.1.14:8017/api/",
-    BaseUri: "http://wsvocal.azurewebsites.net/api/",
+    BaseUri: "http://192.168.1.14:8017/api/",
+    // BaseUri: "http://wsvocal.azurewebsites.net/api/",
 
     Login() : string {
         return this.BaseUri + "auth/login";
@@ -15,10 +15,10 @@ var url = {
     GetListResources(lang: string) : string {
         return this.BaseUri + "resource/list/" + lang;
     },
-    IsExistsUsername(username: string) : string {
-        return this.BaseUri + "user/IsExistsUsername/" + username;
+    IsExistsUsername() : string {
+        return this.BaseUri + "user/IsExistsUsername";
     },
-    IsExistsEmail(email: string) : string {
-        return this.BaseUri + "user/IsExistsEmail/" + email;
+    IsExistsEmail() : string {
+        return this.BaseUri + "user/IsExistsEmail";
     }
 }

@@ -5,6 +5,7 @@ import { StoreService } from '../../services/storeService';
 import { UserService } from '../../services/userService';
 import { params } from '../../services/params';
 import { RegisterRequest } from '../../models/request/registerRequest';
+import { UserExistsRequest } from '../../models/request/userExistsRequest';
 import { Request } from '../../models/request/request';
 import { ResourceResponse } from '../../models/response/resourceResponse';
 import { Response } from '../../models/response';
@@ -42,8 +43,9 @@ export class InscriptionEmailPage {
 
   submit(){
     if(this.model.Email != "") {
-      let obj: Request = {
-        Lang: params.Lang
+      let obj: UserExistsRequest = {
+        Lang: params.Lang,
+        Value: this.model.Email
       };
       this.userService.IsExistsEmail(this.model.Email, obj).subscribe(
         resp => {

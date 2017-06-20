@@ -27,4 +27,11 @@ export class AuthService {
     return response;
   }
 
+  Register(obj) {
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers });
+    var response = this.http.post(url.Register(), obj, options);
+    return response;
+  }
+
 }
