@@ -131,5 +131,14 @@ namespace Vocal.Business.Properties {
                 return ResourceManager.GetString("UserinfoError", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Ce nom d&apos;utilisateur existe déjà.
+        /// </summary>
+        internal static string UsernameExisting {
+            get {
+                return ResourceManager.GetString("UsernameExisting", resourceCulture);
+            }
+        }
     }
 }

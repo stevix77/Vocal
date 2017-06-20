@@ -77,6 +77,14 @@ namespace Vocal.DAL
             return user;
         }
 
+        public User GetUserByUsername(string username)
+        {
+            var db = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var user = db.Find(x => x.Username == username).SingleOrDefault();
+            return user;
+        }
+        
+
         #endregion
 
         #region Vocal

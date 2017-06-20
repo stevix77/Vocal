@@ -120,6 +120,9 @@
   <data name="AskPassword" xml:space="preserve">
     <value />
   </data>
+  <data name="AskPasswordSubject" xml:space="preserve">
+    <value />
+  </data>
   <data name="MailExisting" xml:space="preserve">
     <value>This email is already existing</value>
   </data>
@@ -137,5 +140,8 @@
   </data>
   <data name="UserinfoError" xml:space="preserve">
     <value>Identification error</value>
+  </data>
+  <data name="UsernameExisting" xml:space="preserve">
+    <value>This username is already existing</value>
   </data>
 </root>

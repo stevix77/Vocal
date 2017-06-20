@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { InscriptionUsernamePage } from '../inscription-username/inscription-username'
+import { StoreService } from '../../services/storeService';
+import { RegisterRequest } from '../../models/request/registerRequest';
+import { ResourceResponse } from '../../models/response/ResourceResponse';
 // import { DatePicker } from '@ionic-native/date-picker';
 
 
@@ -17,7 +20,21 @@ import { InscriptionUsernamePage } from '../inscription-username/inscription-use
 })
 export class InscriptionBirthdayPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  model = {
+    BirthdayDate: new Date(),
+    ErrorBirthdayDate: ""
+  }
+  registerRequest: RegisterRequest;
+  resources: Array<ResourceResponse>;
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService) {
+    this.storeService.Get('resource').then(
+      r => {
+        if(r != null) {
+          this.resources = r;
+        }
+      }
+    )
   }
 
   init(){
@@ -25,7 +42,9 @@ export class InscriptionBirthdayPage {
   }
 
   submit(){
-    this.navCtrl.push(InscriptionUsernamePage);
+    this.registerRequest = this.navParams.get('registerRequest');
+    this.registerRequest.BirthdayDate = this.model.BirthdayDate;
+    this.navCtrl.push(InscriptionUsernamePage, {'registerRequest': this.registerRequest});
   }
 
 

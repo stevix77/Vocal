@@ -141,4 +141,7 @@
   <data name="UserinfoError" xml:space="preserve">
     <value>Erreur d'identification 2</value>
   </data>
+  <data name="UsernameExisting" xml:space="preserve">
+    <value>Ce nom d'utilisateur existe déjà</value>
+  </data>
 </root>

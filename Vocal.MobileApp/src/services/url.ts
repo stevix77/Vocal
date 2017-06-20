@@ -13,6 +13,12 @@ var url = {
         return this.BaseUri + "auth/askpassword"
     },
     GetListResources(lang: string) : string {
-        return this.BaseUri + "resource/list" + lang;
+        return this.BaseUri + "resource/list/" + lang;
+    },
+    IsExistsUsername(username: string) : string {
+        return this.BaseUri + "user/IsExistsUsername/" + username;
+    },
+    IsExistsEmail(email: string) : string {
+        return this.BaseUri + "user/IsExistsEmail/" + email;
     }
 }

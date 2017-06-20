@@ -13,6 +13,8 @@ import { StoreService } from '../services/storeService';
 import { ResourceService } from '../services/resourceService';
 import { Globalization } from '@ionic-native/globalization';
 import {params} from '../services/params';
+import {Response} from '../models/response';
+import {ResourceResponse} from '../models/Response/resourceResponse';
 
 
 @Component({
@@ -38,7 +40,7 @@ export class MyApp {
       console.log(error);
       this.rootPage = HomePage;
     });
-    
+    this.SetLanguage();
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -53,8 +55,7 @@ export class MyApp {
 
   }
 
-  
-    GetAllResources() {
+    SetLanguage() {
       this.globalization.getPreferredLanguage()
       .then(res => {
         console.log(res);
@@ -65,6 +66,24 @@ export class MyApp {
         console.log(navigator.language);
         params.Lang = navigator.language;
       });
+    }
+
+    GetAllResources() {
+      this.storeService.Get("resource").then(
+      resource => {
+        if(resource == null) {
+          this.resourceService.GetListResources(params.Lang).subscribe(
+            resp => {
+              let response = resp.json() as Response<Array<ResourceResponse>>;
+              this.storeService.Set("resource", response.Data);
+            }
+          )
+        }
+      }
+    ).catch(error => {
+      console.log(error);
+      this.rootPage = HomePage;
+    });
     }
 
   initializeApp() {

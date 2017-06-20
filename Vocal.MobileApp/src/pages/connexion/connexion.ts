@@ -8,6 +8,7 @@ import { UserResponse } from '../../models/response/UserResponse';
 import { LoginRequest } from '../../models/request/LoginRequest';
 import { AppUser } from '../../models/AppUser';
 import {functions} from '../../services/functions';
+import { ResourceResponse } from '../../models/response/ResourceResponse';
 
 @Component({
   selector: 'page-connexion',
@@ -19,10 +20,21 @@ export class Connexion {
 
   model = {
     Username: "",
-    Password: ""
+    Password: "",
+    ErrorUsername: "",
+    ErrorPassword: ""
   };
+
+  resources: Array<ResourceResponse>;
+
   constructor(public navCtrl: NavController, private authService: AuthService, private storeService: StoreService, private toastCtrl: ToastController) {
-    
+    this.storeService.Get('resource').then(
+      r => {
+        if(r != null) {
+          this.resources = r;
+        }
+      }
+    )
   }
 
   submitConnexion() {
@@ -49,7 +61,8 @@ export class Connexion {
         }
       )
     } else {
-      this.showToast("Veuillez remplir les 2 champs");
+      this.model.ErrorUsername = this.model.Username == "" ? this.resources.find(x => x.Key == "UsernameEmpty").Value : "";
+      this.model.ErrorPassword = this.model.Password == "" ? this.resources.find(x => x.Key == "PasswordEmpty").Value : "";
     }
   }
 
