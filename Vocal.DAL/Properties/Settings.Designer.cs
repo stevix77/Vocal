@@ -85,5 +85,14 @@ namespace Vocal.DAL.Properties {
                 return ((string)(this["CollectionTalk"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Sign")]
+        public string CollectionSign {
+            get {
+                return ((string)(this["CollectionSign"]));
+            }
+        }
     }
 }

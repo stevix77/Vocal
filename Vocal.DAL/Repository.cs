@@ -53,6 +53,18 @@ namespace Vocal.DAL
             return user;
         }
 
+        public void SaveSign(Sign sign)
+        {
+            var collection = _db.GetCollection<Sign>(Settings.Default.CollectionSign);
+            collection.InsertOne(sign);
+        }
+
+        public Sign GetSignature(string sign)
+        {
+            var collection = _db.GetCollection<Sign>(Settings.Default.CollectionSign);
+            return collection.Find(x => x.Id == sign).SingleOrDefault();
+        }
+
         public void AddUser(User user)
         {
             var collection = _db.GetCollection<User>(Settings.Default.CollectionUser);
@@ -96,6 +108,68 @@ namespace Vocal.DAL
                         .SortByDescending(x => x.Messages.Select(y => y.Date))
                         .Project(x => new Talk { Id = x.Id, VocalName = x.VocalName, Users = x.Users, Messages = x.Messages.OrderByDescending(y => y.Date).Take(1).ToList()})
                         .ToList();
+            return list;
+        }
+
+        #endregion
+
+        #region Friends
+
+        public List<User> SearchFriendsByEmails(List<string> emails)
+        {
+            List<User> users = new List<User>();
+            var db = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var filter = new FilterDefinitionBuilder<User>().In(x => x.Email, emails);
+            users = db.Find(filter).ToList();
+            return users;
+        }
+
+        public List<User> SearchFriendsByIds(List<string> ids)
+        {
+            List<User> users = new List<User>();
+            var db = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, ids);
+            users = db.Find(filter).ToList();
+            return users;
+        }
+
+        public bool AddFriends(string userId, List<string> ids)
+        {
+            bool success = false;
+            var db = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, ids);
+            var users = db.Find(filter).ToList();
+            var user = db.Find(x => x.Id == userId).SingleOrDefault();
+            if (user != null)
+            {
+                List<Friend> friends = Bind_UsersToFriends(users);
+                user.Friends.AddRange(friends);
+                db.ReplaceOne(x => x.Id == userId, user);
+                success = true;
+            }
+            return success;
+        }
+
+
+        #endregion
+
+        #region Private methods
+
+        private List<Friend> Bind_UsersToFriends(List<User> users)
+        {
+            var list = new List<Friend>();
+            foreach (var item in users)
+            {
+                list.Add(new Friend
+                {
+                    Email = item.Email,
+                    Firstname = item.Firstname,
+                    Id = item.Id,
+                    Lastname = item.Lastname,
+                    Picture = item.Picture,
+                    Username = item.Username
+                });
+            }
             return list;
         }
 

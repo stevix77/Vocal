@@ -11,22 +11,19 @@ using Vocal.Model.Response;
 
 namespace Vocal.Business.Business
 {
-    public static class UserBusiness
+    public static class FriendBusiness
     {
         private static Repository _repo = new Repository();
 
-        public static Response<bool> IsExistsUsername(string username, string lang)
+        public static Response<List<UserResponse>> SearchFriends(List<string> emails, string lang)
         {
-            var response = new Response<bool>();
+            var response = new Response<List<UserResponse>>();
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+            LogManager.LogDebug(emails, lang);
             try
             {
-                var user = _repo.GetUserByUsername(username);
-                if (user != null)
-                {
-                    response.Data = true;
-                    throw new CustomException(Resources_Language.UsernameExisting);
-                }
+                var list = _repo.SearchFriendsByEmails(emails);
+                response.Data = Binder.Bind.Bind_Users(list);
             }
             catch (TimeoutException tex)
             {
@@ -46,18 +43,14 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<bool> IsExistsEmail(string email, string lang)
+        public static Response<bool> AddFriends(string userId, List<string> ids, string lang)
         {
             var response = new Response<bool>();
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+            LogManager.LogDebug(userId, ids, lang);
             try
             {
-                var user = _repo.GetUserByEmail(email);
-                if (user != null)
-                {
-                    response.Data = true;
-                    throw new CustomException(Resources_Language.MailExisting);
-                }
+                response.Data = _repo.AddFriends(userId, ids);
             }
             catch (TimeoutException tex)
             {
