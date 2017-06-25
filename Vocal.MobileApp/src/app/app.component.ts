@@ -22,7 +22,7 @@ import {ResourceResponse} from '../models/Response/resourceResponse';
   templateUrl: 'app.html',
   providers: [StoreService, ResourceService, Globalization]
 })
-export class MyApp {
+export class VocalApp {
   @ViewChild(Nav) nav: Nav;
   rootPage: any;
 

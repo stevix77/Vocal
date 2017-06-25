@@ -12,7 +12,7 @@
 
 </ion-header>
 
-
+<div *ngIf="model">{{model.ErrorEmail}}</div>
 <ion-content padding>
 <form #form="ngForm" (ngSubmit)="submit(form)" novalidate >
   <h2>Quelle est votre adresse e-mail ?</h2>

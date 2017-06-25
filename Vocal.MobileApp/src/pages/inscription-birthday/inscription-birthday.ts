@@ -4,17 +4,6 @@ import { InscriptionUsernamePage } from '../inscription-username/inscription-use
 import { StoreService } from '../../services/storeService';
 import { RegisterRequest } from '../../models/request/registerRequest';
 import { ResourceResponse } from '../../models/response/ResourceResponse';
-// import { DatePicker } from '@ionic-native/date-picker';
-import { DatePicker } from '@ionic-native/date-picker';
-
-// class DatePickerMock extends DatePicker {
-//   show() {
-//     return new Promise((resolve, reject) => {
-//       console.log('Show Date Picker');
-//     })
-//   }
-// }
-
 
 /**
  * Generated class for the InscriptionBirthdayPage page.
@@ -25,8 +14,7 @@ import { DatePicker } from '@ionic-native/date-picker';
 @IonicPage()
 @Component({
   selector: 'page-inscription-birthday',
-  templateUrl: 'inscription-birthday.html',
-  providers: [ DatePicker ]
+  templateUrl: 'inscription-birthday.html'
 })
 export class InscriptionBirthdayPage {
 
@@ -38,7 +26,7 @@ export class InscriptionBirthdayPage {
   registerRequest: RegisterRequest;
   resources: Array<ResourceResponse>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public datePicker: DatePicker, private storeService: StoreService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService) {
     this.storeService.Get('resource').then(
       r => {
         if(r != null) {
@@ -46,18 +34,6 @@ export class InscriptionBirthdayPage {
         }
       }
     )
-  }
-
-
-  showDatePicker(){
-    this.datePicker.show({
-      date: new Date(),
-      mode: 'date',
-      androidTheme: this.datePicker.ANDROID_THEMES.THEME_HOLO_DARK
-    }).then(
-      date => console.log('Got date: ', date),
-      err => console.log('Error occurred while getting date: ', err)
-    );
   }
 
   submit(){

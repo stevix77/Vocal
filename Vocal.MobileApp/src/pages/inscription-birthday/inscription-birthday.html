@@ -20,9 +20,6 @@
   <ion-list>
 
     <ion-item>
-      <ion-input type="date" placeholder="Date d'anniversaire" name="BirthdayDate2" [(ngModel)]="model.BirthdayDate"></ion-input>
-    </ion-item>
-    <ion-item>
       <ion-datetime placeholder="Date d'anniversaire" name="BirthdayDate" [(ngModel)]="model.BirthdayDateString"></ion-datetime>
     </ion-item>
 
@@ -30,7 +27,6 @@
 
   <button ion-button type="submit" [disabled]="!form.valid">Continuer</button>
 
-  <button ion-button (click)="showDatePicker()">Show Date Picker</button>
 </form>
 
 </ion-content>
