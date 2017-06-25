@@ -4,13 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
-import { ListPage } from '../pages/list/list';
 import { VocalListPage } from '../pages/vocal-list/vocal-list'
-import { PasswordForgotPage } from '../pages/passwordForgot/passwordForgot';
-import { Connexion } from '../pages/connexion/connexion';
-import { Inscription } from '../pages/inscription/inscription';
-import { InscriptionBirthdayPage } from '../pages/inscription-birthday/inscription-birthday';
-import { InscriptionFindFriendsPage } from '../pages/inscription-find-friends/inscription-find-friends';
 import { StoreService } from '../services/storeService';
 import {url} from '../services/url';
 import {HttpService} from '../services/httpService';
@@ -48,12 +42,7 @@ export class MyApp {
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: HomePage },
-      { title: 'List', component: ListPage },
-      { title: 'PasswordForgot', component: PasswordForgotPage },
-      { title: 'Connexion', component: Connexion },
-      { title: 'Inscription', component: Inscription },
-      { title: 'InscriptionBirthday', component: InscriptionBirthdayPage }
+      { title: 'Home', component: HomePage }
     ];
 
   }
