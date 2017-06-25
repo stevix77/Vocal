@@ -261,11 +261,14 @@ __pycache__/
 *.pyc
 
 # App build
-Vocal.MobileApp/www/build/
-Vocal.MobileApp/platforms/
+Vocal.MobileApp/www
+Vocal.MobileApp/platforms
 Vocal.MobileApp/platforms/android/
 Vocal.MobileApp/platforms/windows/
 Vocal.MobileApp/platforms/browser/
+Vocal.MobileApp/plugins
+
+
 
 # File System Mac
 *.DS_Store
