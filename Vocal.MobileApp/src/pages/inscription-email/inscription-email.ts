@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { InscriptionPasswordPage } from '../inscription-password/inscription-password'
 import { StoreService } from '../../services/storeService';
-import { UserService } from '../../services/userService';
+import {url} from '../../services/url';
+import {HttpService} from '../../services/httpService';
 import { params } from '../../services/params';
 import { RegisterRequest } from '../../models/request/registerRequest';
 import { UserExistsRequest } from '../../models/request/userExistsRequest';
-import { Request } from '../../models/request/request';
 import { ResourceResponse } from '../../models/response/resourceResponse';
 import { Response } from '../../models/response';
 
@@ -20,7 +20,7 @@ import { Response } from '../../models/response';
 @Component({
   selector: 'page-inscription-email',
   templateUrl: 'inscription-email.html',
-  providers: [UserService]
+  providers: [HttpService]
 })
 export class InscriptionEmailPage {
 
@@ -31,7 +31,7 @@ export class InscriptionEmailPage {
     ErrorEmail: ""
   }
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService, private userService: UserService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService, private httpService: HttpService) {
     this.storeService.Get('resource').then(
       r => {
         if(r != null) {
@@ -47,7 +47,7 @@ export class InscriptionEmailPage {
         Lang: params.Lang,
         Value: this.model.Email
       };
-      this.userService.IsExistsEmail(this.model.Email, obj).subscribe(
+      this.httpService.Post<UserExistsRequest>(url.IsExistsEmail(), obj).subscribe(
         resp => {
           let response = resp.json() as Response<boolean>;
           if(response.HasError && response.Data) {

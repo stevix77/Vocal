@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { NavController, ToastController } from 'ionic-angular';
-import { AuthService } from '../../services/authService';
 import { StoreService } from '../../services/storeService';
 import {params} from '../../services/params';
 import { Response } from '../../models/Response';
@@ -9,6 +8,8 @@ import { LoginRequest } from '../../models/request/LoginRequest';
 import { AppUser } from '../../models/AppUser';
 import {functions} from '../../services/functions';
 import { ResourceResponse } from '../../models/response/ResourceResponse';
+import {url} from '../../services/url';
+import {HttpService} from '../../services/httpService';
 
 import { VocalListPage } from '../vocal-list/vocal-list';
 import { PasswordForgotPage } from '../passwordForgot/passwordForgot';
@@ -16,7 +17,7 @@ import { PasswordForgotPage } from '../passwordForgot/passwordForgot';
 @Component({
   selector: 'page-connexion',
   templateUrl: 'connexion.html',
-  providers: [AuthService, StoreService]
+  providers: [HttpService, StoreService]
 })
 
 export class Connexion {
@@ -30,7 +31,7 @@ export class Connexion {
 
   resources: Array<ResourceResponse>;
 
-  constructor(public navCtrl: NavController, private authService: AuthService, private storeService: StoreService, private toastCtrl: ToastController) {
+  constructor(public navCtrl: NavController, private httpService: HttpService, private storeService: StoreService, private toastCtrl: ToastController) {
     this.storeService.Get('resource').then(
       r => {
         if(r != null) {
@@ -45,7 +46,7 @@ export class Connexion {
       let pwd = functions.Crypt(this.model.Password);
       var obj = new LoginRequest(this.model.Username, pwd);
       obj.Lang = params.Lang;
-      this.authService.Connect(obj).subscribe(
+      this.httpService.Post<LoginRequest>(url.Login(), obj).subscribe(
         resp => {
           var response = resp.json() as Response<UserResponse>;
           if(response.HasError) {

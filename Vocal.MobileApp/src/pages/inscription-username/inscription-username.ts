@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { InscriptionEmailPage } from '../inscription-email/inscription-email'
 import { StoreService } from '../../services/storeService';
-import { UserService } from '../../services/userService';
+import {url} from '../../services/url';
+import {HttpService} from '../../services/httpService';
 import { params } from '../../services/params';
 import { UserExistsRequest } from '../../models/request/userExistsRequest';
 import { RegisterRequest } from '../../models/request/registerRequest';
-import { Request } from '../../models/request/request';
 import { ResourceResponse } from '../../models/response/resourceResponse';
 import { Response } from '../../models/response';
 
@@ -20,7 +20,7 @@ import { Response } from '../../models/response';
 @Component({
   selector: 'page-inscription-username',
   templateUrl: 'inscription-username.html',
-  providers: [UserService]
+  providers: [HttpService]
 })
 export class InscriptionUsernamePage {
   registerRequest: RegisterRequest;
@@ -30,7 +30,7 @@ export class InscriptionUsernamePage {
     ErrorUsername: ""
   }
   
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService, private userService: UserService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService, private httpService: HttpService) {
     this.storeService.Get('resource').then(
       r => {
         if(r != null) {
@@ -42,11 +42,10 @@ export class InscriptionUsernamePage {
 
   submit(){
     if(this.model.Username != "") {
-      let obj: UserExistsRequest = {
-        Lang: params.Lang,
-        Value: this.model.Username
-      };
-      this.userService.IsExistsUsername(this.model.Username, obj).subscribe(
+      let obj = new UserExistsRequest();
+      obj.Lang = params.Lang,
+      obj.Value = this.model.Username;
+      this.httpService.Post<UserExistsRequest>(url.IsExistsUsername(), obj).subscribe(
         resp => {
           let response = resp.json() as Response<boolean>;
           if(response.HasError && response.Data) {

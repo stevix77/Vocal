@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { InscriptionFindFriendsPage } from '../inscription-find-friends/inscription-find-friends';
 import { StoreService } from '../../services/storeService';
-import { AuthService } from '../../services/authService';
+import {url} from '../../services/url';
+import {HttpService} from '../../services/httpService';
 import { RegisterRequest } from '../../models/request/registerRequest';
 import { ResourceResponse } from '../../models/response/resourceResponse';
 import { UserResponse } from '../../models/response/userResponse';
@@ -20,7 +21,7 @@ import {functions} from '../../services/functions';
 @Component({
   selector: 'page-inscription-password',
   templateUrl: 'inscription-password.html',
-  providers: [AuthService]
+  providers: [HttpService]
 })
 export class InscriptionPasswordPage {
 
@@ -31,7 +32,7 @@ export class InscriptionPasswordPage {
     ErrorPassword: ""
   }
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService, private authService: AuthService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService, private httpService: HttpService) {
     this.storeService.Get('resource').then(
       r => {
         if(r != null) {
@@ -46,7 +47,7 @@ export class InscriptionPasswordPage {
       let pwd = functions.Crypt(this.model.Password);
        this.registerRequest = this.navParams.get('registerRequest');
        this.registerRequest.Password = pwd;
-       this.authService.Register(this.registerRequest).subscribe(
+       this.httpService.Post<RegisterRequest>(url.Register(), this.registerRequest).subscribe(
          resp => {
            let response = resp.json() as Response<UserResponse>;
            if(response.HasError) {

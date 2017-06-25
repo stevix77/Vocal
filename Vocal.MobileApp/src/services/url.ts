@@ -20,5 +20,11 @@ var url = {
     },
     IsExistsEmail() : string {
         return this.BaseUri + "user/IsExistsEmail";
+    },
+    SearchFriends() : string {
+        return this.BaseUri + "friend/search";
+    },
+    AddFriends() : string {
+        return this.BaseUri + "friend/add";
     }
 }

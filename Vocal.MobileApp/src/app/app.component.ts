@@ -10,8 +10,10 @@ import { PasswordForgotPage } from '../pages/passwordForgot/passwordForgot';
 import { Connexion } from '../pages/connexion/connexion';
 import { Inscription } from '../pages/inscription/inscription';
 import { InscriptionBirthdayPage } from '../pages/inscription-birthday/inscription-birthday';
+import { InscriptionFindFriendsPage } from '../pages/inscription-find-friends/inscription-find-friends';
 import { StoreService } from '../services/storeService';
-import { ResourceService } from '../services/resourceService';
+import {url} from '../services/url';
+import {HttpService} from '../services/httpService';
 import { Globalization } from '@ionic-native/globalization';
 import {params} from '../services/params';
 import {Response} from '../models/response';
@@ -20,7 +22,7 @@ import {ResourceResponse} from '../models/Response/resourceResponse';
 
 @Component({
   templateUrl: 'app.html',
-  providers: [StoreService, ResourceService, Globalization]
+  providers: [StoreService, HttpService, Globalization]
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
@@ -28,7 +30,7 @@ export class MyApp {
 
   pages: Array<{title: string, component: any}>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private storeService: StoreService, private resourceService: ResourceService, private globalization: Globalization) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private storeService: StoreService, private httpService: HttpService, private globalization: Globalization) {
     this.GetAllResources();
     this.storeService.Get("user").then(
       user => {
@@ -73,7 +75,7 @@ export class MyApp {
       this.storeService.Get("resource").then(
       resource => {
         if(resource == null) {
-          this.resourceService.GetListResources(params.Lang).subscribe(
+          this.httpService.Post(url.GetListResources(params.Lang), null).subscribe(
             resp => {
               let response = resp.json() as Response<Array<ResourceResponse>>;
               this.storeService.Set("resource", response.Data);
