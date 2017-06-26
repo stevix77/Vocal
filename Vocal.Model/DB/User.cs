@@ -17,5 +17,6 @@ namespace Vocal.Model.DB
         public DateTime RegistrationDate { get; set; }
         public DateTime BirthdayDate { get; set; }
         public List<Friend> Friends { get; set; } = new List<Friend>();
+        public ResetPassword Reset { get; set; }
     }
 }

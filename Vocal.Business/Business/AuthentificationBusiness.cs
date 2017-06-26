@@ -51,6 +51,45 @@ namespace Vocal.Business
             return response;
         }
 
+        public static Response<bool> ResetPassword(string password, string username, string token, string lang)
+        {
+            var response = new Response<bool>();
+            LogManager.LogDebug(password, username, token, lang);
+            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+            try
+            {
+                var isTokenValid = IsTokenValid(username, token, lang);
+                if (!isTokenValid.HasError && isTokenValid.Data)
+                {
+                    var pwd = Hash.getHash(password);
+                    var newToken = Hash.getHash(string.Format(Settings.Default.FormatToken, username, password, Settings.Default.Salt));
+                    var user = _repo.GetUserByUsername(username);
+                    user.Token = newToken;
+                    user.Password = pwd;
+                    _repo.UpdateUser(user);
+                    response.Data = true;
+                }
+                else
+                    throw new CustomException(isTokenValid.ErrorMessage);
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
         public static Response<UserResponse> Register(string email, string username, string password, string firstname, string lastname, DateTime birthday, string lang)
         {
             var response = new Response<UserResponse>();
@@ -100,9 +139,9 @@ namespace Vocal.Business
             return response;
         }
 
-        public static Response<bool> Password(string email, string lang)
+        public static Response<bool> PasswordForgot(string email, string lang)
         {
-
+            LogManager.LogDebug(email, lang);
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             var response = new Response<bool>();
             try
@@ -112,10 +151,16 @@ namespace Vocal.Business
                     throw new CustomException(Resources_Language.MailNotExisting);
                 else
                 {
-                    var message = Resources_Language.AskPassword;
-                    message = string.Format(message, email);
+                    var token = Guid.NewGuid().ToString();
+                    var url = $"{Settings.Default.UrlUpdatePassword}/{user.Username}?token={token}&lang={lang}";
+                    var message = string.Format(Resources_Language.AskPassword, url);
                     MailManager.Send(email, message, lang);
                     response.Data = true;
+                    Task.Run(() =>
+                    {
+                        user.Reset = new ResetPassword { Token = token, ValidityDate = DateTime.Now.AddMinutes(Settings.Default.ValidityToken) };
+                        _repo.UpdateUser(user);
+                    });
                 }
             }
             catch (TimeoutException ex)
@@ -132,6 +177,42 @@ namespace Vocal.Business
             {
                 LogManager.LogError(ex);
                 response.ErrorMessage = Resource.GetValue(lang, Resource.TechnicalError);
+            }
+            return response;
+        }
+
+        public static Response<bool> IsTokenValid(string username, string token, string lang)
+        {
+            var response = new Response<bool>();
+            LogManager.LogDebug(username, token, lang);
+            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+            try
+            {
+                var user = _repo.GetUserByUsername(username);
+                if (user != null)
+                {
+                    if (user.Reset != null && user.Reset.Token == token && user.Reset.ValidityDate > DateTime.Now)
+                        response.Data = true;
+                    else
+                        throw new CustomException(Resources_Language.InvalidToken);
+                }
+                else
+                    throw new CustomException(Resources_Language.UsernameNotExisting);
+            }
+            catch (TimeoutException ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
             }
             return response;
         }

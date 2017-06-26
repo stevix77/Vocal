@@ -36,10 +36,10 @@ namespace Vocal.DAL
                     new MongoCredential("SCRAM-SHA-1", identity, evidence)
                 };
 #endif
-            //settings.Credentials = new List<MongoCredential>()
-            //{
-            //    new MongoCredential("SCRAM-SHA-1", identity, evidence)
-            //};
+            settings.Credentials = new List<MongoCredential>()
+            {
+                new MongoCredential("SCRAM-SHA-1", identity, evidence)
+            };
             MongoClient client = new MongoClient(settings);
             return client;
         }
@@ -96,6 +96,11 @@ namespace Vocal.DAL
             return user;
         }
         
+        public void UpdateUser(User user)
+        {
+            var db = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            db.ReplaceOne(x => x.Id == user.Id, user);
+        }
 
         #endregion
 
