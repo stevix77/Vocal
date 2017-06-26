@@ -22,7 +22,7 @@ namespace Vocal.Business.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources_Language {
+    public class Resources_Language {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Vocal.Business.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Vocal.Business.Properties.Resources.Language", typeof(Resources_Language).Assembly);
@@ -51,7 +51,7 @@ namespace Vocal.Business.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,9 +61,9 @@ namespace Vocal.Business.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cliquez sur le lien pour modifier mot de passe {0}.
+        ///   Looks up a localized string similar to Cliquez sur le lien pour modifier mot de passe &lt;a target=&quot;_blank&quot; href=&quot;{0}&quot;&gt;{1}&lt;/a&gt;.
         /// </summary>
-        internal static string AskPassword {
+        public static string AskPassword {
             get {
                 return ResourceManager.GetString("AskPassword", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace Vocal.Business.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Mot de passe oublié ?.
         /// </summary>
-        internal static string AskPasswordSubject {
+        public static string AskPasswordSubject {
             get {
                 return ResourceManager.GetString("AskPasswordSubject", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace Vocal.Business.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Ce token n&apos;est pas valide.
         /// </summary>
-        internal static string InvalidToken {
+        public static string InvalidToken {
             get {
                 return ResourceManager.GetString("InvalidToken", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace Vocal.Business.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cet email existe déja.
         /// </summary>
-        internal static string MailExisting {
+        public static string MailExisting {
             get {
                 return ResourceManager.GetString("MailExisting", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace Vocal.Business.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cet email n&apos;existe pas.
         /// </summary>
-        internal static string MailNotExisting {
+        public static string MailNotExisting {
             get {
                 return ResourceManager.GetString("MailNotExisting", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace Vocal.Business.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Le mot de passe n&apos;est pas au bon format.
         /// </summary>
-        internal static string PasswordRegex {
+        public static string PasswordRegex {
             get {
                 return ResourceManager.GetString("PasswordRegex", resourceCulture);
             }
@@ -117,16 +117,25 @@ namespace Vocal.Business.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Mot de passe requis.
         /// </summary>
-        internal static string PasswordRequired {
+        public static string PasswordRequired {
             get {
                 return ResourceManager.GetString("PasswordRequired", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mot de passe bien modifié.
+        /// </summary>
+        public static string ResetPasswordSuccess {
+            get {
+                return ResourceManager.GetString("ResetPasswordSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Erreur technique, réessayez plus tard.
         /// </summary>
-        internal static string TechnicalError {
+        public static string TechnicalError {
             get {
                 return ResourceManager.GetString("TechnicalError", resourceCulture);
             }
@@ -135,7 +144,7 @@ namespace Vocal.Business.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Délai d&apos;attente dépassé.
         /// </summary>
-        internal static string TimeoutError {
+        public static string TimeoutError {
             get {
                 return ResourceManager.GetString("TimeoutError", resourceCulture);
             }
@@ -144,7 +153,7 @@ namespace Vocal.Business.Properties {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        internal static string Unauthorize {
+        public static string Unauthorize {
             get {
                 return ResourceManager.GetString("Unauthorize", resourceCulture);
             }
@@ -153,7 +162,7 @@ namespace Vocal.Business.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Erreur d&apos;identification 2.
         /// </summary>
-        internal static string UserinfoError {
+        public static string UserinfoError {
             get {
                 return ResourceManager.GetString("UserinfoError", resourceCulture);
             }
@@ -162,7 +171,7 @@ namespace Vocal.Business.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Ce nom d&apos;utilisateur existe déjà.
         /// </summary>
-        internal static string UsernameExisting {
+        public static string UsernameExisting {
             get {
                 return ResourceManager.GetString("UsernameExisting", resourceCulture);
             }
@@ -171,7 +180,7 @@ namespace Vocal.Business.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Ce nom d&apos;utilisateur n&apos;existe pas.
         /// </summary>
-        internal static string UsernameNotExisting {
+        public static string UsernameNotExisting {
             get {
                 return ResourceManager.GetString("UsernameNotExisting", resourceCulture);
             }

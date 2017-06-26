@@ -9,12 +9,12 @@ namespace Vocal.WebApi.Models
 {
     public class PasswordReset
     {
-        [Required(ErrorMessageResourceName = "PasswordRequired")]
-        [RegularExpression("{8,}", ErrorMessageResourceName = "PasswordRegex")]
+        [Required(ErrorMessageResourceName = "PasswordRequired", ErrorMessageResourceType = typeof(Business.Properties.Resources_Language))]
+        [RegularExpression("^.{8,}", ErrorMessageResourceName = "PasswordRegex", ErrorMessageResourceType = typeof(Business.Properties.Resources_Language))]
         public string Password { get; set; }
-        [Required(ErrorMessageResourceName = "PasswordRequired")]
+        [Required(ErrorMessageResourceName = "PasswordRequired", ErrorMessageResourceType = typeof(Business.Properties.Resources_Language))]
         public string Username { get; set; }
-        [Required(ErrorMessageResourceName = "PasswordRequired")]
+        [Required(ErrorMessageResourceName = "PasswordRequired", ErrorMessageResourceType = typeof(Business.Properties.Resources_Language))]
         public string Token { get; set; }
     }
 }

@@ -32,6 +32,7 @@ namespace Vocal.Business.Tools
             mail.To.Add(email);
             mail.From = new MailAddress(Settings.Default.MailFrom);
             mail.Body = text;
+            mail.IsBodyHtml = true;
             client.Send(mail);
         }
     }

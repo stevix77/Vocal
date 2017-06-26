@@ -17,7 +17,8 @@ namespace Vocal.WebApi.Controllers
             if (response.Data)
             {
                 ViewBag.Lang = lang;
-                return View();
+                var model = new PasswordReset { Token = token, Username = id };
+                return View(model);
             }
             else
             {
@@ -34,7 +35,10 @@ namespace Vocal.WebApi.Controllers
             {
                 var response = AuthentificationBusiness.ResetPassword(model.Password, model.Username, model.Token, lang);
                 if (response.Data)
+                {
+                    ViewBag.Success = Business.Properties.Resources_Language.ResetPasswordSuccess;
                     return View("ResetPasswordSuccess");
+                }
                 else
                 {
                     ViewBag.Error = response.ErrorMessage;

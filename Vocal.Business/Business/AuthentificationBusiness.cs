@@ -153,7 +153,7 @@ namespace Vocal.Business
                 {
                     var token = Guid.NewGuid().ToString();
                     var url = $"{Settings.Default.UrlUpdatePassword}/{user.Username}?token={token}&lang={lang}";
-                    var message = string.Format(Resources_Language.AskPassword, url);
+                    var message = string.Format(Resources_Language.AskPassword, url, url);
                     MailManager.Send(email, message, lang);
                     response.Data = true;
                     Task.Run(() =>
@@ -191,7 +191,7 @@ namespace Vocal.Business
                 var user = _repo.GetUserByUsername(username);
                 if (user != null)
                 {
-                    if (user.Reset != null && user.Reset.Token == token && user.Reset.ValidityDate > DateTime.Now)
+                    if (user.Reset != null && user.Reset.Token == token && user.Reset.ValidityDate.ToLocalTime() > DateTime.Now)
                         response.Data = true;
                     else
                         throw new CustomException(Resources_Language.InvalidToken);
