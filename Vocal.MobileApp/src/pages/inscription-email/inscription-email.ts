@@ -44,6 +44,7 @@ export class InscriptionEmailPage {
           let response = resp.json() as Response<boolean>;
           if(response.HasError && response.Data) {
             this.model.ErrorEmail = response.ErrorMessage;
+            this.navCtrl.setRoot(this.navCtrl.getActive().component);
           } else if(response.HasError && !response.Data) {
 
           } else {

@@ -31,6 +31,7 @@
         "cordova-android": "^5.0.0",
         "cordova-browser": "^4.1.0",
         "cordova-plugin-compat": "^1.0.0",
+        "cordova-ios": "^4.4.0",
         "cordova-plugin-console": "^1.0.5",
         "cordova-plugin-contacts": "^2.3.1",
         "cordova-plugin-datepicker": "^0.9.3",
@@ -73,6 +74,7 @@
         "platforms": [
             "android",
             "browser",
+            "ios",
             "windows"
         ]
     }
