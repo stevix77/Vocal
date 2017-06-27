@@ -30,7 +30,14 @@
         },
         "cordova-plugin-globalization": {
             "PACKAGE_NAME": "MyApp"
+        },
+        "cordova-plugin-contacts": {
+            "PACKAGE_NAME": "MyApp"
         }
     },
-    "dependent_plugins": {}
+    "dependent_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "MyApp"
+        }
+    }
 }

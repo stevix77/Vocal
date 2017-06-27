@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="Binder\Bind.cs" />
     <Compile Include="Business\AuthentificationBusiness.cs" />
+    <Compile Include="Business\FriendBusiness.cs" />
     <Compile Include="Business\ResourceBusiness.cs" />
     <Compile Include="Business\UserBusiness.cs" />
     <Compile Include="Exception\CustomException.cs" />
@@ -124,15 +125,15 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.Language.en.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Language.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.Language.fr.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Language.fr.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.Language.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Language.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

@@ -4,7 +4,6 @@ import { InscriptionBirthdayPage } from '../inscription-birthday/inscription-bir
 import { StoreService } from '../../services/storeService';
 import { params } from '../../services/params';
 import { RegisterRequest } from '../../models/request/registerRequest';
-import { ResourceResponse } from '../../models/response/ResourceResponse';
 
 
 @Component({
@@ -19,7 +18,7 @@ export class Inscription {
     ErrorFirstname: "",
     ErrorLastname: ""
   }
-  resources: Array<ResourceResponse>;
+  
 
   ionViewDidEnter() {
     // this.storeService.Get("registerRequest").then(
@@ -33,13 +32,6 @@ export class Inscription {
   }
 
   constructor(public navCtrl: NavController, private storeService: StoreService) {
-    this.storeService.Get('resource').then(
-      r => {
-        if(r != null) {
-          this.resources = r;
-        }
-      }
-    )
   }
 
   submit() {
@@ -51,8 +43,8 @@ export class Inscription {
       this.storeService.Set("registerRequest", registerObj);
       this.navCtrl.push(InscriptionBirthdayPage,{'registerRequest': registerObj} );
     } else {
-      this.model.ErrorFirstname = this.model.Firstname == "" ? this.resources.find(x => x.Key == "FirstnameEmpty").Value : "";
-      this.model.ErrorLastname = this.model.Lastname == "" ? this.resources.find(x => x.Key == "LastnameEmpty").Value : "";
+      this.model.ErrorFirstname = this.model.Firstname == "" ? params.Resources.find(x => x.Key == "FirstnameEmpty").Value : "";
+      this.model.ErrorLastname = this.model.Lastname == "" ? params.Resources.find(x => x.Key == "LastnameEmpty").Value : "";
     }
   }
 

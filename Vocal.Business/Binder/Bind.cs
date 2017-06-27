@@ -19,8 +19,28 @@ namespace Vocal.Business.Binder
                 Email = user.Email,
                 Id = user.Id,
                 Picture = user.Picture,
-                Username = user.Username
+                Username = user.Username,
+                Firstname = user.Firstname,
+                Lastname = user.Lastname
             };
+        }
+
+        internal static List<UserResponse> Bind_Users(List<User> list)
+        {
+            var users = new List<UserResponse>();
+            foreach(var item in list)
+            {
+                users.Add(new UserResponse
+                {
+                    Email = item.Email,
+                    Firstname = item.Firstname,
+                    Id = item.Id,
+                    Lastname = item.Lastname,
+                    Picture = item.Picture,
+                    Username = item.Username
+                });
+            }
+            return users;
         }
     }
 }

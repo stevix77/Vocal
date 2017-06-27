@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { InscriptionUsernamePage } from '../inscription-username/inscription-username'
 import { StoreService } from '../../services/storeService';
 import { RegisterRequest } from '../../models/request/registerRequest';
-import { ResourceResponse } from '../../models/response/ResourceResponse';
 
 /**
  * Generated class for the InscriptionBirthdayPage page.
@@ -24,16 +23,8 @@ export class InscriptionBirthdayPage {
     ErrorBirthdayDate: ""
   }
   registerRequest: RegisterRequest;
-  resources: Array<ResourceResponse>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService) {
-    this.storeService.Get('resource').then(
-      r => {
-        if(r != null) {
-          this.resources = r;
-        }
-      }
-    )
   }
 
   submit(){

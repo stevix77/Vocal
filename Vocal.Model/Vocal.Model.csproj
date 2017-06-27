@@ -38,17 +38,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Response.cs" />
+    <Compile Include="DB\ResetPassword.cs" />
+    <Compile Include="DB\Sign.cs" />
     <Compile Include="DB\Friend.cs" />
     <Compile Include="DB\Message.cs" />
     <Compile Include="DB\User.cs" />
     <Compile Include="DB\UserListen.cs" />
     <Compile Include="DB\Talk.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Request\AddFriendsRequest.cs" />
     <Compile Include="Request\CookieRequest.cs" />
     <Compile Include="Request\LoginRequest.cs" />
     <Compile Include="Request\PasswordRequest.cs" />
     <Compile Include="Request\RegisterRequest.cs" />
     <Compile Include="Request\Request.cs" />
+    <Compile Include="Request\SearchFriendsRequest.cs" />
     <Compile Include="Request\UserExistsRequest.cs" />
     <Compile Include="Response\ResourceResponse.cs" />
     <Compile Include="Response\UserResponse.cs" />
