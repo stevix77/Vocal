@@ -199,7 +199,9 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="Properties\PublishProfiles\wsvocal - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\wsvocal - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\wsvocal - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\wsvocal - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
@@ -223,6 +225,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config" />
+    <Content Include="wsvocal.PublishSettings" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />

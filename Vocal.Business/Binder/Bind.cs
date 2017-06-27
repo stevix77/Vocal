@@ -19,7 +19,9 @@ namespace Vocal.Business.Binder
                 Email = user.Email,
                 Id = user.Id,
                 Picture = user.Picture,
-                Username = user.Username
+                Username = user.Username,
+                Firstname = user.Firstname,
+                Lastname = user.Lastname
             };
         }
 
