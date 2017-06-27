@@ -8,7 +8,7 @@ import { RegisterRequest } from '../../models/request/registerRequest';
 import { ResourceResponse } from '../../models/response/resourceResponse';
 import { UserResponse } from '../../models/response/userResponse';
 import { Response } from '../../models/response';
-import { AppUser } from '../../models/AppUser';
+import { AppUser } from '../../models/appUser';
 import {functions} from '../../services/functions';
 import { params } from "../../services/params";
 

@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { SearchFriendsRequest } from "../../models/request/searchFriendsRequest";
 import { params } from "../../services/params";
 import { url } from "../../services/url";
-import { AppUser } from "../../models/AppUser";
+import { AppUser } from "../../models/appUser";
 import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
