@@ -66,6 +66,7 @@ namespace Vocal.Business
                     var user = _repo.GetUserByUsername(username);
                     user.Token = newToken;
                     user.Password = pwd;
+                    user.Reset.IsActive = false;
                     _repo.UpdateUser(user);
                     response.Data = true;
                 }
@@ -191,7 +192,7 @@ namespace Vocal.Business
                 var user = _repo.GetUserByUsername(username);
                 if (user != null)
                 {
-                    if (user.Reset != null && user.Reset.Token == token && user.Reset.ValidityDate.ToLocalTime() > DateTime.Now)
+                    if (user.Reset != null && user.Reset.IsActive && user.Reset.Token == token && user.Reset.ValidityDate.ToLocalTime() > DateTime.Now)
                         response.Data = true;
                     else
                         throw new CustomException(Resources_Language.InvalidToken);

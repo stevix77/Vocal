@@ -36,10 +36,10 @@ namespace Vocal.DAL
                     new MongoCredential("SCRAM-SHA-1", identity, evidence)
                 };
 #endif
-            settings.Credentials = new List<MongoCredential>()
-            {
-                new MongoCredential("SCRAM-SHA-1", identity, evidence)
-            };
+            //settings.Credentials = new List<MongoCredential>()
+            //{
+            //    new MongoCredential("SCRAM-SHA-1", identity, evidence)
+            //};
             MongoClient client = new MongoClient(settings);
             return client;
         }

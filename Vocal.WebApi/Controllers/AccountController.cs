@@ -15,11 +15,7 @@ namespace Vocal.WebApi.Controllers
         {
             var response = AuthentificationBusiness.IsTokenValid(id, token, lang);
             if (response.Data)
-            {
-                ViewBag.Lang = lang;
-                var model = new PasswordReset { Token = token, Username = id };
-                return View(model);
-            }
+                return View();
             else
             {
                 ViewBag.Error = response.ErrorMessage;
@@ -29,11 +25,11 @@ namespace Vocal.WebApi.Controllers
 
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult ResetPassword(PasswordReset model, string lang)
+        public ActionResult ResetPassword(PasswordReset model, string id, string token, string lang)
         {
             if(ModelState.IsValid)
             {
-                var response = AuthentificationBusiness.ResetPassword(model.Password, model.Username, model.Token, lang);
+                var response = AuthentificationBusiness.ResetPassword(model.Password, id, token, lang);
                 if (response.Data)
                 {
                     ViewBag.Success = Business.Properties.Resources_Language.ResetPasswordSuccess;
@@ -46,10 +42,7 @@ namespace Vocal.WebApi.Controllers
                 }
             }
             else
-            {
-                ViewBag.Lang = lang;
                 return View(model);
-            }
         }
     }
 }
