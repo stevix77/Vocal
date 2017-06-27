@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { VocalListPage } from '../vocal-list/vocal-list';
-import { Connexion } from '../connexion/connexion';
 import { Contacts } from '@ionic-native/contacts';
 import { HttpService } from '../../services/httpService';
 import { params } from '../../services/params';
@@ -11,7 +10,6 @@ import { Response } from '../../models/response';
 import {AddFriendsRequest} from '../../models/request/addFriendsRequest';
 import {url} from '../../services/url';
 import {CookieService} from '../../services/cookieService';
-import {AppUser} from '../../models/appUser'
 import {StoreService} from '../../services/storeService'
 
 /**
@@ -32,19 +30,9 @@ export class InscriptionFindFriendsPage {
     Friends: [],
     ErrorFriends: ""
   }
-  private User: AppUser;
   constructor(public navCtrl: NavController, public navParams: NavParams, private contacts: Contacts, private httpService: HttpService, private cookieService: CookieService, private storeService: StoreService) {
-    this.storeService.Get("user").then(
-      user => {
-        if(user != null)
-          this.User = user;
-        else
-          this.navCtrl.push(Connexion)
-      }
-    ).catch(error => {
-      console.log(error);
-      this.navCtrl.push(Connexion)
-    });
+    //this.searchFriends(['s.valentin77@gmail.com', 'tik@tik.fr']);
+    //this.addFriends(["000000-f1e6-4c976-9a55-7525496145s", "599fc814-8733-4284-a606-de34c9845348"]);
   }
 
   getAccess(){
@@ -61,12 +49,31 @@ export class InscriptionFindFriendsPage {
     obj.Lang = params.Lang;
     obj.Emails = emails;
     let urlSearch = url.SearchFriends();
-    this.cookieService.SetAuthorizeCookie(urlSearch, this.User)
-    this.httpService.Post<SearchFriendsRequest>(urlSearch, obj).subscribe(
+    let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
+    this.httpService.Post<SearchFriendsRequest>(urlSearch, obj, cookie).subscribe(
       resp => {
         let response = resp.json() as Response<Array<UserResponse>>;
         if(!response.HasError) {
           this.model.Friends = response.Data;
+        } else {
+          this.model.ErrorFriends = response.ErrorMessage;
+        }
+      }
+    );
+  }
+
+  addFriends(ids: Array<string>) {
+    let obj = new AddFriendsRequest();
+    obj.Lang = params.Lang;
+    obj.Ids = ids;
+    obj.UserId = params.User.Id;
+    let urlAddFriends = url.AddFriends();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlAddFriends, params.User)
+    this.httpService.Post<AddFriendsRequest>(urlAddFriends, obj, cookie).subscribe(
+      resp => {
+        let response = resp.json() as Response<boolean>;
+        if(!response.HasError) {
+          
         } else {
           this.model.ErrorFriends = response.ErrorMessage;
         }
@@ -87,23 +94,4 @@ export class InscriptionFindFriendsPage {
       }
     }).catch((e) => this.model.ErrorFriends = "")
   }
-
-  addFriends(ids: Array<string>) {
-    let obj = new AddFriendsRequest();
-    obj.Lang = params.Lang;
-    obj.Ids = ids;
-    let urlAddFriends = url.AddFriends();
-    this.cookieService.SetAuthorizeCookie(urlAddFriends, this.User)
-    this.httpService.Post<AddFriendsRequest>(urlAddFriends, obj).subscribe(
-      resp => {
-        let response = resp.json() as Response<boolean>;
-        if(!response.HasError) {
-          
-        } else {
-          this.model.ErrorFriends = response.ErrorMessage;
-        }
-      }
-    );
-  }
-
 }

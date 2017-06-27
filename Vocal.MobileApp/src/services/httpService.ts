@@ -12,8 +12,10 @@ export class HttpService {
   constructor(private http: Http) {
   }
 
-  Post<T>(url: string, obj: T) {
+  Post<T>(url: string, obj: T, cookie?: any) {
     let headers = new Headers({ 'Content-Type': 'application/json' });
+    if(cookie != null)
+      headers.set('Set-Cookie', cookie)
     let options = new RequestOptions({ headers: headers });
     var response = this.http.post(url, obj, options);
     return response;

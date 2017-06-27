@@ -14,13 +14,18 @@ namespace Vocal.WebApi.Attribute
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
             bool isAuthorize = false;
-            var cookie = CookieManager.Get("authorize");
-            if (cookie != null)
+            var values = new List<string>().AsEnumerable();
+            if(actionContext.Request.Headers.TryGetValues("Set-Cookie", out values))
             {
-                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Model.Request.CookieRequest>(cookie.Value);
-                if(obj != null)
+                var cookie = values.SingleOrDefault(x => x.StartsWith("authorize"));
+                if(!string.IsNullOrEmpty(cookie))
                 {
-                    isAuthorize = Authorize.IsAuthorize(obj.UserId, obj.Sign, obj.Timestamp);
+                    var value = cookie.Split('=').SingleOrDefault(x => x.StartsWith("{"));
+                    var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Model.Request.CookieRequest>(value);
+                    if (obj != null)
+                    {
+                        isAuthorize = Authorize.IsAuthorize(obj.UserId, obj.Sign, obj.Timestamp, actionContext.Request.RequestUri.AbsoluteUri);
+                    }
                 }
             }
             return isAuthorize;

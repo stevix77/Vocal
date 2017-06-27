@@ -24,20 +24,13 @@ import { Response } from '../../models/response';
 })
 export class InscriptionUsernamePage {
   registerRequest: RegisterRequest;
-  resources: Array<ResourceResponse>;
   model = {
     Username: "",
     ErrorUsername: ""
   }
   
   constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService, private httpService: HttpService) {
-    this.storeService.Get('resource').then(
-      r => {
-        if(r != null) {
-          this.resources = r;
-        }
-      }
-    )
+    
   }
 
   submit(){

@@ -22,7 +22,7 @@ namespace Vocal.Business.Security
         /// <param name="sign">Signature de la requête</param>
         /// <param name="timestamp">Timestamp utilisé pour générer la signature</param>
         /// <returns>True if matching</returns>
-        public static bool IsAuthorize(string id, string sign, string timestamp)
+        public static bool IsAuthorize(string id, string sign, string timestamp, string url)
         {
             bool authorize = false;
             if (!IsSignatureExist(sign))
@@ -38,26 +38,20 @@ namespace Vocal.Business.Security
                         CacheManager.SetCache($"{Settings.Default.CacheKeyToken}_{id}", token);
                     }
                 }
-                string signature = Hash.getHash(string.Format(Settings.Default.FormatSign, id, token, timestamp));
+                string signature = Hash.getHash(string.Format(Settings.Default.FormatSign, url, timestamp, token));
                 if (sign.Equals(signature))
                 {
                     authorize = true;
-                    Task.Run(() => SaveSignature(sign, id));
+                    Task.Run(() => _repo.SaveSign(id, sign));
                 }
             }
             return authorize;
         }
 
-        private static void SaveSignature(string sign, string userId)
-        {
-            Sign s = new Sign { Id = sign, UserId = userId };
-            _repo.SaveSign(s);
-        }
-
         private static bool IsSignatureExist(string sign)
         {
-            var s = _repo.GetSignature(sign);
-            return s != null;
+            var exists = _repo.GetSignature(sign);
+            return exists;
         }
     }
 }

@@ -10,6 +10,7 @@ import { UserResponse } from '../../models/response/userResponse';
 import { Response } from '../../models/response';
 import { AppUser } from '../../models/AppUser';
 import {functions} from '../../services/functions';
+import { params } from "../../services/params";
 
 /**
  * Generated class for the InscriptionPasswordPage page.
@@ -26,20 +27,14 @@ import {functions} from '../../services/functions';
 export class InscriptionPasswordPage {
 
   registerRequest: RegisterRequest;
-  resources: Array<ResourceResponse>;
+  
   model = {
     Password: "",
     ErrorPassword: ""
   }
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService, private httpService: HttpService) {
-    this.storeService.Get('resource').then(
-      r => {
-        if(r != null) {
-          this.resources = r;
-        }
-      }
-    )
+    
   }
 
   submit(){
@@ -61,6 +56,7 @@ export class InscriptionPasswordPage {
             appUser.Username = response.Data.Username;
             appUser.Token = functions.GenerateToken(response.Data.Username, this.model.Password);
             this.storeService.Set("user", appUser);
+            params.User = appUser;
             this.navCtrl.push(InscriptionFindFriendsPage);
            }
          }

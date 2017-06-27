@@ -25,20 +25,12 @@ import { Response } from '../../models/response';
 export class InscriptionEmailPage {
 
   registerRequest: RegisterRequest;
-  resources: Array<ResourceResponse>;
   model = {
     Email: "",
     ErrorEmail: ""
   }
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService, private httpService: HttpService) {
-    this.storeService.Get('resource').then(
-      r => {
-        if(r != null) {
-          this.resources = r;
-        }
-      }
-    )
   }
 
   submit(){

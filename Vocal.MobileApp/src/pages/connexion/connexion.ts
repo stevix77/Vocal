@@ -29,16 +29,8 @@ export class Connexion {
     ErrorPassword: ""
   };
 
-  resources: Array<ResourceResponse>;
-
   constructor(public navCtrl: NavController, private httpService: HttpService, private storeService: StoreService, private toastCtrl: ToastController) {
-    this.storeService.Get('resource').then(
-      r => {
-        if(r != null) {
-          this.resources = r;
-        }
-      }
-    )
+    
   }
 
   submitConnexion() {
@@ -60,13 +52,14 @@ export class Connexion {
             appUser.Username = response.Data.Username;
             appUser.Token = functions.GenerateToken(response.Data.Username, this.model.Password);
             this.storeService.Set("user", appUser);
+            params.User = appUser;
             this.navCtrl.push(VocalListPage);
           }
         }
       )
     } else {
-      this.model.ErrorUsername = this.model.Username == "" ? this.resources.find(x => x.Key == "UsernameEmpty").Value : "";
-      this.model.ErrorPassword = this.model.Password == "" ? this.resources.find(x => x.Key == "PasswordEmpty").Value : "";
+      this.model.ErrorUsername = this.model.Username == "" ? params.Resources.find(x => x.Key == "UsernameEmpty").Value : "";
+      this.model.ErrorPassword = this.model.Password == "" ? params.Resources.find(x => x.Key == "PasswordEmpty").Value : "";
     }
   }
 

@@ -28,8 +28,10 @@ export class MyApp {
     this.GetAllResources();
     this.storeService.Get("user").then(
       user => {
-        if(user != null)
+        if(user != null) {
+          params.User = user;
           this.rootPage = VocalListPage;
+        }
         else
           this.rootPage = HomePage;
       }
@@ -68,6 +70,7 @@ export class MyApp {
             resp => {
               let response = resp.json() as Response<Array<ResourceResponse>>;
               this.storeService.Set("resource", response.Data);
+              params.Resources = response.Data;
             }
           )
         }

@@ -53,27 +53,32 @@ namespace Vocal.DAL
             return user;
         }
 
-        public void SaveSign(Sign sign)
-        {
-            var collection = _db.GetCollection<Sign>(Settings.Default.CollectionSign);
-            collection.InsertOne(sign);
-        }
-
-        public Sign GetSignature(string sign)
-        {
-            var collection = _db.GetCollection<Sign>(Settings.Default.CollectionSign);
-            return collection.Find(x => x.Id == sign).SingleOrDefault();
-        }
-
-        public void AddUser(User user)
+        public void SaveSign(string userId, string sign)
         {
             var collection = _db.GetCollection<User>(Settings.Default.CollectionUser);
-            collection.InsertOne(user);
+            var user = collection.Find(x => x.Id == userId).SingleOrDefault();
+            if(user != null)
+            {
+                user.Signs.Add(sign);
+                collection.ReplaceOne(x => x.Id == userId, user);
+            }
+        }
+
+        public bool GetSignature(string sign)
+        {
+            var collection = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            return collection.Find(x => x.Signs.Contains(sign)).Any();
         }
 
         #endregion
 
         #region User 
+        
+        public void AddUser(User user)
+        {
+            var collection = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            collection.InsertOne(user);
+        }
 
         public User GetUserById(string id)
         {
@@ -148,6 +153,7 @@ namespace Vocal.DAL
             if (user != null)
             {
                 List<Friend> friends = Bind_UsersToFriends(users);
+                friends.RemoveAll(x => user.Friends.Select(y => y.Id).Contains(x.Id));
                 user.Friends.AddRange(friends);
                 db.ReplaceOne(x => x.Id == userId, user);
                 success = true;
