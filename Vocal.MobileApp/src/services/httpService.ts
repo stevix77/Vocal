@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { url } from './url';
 import 'rxjs/add/operator/map';
 import { Http, Headers, RequestOptions } from '@angular/http';
 
@@ -8,22 +7,24 @@ import { Http, Headers, RequestOptions } from '@angular/http';
  * @class
  */
 @Injectable()
-export class UserService {
+export class HttpService {
 
   constructor(private http: Http) {
   }
 
-  IsExistsUsername(username: string, request: any) {
+  Post<T>(url: string, obj: T, cookie?: any) {
     let headers = new Headers({ 'Content-Type': 'application/json' });
+    if(cookie != null)
+      headers.set('Set-Cookie', cookie)
     let options = new RequestOptions({ headers: headers });
-    var response = this.http.post(url.IsExistsUsername(), request, options);
+    var response = this.http.post(url, obj, options);
     return response;
   }
 
-  IsExistsEmail(email: string, request: any) {
+  Get(url: string) {
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
-    var response = this.http.post(url.IsExistsEmail(), request, options);
+    var response = this.http.get(url, options);
     return response;
   }
 

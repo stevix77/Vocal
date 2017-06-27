@@ -1,15 +1,17 @@
 import { Component, OnInit } from "@angular/core";
 import { NavParams, NavController } from 'ionic-angular';
-import { AuthService } from '../../services/authService';
+import {url} from '../../services/url';
+import {HttpService} from '../../services/httpService';
 import {params} from '../../services/params';
 import { Response } from '../../models/Response';
+import { PasswordRequest } from '../../models/request/passwordRequest';
 import { PasswordForgotValidationPage } from '../password-forgot-validation/password-forgot-validation';
 import { ToastController } from 'ionic-angular';
 
 @Component({
   selector: "app-passwordForgot",
   templateUrl: "./passwordForgot.html",
-  providers: [AuthService]
+  providers: [HttpService]
 })
 
 export class PasswordForgotPage implements OnInit {
@@ -19,7 +21,7 @@ export class PasswordForgotPage implements OnInit {
     ErrorEmail: ""
   }
 
-  constructor(private navCtrl: NavController, private navParams: NavParams, private authService: AuthService, private toastCtrl: ToastController) { 
+  constructor(private navCtrl: NavController, private navParams: NavParams, private httpService: HttpService, private toastCtrl: ToastController) { 
   }
 
   ngOnInit() {
@@ -27,11 +29,11 @@ export class PasswordForgotPage implements OnInit {
   }
 
   Submit() {
-    var request = {
+    var request: PasswordRequest = {
       Lang: params.Lang,
       Email: this.model.Email
     };
-    var response = this.authService.askPasswordForgot(request);
+    var response = this.httpService.Post<PasswordRequest>(url.AskPwd(), request);
     response.subscribe(
       resp => {
           var data = resp.json() as Response<any>;

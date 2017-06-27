@@ -4,14 +4,10 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
-import { ListPage } from '../pages/list/list';
 import { VocalListPage } from '../pages/vocal-list/vocal-list'
-import { PasswordForgotPage } from '../pages/passwordForgot/passwordForgot';
-import { Connexion } from '../pages/connexion/connexion';
-import { Inscription } from '../pages/inscription/inscription';
-import { InscriptionBirthdayPage } from '../pages/inscription-birthday/inscription-birthday';
 import { StoreService } from '../services/storeService';
-import { ResourceService } from '../services/resourceService';
+import {url} from '../services/url';
+import {HttpService} from '../services/httpService';
 import { Globalization } from '@ionic-native/globalization';
 import {params} from '../services/params';
 import {Response} from '../models/response';
@@ -20,7 +16,7 @@ import {ResourceResponse} from '../models/Response/resourceResponse';
 
 @Component({
   templateUrl: 'app.html',
-  providers: [StoreService, ResourceService, Globalization]
+  providers: [StoreService, HttpService, Globalization]
 })
 export class VocalApp {
   @ViewChild(Nav) nav: Nav;
@@ -28,12 +24,14 @@ export class VocalApp {
 
   pages: Array<{title: string, component: any}>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private storeService: StoreService, private resourceService: ResourceService, private globalization: Globalization) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private storeService: StoreService, private httpService: HttpService, private globalization: Globalization) {
     this.GetAllResources();
     this.storeService.Get("user").then(
       user => {
-        if(user != null)
+        if(user != null) {
+          params.User = user;
           this.rootPage = VocalListPage;
+        }
         else
           this.rootPage = HomePage;
       }
@@ -46,12 +44,7 @@ export class VocalApp {
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: HomePage },
-      { title: 'List', component: ListPage },
-      { title: 'PasswordForgot', component: PasswordForgotPage },
-      { title: 'Connexion', component: Connexion },
-      { title: 'Inscription', component: Inscription },
-      { title: 'InscriptionBirthday', component: InscriptionBirthdayPage }
+      { title: 'Home', component: HomePage }
     ];
 
   }
@@ -73,10 +66,11 @@ export class VocalApp {
       this.storeService.Get("resource").then(
       resource => {
         if(resource == null) {
-          this.resourceService.GetListResources(params.Lang).subscribe(
+          this.httpService.Post(url.GetListResources(params.Lang), null).subscribe(
             resp => {
               let response = resp.json() as Response<Array<ResourceResponse>>;
               this.storeService.Set("resource", response.Data);
+              params.Resources = response.Data;
             }
           )
         }

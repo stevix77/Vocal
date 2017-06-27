@@ -2,13 +2,15 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { InscriptionFindFriendsPage } from '../inscription-find-friends/inscription-find-friends';
 import { StoreService } from '../../services/storeService';
-import { AuthService } from '../../services/authService';
+import {url} from '../../services/url';
+import {HttpService} from '../../services/httpService';
 import { RegisterRequest } from '../../models/request/registerRequest';
 import { ResourceResponse } from '../../models/response/resourceResponse';
 import { UserResponse } from '../../models/response/userResponse';
 import { Response } from '../../models/response';
 import { AppUser } from '../../models/AppUser';
 import {functions} from '../../services/functions';
+import { params } from "../../services/params";
 
 /**
  * Generated class for the InscriptionPasswordPage page.
@@ -20,25 +22,19 @@ import {functions} from '../../services/functions';
 @Component({
   selector: 'page-inscription-password',
   templateUrl: 'inscription-password.html',
-  providers: [AuthService]
+  providers: [HttpService]
 })
 export class InscriptionPasswordPage {
 
   registerRequest: RegisterRequest;
-  resources: Array<ResourceResponse>;
+  
   model = {
     Password: "",
     ErrorPassword: ""
   }
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService, private authService: AuthService) {
-    this.storeService.Get('resource').then(
-      r => {
-        if(r != null) {
-          this.resources = r;
-        }
-      }
-    )
+  constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService, private httpService: HttpService) {
+    
   }
 
   submit(){
@@ -46,7 +42,7 @@ export class InscriptionPasswordPage {
       let pwd = functions.Crypt(this.model.Password);
        this.registerRequest = this.navParams.get('registerRequest');
        this.registerRequest.Password = pwd;
-       this.authService.Register(this.registerRequest).subscribe(
+       this.httpService.Post<RegisterRequest>(url.Register(), this.registerRequest).subscribe(
          resp => {
            let response = resp.json() as Response<UserResponse>;
            if(response.HasError) {
@@ -60,6 +56,7 @@ export class InscriptionPasswordPage {
             appUser.Username = response.Data.Username;
             appUser.Token = functions.GenerateToken(response.Data.Username, this.model.Password);
             this.storeService.Set("user", appUser);
+            params.User = appUser;
             this.navCtrl.push(InscriptionFindFriendsPage);
            }
          }

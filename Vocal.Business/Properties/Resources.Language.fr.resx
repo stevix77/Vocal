@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AskPassword" xml:space="preserve">
-    <value>Valider pour modifier mot de passe</value>
+    <value>Cliquez sur le lien pour modifier mot de passe {0}</value>
   </data>
   <data name="AskPasswordSubject" xml:space="preserve">
     <value>Mot de passe oublié ?</value>

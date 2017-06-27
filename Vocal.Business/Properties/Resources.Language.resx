@@ -118,16 +118,28 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AskPassword" xml:space="preserve">
-    <value>Valider pour modifier mot de passe</value>
+    <value>Cliquez sur le lien pour modifier mot de passe &lt;a target="_blank" href="{0}"&gt;{1}&lt;/a&gt;</value>
   </data>
   <data name="AskPasswordSubject" xml:space="preserve">
     <value>Mot de passe oublié ?</value>
+  </data>
+  <data name="InvalidToken" xml:space="preserve">
+    <value>Ce token n'est pas valide</value>
   </data>
   <data name="MailExisting" xml:space="preserve">
     <value>Cet email existe déja</value>
   </data>
   <data name="MailNotExisting" xml:space="preserve">
     <value>Cet email n'existe pas</value>
+  </data>
+  <data name="PasswordRegex" xml:space="preserve">
+    <value>Le mot de passe n'est pas au bon format</value>
+  </data>
+  <data name="PasswordRequired" xml:space="preserve">
+    <value>Mot de passe requis</value>
+  </data>
+  <data name="ResetPasswordSuccess" xml:space="preserve">
+    <value>Mot de passe bien modifié</value>
   </data>
   <data name="TechnicalError" xml:space="preserve">
     <value>Erreur technique, réessayez plus tard</value>
@@ -143,5 +155,8 @@
   </data>
   <data name="UsernameExisting" xml:space="preserve">
     <value>Ce nom d'utilisateur existe déjà</value>
+  </data>
+  <data name="UsernameNotExisting" xml:space="preserve">
+    <value>Ce nom d'utilisateur n'existe pas</value>
   </data>
 </root>

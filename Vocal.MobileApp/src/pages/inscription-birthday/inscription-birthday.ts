@@ -24,16 +24,8 @@ export class InscriptionBirthdayPage {
     ErrorBirthdayDate: ""
   }
   registerRequest: RegisterRequest;
-  resources: Array<ResourceResponse>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService) {
-    this.storeService.Get('resource').then(
-      r => {
-        if(r != null) {
-          this.resources = r;
-        }
-      }
-    )
+  constructor(public navCtrl: NavController, public navParams: NavParams, public datePicker: DatePicker, private storeService: StoreService) {
   }
 
   submit(){

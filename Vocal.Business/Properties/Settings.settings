@@ -35,5 +35,11 @@
     <Setting Name="MailPassword" Type="System.String" Scope="Application">
       <Value Profile="(Default)">44509b4d06feb6</Value>
     </Setting>
+    <Setting Name="UrlUpdatePassword" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://localhost:8017/account/resetpassword</Value>
+    </Setting>
+    <Setting Name="ValidityToken" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
