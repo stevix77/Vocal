@@ -4,7 +4,6 @@ import { InscriptionBirthdayPage } from '../inscription-birthday/inscription-bir
 import { StoreService } from '../../services/storeService';
 import { params } from '../../services/params';
 import { RegisterRequest } from '../../models/request/registerRequest';
-import { ResourceResponse } from '../../models/response/ResourceResponse';
 
 
 @Component({
