@@ -18,8 +18,6 @@ namespace Vocal.Business
 {
     public static class AuthentificationBusiness
     {
-        private static Repository _repo = new Repository();
-
         public static Response<UserResponse> Login(string login, string pwd, string lang)
         {
             Response<UserResponse> response = new Response<UserResponse>();
@@ -27,7 +25,7 @@ namespace Vocal.Business
             {
                 LogManager.LogDebug(login, pwd, lang);
                 string password = Hash.getHash(pwd);
-                var user = _repo.Login(login, password);
+                var user = Repository.Instance.Login(login, password);
                 if (user != null)
                     response.Data = Bind.Bind_User(user);
                 else
@@ -63,11 +61,10 @@ namespace Vocal.Business
                 {
                     var pwd = Hash.getHash(password);
                     var newToken = Hash.getHash(string.Format(Settings.Default.FormatToken, username, password, Settings.Default.Salt));
-                    var user = _repo.GetUserByUsername(username);
+                    var user = Repository.Instance.GetUserByUsername(username);
                     user.Token = newToken;
                     user.Password = pwd;
-                    user.Reset.IsActive = false;
-                    _repo.UpdateUser(user);
+                    Repository.Instance.UpdateUser(user);
                     response.Data = true;
                 }
                 else
@@ -97,7 +94,7 @@ namespace Vocal.Business
             LogManager.LogDebug(email, username, password, firstname, lastname, birthday, lang);
             try
             {
-                var user = _repo.GetUserByEmail(email);
+                var user = Repository.Instance.GetUserByEmail(email);
                 if (user != null)
                     throw new CustomException(Resource.GetValue(lang, Resource.MailExisting));
                 else
@@ -118,7 +115,7 @@ namespace Vocal.Business
                         Firstname = firstname,
                         Lastname = lastname
                     };
-                    _repo.AddUser(user);
+                    Repository.Instance.AddUser(user);
                     response.Data = Bind.Bind_User(user);
                 }
             }
@@ -147,7 +144,7 @@ namespace Vocal.Business
             var response = new Response<bool>();
             try
             {
-                var user = _repo.GetUserByEmail(email);
+                var user = Repository.Instance.GetUserByEmail(email);
                 if (user == null)
                     throw new CustomException(Resources_Language.MailNotExisting);
                 else
@@ -160,7 +157,7 @@ namespace Vocal.Business
                     Task.Run(() =>
                     {
                         user.Reset = new ResetPassword { Token = token, ValidityDate = DateTime.Now.AddMinutes(Settings.Default.ValidityToken) };
-                        _repo.UpdateUser(user);
+                        Repository.Instance.UpdateUser(user);
                     });
                 }
             }
@@ -189,7 +186,7 @@ namespace Vocal.Business
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {
-                var user = _repo.GetUserByUsername(username);
+                var user = Repository.Instance.GetUserByUsername(username);
                 if (user != null)
                 {
                     if (user.Reset != null && user.Reset.IsActive && user.Reset.Token == token && user.Reset.ValidityDate.ToLocalTime() > DateTime.Now)

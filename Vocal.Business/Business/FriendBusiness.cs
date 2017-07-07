@@ -13,8 +13,6 @@ namespace Vocal.Business.Business
 {
     public static class FriendBusiness
     {
-        private static Repository _repo = new Repository();
-
         public static Response<List<UserResponse>> SearchFriends(List<string> emails, string lang)
         {
             var response = new Response<List<UserResponse>>();
@@ -22,7 +20,7 @@ namespace Vocal.Business.Business
             LogManager.LogDebug(emails, lang);
             try
             {
-                var list = _repo.SearchFriendsByEmails(emails);
+                var list = Repository.Instance.SearchFriendsByEmails(emails);
                 response.Data = Binder.Bind.Bind_Users(list);
             }
             catch (TimeoutException tex)
@@ -50,7 +48,7 @@ namespace Vocal.Business.Business
             LogManager.LogDebug(userId, ids, lang);
             try
             {
-                response.Data = _repo.AddFriends(userId, ids);
+                response.Data = Repository.Instance.AddFriends(userId, ids);
             }
             catch (TimeoutException tex)
             {

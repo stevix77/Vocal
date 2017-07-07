@@ -19,9 +19,7 @@ namespace Vocal.Business.Binder
                 Email = user.Email,
                 Id = user.Id,
                 Picture = user.Picture,
-                Username = user.Username,
-                Firstname = user.Firstname,
-                Lastname = user.Lastname
+                Username = user.Username
             };
         }
 
@@ -41,6 +39,25 @@ namespace Vocal.Business.Binder
                 });
             }
             return users;
+        }
+
+        internal static List<TalkResponse> Bind_Talks(List<Talk> list, string userId)
+        {
+            var response = new List<TalkResponse>();
+            if(list.Count > 0)
+                foreach(var item in list)
+                {
+                    var message = item.Messages.LastOrDefault();
+                    response.Add(new TalkResponse
+                    {
+                        Id = item.Id,
+                        Name = item.VocalName,
+                        Users = Bind_Users(item.Users),
+                        DateLastMessage = message.Date,
+                        HasNewMessage = !message.Users.SingleOrDefault(x => x.UserId == userId).ListenDate.HasValue
+                    });
+                }
+            return response;
         }
     }
 }

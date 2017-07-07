@@ -12,9 +12,6 @@ namespace Vocal.Business.Security
 {
     public static class Authorize
     {
-        private static Repository _repo = new Repository();
-
-        
         /// <summary>
         /// Check if it's token's id
         /// </summary>
@@ -31,7 +28,7 @@ namespace Vocal.Business.Security
                 token = CacheManager.GetCache<string>($"{Settings.Default.CacheKeyToken}_{id}");
                 if (string.IsNullOrEmpty(token))
                 {
-                    var user = _repo.GetUserById(id);
+                    var user = Repository.Instance.GetUserById(id);
                     if (user != null)
                     {
                         token = user.Token;
@@ -42,15 +39,20 @@ namespace Vocal.Business.Security
                 if (sign.Equals(signature))
                 {
                     authorize = true;
-                    Task.Run(() => _repo.SaveSign(id, sign));
+                    Task.Run(() => SaveSignature(id, sign));
                 }
             }
             return authorize;
         }
 
+        private static void SaveSignature(string sign, string userId)
+        {
+            Repository.Instance.SaveSign(userId, sign);
+        }
+
         private static bool IsSignatureExist(string sign)
         {
-            var exists = _repo.GetSignature(sign);
+            var exists = Repository.Instance.GetSignature(sign);
             return exists;
         }
     }

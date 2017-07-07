@@ -13,15 +13,13 @@ namespace Vocal.Business.Business
 {
     public static class UserBusiness
     {
-        private static Repository _repo = new Repository();
-
         public static Response<bool> IsExistsUsername(string username, string lang)
         {
             var response = new Response<bool>();
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {
-                var user = _repo.GetUserByUsername(username);
+                var user = Repository.Instance.GetUserByUsername(username);
                 if (user != null)
                 {
                     response.Data = true;
@@ -52,7 +50,7 @@ namespace Vocal.Business.Business
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {
-                var user = _repo.GetUserByEmail(email);
+                var user = Repository.Instance.GetUserByEmail(email);
                 if (user != null)
                 {
                     response.Data = true;

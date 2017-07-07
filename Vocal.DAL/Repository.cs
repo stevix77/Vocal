@@ -11,8 +11,23 @@ using Vocal.Model.DB;
 
 namespace Vocal.DAL
 {
-    public class Repository
+    public sealed class Repository
     {
+        private Repository()
+        {
+        }
+
+        static Repository() { }
+
+        private static readonly Repository _instance = new Repository();
+        public static Repository Instance
+        {
+            get
+            {
+                return _instance;
+            }
+        }
+
         private static MongoClient _client = GetClient();
         private static IMongoDatabase _db = GetDatabase();
 
@@ -57,7 +72,7 @@ namespace Vocal.DAL
         {
             var collection = _db.GetCollection<User>(Settings.Default.CollectionUser);
             var user = collection.Find(x => x.Id == userId).SingleOrDefault();
-            if(user != null)
+            if (user != null)
             {
                 user.Signs.Add(sign);
                 collection.ReplaceOne(x => x.Id == userId, user);
@@ -73,7 +88,7 @@ namespace Vocal.DAL
         #endregion
 
         #region User 
-        
+
         public void AddUser(User user)
         {
             var collection = _db.GetCollection<User>(Settings.Default.CollectionUser);
@@ -100,7 +115,7 @@ namespace Vocal.DAL
             var user = db.Find(x => x.Username == username).SingleOrDefault();
             return user;
         }
-        
+
         public void UpdateUser(User user)
         {
             var db = _db.GetCollection<User>(Settings.Default.CollectionUser);
@@ -108,21 +123,7 @@ namespace Vocal.DAL
         }
 
         #endregion
-
-        #region Vocal
-
-        public List<Talk> GetListTalk(string userId)
-        {
-            var db = _db.GetCollection<Talk>(Settings.Default.CollectionTalk);
-            var list = db.Find(x => x.Users.Exists(y => y.Id == userId))
-                        .SortByDescending(x => x.Messages.Select(y => y.Date))
-                        .Project(x => new Talk { Id = x.Id, VocalName = x.VocalName, Users = x.Users, Messages = x.Messages.OrderByDescending(y => y.Date).Take(1).ToList()})
-                        .ToList();
-            return list;
-        }
-
-        #endregion
-
+        
         #region Friends
 
         public List<User> SearchFriendsByEmails(List<string> emails)
@@ -161,6 +162,28 @@ namespace Vocal.DAL
             return success;
         }
 
+        #endregion
+
+        #region Talk
+
+        //public List<Talk> GetTalks(string userId)
+        //{
+        //    var collection = _db.GetCollection<Talk>(Settings.Default.CollectionTalk);
+        //    var query = new FilterDefinitionBuilder<Talk>().In("Users._id", new[] { userId });
+        //    var list = collection.Find(query).ToList();
+        //    //var list = collection.Find(x => x.Users.Any(y => y.Id == userId)).ToList();
+        //    return list;
+        //}
+
+        public List<Talk> GetListTalk(string userId)
+        {
+            var db = _db.GetCollection<Talk>(Settings.Default.CollectionTalk);
+            var list = db.Find(x => x.Users.Exists(y => y.Id == userId))
+                        .Project(x => new Talk { Id = x.Id, VocalName = x.VocalName, Users = x.Users, Messages = x.Messages.OrderByDescending(y => y.Date).Take(1).ToList() })
+                        .SortByDescending(x => x.Messages.Select(y => y.Date))
+                        .ToList();
+            return list;
+        }
 
         #endregion
 
