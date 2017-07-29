@@ -10,7 +10,7 @@ import { StoreService } from "../../services/storeService";
 import { AddFriendsRequest } from "../../models/request/addFriendsRequest";
 import { UserResponse } from '../../models/response/userResponse';
 import { Response } from '../../models/response';
-import { MediaPlugin } from 'ionic-native';
+import { AudioRecorder } from '../../services/audiorecorder';
 
 
 
@@ -24,12 +24,11 @@ import { MediaPlugin } from 'ionic-native';
 @Component({
   selector: 'page-vocal-list',
   templateUrl: 'vocal-list.html',
-  providers: [HttpService, CookieService]
+  providers: [HttpService, CookieService, AudioRecorder]
 })
 export class VocalListPage {
-  media: MediaPlugin = new MediaPlugin('../Library/NoCloud/recording.wav');
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, private httpService: HttpService, private cookieService: CookieService, private storeService: StoreService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public audioRecorder: AudioRecorder, private httpService: HttpService, private cookieService: CookieService, private storeService: StoreService) {
     //this.searchFriends(['s.valentin77@gmail.com', 'tik@tik.fr']);
     //this.addFriends(["000000-f1e6-4c976-9a55-7525496145s", "599fc814-8733-4284-a606-de34c9845348"]);
   }
@@ -41,27 +40,34 @@ export class VocalListPage {
     document.getElementById('record-vocal').addEventListener('touchend', oEvt => this.stopRecording());
   }
 
+  startTimer() {
+    console.log('start timer');
+  }
+
   startRecording() {
-    try {
-      this.media.startRecord();
-    }
-    catch (e) {
-      this.showAlert('Could not start recording.');
-    }
+    console.log('start recording');
+    this.startTimer();
+    // try {
+    //   this.audioRecorder.startRecording();
+    // }
+    // catch (e) {
+    //   this.showAlert('Could not start recording.');
+    // }
   }
 
   stopRecording() {
-    try {
-      this.media.stopRecord();
-    }
-    catch (e) {
-      this.showAlert('Could not stop recording.');
-    }
+    console.log('stop recording');
+    // try {
+    //   this.audioRecorder.stopRecording();
+    // }
+    // catch (e) {
+    //   this.showAlert('Could not stop recording.');
+    // }
   }
 
   startPlayback() {
     try {
-      this.media.play();
+      this.audioRecorder.startPlayback();
     }
     catch (e) {
       this.showAlert('Could not play recording.');
@@ -70,7 +76,7 @@ export class VocalListPage {
 
   stopPlayback() {
     try {
-      this.media.stop();
+      this.audioRecorder.stopPlayback();
     }
     catch (e) {
       this.showAlert('Could not stop playing recording.');
