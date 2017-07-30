@@ -52,6 +52,7 @@ export class VocalListPage {
 
   stopRecording() {
     console.log('stop recording');
+    this.audioRecorder.stopRecording();
     // try {
     //   this.audioRecorder.stopRecording();
     // }

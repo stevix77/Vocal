@@ -5,6 +5,7 @@ import { Timer } from './timer';
 @Injectable()
 export class AudioRecorder {
   mediaPlugin: MediaPlugin = null;
+  timer: Timer;
   
   get MediaPlugin(): MediaPlugin {
     if (this.mediaPlugin == null) {
@@ -15,12 +16,13 @@ export class AudioRecorder {
   }
 
   startRecording() {
-    let timer = new Timer();
-    timer.startTimer();
-    //this.MediaPlugin.startRecord();
+    this.timer = new Timer();
+    this.timer.startTimer();
+    this.MediaPlugin.startRecord();
   }
 
   stopRecording() {
+    this.timer.stopTimer();
     this.MediaPlugin.stopRecord();
   }
 
