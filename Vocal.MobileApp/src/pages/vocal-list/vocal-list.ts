@@ -37,16 +37,11 @@ export class VocalListPage {
     console.log('ionViewDidLoad VocalListPage');
 
     document.getElementById('record-vocal').addEventListener('touchstart', oEvt => this.startRecording());
-    document.getElementById('record-vocal').addEventListener('touchend', oEvt => this.stopRecording());
-  }
-
-  startTimer() {
-    console.log('start timer');
+    //document.getElementById('record-vocal').addEventListener('touchend', oEvt => this.stopRecording());
   }
 
   startRecording() {
-    console.log('start recording');
-    this.startTimer();
+    this.audioRecorder.startRecording();
     // try {
     //   this.audioRecorder.startRecording();
     // }

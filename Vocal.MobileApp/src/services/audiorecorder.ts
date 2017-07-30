@@ -1,10 +1,11 @@
 import { MediaPlugin } from 'ionic-native';
 import { Injectable } from '@angular/core';
+import { Timer } from './timer';
 
 @Injectable()
 export class AudioRecorder {
   mediaPlugin: MediaPlugin = null;
-
+  
   get MediaPlugin(): MediaPlugin {
     if (this.mediaPlugin == null) {
       this.mediaPlugin = new MediaPlugin('../Library/NoCloud/recording.wav');
@@ -14,7 +15,9 @@ export class AudioRecorder {
   }
 
   startRecording() {
-    this.MediaPlugin.startRecord();
+    let timer = new Timer();
+    timer.startTimer();
+    //this.MediaPlugin.startRecord();
   }
 
   stopRecording() {
@@ -28,4 +31,5 @@ export class AudioRecorder {
   stopPlayback() {
     this.MediaPlugin.stop();
   }
+
 }
