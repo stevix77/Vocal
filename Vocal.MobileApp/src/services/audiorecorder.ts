@@ -18,12 +18,12 @@ export class AudioRecorder {
   startRecording() {
     this.timer = new Timer();
     this.timer.startTimer();
-    this.MediaPlugin.startRecord();
+    //this.MediaPlugin.startRecord();
   }
 
   stopRecording() {
     this.timer.stopTimer();
-    this.MediaPlugin.stopRecord();
+    //this.MediaPlugin.stopRecord();
   }
 
   startPlayback() {

@@ -5,22 +5,22 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar>
-    <ion-title>VocalList</ion-title>
+    <ion-title>My Vocals</ion-title>
   </ion-navbar>
-
 </ion-header>
 
 
-<ion-content padding>
+<ion-content center padding>
 
-<pre>Vocal List</pre>
+  <button ion-button icon-only (click)="presentPopover()">
+    <ion-icon name="more"></ion-icon>
+  </button>
 
-
-<div id="timer"></div>
-<ion-fab center bottom>
-  <button ion-fab id="record-vocal"><ion-icon name="add"></ion-icon></button>
-</ion-fab>
+  <div class="timer" data-timer></div>
+  <ion-fab center bottom>
+    <button ion-fab id="record-vocal"><ion-icon name="mic"></ion-icon></button>
+    <button ion-fab (click)="presentPopoverRecord()"><ion-icon name="mic"></ion-icon></button>
+  </ion-fab>
 
 </ion-content>

@@ -30,6 +30,6 @@ export class Timer{
   }
 
   updateTimer() {
-    document.getElementById('timer').innerHTML = this.getTime();
+    document.querySelector('[data-timer]').innerHTML = this.getTime();
   }
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, PopoverController, ViewController } from 'ionic-angular';
 import { SearchFriendsRequest } from "../../models/request/searchFriendsRequest";
 import { params } from "../../services/params";
 import { url } from "../../services/url";
@@ -11,6 +11,8 @@ import { AddFriendsRequest } from "../../models/request/addFriendsRequest";
 import { UserResponse } from '../../models/response/userResponse';
 import { Response } from '../../models/response';
 import { AudioRecorder } from '../../services/audiorecorder';
+import { PopoverRecordPage } from '../../pages/popover-record/popover-record';
+import { PopoverPage } from '../../pages/popover/popover';
 
 
 
@@ -28,7 +30,14 @@ import { AudioRecorder } from '../../services/audiorecorder';
 })
 export class VocalListPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public audioRecorder: AudioRecorder, private httpService: HttpService, private cookieService: CookieService, private storeService: StoreService) {
+  constructor(public navCtrl: NavController, 
+    public navParams: NavParams, 
+    public alertCtrl: AlertController, 
+    public audioRecorder: AudioRecorder,
+    public popoverCtrl: PopoverController,
+    private httpService: HttpService, 
+    private cookieService: CookieService, 
+    private storeService: StoreService) {
     //this.searchFriends(['s.valentin77@gmail.com', 'tik@tik.fr']);
     //this.addFriends(["000000-f1e6-4c976-9a55-7525496145s", "599fc814-8733-4284-a606-de34c9845348"]);
   }
@@ -40,8 +49,19 @@ export class VocalListPage {
     //document.getElementById('record-vocal').addEventListener('touchend', oEvt => this.stopRecording());
   }
 
+  presentPopover() {
+    let popover = this.popoverCtrl.create(PopoverPage);
+    popover.present();
+  }
+  presentPopoverRecord() {
+    let popover = this.popoverCtrl.create(PopoverRecordPage);
+    popover.present();
+  }
+
   startRecording() {
-    this.audioRecorder.startRecording();
+    console.log('startRecording');
+    // this.presentPopover();
+    //this.audioRecorder.startRecording();
     // try {
     //   this.audioRecorder.startRecording();
     // }
@@ -87,6 +107,4 @@ export class VocalListPage {
     });
     alert.present();
   }
-
-  
 }
