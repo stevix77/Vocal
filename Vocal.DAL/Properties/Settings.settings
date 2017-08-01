@@ -23,5 +23,11 @@
     <Setting Name="CollectionTalk" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Talk</Value>
     </Setting>
+    <Setting Name="DefaultFullSharedAccessSignature" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Endpoint=sb://vocalnotif.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=DTSTAQTpFmB8KzmE7n496TNWUEeInaxLGtATc7Cl9Hk=</Value>
+    </Setting>
+    <Setting Name="Hubname" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">vocal</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

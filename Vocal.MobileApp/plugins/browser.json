@@ -22,6 +22,12 @@
         "cordova-plugin-globalization": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-ms-azure-mobile-apps": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
         "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
@@ -33,10 +39,16 @@
         },
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "phonegap-plugin-push": {
+            "PACKAGE_NAME": "io.ionic.starter"
         }
     },
     "dependent_plugins": {
         "cordova-plugin-compat": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-sqlite-storage": {
             "PACKAGE_NAME": "io.ionic.starter"
         }
     }

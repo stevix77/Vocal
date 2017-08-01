@@ -19,5 +19,6 @@ namespace Vocal.Model.DB
         public List<Friend> Friends { get; set; } = new List<Friend>();
         public ResetPassword Reset { get; set; }
         public List<string> Signs { get; set; } = new List<string>();
+        public List<Device> Devices { get; set; } = new List<Device>();
     }
 }

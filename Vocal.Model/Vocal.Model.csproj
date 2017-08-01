@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Response.cs" />
+    <Compile Include="DB\Device.cs" />
     <Compile Include="DB\ResetPassword.cs" />
     <Compile Include="DB\Sign.cs" />
     <Compile Include="DB\Friend.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Request\AddFriendsRequest.cs" />
     <Compile Include="Request\CookieRequest.cs" />
     <Compile Include="Request\LoginRequest.cs" />
+    <Compile Include="Request\NotificationRegisterRequest.cs" />
     <Compile Include="Request\PasswordRequest.cs" />
     <Compile Include="Request\RegisterRequest.cs" />
     <Compile Include="Request\Request.cs" />

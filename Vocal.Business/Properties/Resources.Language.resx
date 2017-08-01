@@ -141,8 +141,14 @@
   <data name="ResetPasswordSuccess" xml:space="preserve">
     <value>Mot de passe bien modifié</value>
   </data>
+  <data name="TalkingMessage" xml:space="preserve">
+    <value>est en train de parler</value>
+  </data>
   <data name="TechnicalError" xml:space="preserve">
     <value>Erreur technique, réessayez plus tard</value>
+  </data>
+  <data name="TextNotifAddFriend" xml:space="preserve">
+    <value>vous a ajouté dans sa liste d'amis</value>
   </data>
   <data name="TimeoutError" xml:space="preserve">
     <value>Délai d'attente dépassé</value>

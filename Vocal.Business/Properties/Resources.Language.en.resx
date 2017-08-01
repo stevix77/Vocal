@@ -135,6 +135,9 @@
   <data name="TechnicalError" xml:space="preserve">
     <value />
   </data>
+  <data name="TextNotifAddFriend" xml:space="preserve">
+    <value>added you in the friend list</value>
+  </data>
   <data name="TimeoutError" xml:space="preserve">
     <value />
   </data>

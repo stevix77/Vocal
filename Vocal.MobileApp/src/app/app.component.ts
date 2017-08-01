@@ -9,23 +9,24 @@ import { StoreService } from '../services/storeService';
 import {url} from '../services/url';
 import {HttpService} from '../services/httpService';
 import { Globalization } from '@ionic-native/globalization';
+import { Device } from '@ionic-native/device';
 import {params} from '../services/params';
 import {Response} from '../models/response';
 import {ResourceResponse} from '../models/Response/resourceResponse';
-
-
+// import { WindowsAzure } from 'cordova-plugin-ms-azure-mobile-apps';
+declare var WindowsAzure: any;
 @Component({
   templateUrl: 'app.html',
-  providers: [StoreService, HttpService, Globalization]
+  providers: [StoreService, HttpService, Globalization, Device]
 })
 export class VocalApp {
   @ViewChild(Nav) nav: Nav;
   rootPage: any;
-
+  client : any;
   pages: Array<{title: string, component: any}>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private storeService: StoreService, private httpService: HttpService, private globalization: Globalization) {
-    this.GetAllResources();
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private storeService: StoreService, private httpService: HttpService, private globalization: Globalization, private device: Device) {
+    
     this.storeService.Get("user").then(
       user => {
         if(user != null) {
@@ -39,7 +40,7 @@ export class VocalApp {
       console.log(error);
       this.rootPage = HomePage;
     });
-    this.SetLanguage();
+    
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -49,37 +50,37 @@ export class VocalApp {
 
   }
 
-    SetLanguage() {
-      this.globalization.getPreferredLanguage()
-      .then(res => {
-        console.log(res);
-        params.Lang = res.value;
-      })
-      .catch(e => {
-        console.log(e)
-        console.log(navigator.language);
-        params.Lang = navigator.language;
-      });
-    }
+  SetLanguage() {
+    this.globalization.getPreferredLanguage()
+    .then(res => {
+      console.log(res);
+      params.Lang = res.value;
+    })
+    .catch(e => {
+      console.log(e)
+      console.log(navigator.language);
+      params.Lang = navigator.language;
+    });
+  }
 
-    GetAllResources() {
-      this.storeService.Get("resource").then(
-      resource => {
-        if(resource == null) {
-          this.httpService.Post(url.GetListResources(params.Lang), null).subscribe(
-            resp => {
-              let response = resp.json() as Response<Array<ResourceResponse>>;
-              this.storeService.Set("resource", response.Data);
-              params.Resources = response.Data;
-            }
-          )
-        }
+  GetAllResources() {
+    this.storeService.Get("resource").then(
+    resource => {
+      if(resource == null) {
+        this.httpService.Post(url.GetListResources(params.Lang), null).subscribe(
+          resp => {
+            let response = resp.json() as Response<Array<ResourceResponse>>;
+            this.storeService.Set("resource", response.Data);
+            params.Resources = response.Data;
+          }
+        )
       }
+    }
     ).catch(error => {
       console.log(error);
       this.rootPage = HomePage;
     });
-    }
+  }
 
   initializeApp() {
     this.platform.ready().then(() => {
@@ -87,7 +88,31 @@ export class VocalApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.GetAllResources();
+      this.SetLanguage();
+      this.SetPlatform();
+      this.client = new WindowsAzure.MobileServiceClient("https://appvocal.azurewebsites.net");
     });
+  }
+
+  SetPlatform() {
+    let platform = '';
+    switch(this.device.platform) {
+      case 'windows':
+        platform = 'mpns';
+        break;
+      case 'iOS':
+        platform = 'apns';
+        break;
+      case 'android':
+      case 'Android':
+        platform = 'gcm';
+        break;
+      default:
+        platform = 'wns';
+        break;
+    }
+    params.Platform = platform;
   }
 
   openPage(page) {

@@ -122,8 +122,17 @@ namespace Vocal.DAL
             db.ReplaceOne(x => x.Id == user.Id, user);
         }
 
+        public List<User> GetUsersById(List<string> userIds)
+        {
+            List<User> users = new List<User>();
+            var db = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, userIds);
+            users = db.Find(filter).ToList();
+            return users;
+        }
+
         #endregion
-        
+
         #region Friends
 
         public List<User> SearchFriendsByEmails(List<string> emails)

@@ -23,9 +23,7 @@ namespace Vocal.WebApi.Controllers
         [Route("login")]
         public Response<UserResponse> Login(LoginRequest request)
         {
-            var response = AuthentificationBusiness.Login(request.Login, request.Password, request.Lang);
-            return response;
-
+            return AuthentificationBusiness.Login(request.Login, request.Password, request.Lang);
         }
 
         [HttpPost]
