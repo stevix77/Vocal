@@ -10,7 +10,13 @@
         "cordova-plugin-console": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
+        "cordova-plugin-datepicker": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
         "cordova-plugin-device": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-globalization": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
         "cordova-plugin-splashscreen": {
@@ -25,16 +31,12 @@
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
-        "cordova-plugin-datepicker": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-globalization": {
+        "cordova-plugin-media": {
+            "MICROPHONE_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "io.ionic.starter"
         },
         "cordova-plugin-contacts": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-media": {
+            "CONTACTS_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "io.ionic.starter"
         }
     },

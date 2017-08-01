@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Package IgnorableNamespaces="uap mp" xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10">
     <Identity Name="io.ionic.starter" Publisher="CN=$username$" Version="0.0.1.0" />
-    <mp:PhoneIdentity PhoneProductId="e1a70850-681d-11e7-b684-7b9a885a4ca7" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+    <mp:PhoneIdentity PhoneProductId="e6e5c000-3bb7-11e7-951d-f7eccb87a6b1" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
     <Properties>
         <DisplayName>MyApp</DisplayName>
         <PublisherDisplayName>Ionic Framework Team</PublisherDisplayName>
@@ -27,13 +27,12 @@
             </uap:VisualElements>
             <uap:ApplicationContentUriRules>
                 <uap:Rule Match="http://ionic.local/*" Type="include" WindowsRuntimeAccess="all" />
-                <uap:Rule Match="http://192.168.1.21:8100" Type="include" WindowsRuntimeAccess="all" />
                 <uap:Rule Match="ms-appx-web:///" Type="include" WindowsRuntimeAccess="all" />
             </uap:ApplicationContentUriRules>
         </Application>
     </Applications>
     <Capabilities>
         <Capability Name="internetClient" />
-        <uap:Capability Name="contacts" />
+        <DeviceCapability Name="microphone" />
     </Capabilities>
 </Package>

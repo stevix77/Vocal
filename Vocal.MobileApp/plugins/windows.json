@@ -10,22 +10,7 @@
         "cordova-plugin-console": {
             "PACKAGE_NAME": "MyApp"
         },
-        "cordova-plugin-contacts": {
-            "PACKAGE_NAME": "MyApp"
-        },
-        "cordova-plugin-datepicker": {
-            "PACKAGE_NAME": "MyApp"
-        },
         "cordova-plugin-device": {
-            "PACKAGE_NAME": "MyApp"
-        },
-        "cordova-plugin-globalization": {
-            "PACKAGE_NAME": "MyApp"
-        },
-        "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "MyApp"
-        },
-        "cordova-plugin-ms-azure-mobile-apps": {
             "PACKAGE_NAME": "MyApp"
         },
         "cordova-plugin-splashscreen": {
@@ -40,7 +25,16 @@
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "MyApp"
         },
-        "phonegap-plugin-push": {
+        "cordova-plugin-datepicker": {
+            "PACKAGE_NAME": "MyApp"
+        },
+        "cordova-plugin-globalization": {
+            "PACKAGE_NAME": "MyApp"
+        },
+        "cordova-plugin-contacts": {
+            "PACKAGE_NAME": "MyApp"
+        },
+        "cordova-plugin-media": {
             "PACKAGE_NAME": "MyApp"
         }
     },
@@ -48,7 +42,7 @@
         "cordova-plugin-compat": {
             "PACKAGE_NAME": "MyApp"
         },
-        "cordova-sqlite-storage": {
+        "cordova-plugin-file": {
             "PACKAGE_NAME": "MyApp"
         }
     }
