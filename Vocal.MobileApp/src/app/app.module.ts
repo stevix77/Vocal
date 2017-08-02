@@ -19,8 +19,7 @@ import { InscriptionFindFriendsPage } from '../pages/inscription-find-friends/in
 
 import { VocalListPage } from '../pages/vocal-list/vocal-list';
 
-import { PopoverRecordPage } from '../pages/popover-record/popover-record';
-import { PopoverPage } from '../pages/popover/popover';
+import { ModalRecordPage } from '../pages/modal-record/modal-record';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -41,8 +40,7 @@ let pages = [
   InscriptionFindFriendsPage,
 
   VocalListPage,
-  PopoverRecordPage,
-  PopoverPage
+  ModalRecordPage
 ];
 
 @NgModule({

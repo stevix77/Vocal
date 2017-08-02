@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, PopoverController, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ModalController } from 'ionic-angular';
 import { SearchFriendsRequest } from "../../models/request/searchFriendsRequest";
 import { params } from "../../services/params";
 import { url } from "../../services/url";
@@ -11,9 +11,7 @@ import { AddFriendsRequest } from "../../models/request/addFriendsRequest";
 import { UserResponse } from '../../models/response/userResponse';
 import { Response } from '../../models/response';
 import { AudioRecorder } from '../../services/audiorecorder';
-import { PopoverRecordPage } from '../../pages/popover-record/popover-record';
-import { PopoverPage } from '../../pages/popover/popover';
-
+import { ModalRecordPage } from '../modal-record/modal-record';
 
 
 /**
@@ -34,7 +32,7 @@ export class VocalListPage {
     public navParams: NavParams, 
     public alertCtrl: AlertController, 
     public audioRecorder: AudioRecorder,
-    public popoverCtrl: PopoverController,
+    public modalCtrl: ModalController,
     private httpService: HttpService, 
     private cookieService: CookieService, 
     private storeService: StoreService) {
@@ -45,23 +43,19 @@ export class VocalListPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad VocalListPage');
 
-    document.getElementById('record-vocal').addEventListener('touchstart', oEvt => this.startRecording());
-    //document.getElementById('record-vocal').addEventListener('touchend', oEvt => this.stopRecording());
+    document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.startRecording());
+    //document.querySelect('[data-record]').addEventListener('touchend', oEvt => this.stopRecording());
   }
 
-  presentPopover() {
-    let popover = this.popoverCtrl.create(PopoverPage);
-    popover.present();
-  }
-  presentPopoverRecord() {
-    let popover = this.popoverCtrl.create(PopoverRecordPage);
-    popover.present();
+  presentModal() {
+    let modal = this.modalCtrl.create(ModalRecordPage);
+    modal.present();
   }
 
   startRecording() {
-    console.log('startRecording');
-    // this.presentPopover();
-    //this.audioRecorder.startRecording();
+    console.log('start recording');
+    this.presentModal();
+    this.audioRecorder.startRecording();
     // try {
     //   this.audioRecorder.startRecording();
     // }
