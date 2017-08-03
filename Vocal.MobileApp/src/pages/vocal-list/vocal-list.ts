@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ModalController, ViewController } from 'ionic-angular';
 import { SearchFriendsRequest } from "../../models/request/searchFriendsRequest";
 import { params } from "../../services/params";
 import { url } from "../../services/url";
@@ -33,6 +33,7 @@ export class VocalListPage {
     public alertCtrl: AlertController, 
     public audioRecorder: AudioRecorder,
     public modalCtrl: ModalController,
+    public viewCtrl: ViewController,
     private httpService: HttpService, 
     private cookieService: CookieService, 
     private storeService: StoreService) {
@@ -44,35 +45,31 @@ export class VocalListPage {
     console.log('ionViewDidLoad VocalListPage');
 
     document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.startRecording());
-    //document.querySelect('[data-record]').addEventListener('touchend', oEvt => this.stopRecording());
+    document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.stopRecording());
   }
 
   presentModal() {
     let modal = this.modalCtrl.create(ModalRecordPage);
     modal.present();
+    modal.onDidDismiss(()=> this.stopRecording());
   }
 
   startRecording() {
-    console.log('start recording');
-    this.presentModal();
-    this.audioRecorder.startRecording();
-    // try {
-    //   this.audioRecorder.startRecording();
-    // }
-    // catch (e) {
-    //   this.showAlert('Could not start recording.');
-    // }
+    try {
+      this.audioRecorder.startRecording();
+    }
+    catch (e) {
+      this.showAlert('Could not start recording.');
+    }
   }
 
   stopRecording() {
-    console.log('stop recording');
-    this.audioRecorder.stopRecording();
-    // try {
-    //   this.audioRecorder.stopRecording();
-    // }
-    // catch (e) {
-    //   this.showAlert('Could not stop recording.');
-    // }
+    try {
+      this.audioRecorder.stopRecording();
+    }
+    catch (e) {
+      this.showAlert('Could not stop recording.');
+    }
   }
 
   startPlayback() {

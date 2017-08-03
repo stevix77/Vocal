@@ -7,11 +7,11 @@
 
 <ion-content padding text-center>
 
-<div class="timer" data-timer></div>
+<div class="timer" data-timer><span>0:00</span></div>
 <span class="subtitle">Enregistrement du vocal en cours ...</span>
 
 <ion-fab center bottom>
-  <button ion-fab data-record><ion-icon name="mic"></ion-icon></button>
+  <button ion-fab (click)="close()"><ion-icon name="mic"></ion-icon></button>
 </ion-fab>
 
 </ion-content>
