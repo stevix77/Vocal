@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, ModalController, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, Events, ViewController, Platform } from 'ionic-angular';
 import { SearchFriendsRequest } from "../../models/request/searchFriendsRequest";
 import { params } from "../../services/params";
 import { url } from "../../services/url";
@@ -11,8 +11,6 @@ import { AddFriendsRequest } from "../../models/request/addFriendsRequest";
 import { UserResponse } from '../../models/response/userResponse';
 import { Response } from '../../models/response';
 import { AudioRecorder } from '../../services/audiorecorder';
-import { ModalRecordPage } from '../modal-record/modal-record';
-
 
 /**
  * Generated class for the VocalListPage page.
@@ -32,8 +30,9 @@ export class VocalListPage {
     public navParams: NavParams, 
     public alertCtrl: AlertController, 
     public audioRecorder: AudioRecorder,
-    public modalCtrl: ModalController,
     public viewCtrl: ViewController,
+    public events: Events,
+    public platform: Platform,
     private httpService: HttpService, 
     private cookieService: CookieService, 
     private storeService: StoreService) {
@@ -48,13 +47,19 @@ export class VocalListPage {
     document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.stopRecording());
   }
 
-  presentModal() {
-    let modal = this.modalCtrl.create(ModalRecordPage);
-    modal.present();
-    modal.onDidDismiss(()=> this.stopRecording());
+  hideHeader() {
+    document.querySelector('.ion-page ion-header').classList.add('anime-hide');
+  }
+
+  addPopinTimer() {
+    let parent = document.querySelector('.ion-page ion-content').parentNode;
+    //parent.insertBefore(document.getElementById('popin-timer'), document.querySelector('.ion-page ion-content ion-fab').parentNode);
   }
 
   startRecording() {
+    this.events.publish('record:start');
+    this.hideHeader();
+    this.addPopinTimer();
     try {
       this.audioRecorder.startRecording();
     }
