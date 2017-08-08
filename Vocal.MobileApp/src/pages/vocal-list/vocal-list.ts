@@ -40,6 +40,7 @@ export class VocalListPage {
     connection.start({ jsonp: true })
     .done(function(){ console.log('Now connected, connection ID=' + connection.id); })
     .fail(function(){ console.log('Could not connect'); });
+    this.initPushNotification();
   }
 
   ionViewDidLoad() {
