@@ -52,8 +52,10 @@ export class VocalListPage {
   }
 
   addPopinTimer() {
-    let parent = document.querySelector('.ion-page ion-content').parentNode;
-    //parent.insertBefore(document.getElementById('popin-timer'), document.querySelector('.ion-page ion-content ion-fab').parentNode);
+    let parent = document.querySelector('.ion-page ion-content');
+    var elm = document.createElement('div');
+    elm.className = 'timer';
+    parent.appendChild(elm);
   }
 
   startRecording() {
