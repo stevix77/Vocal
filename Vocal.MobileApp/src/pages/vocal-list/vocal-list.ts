@@ -1,16 +1,12 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, Events, ViewController, Platform } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, Events, ViewController, ModalController } from 'ionic-angular';
 import { SearchFriendsRequest } from "../../models/request/searchFriendsRequest";
-import { params } from "../../services/params";
-import { url } from "../../services/url";
-import { AppUser } from "../../models/appUser";
 import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
 import { AddFriendsRequest } from "../../models/request/addFriendsRequest";
-import { UserResponse } from '../../models/response/userResponse';
-import { Response } from '../../models/response';
 import { AudioRecorder } from '../../services/audiorecorder';
+import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-vocal';
 
 /**
  * Generated class for the VocalListPage page.
@@ -31,8 +27,8 @@ export class VocalListPage {
     public alertCtrl: AlertController, 
     public audioRecorder: AudioRecorder,
     public viewCtrl: ViewController,
+    public modalCtrl: ModalController,
     public events: Events,
-    public platform: Platform,
     private httpService: HttpService, 
     private cookieService: CookieService, 
     private storeService: StoreService) {
@@ -44,24 +40,28 @@ export class VocalListPage {
     console.log('ionViewDidLoad VocalListPage');
 
     document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.startRecording());
-    document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.stopRecording());
+    //document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.stopRecording());
   }
 
   hideHeader() {
     document.querySelector('.ion-page ion-header').classList.add('anime-hide');
   }
 
-  addPopinTimer() {
-    let parent = document.querySelector('.ion-page ion-content');
-    var elm = document.createElement('div');
-    elm.className = 'timer';
-    parent.appendChild(elm);
+  presentEditVocalModal() {
+    let editVocalModal = this.modalCtrl.create(ModalEditVocalPage);
+    editVocalModal.present();
   }
 
   startRecording() {
     this.events.publish('record:start');
     this.hideHeader();
-    this.addPopinTimer();
+    let template = `
+    <div class="wrapper-record">
+      <div class="timer" data-timer><span>0:00</span></div>
+      <span class="subtitle">Enregistrement du vocal en cours ...</span>
+    </div>`;
+
+    document.querySelector('.ion-page ion-content').insertAdjacentHTML('beforeend', template);
     try {
       this.audioRecorder.startRecording();
     }
@@ -71,6 +71,8 @@ export class VocalListPage {
   }
 
   stopRecording() {
+    this.presentEditVocalModal();
+    document.querySelector('.ion-page ion-content .wrapper-record').remove();
     try {
       this.audioRecorder.stopRecording();
     }

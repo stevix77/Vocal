@@ -20,6 +20,7 @@ import { InscriptionFindFriendsPage } from '../pages/inscription-find-friends/in
 import { VocalListPage } from '../pages/vocal-list/vocal-list';
 
 import { ModalRecordPage } from '../pages/modal-record/modal-record';
+import { ModalEditVocalPage } from '../pages/modal-edit-vocal/modal-edit-vocal';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -40,7 +41,8 @@ let pages = [
   InscriptionFindFriendsPage,
 
   VocalListPage,
-  ModalRecordPage
+  ModalRecordPage,
+  ModalEditVocalPage,
 ];
 
 @NgModule({
