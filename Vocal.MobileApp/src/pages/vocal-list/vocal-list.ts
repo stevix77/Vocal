@@ -14,7 +14,9 @@ import { Response } from '../../models/response';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
 import { hubConnection  } from 'signalr-no-jquery';
 import { MediaPlugin } from 'ionic-native';
+import { SettingsPage } from '../settings/settings';
 
+declare var WindowsAzure: any;
 
 
 /**
@@ -31,14 +33,18 @@ import { MediaPlugin } from 'ionic-native';
 })
 export class VocalListPage {
   media: MediaPlugin = new MediaPlugin('../Library/NoCloud/recording.wav');
+  notificationHub : any;
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, private httpService: HttpService, private cookieService: CookieService, private storeService: StoreService, private push: Push) {
     //this.searchFriends(['s.valentin77@gmail.com', 'tik@tik.fr']);
     //this.addFriends(["000000-f1e6-4c976-9a55-7525496145s", "599fc814-8733-4284-a606-de34c9845348"]);
     const connection = hubConnection(url.BaseUri, null);
     const hubProxy = connection.createHubProxy('Vocal');
     console.log(hubProxy);
-    connection.start({ jsonp: true })
-    .done(function(){ console.log('Now connected, connection ID=' + connection.id); })
+    connection.start()
+    .done(function(){ 
+      console.log('Now connected, connection ID=' + connection.id); 
+      hubProxy.invoke('Connect', params.User.Id);
+    })
     .fail(function(){ console.log('Could not connect'); });
     this.initPushNotification();
   }
@@ -48,6 +54,10 @@ export class VocalListPage {
 
     document.getElementById('record-vocal').addEventListener('touchstart', oEvt => this.startRecording());
     document.getElementById('record-vocal').addEventListener('touchend', oEvt => this.stopRecording());
+  }
+
+  settings() {
+    this.navCtrl.push(SettingsPage);
   }
 
   startRecording() {
@@ -97,6 +107,8 @@ export class VocalListPage {
 
   initPushNotification() {
     var pushOptions = {
+      notificationHubPath: 'vocal',
+      connectionString: 'Endpoint=sb://mobileappvocal.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=veeFqIaZyw/bB4lcGMHHqnbT5hOkz5g4/KThwhFqCZY=',
       android: {
           senderID: '1054724390279'
       },
@@ -125,8 +137,8 @@ export class VocalListPage {
       )
     });
     
-    // pushObject.on('notification').subscribe((data: any) => {
-    //   console.log('message -> ' + data.message);
+    pushObject.on('notification').subscribe((data: any) => {
+      console.log('data -> ' + data);
       //if user using app and push notification comes
       // if (data.additionalData.foreground) {
       //   // if application open, show popup
@@ -151,7 +163,7 @@ export class VocalListPage {
       //   this.nav.push(DetailsPage, { message: data.message });
       //   console.log('Push notification clicked');
       // }
-    // });
+    });
 
     pushObject.on('error').subscribe(error => {
       console.log('Error with Push plugin' + error);

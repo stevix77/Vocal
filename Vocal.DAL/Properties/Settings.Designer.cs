@@ -88,9 +88,9 @@ namespace Vocal.DAL.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Endpoint=sb://vocalnotif.servicebus.windows.net/;SharedAccessKeyName=DefaultFullS" +
-            "haredAccessSignature;SharedAccessKey=DTSTAQTpFmB8KzmE7n496TNWUEeInaxLGtATc7Cl9Hk" +
-            "=")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Endpoint=sb://mobileappvocal.servicebus.windows.net/;SharedAccessKeyName=DefaultF" +
+            "ullSharedAccessSignature;SharedAccessKey=h6TObd/MF8tY9JiQjiHRj4c3C2+XYjbYQe0CzgZ" +
+            "nmoA=")]
         public string DefaultFullSharedAccessSignature {
             get {
                 return ((string)(this["DefaultFullSharedAccessSignature"]));

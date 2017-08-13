@@ -123,8 +123,12 @@
       <Name>Vocal.DAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Vocal.Model\Vocal.Model.csproj">
-      <Project>{1551dfa8-d21e-400a-81fe-e15831cfdd74}</Project>
+      <Project>{b76d6ce5-b158-4eb9-8a35-54da7cee32ea}</Project>
       <Name>Vocal.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Vocal.Tools\Vocal.Tools.csproj">
+      <Project>{9198f034-6876-4e86-a84a-50624d6c7742}</Project>
+      <Name>Vocal.Tools</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

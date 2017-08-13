@@ -33,15 +33,15 @@ namespace Vocal.DAL
 
         private static IMongoDatabase GetDatabase()
         {
-            return _client.GetDatabase(Settings.Default.DocumentDBName);
+            return _client.GetDatabase(Properties.Settings.Default.DocumentDBName);
         }
 
         private static MongoClient GetClient()
         {
             MongoClientSettings settings = new MongoClientSettings();
-            settings.Server = new MongoServerAddress(Settings.Default.Host, Settings.Default.Port);
-            MongoIdentity identity = new MongoInternalIdentity(Settings.Default.DocumentDBName, Settings.Default.DocumentDBUser);
-            MongoIdentityEvidence evidence = new PasswordEvidence(Settings.Default.DocumentDBPwd);
+            settings.Server = new MongoServerAddress(Properties.Settings.Default.Host, Properties.Settings.Default.Port);
+            MongoIdentity identity = new MongoInternalIdentity(Properties.Settings.Default.DocumentDBName, Properties.Settings.Default.DocumentDBUser);
+            MongoIdentityEvidence evidence = new PasswordEvidence(Properties.Settings.Default.DocumentDBPwd);
 #if !DEBUG
                 //settings.UseSsl = true;
                 //settings.SslSettings = new SslSettings();
@@ -63,14 +63,14 @@ namespace Vocal.DAL
 
         public User Login(string login, string password)
         {
-            var collection = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var user = collection.Find(x => x.Password == password && (x.Email == login || x.Username == login)).SingleOrDefault();
             return user;
         }
 
         public void SaveSign(string userId, string sign)
         {
-            var collection = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var user = collection.Find(x => x.Id == userId).SingleOrDefault();
             if (user != null)
             {
@@ -81,7 +81,7 @@ namespace Vocal.DAL
 
         public bool GetSignature(string sign)
         {
-            var collection = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             return collection.Find(x => x.Signs.Contains(sign)).Any();
         }
 
@@ -91,41 +91,41 @@ namespace Vocal.DAL
 
         public void AddUser(User user)
         {
-            var collection = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             collection.InsertOne(user);
         }
 
         public User GetUserById(string id)
         {
-            var db = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var user = db.Find(x => x.Id == id).SingleOrDefault();
             return user;
         }
 
         public User GetUserByEmail(string email)
         {
-            var db = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var user = db.Find(x => x.Email == email).SingleOrDefault();
             return user;
         }
 
         public User GetUserByUsername(string username)
         {
-            var db = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var user = db.Find(x => x.Username == username).SingleOrDefault();
             return user;
         }
 
         public void UpdateUser(User user)
         {
-            var db = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             db.ReplaceOne(x => x.Id == user.Id, user);
         }
 
         public List<User> GetUsersById(List<string> userIds)
         {
             List<User> users = new List<User>();
-            var db = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, userIds);
             users = db.Find(filter).ToList();
             return users;
@@ -138,7 +138,7 @@ namespace Vocal.DAL
         public List<User> SearchFriendsByEmails(List<string> emails)
         {
             List<User> users = new List<User>();
-            var db = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var filter = new FilterDefinitionBuilder<User>().In(x => x.Email, emails);
             users = db.Find(filter).ToList();
             return users;
@@ -147,7 +147,7 @@ namespace Vocal.DAL
         public List<User> SearchFriendsByIds(List<string> ids)
         {
             List<User> users = new List<User>();
-            var db = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, ids);
             users = db.Find(filter).ToList();
             return users;
@@ -156,13 +156,13 @@ namespace Vocal.DAL
         public bool AddFriends(string userId, List<string> ids)
         {
             bool success = false;
-            var db = _db.GetCollection<User>(Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, ids);
             var users = db.Find(filter).ToList();
             var user = db.Find(x => x.Id == userId).SingleOrDefault();
             if (user != null)
             {
-                List<Friend> friends = Bind_UsersToFriends(users);
+                List<People> friends = Bind_UsersToFriends(users);
                 friends.RemoveAll(x => user.Friends.Select(y => y.Id).Contains(x.Id));
                 user.Friends.AddRange(friends);
                 db.ReplaceOne(x => x.Id == userId, user);
@@ -186,7 +186,7 @@ namespace Vocal.DAL
 
         public List<Talk> GetListTalk(string userId)
         {
-            var db = _db.GetCollection<Talk>(Settings.Default.CollectionTalk);
+            var db = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
             var list = db.Find(x => x.Users.Exists(y => y.Id == userId))
                         .Project(x => new Talk { Id = x.Id, VocalName = x.VocalName, Users = x.Users, Messages = x.Messages.OrderByDescending(y => y.Date).Take(1).ToList() })
                         .SortByDescending(x => x.Messages.Select(y => y.Date))
@@ -198,12 +198,12 @@ namespace Vocal.DAL
 
         #region Private methods
 
-        private List<Friend> Bind_UsersToFriends(List<User> users)
+        private List<People> Bind_UsersToFriends(List<User> users)
         {
-            var list = new List<Friend>();
+            var list = new List<People>();
             foreach (var item in users)
             {
-                list.Add(new Friend
+                list.Add(new People
                 {
                     Email = item.Email,
                     Firstname = item.Firstname,

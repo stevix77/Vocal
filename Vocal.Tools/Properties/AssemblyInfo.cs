@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("Vocal.Model")]
+[assembly: AssemblyTitle("Vocal.Tools")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Vocal.Model")]
+[assembly: AssemblyProduct("Vocal.Tools")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Le GUID suivant est pour l'ID de la typelib si ce projet est exposé à COM
-[assembly: Guid("b76d6ce5-b158-4eb9-8a35-54da7cee32ea")]
+[assembly: Guid("9198f034-6876-4e86-a84a-50624d6c7742")]
 
 // Les informations de version pour un assembly se composent des quatre valeurs suivantes :
 //

@@ -18,6 +18,10 @@ import { InscriptionPasswordPage } from '../pages/inscription-password/inscripti
 import { InscriptionFindFriendsPage } from '../pages/inscription-find-friends/inscription-find-friends';
 
 import { VocalListPage } from '../pages/vocal-list/vocal-list';
+import { SettingsPage } from '../pages/settings/settings';
+
+import { SettingsChoices } from '../pages/settings/settingsChoices/SettingsChoices';
+
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -37,7 +41,9 @@ let pages = [
   InscriptionPasswordPage,
   InscriptionFindFriendsPage,
 
-  VocalListPage
+  VocalListPage,
+  SettingsPage,
+  SettingsChoices
 ];
 
 @NgModule({

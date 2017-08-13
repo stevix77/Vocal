@@ -29,6 +29,8 @@ namespace Vocal.WebApi.Signalr
                 // path.
                 map.RunSignalR(hubConfiguration);
             });
+            //app.UseCors(CorsOptions.AllowAll);
+            //app.MapSignalR();
         }
     }
 }

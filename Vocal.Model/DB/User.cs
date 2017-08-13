@@ -16,9 +16,10 @@ namespace Vocal.Model.DB
         public bool IsActive { get; set; }
         public DateTime RegistrationDate { get; set; }
         public DateTime BirthdayDate { get; set; }
-        public List<Friend> Friends { get; set; } = new List<Friend>();
+        public List<People> Friends { get; set; } = new List<People>();
         public ResetPassword Reset { get; set; }
         public List<string> Signs { get; set; } = new List<string>();
         public List<Device> Devices { get; set; } = new List<Device>();
+        public Settings Settings { get; set; } = new Settings();
     }
 }

@@ -17,8 +17,8 @@ namespace Vocal.DAL
 
         private NotificationHub()
         {
-            Hub = NotificationHubClient.CreateClientFromConnectionString(Settings.Default.DefaultFullSharedAccessSignature,
-                                                                         "<hub name>");
+            Hub = NotificationHubClient.CreateClientFromConnectionString(Properties.Settings.Default.DefaultFullSharedAccessSignature,
+                                                                         Properties.Settings.Default.Hubname, true);
         }
 
         public async Task<string> GetRegistrationId(string channel)
@@ -37,20 +37,24 @@ namespace Vocal.DAL
             return await Hub.GetRegistrationAsync<RegistrationDescription>(registrationId);
         }
 
-        public async Task RegistrationUser(string channel, string platform, string tag)
+        public async Task RegistrationUser(string registrationId, string channel, string platform, string tag)
         {
             var description = GetRegistrationDescriptionByPlatform(platform, channel);
-            description.Tags.Add(tag);
-            await Hub.CreateOrUpdateRegistrationAsync(description);
+            if (description.Tags == null)
+                description.Tags = new HashSet<string>() { tag };
+            description.PushVariables = new Dictionary<string, string>();
+            description.PushVariables.Add("test", "toto");
+            description.RegistrationId = registrationId;
+            var toto = await Hub.CreateOrUpdateRegistrationAsync(description);
         }
 
-        public async Task SendNotification(List<Device> devices, string tag, string text)
+        public async Task SendNotification(List<string> platform, string tag, string text)
         {
-            foreach(var item in devices)
+            foreach(var item in platform)
             {
-                string mess = GenerateTextNotif(item.Platform, text);
-                var notif = GenerateNotif(item.Platform, mess);
-                await Hub.SendNotificationAsync(notif, tag);
+                string mess = GenerateTextNotif(item, text);
+                var notif = GenerateNotif(item, mess);
+                var toto = await Hub.SendNotificationAsync(notif, tag);
             }
         }
 
@@ -97,10 +101,10 @@ namespace Vocal.DAL
                     notification = new AppleNotification(mess);
                     break;
                 case "mpns":
-                    notification = new WindowsNotification(mess);
+                    notification = new MpnsNotification(mess);
                     break;
                 case "wns":
-                    notification = new MpnsNotification(mess);
+                    notification = new WindowsNotification(mess);
                     break;
                 default:
                     notification = null;
@@ -115,16 +119,16 @@ namespace Vocal.DAL
             switch (platform)
             {
                 case "gcm":
-                    textNotif = string.Format("{\"data\" : {\"msg\" : \"{0}\" }}", text);
+                    textNotif = string.Format("{\"data\" : {\"message\" : \"{0}\" }}", text);
                     break;
                 case "apns":
                     textNotif = string.Format("{\"aps\" : {\"alert\" : \"{0}\" }}", text);
                     break;
-                case "mpns":
+                case "wns":
                     textNotif = string.Format("<toast><visual><binding template = \"ToastText01\"><text id=\"1\">{0}</text></binding></visual></toast>", text);
                     break;
-                case "wns":
-                    textNotif = "<?xml version=\"1.0\" encoding=\"utf-8\"?><wp:Notification xmlns:wp=\"WPNotification\"><wp:Toast><wp:Text1>" + text + "</wp:Text1></wp:Toast></wp:Notification>";
+                case "mpns":
+                    textNotif = $"<wp:Notification xmlns:wp=\"WPNotification\"><wp:Toast><wp:Text1>{text}</wp:Text1></wp:Toast></wp:Notification>";
                     break;
                 default:
                     textNotif = null;

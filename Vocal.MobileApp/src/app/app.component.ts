@@ -91,7 +91,8 @@ export class VocalApp {
       this.GetAllResources();
       this.SetLanguage();
       this.SetPlatform();
-      this.client = new WindowsAzure.MobileServiceClient("https://appvocal.azurewebsites.net");
+      this.client = new WindowsAzure.MobileServiceClient("https://mobileappvocal.azurewebsites.net");
+      // this.client = new WindowsAzure.Messaging.NotificationHub("vocal", "Endpoint=sb://vocalnotif.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=DTSTAQTpFmB8KzmE7n496TNWUEeInaxLGtATc7Cl9Hk=");
     });
   }
 
@@ -99,7 +100,7 @@ export class VocalApp {
     let platform = '';
     switch(this.device.platform) {
       case 'windows':
-        platform = 'mpns';
+        platform = 'wns';
         break;
       case 'iOS':
         platform = 'apns';
@@ -109,7 +110,7 @@ export class VocalApp {
         platform = 'gcm';
         break;
       default:
-        platform = 'wns';
+        platform = '';
         break;
     }
     params.Platform = platform;

@@ -29,5 +29,11 @@ var url = {
     },
     NotificationRegister() : string {
         return this.BaseUri + "/api/notification/register"
+    },
+    GetSettings() : string {
+        return this.BaseUri + "/api/user/me";
+    },
+    UpdateUser() : string {
+        return this.BaseUri + "/api/user/me/update"
     }
 }

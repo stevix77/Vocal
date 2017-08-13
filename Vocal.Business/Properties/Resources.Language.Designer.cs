@@ -61,6 +61,15 @@ namespace Vocal.Business.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Activé.
+        /// </summary>
+        public static string Active {
+            get {
+                return ResourceManager.GetString("Active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Cliquez sur le lien pour modifier mot de passe &lt;a target=&quot;_blank&quot; href=&quot;{0}&quot;&gt;{1}&lt;/a&gt;.
         /// </summary>
         public static string AskPassword {
@@ -75,6 +84,42 @@ namespace Vocal.Business.Properties {
         public static string AskPasswordSubject {
             get {
                 return ResourceManager.GetString("AskPasswordSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Desactivé.
+        /// </summary>
+        public static string Deactive {
+            get {
+                return ResourceManager.GetString("Deactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Tout le monde.
+        /// </summary>
+        public static string Everybody {
+            get {
+                return ResourceManager.GetString("Everybody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Une femme.
+        /// </summary>
+        public static string Female {
+            get {
+                return ResourceManager.GetString("Female", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Mes amis.
+        /// </summary>
+        public static string Friends {
+            get {
+                return ResourceManager.GetString("Friends", resourceCulture);
             }
         }
         
@@ -102,6 +147,24 @@ namespace Vocal.Business.Properties {
         public static string MailNotExisting {
             get {
                 return ResourceManager.GetString("MailNotExisting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Un homme.
+        /// </summary>
+        public static string Male {
+            get {
+                return ResourceManager.GetString("Male", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Personne.
+        /// </summary>
+        public static string Nobody {
+            get {
+                return ResourceManager.GetString("Nobody", resourceCulture);
             }
         }
         

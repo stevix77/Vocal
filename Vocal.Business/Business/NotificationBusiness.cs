@@ -23,18 +23,23 @@ namespace Vocal.Business.Business
                 var user = Repository.Instance.GetUserById(userId);
                 if(user != null)
                 {
-                    var registrationId = await NotificationHub.Instance.GetRegistrationId(channel);
-                    var tag = $"{Settings.Default.TagUser}:{userId}";
-                    user.Devices.Add(new Device
+                    //if(true)
+                    if (!user.Devices.Exists(x => x.Channel == channel))
                     {
-                        RegistrationId = registrationId,
-                        Platform = platform,
-                        Channel = channel,
-                        Tags = new List<string>() { tag }
-                    });
-                    Repository.Instance.UpdateUser(user);
-                    await NotificationHub.Instance.RegistrationUser(channel, platform, tag);
-                    response.Data = registrationId;
+                        var registrationId = await NotificationHub.Instance.GetRegistrationId(channel);
+                        var tag = $"{Properties.Settings.Default.TagUser}:{userId}";
+                        user.Devices.Add(new Device
+                        {
+                            RegistrationId = registrationId,
+                            Platform = platform,
+                            Channel = channel,
+                            Tags = new List<string>() { tag }
+                        });
+                        Repository.Instance.UpdateUser(user);
+                        await NotificationHub.Instance.RegistrationUser(registrationId, channel, platform, tag);
+                        await NotificationHub.Instance.SendNotification(user.Devices.Select(x => x.Platform).Distinct().ToList(), tag, "toto");
+                        response.Data = registrationId;
+                    }
                 }
             }
             catch (TimeoutException tex)
@@ -62,8 +67,8 @@ namespace Vocal.Business.Business
             try
             {
                 var users = Repository.Instance.GetUsersById(userIds);
-                var devices = users.SelectMany(x => x.Devices).ToList();
-                await NotificationHub.Instance.SendNotification(devices, tag, message);
+                var devices = users.Where(x => x.Settings.IsNotifiable).SelectMany(x => x.Devices).ToList();
+                await NotificationHub.Instance.SendNotification(devices.Select(x => x.Platform).Distinct().ToList(), tag, message);
             }
             catch (TimeoutException tex)
             {

@@ -80,7 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vocal.Model\Vocal.Model.csproj">
-      <Project>{1551dfa8-d21e-400a-81fe-e15831cfdd74}</Project>
+      <Project>{b76d6ce5-b158-4eb9-8a35-54da7cee32ea}</Project>
       <Name>Vocal.Model</Name>
     </ProjectReference>
   </ItemGroup>
