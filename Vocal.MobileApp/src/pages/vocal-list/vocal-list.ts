@@ -6,7 +6,6 @@ import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
 import { NotificationRegisterRequest } from "../../models/request/notificationRegisterRequest";
-import { UserResponse } from '../../models/response/userResponse';
 import { AudioRecorder } from '../../services/audiorecorder';
 import { Push, PushObject } from '@ionic-native/push';
 import { hubConnection  } from 'signalr-no-jquery';

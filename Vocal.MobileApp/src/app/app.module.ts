@@ -48,7 +48,7 @@ let pages = [
   VocalListPage,
   SettingsPage,
   SettingsChoices,
-  SettingsMail
+  SettingsMail,
   SettingsChoices,
 
   ModalRecordPage,
