@@ -21,6 +21,7 @@ import { VocalListPage } from '../pages/vocal-list/vocal-list';
 import { SettingsPage } from '../pages/settings/settings';
 
 import { SettingsChoices } from '../pages/settings/settingsChoices/SettingsChoices';
+import { SettingsMail } from '../pages/settings/settingsMail/SettingsMail';
 
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -43,7 +44,8 @@ let pages = [
 
   VocalListPage,
   SettingsPage,
-  SettingsChoices
+  SettingsChoices,
+  SettingsMail
 ];
 
 @NgModule({

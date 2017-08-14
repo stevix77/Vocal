@@ -1,16 +1,16 @@
 import { Component, OnInit } from "@angular/core";
-import { IonicPage, NavController, ModalController } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
 import { params } from "../../services/params";
 import { url } from "../../services/url";
-import { AppUser } from "../../models/appUser";
 import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
-import { UserResponse } from '../../models/response/userResponse';
 import { SettingsResponse } from '../../models/response/settingsResponse';
+import { KeyStore } from '../../models/enums';
 import { Response } from '../../models/response';
 import { Request } from "../../models/request/Request";
 import { SettingsChoices } from './settingsChoices/SettingsChoices';
+import { SettingsMail } from './settingsMail/SettingsMail';
 
 @Component({
   selector: "app-settings",
@@ -28,7 +28,18 @@ export class SettingsPage implements OnInit {
   }
 
   ionViewDidLoad() {
-    this.LoadSettings();
+    
+  }
+
+  ionViewWillEnter() {
+    this.storeService.Get(KeyStore.Settings.toString()).then(
+      store => {
+        if(store != null)
+          this.model.Settings = store;
+        else
+          this.LoadSettings();
+      }
+    )
   }
 
   LoadSettings () {
@@ -41,6 +52,7 @@ export class SettingsPage implements OnInit {
         let response = resp.json() as Response<SettingsResponse>;
         if(!response.HasError) {
           this.model.Settings = response.Data;
+          this.storeService.Set(KeyStore.Settings.toString(), this.model.Settings)
         } else {
           
         }
@@ -52,7 +64,11 @@ export class SettingsPage implements OnInit {
    this.navCtrl.push(SettingsChoices, {UpdateType: choice, Obj: obj})
   }
 
-  ngOnInit() {
+  SettingsMail() {
+    this.navCtrl.push(SettingsMail, {Email: this.model.Settings.Email})
+  }
 
+  ngOnInit() {
+    console.log("on init settings");
   }
 }

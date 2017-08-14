@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Cookie} from '../models/cookie';
 import {AppUser} from '../models/appUser';
-import hmacsha256 from 'crypto-js/hmac-sha256';
 import { functions } from "./functions";
 import { CookieStorage } from 'cookie-storage';
 

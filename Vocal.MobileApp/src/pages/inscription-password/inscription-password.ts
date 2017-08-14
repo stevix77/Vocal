@@ -5,7 +5,6 @@ import { StoreService } from '../../services/storeService';
 import {url} from '../../services/url';
 import {HttpService} from '../../services/httpService';
 import { RegisterRequest } from '../../models/request/registerRequest';
-import { ResourceResponse } from '../../models/response/resourceResponse';
 import { UserResponse } from '../../models/response/userResponse';
 import { Response } from '../../models/response';
 import { AppUser } from '../../models/appUser';

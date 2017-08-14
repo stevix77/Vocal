@@ -66,6 +66,9 @@ namespace Vocal.Business.Business
                     case Update.Notification:
                         user.Settings.IsNotifiable = Convert.ToBoolean(value);
                         break;
+                    case Update.Email:
+                        user.Email = value.ToString();
+                        break;
                     default:
                         break;
                 }

@@ -6,3 +6,8 @@ export enum UpdateType {
     Notification = 4,
     BirthdayDate = 5
 }
+
+export enum KeyStore {
+    Settings = 0,
+    User = 1
+}

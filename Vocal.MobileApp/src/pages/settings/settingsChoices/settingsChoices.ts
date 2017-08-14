@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { NavParams, ViewController } from 'ionic-angular';
+import { NavParams} from 'ionic-angular';
 import { Response } from '../../../models/response';
-import { Request } from "../../../models/request/Request";
 import { params } from "../../../services/params";
 import { url } from "../../../services/url";
 import { UpdateRequest } from "../../../models/request/updateRequest";
