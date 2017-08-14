@@ -24,6 +24,9 @@ import { SettingsChoices } from '../pages/settings/settingsChoices/SettingsChoic
 import { SettingsMail } from '../pages/settings/settingsMail/SettingsMail';
 
 
+import { ModalRecordPage } from '../pages/modal-record/modal-record';
+import { ModalEditVocalPage } from '../pages/modal-edit-vocal/modal-edit-vocal';
+
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -46,6 +49,10 @@ let pages = [
   SettingsPage,
   SettingsChoices,
   SettingsMail
+  SettingsChoices,
+
+  ModalRecordPage,
+  ModalEditVocalPage,
 ];
 
 @NgModule({

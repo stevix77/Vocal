@@ -1,18 +1,20 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, Events, ViewController, ModalController } from 'ionic-angular';
 import { params } from "../../services/params";
 import { url } from "../../services/url";
 import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
 import { NotificationRegisterRequest } from "../../models/request/notificationRegisterRequest";
+import { UserResponse } from '../../models/response/userResponse';
+import { AudioRecorder } from '../../services/audiorecorder';
 import { Push, PushObject } from '@ionic-native/push';
 import { hubConnection  } from 'signalr-no-jquery';
 import { MediaPlugin } from 'ionic-native';
 import { SettingsPage } from '../settings/settings';
+import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-vocal';
 
 declare var WindowsAzure: any;
-
 
 /**
  * Generated class for the VocalListPage page.
@@ -24,12 +26,22 @@ declare var WindowsAzure: any;
 @Component({
   selector: 'page-vocal-list',
   templateUrl: 'vocal-list.html',
-  providers: [HttpService, CookieService, Push]
+  providers: [HttpService, CookieService, Push, AudioRecorder]
 })
 export class VocalListPage {
   media: MediaPlugin = new MediaPlugin('../Library/NoCloud/recording.wav');
   notificationHub : any;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, private httpService: HttpService, private cookieService: CookieService, private storeService: StoreService, private push: Push) {
+  constructor(public navCtrl: NavController, 
+    public navParams: NavParams, 
+    public alertCtrl: AlertController, 
+    public audioRecorder: AudioRecorder,
+    public viewCtrl: ViewController,
+    public modalCtrl: ModalController,
+    public events: Events,
+    private httpService: HttpService, 
+    private cookieService: CookieService, 
+    private storeService: StoreService,
+    private push: Push) {
     //this.searchFriends(['s.valentin77@gmail.com', 'tik@tik.fr']);
     //this.addFriends(["000000-f1e6-4c976-9a55-7525496145s", "599fc814-8733-4284-a606-de34c9845348"]);
     const connection = hubConnection(url.BaseUri, null);
@@ -47,8 +59,17 @@ export class VocalListPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad VocalListPage');
 
-    document.getElementById('record-vocal').addEventListener('touchstart', oEvt => this.startRecording());
-    document.getElementById('record-vocal').addEventListener('touchend', oEvt => this.stopRecording());
+    document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.startRecording());
+    document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.stopRecording());
+  }
+
+  hideHeader() {
+    document.querySelector('.ion-page ion-header').classList.add('anime-hide');
+  }
+
+  presentEditVocalModal() {
+    let editVocalModal = this.modalCtrl.create(ModalEditVocalPage);
+    editVocalModal.present();
   }
 
   settings() {
@@ -56,8 +77,17 @@ export class VocalListPage {
   }
 
   startRecording() {
+    this.events.publish('record:start');
+    this.hideHeader();
+    let template = `
+    <div class="wrapper-record">
+      <div class="timer" data-timer><span>0:00</span></div>
+      <span class="subtitle">Enregistrement du vocal en cours ...</span>
+    </div>`;
+
+    document.querySelector('.ion-page ion-content').insertAdjacentHTML('beforeend', template);
     try {
-      this.media.startRecord();
+      this.audioRecorder.startRecording();
     }
     catch (e) {
       this.showAlert('Could not start recording.');
@@ -65,8 +95,10 @@ export class VocalListPage {
   }
 
   stopRecording() {
+    this.presentEditVocalModal();
+    document.querySelector('.ion-page ion-content .wrapper-record').remove();
     try {
-      this.media.stopRecord();
+      this.audioRecorder.stopRecording();
     }
     catch (e) {
       this.showAlert('Could not stop recording.');
@@ -75,7 +107,7 @@ export class VocalListPage {
 
   startPlayback() {
     try {
-      this.media.play();
+      this.audioRecorder.startPlayback();
     }
     catch (e) {
       this.showAlert('Could not play recording.');
@@ -84,7 +116,7 @@ export class VocalListPage {
 
   stopPlayback() {
     try {
-      this.media.stop();
+      this.audioRecorder.stopPlayback();
     }
     catch (e) {
       this.showAlert('Could not stop playing recording.');
@@ -126,8 +158,8 @@ export class VocalListPage {
       let urlNotifRegister = url.NotificationRegister();
       let cookie = this.cookieService.GetAuthorizeCookie(urlNotifRegister, params.User)
       this.httpService.Post<NotificationRegisterRequest>(urlNotifRegister, request, cookie).subscribe(
-        resp => {
-          // let response = resp.json() as Response<string>;
+          resp => {
+
         }
       )
     });
