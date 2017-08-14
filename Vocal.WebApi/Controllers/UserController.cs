@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
+//using System.Web.Mvc;
 using Vocal.Business.Business;
 using Vocal.Model.Business;
 using Vocal.Model.Request;
@@ -27,6 +28,20 @@ namespace Vocal.WebApi.Controllers
         public Response<bool> IsExistsEmail(UserExistsRequest request)
         {
             return UserBusiness.IsExistsEmail(request.Value, request.Lang);
+        }
+
+        [HttpPost, Route("me"), CustomAuthorize]
+        public Response<SettingsResponse> GetSettings(Request request)
+        {
+            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
+            return UserBusiness.GetSettings(obj.UserId, request.Lang);
+        }
+
+        [HttpPost, Route("me/update"), CustomAuthorize]
+        public Response<bool> UpdateUser(UpdateRequest request)
+        {
+            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
+            return UserBusiness.UpdateUser(obj.UserId, request.Value, request.UpdateType, request.Lang);
         }
     }
 }

@@ -79,20 +79,61 @@
         "is_top_level": false,
         "variables": {}
     },
-    "cordova-plugin-media": {
+    "cordova-plugin-file": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-media@3.0.1"
+            "id": "cordova-plugin-file@~4.1.0"
         },
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-plugin-file": {
+    "phonegap-plugin-push": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-file@^4.0.0"
+            "id": "phonegap-plugin-push@^2.0.0-rc5"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-ms-azure-mobile-apps": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-ms-azure-mobile-apps@^2.0.0"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-inappbrowser": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-inappbrowser@^1.5.0"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "msopentech.azure.NotificationHub": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/PhonegapProjects/cordova-plugin-azure-notificationhub/",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-sqlite-storage": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-sqlite-storage@1.4.8"
         },
         "is_top_level": false,
+        "variables": {}
+    },
+    "cordova-azure-notification-hubs": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-azure-notification-hubs@1.0.2"
+        },
+        "is_top_level": true,
         "variables": {}
     }
 }

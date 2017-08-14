@@ -117,11 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Active" xml:space="preserve">
+    <value>Activé</value>
+  </data>
   <data name="AskPassword" xml:space="preserve">
     <value>Cliquez sur le lien pour modifier mot de passe &lt;a target="_blank" href="{0}"&gt;{1}&lt;/a&gt;</value>
   </data>
   <data name="AskPasswordSubject" xml:space="preserve">
     <value>Mot de passe oublié ?</value>
+  </data>
+  <data name="Deactive" xml:space="preserve">
+    <value>Desactivé</value>
+  </data>
+  <data name="Everybody" xml:space="preserve">
+    <value>Tout le monde</value>
+  </data>
+  <data name="Female" xml:space="preserve">
+    <value>Une femme</value>
+  </data>
+  <data name="Friends" xml:space="preserve">
+    <value>Mes amis</value>
   </data>
   <data name="InvalidToken" xml:space="preserve">
     <value>Ce token n'est pas valide</value>
@@ -132,6 +147,12 @@
   <data name="MailNotExisting" xml:space="preserve">
     <value>Cet email n'existe pas</value>
   </data>
+  <data name="Male" xml:space="preserve">
+    <value>Un homme</value>
+  </data>
+  <data name="Nobody" xml:space="preserve">
+    <value>Personne</value>
+  </data>
   <data name="PasswordRegex" xml:space="preserve">
     <value>Le mot de passe n'est pas au bon format</value>
   </data>
@@ -141,8 +162,14 @@
   <data name="ResetPasswordSuccess" xml:space="preserve">
     <value>Mot de passe bien modifié</value>
   </data>
+  <data name="TalkingMessage" xml:space="preserve">
+    <value>est en train de parler</value>
+  </data>
   <data name="TechnicalError" xml:space="preserve">
     <value>Erreur technique, réessayez plus tard</value>
+  </data>
+  <data name="TextNotifAddFriend" xml:space="preserve">
+    <value>vous a ajouté dans sa liste d'amis</value>
   </data>
   <data name="TimeoutError" xml:space="preserve">
     <value>Délai d'attente dépassé</value>

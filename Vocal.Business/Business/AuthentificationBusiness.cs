@@ -60,7 +60,7 @@ namespace Vocal.Business
                 if (!isTokenValid.HasError && isTokenValid.Data)
                 {
                     var pwd = Hash.getHash(password);
-                    var newToken = Hash.getHash(string.Format(Settings.Default.FormatToken, username, password, Settings.Default.Salt));
+                    var newToken = Hash.getHash(string.Format(Properties.Settings.Default.FormatToken, username, password, Properties.Settings.Default.Salt));
                     var user = Repository.Instance.GetUserByUsername(username);
                     user.Token = newToken;
                     user.Password = pwd;
@@ -101,7 +101,7 @@ namespace Vocal.Business
                 {
                     string id = Guid.NewGuid().ToString();
                     string pwd = Hash.getHash(password);
-                    string token = Hash.getHash(string.Format(Settings.Default.FormatToken, username, password, Settings.Default.Salt));
+                    string token = Hash.getHash(string.Format(Properties.Settings.Default.FormatToken, username, password, Properties.Settings.Default.Salt));
                     user = new User
                     {
                         Id = id,
@@ -150,13 +150,13 @@ namespace Vocal.Business
                 else
                 {
                     var token = Guid.NewGuid().ToString();
-                    var url = $"{Settings.Default.UrlUpdatePassword}/{user.Username}?token={token}&lang={lang}";
+                    var url = $"{Properties.Settings.Default.UrlUpdatePassword}/{user.Username}?token={token}&lang={lang}";
                     var message = string.Format(Resources_Language.AskPassword, url, url);
                     MailManager.Send(email, message, lang);
                     response.Data = true;
                     Task.Run(() =>
                     {
-                        user.Reset = new ResetPassword { Token = token, ValidityDate = DateTime.Now.AddMinutes(Settings.Default.ValidityToken) };
+                        user.Reset = new ResetPassword { Token = token, ValidityDate = DateTime.Now.AddMinutes(Properties.Settings.Default.ValidityToken) };
                         Repository.Instance.UpdateUser(user);
                     });
                 }

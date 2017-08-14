@@ -23,5 +23,11 @@
     <Setting Name="CollectionTalk" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Talk</Value>
     </Setting>
+    <Setting Name="DefaultFullSharedAccessSignature" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Endpoint=sb://mobileappvocal.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=h6TObd/MF8tY9JiQjiHRj4c3C2+XYjbYQe0CzgZnmoA=</Value>
+    </Setting>
+    <Setting Name="Hubname" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">vocal</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

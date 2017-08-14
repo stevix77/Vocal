@@ -18,6 +18,11 @@ namespace Vocal.Business.Tools
             return _manager.GetString(key, new System.Globalization.CultureInfo(lang));
         }
 
+        public static string GetValue(string key)
+        {
+            return _manager.GetString(key);
+        }
+
         public const string MailExisting = "MailExisting";
         public const string TechnicalError = "TechnicalError";
         public const string TimeoutError = "TimeoutError";

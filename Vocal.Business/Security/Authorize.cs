@@ -25,17 +25,17 @@ namespace Vocal.Business.Security
             if (!IsSignatureExist(sign))
             {
                 string token = string.Empty;
-                token = CacheManager.GetCache<string>($"{Settings.Default.CacheKeyToken}_{id}");
+                token = CacheManager.GetCache<string>($"{Properties.Settings.Default.CacheKeyToken}_{id}");
                 if (string.IsNullOrEmpty(token))
                 {
                     var user = Repository.Instance.GetUserById(id);
                     if (user != null)
                     {
                         token = user.Token;
-                        CacheManager.SetCache($"{Settings.Default.CacheKeyToken}_{id}", token);
+                        CacheManager.SetCache($"{Properties.Settings.Default.CacheKeyToken}_{id}", token);
                     }
                 }
-                string signature = Hash.getHash(string.Format(Settings.Default.FormatSign, url, timestamp, token));
+                string signature = Hash.getHash(string.Format(Properties.Settings.Default.FormatSign, url, timestamp, token));
                 if (sign.Equals(signature))
                 {
                     authorize = true;

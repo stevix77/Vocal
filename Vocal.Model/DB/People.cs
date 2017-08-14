@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Vocal.Model.DB
 {
-    public class Friend
+    public class People
     {
         public string Id { get; set; }
         public string Email { get; set; }

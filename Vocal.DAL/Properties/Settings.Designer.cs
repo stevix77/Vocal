@@ -85,5 +85,25 @@ namespace Vocal.DAL.Properties {
                 return ((string)(this["CollectionTalk"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Endpoint=sb://mobileappvocal.servicebus.windows.net/;SharedAccessKeyName=DefaultF" +
+            "ullSharedAccessSignature;SharedAccessKey=h6TObd/MF8tY9JiQjiHRj4c3C2+XYjbYQe0CzgZ" +
+            "nmoA=")]
+        public string DefaultFullSharedAccessSignature {
+            get {
+                return ((string)(this["DefaultFullSharedAccessSignature"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("vocal")]
+        public string Hubname {
+            get {
+                return ((string)(this["Hubname"]));
+            }
+        }
     }
 }
