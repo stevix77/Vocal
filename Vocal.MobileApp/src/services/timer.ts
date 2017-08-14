@@ -21,12 +21,15 @@ export class Timer{
     return `<span>${this.minutes}:${this.pad(this.secondes)}</span>`;
   }
 
-  startTimer(){
-    console.log('start timer');
+  startTimer() {
     this.interval = setInterval(() => this.updateTimer(), 1000);
   }
 
+  stopTimer() {
+    clearInterval(this.interval);
+  }
+
   updateTimer() {
-    document.getElementById('timer').innerHTML = this.getTime();
+    document.querySelector('[data-timer]').innerHTML = this.getTime();
   }
 }

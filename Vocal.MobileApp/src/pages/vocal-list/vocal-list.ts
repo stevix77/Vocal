@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
-import { SearchFriendsRequest } from "../../models/request/searchFriendsRequest";
+import { IonicPage, NavController, NavParams, AlertController, Events, ViewController, ModalController } from 'ionic-angular';
 import { params } from "../../services/params";
 import { url } from "../../services/url";
-import { AppUser } from "../../models/appUser";
+import { SearchFriendsRequest } from "../../models/request/searchFriendsRequest";
 import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
@@ -16,9 +15,9 @@ import { Push, PushObject, PushOptions } from '@ionic-native/push';
 import { hubConnection  } from 'signalr-no-jquery';
 import { MediaPlugin } from 'ionic-native';
 import { SettingsPage } from '../settings/settings';
+import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-vocal';
 
 declare var WindowsAzure: any;
-
 
 /**
  * Generated class for the VocalListPage page.
@@ -35,7 +34,17 @@ declare var WindowsAzure: any;
 export class VocalListPage {
   media: MediaPlugin = new MediaPlugin('../Library/NoCloud/recording.wav');
   notificationHub : any;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public audioRecorder: AudioRecorder, private httpService: HttpService, private cookieService: CookieService, private storeService: StoreService, private push: Push) {
+  constructor(public navCtrl: NavController, 
+    public navParams: NavParams, 
+    public alertCtrl: AlertController, 
+    public audioRecorder: AudioRecorder,
+    public viewCtrl: ViewController,
+    public modalCtrl: ModalController,
+    public events: Events,
+    private httpService: HttpService, 
+    private cookieService: CookieService, 
+    private storeService: StoreService,
+    private push: Push) {
     //this.searchFriends(['s.valentin77@gmail.com', 'tik@tik.fr']);
     //this.addFriends(["000000-f1e6-4c976-9a55-7525496145s", "599fc814-8733-4284-a606-de34c9845348"]);
     const connection = hubConnection(url.BaseUri, null);
@@ -53,8 +62,17 @@ export class VocalListPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad VocalListPage');
 
-    document.getElementById('record-vocal').addEventListener('touchstart', oEvt => this.startRecording());
-    //document.getElementById('record-vocal').addEventListener('touchend', oEvt => this.stopRecording());
+    document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.startRecording());
+    document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.stopRecording());
+  }
+
+  hideHeader() {
+    document.querySelector('.ion-page ion-header').classList.add('anime-hide');
+  }
+
+  presentEditVocalModal() {
+    let editVocalModal = this.modalCtrl.create(ModalEditVocalPage);
+    editVocalModal.present();
   }
 
   settings() {
@@ -62,23 +80,32 @@ export class VocalListPage {
   }
 
   startRecording() {
-    this.audioRecorder.startRecording();
-    // try {
-    //   this.audioRecorder.startRecording();
-    // }
-    // catch (e) {
-    //   this.showAlert('Could not start recording.');
-    // }
+    this.events.publish('record:start');
+    this.hideHeader();
+    let template = `
+    <div class="wrapper-record">
+      <div class="timer" data-timer><span>0:00</span></div>
+      <span class="subtitle">Enregistrement du vocal en cours ...</span>
+    </div>`;
+
+    document.querySelector('.ion-page ion-content').insertAdjacentHTML('beforeend', template);
+    try {
+      this.audioRecorder.startRecording();
+    }
+    catch (e) {
+      this.showAlert('Could not start recording.');
+    }
   }
 
   stopRecording() {
-    console.log('stop recording');
-    // try {
-    //   this.audioRecorder.stopRecording();
-    // }
-    // catch (e) {
-    //   this.showAlert('Could not stop recording.');
-    // }
+    this.presentEditVocalModal();
+    document.querySelector('.ion-page ion-content .wrapper-record').remove();
+    try {
+      this.audioRecorder.stopRecording();
+    }
+    catch (e) {
+      this.showAlert('Could not stop recording.');
+    }
   }
 
   startPlayback() {
