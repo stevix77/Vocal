@@ -40,7 +40,7 @@ export class VocalListPage {
     console.log('ionViewDidLoad VocalListPage');
 
     document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.startRecording());
-    //document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.stopRecording());
+    document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.stopRecording());
   }
 
   hideHeader() {
