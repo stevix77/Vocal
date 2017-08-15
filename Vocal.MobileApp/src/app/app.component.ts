@@ -13,7 +13,8 @@ import { Device } from '@ionic-native/device';
 import {params} from '../services/params';
 import {Response} from '../models/response';
 import {ResourceResponse} from '../models/Response/resourceResponse';
-// import { WindowsAzure } from 'cordova-plugin-ms-azure-mobile-apps';
+import {KeyValueResponse} from '../models/response/keyValueResponse';
+
 declare var WindowsAzure: any;
 
 @Component({
@@ -70,7 +71,7 @@ export class VocalApp {
       if(resource == null) {
         this.httpService.Post(url.GetListResources(params.Lang), null).subscribe(
           resp => {
-            let response = resp.json() as Response<Array<ResourceResponse>>;
+            let response = resp.json() as Response<Array<KeyValueResponse<string, string>>>;
             this.storeService.Set("resource", response.Data);
             params.Resources = response.Data;
           }

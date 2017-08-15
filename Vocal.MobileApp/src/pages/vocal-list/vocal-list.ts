@@ -7,8 +7,10 @@ import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
 import { AddFriendsRequest } from "../../models/request/addFriendsRequest";
+import { Request } from "../../models/request/Request";
 import { NotificationRegisterRequest } from "../../models/request/notificationRegisterRequest";
 import { UserResponse } from '../../models/response/userResponse';
+import { InitResponse } from '../../models/response/InitResponse';
 import { Response } from '../../models/response';
 import { AudioRecorder } from '../../services/audiorecorder';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
@@ -16,6 +18,8 @@ import { hubConnection  } from 'signalr-no-jquery';
 import { MediaPlugin } from 'ionic-native';
 import { SettingsPage } from '../settings/settings';
 import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-vocal';
+import {KeyStore} from '../../models/enums';
+import {KeyValueResponse} from '../../models/response/keyValueResponse';
 
 declare var WindowsAzure: any;
 
@@ -48,8 +52,6 @@ export class VocalListPage {
     private storeService: StoreService,
     private push: Push) {
 
-    //this.searchFriends(['s.valentin77@gmail.com', 'tik@tik.fr']);
-    //this.addFriends(["000000-f1e6-4c976-9a55-7525496145s", "599fc814-8733-4284-a606-de34c9845348"]);
     const connection = hubConnection(url.BaseUri, null);
     const hubProxy = connection.createHubProxy('Vocal');
     console.log(hubProxy);
@@ -69,6 +71,10 @@ export class VocalListPage {
 
     document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.startRecording());
     if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.stopRecording());
+  }
+
+  ionViewWillEnter() {
+    this.initialize();
   }
 
   hideHeader() {
@@ -138,6 +144,36 @@ export class VocalListPage {
       buttons: ['OK']
     });
     alert.present();
+  }
+
+  initialize() {
+    let request = new Request();
+    request.Lang = params.Lang;
+    let urlInit = url.Init();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlInit, params.User)
+    this.httpService.Post(urlInit, request, cookie).subscribe(
+      resp => {
+        let response = resp.json() as Response<InitResponse>;
+        if(response.HasError)
+          this.showAlert(response.ErrorMessage)
+        else {
+          let errorSettings = response.Data.Errors.find(x => x.Key == KeyStore.Settings.toString());
+          let errorFriends = response.Data.Errors.find(x => x.Key == KeyStore.Friends.toString());
+          let errorTalks = response.Data.Errors.find(x => x.Key == KeyStore.Talks.toString());
+          this.SaveData(response.Data.Friends, errorFriends, KeyStore.Friends);
+          this.SaveData(response.Data.Talks, errorTalks, KeyStore.Talks);
+          this.SaveData(response.Data.Settings, errorSettings, KeyStore.Settings);
+        }
+      },
+      error => this.showAlert(error)
+    )
+  }
+
+  SaveData(data: any, error: KeyValueResponse<string, string>, key: KeyStore) {
+    if(error == null)
+      this.storeService.Set(key.toString(), data);
+    else
+      this.showAlert(error.Value);
   }
 
   initPushNotification() {

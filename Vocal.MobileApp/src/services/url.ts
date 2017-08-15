@@ -35,5 +35,8 @@ var url = {
     },
     UpdateUser() : string {
         return this.BaseUri + "/api/user/me/update"
+    },
+    Init() : string {
+        return this.BaseUri + "/api/home/init";
     }
 }
