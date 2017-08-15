@@ -34,6 +34,7 @@ declare var WindowsAzure: any;
 export class VocalListPage {
   media: MediaPlugin = new MediaPlugin('../Library/NoCloud/recording.wav');
   notificationHub : any;
+  isApp: boolean;
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
     public alertCtrl: AlertController, 
@@ -57,6 +58,9 @@ export class VocalListPage {
     })
     .fail(function(){ console.log('Could not connect'); });
     this.initPushNotification();
+
+    
+    this.isApp = !document.URL.startsWith('http');
   }
 
   ionViewDidLoad() {
