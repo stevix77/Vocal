@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-navbar><ion-title>Chat room</ion-title>  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <div id="chat-window" class="chat-window">
+      <ion-grid>
+        <ion-row id="message-room">
+
+        </ion-row>
+      </ion-grid>
+  </div>
+
+  <div>
+    <form #form="ngForm" (ngSubmit)="sendMessage(form)" >
+      <ion-grid>
+        <ion-row>
+          <ion-col col-10>
+            <ion-item>
+              <ion-input type="text" name="Message" [(ngModel)]="model.Message" placeholder="Say something..." clearInput required></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col col-2>
+            <button ion-button icon-only round color="secondary" type="submit" [disabled]="!form.valid">
+                <ion-icon name="arrow-round-up"></ion-icon>
+            </button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </div>
+
+</ion-content>
