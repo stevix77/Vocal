@@ -10,15 +10,17 @@
   </ion-navbar>
 </ion-header>
 
-
 <ion-content center padding>
-  <button ion-button (click)="settings()">Settings</button>
+  
+  <div class="wrapper-content">
+    <!-- <button *ngIf="!isApp" ion-button (click)="settings()">Settings</button> -->
+  </div>
 
   <ion-fab center bottom>
     <button ion-fab data-record><ion-icon name="mic"></ion-icon></button>
   </ion-fab>
 
-  <ion-fab right bottom>
+  <ion-fab right bottom *ngIf="!isApp">
     <button ion-fab (click)="stopRecording()"><ion-icon name="square"></ion-icon></button>
   </ion-fab> 
 

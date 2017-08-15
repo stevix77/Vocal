@@ -15,6 +15,7 @@ import {Response} from '../models/response';
 import {ResourceResponse} from '../models/Response/resourceResponse';
 // import { WindowsAzure } from 'cordova-plugin-ms-azure-mobile-apps';
 declare var WindowsAzure: any;
+
 @Component({
   templateUrl: 'app.html',
   providers: [StoreService, HttpService, Globalization, Device]
@@ -91,7 +92,7 @@ export class VocalApp {
       this.GetAllResources();
       this.SetLanguage();
       this.SetPlatform();
-      this.client = new WindowsAzure.MobileServiceClient("https://mobileappvocal.azurewebsites.net");
+      //this.client = new WindowsAzure.MobileServiceClient("https://mobileappvocal.azurewebsites.net");
       // this.client = new WindowsAzure.Messaging.NotificationHub("vocal", "Endpoint=sb://vocalnotif.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=DTSTAQTpFmB8KzmE7n496TNWUEeInaxLGtATc7Cl9Hk=");
     });
   }

@@ -6,6 +6,7 @@ import { Timer } from './timer';
 export class AudioRecorder {
   mediaPlugin: MediaPlugin = null;
   timer: Timer;
+  isApp: boolean = !document.URL.startsWith('http');
   
   get MediaPlugin(): MediaPlugin {
     if (this.mediaPlugin == null) {
@@ -18,20 +19,20 @@ export class AudioRecorder {
   startRecording() {
     this.timer = new Timer();
     this.timer.startTimer();
-    this.MediaPlugin.startRecord();
+    if(this.isApp) this.MediaPlugin.startRecord();
   }
 
   stopRecording() {
     this.timer.stopTimer();
-    this.MediaPlugin.stopRecord();
+    if(this.isApp) this.MediaPlugin.stopRecord();
   }
 
   startPlayback() {
-    this.MediaPlugin.play();
+    if(this.isApp) this.MediaPlugin.play();
   }
 
   stopPlayback() {
-    this.MediaPlugin.stop();
+    if(this.isApp) this.MediaPlugin.stop();
   }
 
 }

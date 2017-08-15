@@ -30,6 +30,8 @@ declare var WindowsAzure: any;
 export class VocalListPage {
   media: MediaPlugin = new MediaPlugin('../Library/NoCloud/recording.wav');
   notificationHub : any;
+  isApp: boolean = !document.URL.startsWith('http');
+
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
     public alertCtrl: AlertController, 
@@ -41,6 +43,7 @@ export class VocalListPage {
     private cookieService: CookieService, 
     private storeService: StoreService,
     private push: Push) {
+
     //this.searchFriends(['s.valentin77@gmail.com', 'tik@tik.fr']);
     //this.addFriends(["000000-f1e6-4c976-9a55-7525496145s", "599fc814-8733-4284-a606-de34c9845348"]);
     const connection = hubConnection(url.BaseUri, null);
@@ -53,13 +56,15 @@ export class VocalListPage {
     })
     .fail(function(){ console.log('Could not connect'); });
     this.initPushNotification();
+
+    
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad VocalListPage');
 
     document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.startRecording());
-    document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.stopRecording());
+    if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.stopRecording());
   }
 
   hideHeader() {
