@@ -34,7 +34,17 @@
         "cordova-plugin-contacts": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
-        "cordova-plugin-media": {
+        "msopentech.azure.NotificationHub": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "phonegap-plugin-push": {
+            "SENDER_ID": "85075801930",
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-ms-azure-mobile-apps": {
             "PACKAGE_NAME": "io.ionic.starter"
         }
     },
@@ -42,7 +52,7 @@
         "cordova-plugin-compat": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
-        "cordova-plugin-file": {
+        "cordova-sqlite-storage": {
             "PACKAGE_NAME": "io.ionic.starter"
         }
     }

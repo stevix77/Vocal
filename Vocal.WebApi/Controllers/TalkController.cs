@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using Vocal.Business.Business;
@@ -21,6 +17,12 @@ namespace Vocal.WebApi.Controllers
         public Response<List<TalkResponse>> GetTalks(TalkRequest request)
         {
             return TalkBusiness.GetTalks(request.UserId, request.Lang);
+        }
+
+        [Route("SendMessage")]
+        public Response<bool> SendMessage(SendMessageRequest request)
+        {
+            return TalkBusiness.SendMessage(request);
         }
     }
 }

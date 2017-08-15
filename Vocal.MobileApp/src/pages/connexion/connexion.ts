@@ -7,7 +7,6 @@ import { UserResponse } from '../../models/response/UserResponse';
 import { LoginRequest } from '../../models/request/LoginRequest';
 import { AppUser } from '../../models/appUser';
 import {functions} from '../../services/functions';
-import { ResourceResponse } from '../../models/response/ResourceResponse';
 import {url} from '../../services/url';
 import {HttpService} from '../../services/httpService';
 

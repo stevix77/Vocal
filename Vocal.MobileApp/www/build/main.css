@@ -24731,3 +24731,20 @@ ion-navbar.toolbar {
     padding-top: calc(16px + 20px);
   }
 }
+
+page-message .grid {
+  padding: 0;
+}
+
+page-message .msg {
+  border-radius: 20px;
+  padding: 10px;
+}
+
+page-message .msg.msg-current-user {
+  background-color: #32db64;
+}
+
+page-message .msg.msg-other-user {
+  background-color: lightgray;
+}

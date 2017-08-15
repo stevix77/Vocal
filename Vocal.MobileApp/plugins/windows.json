@@ -7,10 +7,25 @@
         "files": {}
     },
     "installed_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "MyApp"
+        },
         "cordova-plugin-console": {
             "PACKAGE_NAME": "MyApp"
         },
+        "cordova-plugin-contacts": {
+            "PACKAGE_NAME": "MyApp"
+        },
+        "cordova-plugin-datepicker": {
+            "PACKAGE_NAME": "MyApp"
+        },
         "cordova-plugin-device": {
+            "PACKAGE_NAME": "MyApp"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "MyApp"
+        },
+        "cordova-plugin-globalization": {
             "PACKAGE_NAME": "MyApp"
         },
         "cordova-plugin-splashscreen": {
@@ -25,24 +40,22 @@
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "MyApp"
         },
-        "cordova-plugin-datepicker": {
+        "msopentech.azure.NotificationHub": {
             "PACKAGE_NAME": "MyApp"
         },
-        "cordova-plugin-globalization": {
+        "phonegap-plugin-push": {
+            "SENDER_ID": "85075801930",
             "PACKAGE_NAME": "MyApp"
         },
-        "cordova-plugin-contacts": {
+        "cordova-plugin-inappbrowser": {
             "PACKAGE_NAME": "MyApp"
         },
-        "cordova-plugin-media": {
+        "cordova-plugin-ms-azure-mobile-apps": {
             "PACKAGE_NAME": "MyApp"
         }
     },
     "dependent_plugins": {
-        "cordova-plugin-compat": {
-            "PACKAGE_NAME": "MyApp"
-        },
-        "cordova-plugin-file": {
+        "cordova-sqlite-storage": {
             "PACKAGE_NAME": "MyApp"
         }
     }

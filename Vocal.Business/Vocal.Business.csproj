@@ -68,6 +68,8 @@
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.0.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -80,6 +82,7 @@
     <Compile Include="Binder\Bind.cs" />
     <Compile Include="Business\AuthentificationBusiness.cs" />
     <Compile Include="Business\FriendBusiness.cs" />
+    <Compile Include="Business\NotificationBusiness.cs" />
     <Compile Include="Business\ResourceBusiness.cs" />
     <Compile Include="Business\TalkBusiness.cs" />
     <Compile Include="Business\UserBusiness.cs" />
@@ -120,8 +123,12 @@
       <Name>Vocal.DAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Vocal.Model\Vocal.Model.csproj">
-      <Project>{1551dfa8-d21e-400a-81fe-e15831cfdd74}</Project>
+      <Project>{b76d6ce5-b158-4eb9-8a35-54da7cee32ea}</Project>
       <Name>Vocal.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Vocal.Tools\Vocal.Tools.csproj">
+      <Project>{9198f034-6876-4e86-a84a-50624d6c7742}</Project>
+      <Name>Vocal.Tools</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +143,7 @@
     <EmbeddedResource Include="Properties\Resources.Language.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Language.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

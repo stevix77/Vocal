@@ -126,6 +126,9 @@
   <data name="MailExisting" xml:space="preserve">
     <value>Cet email existe déja</value>
   </data>
+  <data name="NoDataMessage" xml:space="preserve">
+    <value>Erreur technique, votre message n'a pas été transmis</value>
+  </data>
   <data name="TechnicalError" xml:space="preserve">
     <value>Erreur technique, réessayez plus tard</value>
   </data>

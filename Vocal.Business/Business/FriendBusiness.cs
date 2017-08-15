@@ -49,6 +49,15 @@ namespace Vocal.Business.Business
             try
             {
                 response.Data = Repository.Instance.AddFriends(userId, ids);
+                Task.Run(async () =>
+                {
+                    var user = Repository.Instance.GetUserById(userId);
+                    if(user != null)
+                    {
+                        var mess = $"{user.Username} {Resources_Language.TextNotifAddFriend}";
+                        await SendNotif(ids, mess);
+                    }
+                });
             }
             catch (TimeoutException tex)
             {
@@ -66,6 +75,15 @@ namespace Vocal.Business.Business
                 response.ErrorMessage = Resources_Language.TechnicalError;
             }
             return response;
+        }
+
+        private static async Task SendNotif(List<string> ids, string mess)
+        {
+            foreach(var item in ids)
+            {
+                var tag = $"{Settings.Default.TagUser}:{item}";
+                await NotificationBusiness.SendNotification(new List<string> { item }, tag, mess);
+            }
         }
     }
 }

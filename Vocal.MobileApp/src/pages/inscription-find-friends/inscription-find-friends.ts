@@ -42,6 +42,7 @@ export class InscriptionFindFriendsPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad InscriptionFindFriendsPage');
+    this.searchFriends(['s.valentin77@gmail.com', 'tik@tik.fr']);
   }
   
   searchFriends(emails: Array<string>) {
@@ -51,7 +52,7 @@ export class InscriptionFindFriendsPage {
     let urlSearch = url.SearchFriends();
     let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
     this.httpService.Post<SearchFriendsRequest>(urlSearch, obj, cookie).subscribe(
-      resp => {
+      resp => { 
         let response = resp.json() as Response<Array<UserResponse>>;
         if(!response.HasError) {
           this.model.Friends = response.Data;

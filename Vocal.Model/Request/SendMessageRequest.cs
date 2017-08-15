@@ -1,14 +1,15 @@
-﻿
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Vocal.Model.Request
 {
     public class SendMessageRequest : Request
     {
-        public byte[] Content { get; set; }
+        public string IdTalk { get; set; }
+        public string Content { get; set; }
         public DateTime SentTime { get; set; }
-        public ulong IdTalk { get; set; }
-       // public MessageType 
-
+        public int MessageType { get; set; } 
+        public string IdSender { get; set; }
+        public List<string> IdsRecipient { get; set; }
     }
 }
