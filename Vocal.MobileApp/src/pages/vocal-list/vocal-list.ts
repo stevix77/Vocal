@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Events, ViewController, ModalController } from 'ionic-angular';
 import { params } from "../../services/params";
 import { url } from "../../services/url";
-import { SearchFriendsRequest } from "../../models/request/searchFriendsRequest";
 import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
@@ -13,7 +12,7 @@ import { UserResponse } from '../../models/response/userResponse';
 import { InitResponse } from '../../models/response/InitResponse';
 import { Response } from '../../models/response';
 import { AudioRecorder } from '../../services/audiorecorder';
-import { Push, PushObject, PushOptions } from '@ionic-native/push';
+import { Push, PushObject } from '@ionic-native/push';
 import { hubConnection  } from 'signalr-no-jquery';
 import { MediaPlugin } from 'ionic-native';
 import { SettingsPage } from '../settings/settings';
@@ -202,8 +201,8 @@ export class VocalListPage {
       let urlNotifRegister = url.NotificationRegister();
       let cookie = this.cookieService.GetAuthorizeCookie(urlNotifRegister, params.User)
       this.httpService.Post<NotificationRegisterRequest>(urlNotifRegister, request, cookie).subscribe(
-        resp => {
-          let response = resp.json() as Response<string>;
+          resp => {
+
         }
       )
     });

@@ -5,7 +5,6 @@ import { HttpModule } from '@angular/http';
 
 import { VocalApp } from './app.component';
 import { HomePage } from '../pages/home/home';
-import { ListPage } from '../pages/list/list';
 import { PasswordForgotPage } from '../pages/passwordForgot/passwordForgot';
 import { PasswordForgotValidationPage } from '../pages/password-forgot-validation/password-forgot-validation';
 import { Connexion } from '../pages/connexion/connexion';
@@ -21,18 +20,19 @@ import { VocalListPage } from '../pages/vocal-list/vocal-list';
 import { SettingsPage } from '../pages/settings/settings';
 
 import { SettingsChoices } from '../pages/settings/settingsChoices/SettingsChoices';
+import { SettingsMail } from '../pages/settings/settingsMail/SettingsMail';
 
 
-import { ModalRecordPage } from '../pages/modal-record/modal-record';
 import { ModalEditVocalPage } from '../pages/modal-edit-vocal/modal-edit-vocal';
+import { SendVocalPage } from '../pages/send-vocal/send-vocal';
+import { SelectFriendsComponent } from '../components/select-friends/select-friends';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-let pages = [
+let components = [
   VocalApp,
   HomePage,
-  ListPage,
   PasswordForgotPage,
   PasswordForgotValidationPage,
   Connexion,
@@ -47,20 +47,24 @@ let pages = [
   VocalListPage,
   SettingsPage,
   SettingsChoices,
+  SettingsMail,
+  SettingsChoices,
 
-  ModalRecordPage,
   ModalEditVocalPage,
+  SendVocalPage,
+
+  SelectFriendsComponent
 ];
 
 @NgModule({
-  declarations: pages,
+  declarations: components,
   imports: [
     BrowserModule,
     HttpModule,
     IonicModule.forRoot(VocalApp),
   ],
   bootstrap: [IonicApp],
-  entryComponents: pages,
+  entryComponents: components,
   providers: [
     StatusBar,
     SplashScreen,
