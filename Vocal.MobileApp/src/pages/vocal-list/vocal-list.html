@@ -7,7 +7,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons start>
-      <button icon-only ion-button><ion-icon name="contact"></ion-icon></button>
+      <button icon-only ion-button (click)="showProfile()"><ion-icon name="contact"></ion-icon></button>
     </ion-buttons>
     <ion-searchbar
       [(ngModel)]="myInput"
@@ -20,10 +20,6 @@
 
 <ion-content center padding>
   
-  <div class="wrapper-content">
-    <!-- <button *ngIf="!isApp" ion-button (click)="settings()">Settings</button> -->
-  </div>
-
   <ion-fab center bottom>
     <button ion-fab data-record><ion-icon name="mic"></ion-icon></button>
   </ion-fab>

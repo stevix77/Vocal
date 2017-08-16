@@ -12,6 +12,7 @@ import { hubConnection  } from 'signalr-no-jquery';
 import { MediaPlugin } from 'ionic-native';
 import { SettingsPage } from '../settings/settings';
 import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-vocal';
+import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
 
 declare var WindowsAzure: any;
 
@@ -76,8 +77,9 @@ export class VocalListPage {
     editVocalModal.present();
   }
 
-  settings() {
-    this.navCtrl.push(SettingsPage);
+  showProfile() {
+    let profileModal = this.modalCtrl.create(ModalProfilePage);
+    profileModal.present();
   }
 
   startRecording() {

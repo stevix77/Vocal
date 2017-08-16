@@ -5,14 +5,17 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
-  <ion-navbar>
-    <ion-title>modalProfile</ion-title>
-  </ion-navbar>
+  <ion-toolbar>
+    <ion-buttons>
+      <button ion-button icon-only (click)="dismiss()"><ion-icon name="close"></ion-icon></button>
+    </ion-buttons>
+  </ion-toolbar>
 
 </ion-header>
 
 
 <ion-content padding>
+
+<button ion-button (click)="goToSettings()">Réglages</button>
 
 </ion-content>

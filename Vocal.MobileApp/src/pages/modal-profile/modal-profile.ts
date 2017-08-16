@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { SettingsPage } from '../../pages/settings/settings';
 
 /**
  * Generated class for the ModalProfilePage page.
@@ -14,11 +15,22 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class ModalProfilePage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, 
+    public navParams: NavParams,
+    public viewCtrl: ViewController
+    ) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ModalProfilePage');
+  }
+
+  goToSettings() {
+    this.navCtrl.push(SettingsPage);
+  }
+
+  dismiss() {
+    this.viewCtrl.dismiss();
   }
 
 }
