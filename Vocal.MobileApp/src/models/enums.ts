@@ -13,3 +13,9 @@ export enum KeyStore {
     Friends = 2,
     Talks = 3
 }
+
+export enum Store {
+    apns, // iOs
+    wns, // Windows
+    gcm // Android
+}

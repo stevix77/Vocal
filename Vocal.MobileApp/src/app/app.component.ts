@@ -12,8 +12,8 @@ import { Globalization } from '@ionic-native/globalization';
 import { Device } from '@ionic-native/device';
 import {params} from '../services/params';
 import {Response} from '../models/response';
-import {ResourceResponse} from '../models/Response/resourceResponse';
 import {KeyValueResponse} from '../models/response/keyValueResponse';
+import {Store} from '../models/enums';
 
 declare var WindowsAzure: any;
 
@@ -102,14 +102,14 @@ export class VocalApp {
     let platform = '';
     switch(this.device.platform) {
       case 'windows':
-        platform = 'wns';
+        platform = Store[Store.wns]
         break;
       case 'iOS':
-        platform = 'apns';
+        platform = Store[Store.apns];
         break;
       case 'android':
       case 'Android':
-        platform = 'gcm';
+        platform = Store[Store.gcm];
         break;
       default:
         platform = '';

@@ -32,7 +32,7 @@ declare var WindowsAzure: any;
 @Component({
   selector: 'page-vocal-list',
   templateUrl: 'vocal-list.html',
-  providers: [HttpService, CookieService, Push, AudioRecorder]
+  providers: [HttpService, CookieService, Push, AudioRecorder, StoreService]
 })
 export class VocalListPage {
   media: MediaPlugin = new MediaPlugin('../Library/NoCloud/recording.wav');

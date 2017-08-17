@@ -2,10 +2,10 @@
 <div>
   <!-- {{text}} -->
   <h2>Best friends</h2>
-  <ion-list>
-    <ion-item>
-      <ion-label>Daenerys Targaryen</ion-label>
-      <ion-checkbox item-end></ion-checkbox>
+  <ion-list inset>
+    <ion-item *ngFor="let item of Friends">
+      <ion-label>{{item.Firstname}} {{item.Lastname}}</ion-label>
+      <ion-checkbox item-end [(ngModel)]="item.Checked"></ion-checkbox>
     </ion-item>
   </ion-list>
 </div>

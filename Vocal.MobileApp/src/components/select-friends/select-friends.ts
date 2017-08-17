@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { UserResponse } from '../../models/response/userResponse';
 
 /**
  * Generated class for the SelectFriendsComponent component.
@@ -13,6 +14,7 @@ import { Component } from '@angular/core';
 export class SelectFriendsComponent {
 
   text: string;
+  @Input() Friends: Array<UserResponse>;
 
   constructor() {
     console.log('Hello SelectFriendsComponent Component');
