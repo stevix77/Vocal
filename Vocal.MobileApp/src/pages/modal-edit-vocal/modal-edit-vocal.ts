@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
 import { AudioRecorder } from '../../services/audiorecorder';
+import { SendVocalPage } from '../../pages/send-vocal/send-vocal';
 
 /**
  * Generated class for the ModalEditVocalPage page.
@@ -39,6 +40,10 @@ export class ModalEditVocalPage {
 
   dismiss(){
     this.viewCtrl.dismiss();
+  }
+
+  goToSendVocal() {
+    this.navCtrl.push(SendVocalPage);
   }
 
   showAlert(message) {

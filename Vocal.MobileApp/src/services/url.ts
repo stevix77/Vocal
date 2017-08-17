@@ -1,6 +1,6 @@
 export
 var url = {
-    //BaseUri: "http://192.168.1.14:8017",
+    // BaseUri: "http://192.168.1.14:8017",
     BaseUri: "http://wsvocal.azurewebsites.net",
 
     Login() : string {
@@ -35,5 +35,8 @@ var url = {
     },
     UpdateUser() : string {
         return this.BaseUri + "/api/user/me/update"
+    },
+    Init() : string {
+        return this.BaseUri + "/api/home/init";
     }
 }

@@ -41,6 +41,35 @@ namespace Vocal.Business.Business
             return response;
         }
 
+        public static Response<List<UserResponse>> GetFriends(string userId, string lang)
+        {
+            var response = new Response<List<UserResponse>>();
+            LogManager.LogDebug(userId, lang);
+            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+            try
+            {
+                var list = Data.Instance.Users;
+                //var list = Repository.Instance.GetFriends(userId);
+                response.Data = Binder.Bind.Bind_Users(list);
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
         public static Response<bool> AddFriends(string userId, List<string> ids, string lang)
         {
             var response = new Response<bool>();
