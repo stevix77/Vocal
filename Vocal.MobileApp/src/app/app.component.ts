@@ -12,8 +12,9 @@ import { Globalization } from '@ionic-native/globalization';
 import { Device } from '@ionic-native/device';
 import {params} from '../services/params';
 import {Response} from '../models/response';
-import {ResourceResponse} from '../models/Response/resourceResponse';
-// import { WindowsAzure } from 'cordova-plugin-ms-azure-mobile-apps';
+import {KeyValueResponse} from '../models/response/keyValueResponse';
+import {Store} from '../models/enums';
+
 declare var WindowsAzure: any;
 
 @Component({
@@ -70,7 +71,7 @@ export class VocalApp {
       if(resource == null) {
         this.httpService.Post(url.GetListResources(params.Lang), null).subscribe(
           resp => {
-            let response = resp.json() as Response<Array<ResourceResponse>>;
+            let response = resp.json() as Response<Array<KeyValueResponse<string, string>>>;
             this.storeService.Set("resource", response.Data);
             params.Resources = response.Data;
           }
@@ -101,14 +102,14 @@ export class VocalApp {
     let platform = '';
     switch(this.device.platform) {
       case 'windows':
-        platform = 'wns';
+        platform = Store[Store.wns]
         break;
       case 'iOS':
-        platform = 'apns';
+        platform = Store[Store.apns];
         break;
       case 'android':
       case 'Android':
-        platform = 'gcm';
+        platform = Store[Store.gcm];
         break;
       default:
         platform = '';
