@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
-import { PopoverPage } from './popover';
+import { SendVocalPage } from './send-vocal';
 
 @NgModule({
   declarations: [
-    PopoverPage,
+    SendVocalPage,
   ],
   imports: [
-    IonicPageModule.forChild(PopoverPage),
+    IonicPageModule.forChild(SendVocalPage),
   ],
   exports: [
-    PopoverPage
+    SendVocalPage
   ]
 })
-export class PopoverPageModule {}
+export class SendVocalPageModule {}

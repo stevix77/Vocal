@@ -65,7 +65,8 @@
     <Compile Include="Request\UpdateRequest.cs" />
     <Compile Include="Request\UserExistsRequest.cs" />
     <Compile Include="Response\ChoiceResponse.cs" />
-    <Compile Include="Response\ResourceResponse.cs" />
+    <Compile Include="Response\KeyValueResponse.cs" />
+    <Compile Include="Response\InitResponse.cs" />
     <Compile Include="Response\SettingsResponse.cs" />
     <Compile Include="Response\TalkResponse.cs" />
     <Compile Include="Response\UserResponse.cs" />

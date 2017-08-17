@@ -4,37 +4,24 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
+using Vocal.Business.Business;
+using Vocal.Model.Business;
+using Vocal.Model.Request;
+using Vocal.Model.Response;
+using Vocal.WebApi.Attribute;
 
 namespace Vocal.WebApi.Controllers
 {
+    [EnableCors("*", "*", "*")]
+    [CustomAuthorize, RoutePrefix("api/home")]
     public class HomeController : ApiController
     {
-        [Route("test2")]
-        // GET: api/Home
-        public IEnumerable<string> Get()
+        [HttpPost, Route("init")]
+        public Response<InitResponse> Initialize(Request request)
         {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/Home/5
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST: api/Home
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT: api/Home/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/Home/5
-        public void Delete(int id)
-        {
+            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
+            return InitBusiness.Initialize(obj.UserId, request.Lang);
         }
     }
 }

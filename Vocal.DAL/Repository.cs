@@ -58,6 +58,7 @@ namespace Vocal.DAL
             MongoClient client = new MongoClient(settings);
             return client;
         }
+        
 
         #region Authentification
 
@@ -169,6 +170,13 @@ namespace Vocal.DAL
                 success = true;
             }
             return success;
+        }
+
+        public List<People> GetFriends(string userId)
+        {
+            var list = new List<People>();
+
+            return list;
         }
 
         #endregion
