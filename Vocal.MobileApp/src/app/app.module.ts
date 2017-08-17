@@ -54,7 +54,7 @@ let components = [
   ModalEditVocalPage,
   SendVocalPage,
 
-  SelectFriendsComponent
+  SelectFriendsComponent,
   ModalProfilePage,
 ];
 

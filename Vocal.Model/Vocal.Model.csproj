@@ -44,6 +44,7 @@
     <Compile Include="DB\Device.cs" />
     <Compile Include="DB\Enums.cs" />
     <Compile Include="DB\Message.cs" />
+    <Compile Include="DB\Search.cs" />
     <Compile Include="DB\Settings.cs" />
     <Compile Include="DB\People.cs" />
     <Compile Include="DB\ResetPassword.cs" />

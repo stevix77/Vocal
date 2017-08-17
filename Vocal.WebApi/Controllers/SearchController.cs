@@ -14,7 +14,7 @@ using Vocal.WebApi.Attribute;
 namespace Vocal.WebApi.Controllers
 {
     [EnableCors("*", "*", "*")]
-    [RoutePrefix("api/search")]
+    [RoutePrefix("api/search"), CustomAuthorize]
     public class SearchController : ApiController
     {
         [HttpPost, Route("people")]
