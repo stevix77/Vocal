@@ -15,7 +15,28 @@
 
 
 <ion-content padding>
+<div text-center>
+  <h2>John Doe</h2>
+  <span class="vocal-total">35h de vocal à votre actif</span>
+</div>
 
-<button ion-button (click)="goToSettings()">Réglages</button>
+<ion-list inset>
+  <ion-item>
+    <ion-badge>1</ion-badge>
+    Ils m'ont ajouté
+  </ion-item>
+  <ion-item>
+    <ion-icon name="add-circle"></ion-icon>
+    Ajouter un ami
+  </ion-item>
+  <ion-item>
+    <ion-icon name="list"></ion-icon>
+    Mes amis
+  </ion-item>
+</ion-list>
+
+<div text-center>
+  <button ion-button (click)="goToSettings()">Réglages</button>
+</div>
 
 </ion-content>
