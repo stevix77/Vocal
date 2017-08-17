@@ -60,6 +60,7 @@
     <Compile Include="Request\RegisterRequest.cs" />
     <Compile Include="Request\Request.cs" />
     <Compile Include="Request\SearchFriendsRequest.cs" />
+    <Compile Include="Request\SearchRequest.cs" />
     <Compile Include="Request\TalkRequest.cs" />
     <Compile Include="Request\UpdateRequest.cs" />
     <Compile Include="Request\UserExistsRequest.cs" />

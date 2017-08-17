@@ -196,6 +196,21 @@ namespace Vocal.DAL
 
         #endregion
 
+        #region Search
+
+        public List<User> SearchPeople(string keyword)
+        {
+            var list = new List<User>();
+            var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            list = collection.Find(x => x.Username.ToLower().Contains(keyword) || 
+                                        x.Firstname.ToLower().Contains(keyword) || 
+                                        x.Lastname.ToLower().Contains(keyword))
+                                        .ToList();
+            return list;
+        }
+
+        #endregion
+
         #region Private methods
 
         private List<People> Bind_UsersToFriends(List<User> users)

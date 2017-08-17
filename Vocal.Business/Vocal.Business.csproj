@@ -84,6 +84,7 @@
     <Compile Include="Business\FriendBusiness.cs" />
     <Compile Include="Business\NotificationBusiness.cs" />
     <Compile Include="Business\ResourceBusiness.cs" />
+    <Compile Include="Business\SearchBusiness.cs" />
     <Compile Include="Business\TalkBusiness.cs" />
     <Compile Include="Business\UserBusiness.cs" />
     <Compile Include="Exception\CustomException.cs" />
