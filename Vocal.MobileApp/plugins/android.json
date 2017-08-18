@@ -10,7 +10,28 @@
         "cordova-plugin-console": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
+        "cordova-plugin-contacts": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-datepicker": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
         "cordova-plugin-device": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-globalization": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-media": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-ms-azure-mobile-apps": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
         "cordova-plugin-splashscreen": {
@@ -25,26 +46,7 @@
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
-        "cordova-plugin-datepicker": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-globalization": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-contacts": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "msopentech.azure.NotificationHub": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
         "phonegap-plugin-push": {
-            "SENDER_ID": "85075801930",
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-ms-azure-mobile-apps": {
             "PACKAGE_NAME": "io.ionic.starter"
         }
     },

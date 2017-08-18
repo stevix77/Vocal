@@ -30,6 +30,7 @@ import { SelectFriendsComponent } from '../components/select-friends/select-frie
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { Media } from '@ionic-native/media';
 
 let components = [
   VocalApp,
@@ -71,6 +72,7 @@ let components = [
   providers: [
     StatusBar,
     SplashScreen,
+    Media,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
   ]
 })

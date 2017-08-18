@@ -57,8 +57,8 @@ export class VocalListPage {
     .fail(function(){ console.log('Could not connect'); });
     this.initPushNotification();
 
-    events.subscribe('record:start', () => this.toggleHeader());
-    events.subscribe('edit-vocal:close', () => this.toggleHeader());
+    events.subscribe('record:start', () => this.toggleContent());
+    events.subscribe('edit-vocal:close', () => this.toggleContent());
   }
 
   ionViewDidLoad() {
@@ -70,6 +70,11 @@ export class VocalListPage {
 
   ionViewWillEnter() {
     this.initialize();
+  }
+
+  toggleContent() {
+    document.querySelector('.ion-page ion-content .vocal-list').classList.toggle('hide'); 
+    this.toggleHeader();
   }
 
   toggleHeader() {
