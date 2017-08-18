@@ -11,15 +11,12 @@ import { NotificationRegisterRequest } from "../../models/request/notificationRe
 import { UserResponse } from '../../models/response/userResponse';
 import { InitResponse } from '../../models/response/InitResponse';
 import { Response } from '../../models/response';
-import { AudioRecorder } from '../../services/audiorecorder';
 import { Push, PushObject } from '@ionic-native/push';
 import { hubConnection  } from 'signalr-no-jquery';
-import { MediaPlugin } from 'ionic-native';
-import { SettingsPage } from '../settings/settings';
-import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-vocal';
 import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
 import {KeyStore} from '../../models/enums';
 import {KeyValueResponse} from '../../models/response/keyValueResponse';
+import { AudioRecorderComponent } from '../../components/audio-recorder/audio-recorder';
 
 declare var WindowsAzure: any;
 
@@ -33,17 +30,16 @@ declare var WindowsAzure: any;
 @Component({
   selector: 'page-vocal-list',
   templateUrl: 'vocal-list.html',
-  providers: [HttpService, CookieService, Push, AudioRecorder, StoreService]
+  providers: [HttpService, CookieService, Push, StoreService],
+  entryComponents: [AudioRecorderComponent]
 })
 export class VocalListPage {
-  media: MediaPlugin = new MediaPlugin('../Library/NoCloud/recording.wav');
   notificationHub : any;
   isApp: boolean = !document.URL.startsWith('http');
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
     public alertCtrl: AlertController, 
-    public audioRecorder: AudioRecorder,
     public viewCtrl: ViewController,
     public modalCtrl: ModalController,
     public events: Events,
@@ -63,79 +59,28 @@ export class VocalListPage {
     .fail(function(){ console.log('Could not connect'); });
     this.initPushNotification();
 
-    
+    events.subscribe('record:start', () => this.toggleHeader());
+    events.subscribe('edit-vocal:close', () => this.toggleHeader());
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad VocalListPage');
 
-    document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.startRecording());
-    if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.stopRecording());
+    document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
+    if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
   }
 
   ionViewWillEnter() {
     this.initialize();
   }
 
-  hideHeader() {
-    document.querySelector('.ion-page ion-header').classList.add('anime-hide');
-  }
-
-  presentEditVocalModal() {
-    let editVocalModal = this.modalCtrl.create(ModalEditVocalPage);
-    editVocalModal.present();
+  toggleHeader() {
+    document.querySelector('.ion-page ion-header').classList.toggle('anime-hide');
   }
 
   showProfile() {
     let profileModal = this.modalCtrl.create(ModalProfilePage);
     profileModal.present();
-  }
-
-  startRecording() {
-    this.events.publish('record:start');
-    this.hideHeader();
-    let template = `
-    <div class="wrapper-record">
-      <div class="timer" data-timer><span>0:00</span></div>
-      <span class="subtitle">Enregistrement du vocal en cours ...</span>
-    </div>`;
-
-    document.querySelector('.ion-page ion-content').insertAdjacentHTML('beforeend', template);
-    try {
-      this.audioRecorder.startRecording();
-    }
-    catch (e) {
-      this.showAlert('Could not start recording.');
-    }
-  }
-
-  stopRecording() {
-    this.presentEditVocalModal();
-    document.querySelector('.ion-page ion-content .wrapper-record').remove();
-    try {
-      this.audioRecorder.stopRecording();
-    }
-    catch (e) {
-      this.showAlert('Could not stop recording.');
-    }
-  }
-
-  startPlayback() {
-    try {
-      this.audioRecorder.startPlayback();
-    }
-    catch (e) {
-      this.showAlert('Could not play recording.');
-    }
-  }
-
-  stopPlayback() {
-    try {
-      this.audioRecorder.stopPlayback();
-    }
-    catch (e) {
-      this.showAlert('Could not stop playing recording.');
-    }
   }
 
   showAlert(message) {

@@ -22,7 +22,7 @@ import { SettingsPage } from '../pages/settings/settings';
 import { SettingsChoices } from '../pages/settings/settingsChoices/SettingsChoices';
 import { SettingsMail } from '../pages/settings/settingsMail/SettingsMail';
 
-
+import { AudioRecorderComponent } from '../components/audio-recorder/audio-recorder';
 import { ModalEditVocalPage } from '../pages/modal-edit-vocal/modal-edit-vocal';
 import { ModalProfilePage } from '../pages/modal-profile/modal-profile';
 import { SendVocalPage } from '../pages/send-vocal/send-vocal';
@@ -51,10 +51,11 @@ let components = [
   SettingsMail,
   SettingsChoices,
 
+  AudioRecorderComponent,
   ModalEditVocalPage,
   SendVocalPage,
 
-  SelectFriendsComponent
+  SelectFriendsComponent,
   ModalProfilePage,
 ];
 
@@ -70,7 +71,7 @@ let components = [
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
   ]
 })
 export class AppModule {}
