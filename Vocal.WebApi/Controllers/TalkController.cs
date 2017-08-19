@@ -20,7 +20,7 @@ namespace Vocal.WebApi.Controllers
         }
 
         [Route("SendMessage")]
-        public Response<bool> SendMessage(SendMessageRequest request)
+        public Response<SendMessageResponse> SendMessage(SendMessageRequest request)
         {
             return TalkBusiness.SendMessage(request);
         }

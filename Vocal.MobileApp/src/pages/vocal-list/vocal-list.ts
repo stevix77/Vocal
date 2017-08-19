@@ -129,18 +129,6 @@ export class VocalListPage {
     }
   }
 
-  sendMyRecord(){
-    try {
-      if(this.media == null){
-        this.showAlert('no record to send');
-      }else{
-        this.showAlert('my record is ready to be sent');
-      }
-    } catch (e) {
-      this.showAlert('Sorry bro ! it didn\'t work');
-    }
-  }
-
   showAlert(message) {
     let alert = this.alertCtrl.create({
       title: 'Error',

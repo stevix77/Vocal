@@ -10,7 +10,11 @@ page-message {
         padding: 10px;
         
         &.msg-current-user{
-                background-color:#32db64;
+                background-color: green;
+        }
+
+        &.msg-current-user-not-sent{
+            background-color: lightgreen;
         }
 
         &.msg-other-user{

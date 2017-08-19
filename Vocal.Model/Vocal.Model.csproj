@@ -62,6 +62,7 @@
     <Compile Include="Request\Request.cs" />
     <Compile Include="Request\SearchFriendsRequest.cs" />
     <Compile Include="Request\SendMessageRequest.cs" />
+    <Compile Include="Response\SendMessageResponse.cs" />
     <Compile Include="Request\TalkRequest.cs" />
     <Compile Include="Request\UpdateRequest.cs" />
     <Compile Include="Request\UserExistsRequest.cs" />

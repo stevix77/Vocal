@@ -45,34 +45,70 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<bool> SendMessage(SendMessageRequest request)
+        public static Response<SendMessageResponse> SendMessage(SendMessageRequest request)
         {
-            var response = new Response<bool> { Data = false };
+            var response = new Response<SendMessageResponse> { Data = new SendMessageResponse { IsSent = false } };
             try
             {
                 if (request != null)
                 {
-                    LogManager.LogDebug(request);
-                    var user = Repository.Instance.GetUserById(request.IdSender);
-                    var msg = new Message
+                    if (Repository.Instance.CheckIfAllUsersExist(request.IdsRecipient))
                     {
-                        Id = Guid.NewGuid(),
-                        SentTime = request.SentTime,
-                        ArrivedTime = DateTime.Now,
-                        Content = request.Content,
-                        ContentType = (MessageType)request.MessageType,
-                        User = user,
-                        Users = request.IdsRecipient.Select(x => new UserListen() { UserId = x }).ToList()
-                    };
+                        LogManager.LogDebug(request);
 
-                    Repository.Instance.AddToDb(msg);
-                    response.Data = true;
+                        Talk talk = null;
+                        var user = Repository.Instance.GetUserById(request.IdSender);
+
+                        if(string.IsNullOrEmpty(request.IdTalk))
+                        {
+                            var AllUser = Repository.Instance.GetUsersById(request.IdsRecipient);
+                            AllUser.Add(user);
+
+                            talk = new Talk
+                            {
+                                Messages = new List<Message>(),
+                                VocalName = DateTime.Now.ToString("MM-dd-yyyy-HH-mm-ss"),
+                                Users = AllUser
+                            };
+                        }
+                        else
+                        {
+                           talk = Repository.Instance.GetTalk(request.IdTalk, request.IdSender);
+                        }
+
+                        if (talk != null)
+                        {
+                            talk.Messages.Add(new Message
+                            {
+                                Id = Guid.NewGuid(),
+                                SentTime = request.SentTime,
+                                ArrivedTime = DateTime.Now,
+                                Content = request.Content,
+                                ContentType = (MessageType)request.MessageType,
+                                User = user,
+                                Users = request.IdsRecipient.Select(x => new UserListen() { UserId = x }).ToList()
+                            });
+                            talk = Repository.Instance.UptOrCreateTalk(talk);
+                            response.Data.IdTalk = talk.Id;
+                            response.Data.IsSent = true;
+                        }
+                        else
+                        {
+                            LogManager.LogError(new Exception("The talk was null. May be, the id talk doesn't exist or the user doesn't have the right on it"));
+                            response.ErrorMessage = Resources_Language.TechnicalError;
+                        }
+                    }
+                    else
+                    {
+                        LogManager.LogError(new Exception("Weird. Some friend of this dude don't exist "));
+                        response.ErrorMessage = Resources_Language.TechnicalError;
+                    }
                 }
                 else
                 {
                     LogManager.LogError(new Exception("No Data"));
                     response.ErrorMessage = Resources_Language.NoDataMessage;
-                }
+                }    
             }
             catch (Exception ex)
             {
