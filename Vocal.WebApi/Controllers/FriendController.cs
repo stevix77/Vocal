@@ -20,13 +20,13 @@ namespace Vocal.WebApi.Controllers
         [HttpPost, CustomAuthorize, Route("search")]
         public Response<List<UserResponse>> SearchFriends(SearchFriendsRequest request)
         {
-            return FriendBusiness.SearchFriends(request.Emails, request.Lang);
+            return Business.Tools.Monitoring.Execute(FriendBusiness.SearchFriends, request.Emails, request.Lang);
         }
 
         [HttpPost, CustomAuthorize, Route("add")]
         public Response<bool> AddFriends(AddFriendsRequest request)
         {
-            return FriendBusiness.AddFriends(request.UserId, request.Ids, request.Lang);
+            return Business.Tools.Monitoring.Execute(FriendBusiness.AddFriends, request.UserId, request.Ids, request.Lang);
         }
     }
 }

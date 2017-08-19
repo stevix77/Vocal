@@ -13,7 +13,7 @@ namespace Vocal.WebApi.Controllers
         // GET: Account
         public ActionResult ResetPassword(string id, string token, string lang)
         {
-            var response = AuthentificationBusiness.IsTokenValid(id, token, lang);
+            var response = Business.Tools.Monitoring.Execute(AuthentificationBusiness.IsTokenValid, id, token, lang);
             if (response.Data)
                 return View();
             else
@@ -29,7 +29,7 @@ namespace Vocal.WebApi.Controllers
         {
             if(ModelState.IsValid)
             {
-                var response = AuthentificationBusiness.ResetPassword(model.Password, id, token, lang);
+                var response = Business.Tools.Monitoring.Execute(AuthentificationBusiness.ResetPassword, model.Password, id, token, lang);
                 if (response.Data)
                 {
                     ViewBag.Success = Business.Properties.Resources_Language.ResetPasswordSuccess;

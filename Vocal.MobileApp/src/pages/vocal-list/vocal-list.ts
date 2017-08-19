@@ -6,11 +6,8 @@ import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
 import { Request } from "../../models/request/Request";
-import { NotificationRegisterRequest } from "../../models/request/notificationRegisterRequest";
 import { InitResponse } from '../../models/response/InitResponse';
 import { Response } from '../../models/response';
-import { Push, PushObject } from '@ionic-native/push';
-import { hubConnection  } from 'signalr-no-jquery';
 import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
 import {KeyStore} from '../../models/enums';
 import {KeyValueResponse} from '../../models/response/keyValueResponse';
@@ -28,7 +25,7 @@ declare var WindowsAzure: any;
 @Component({
   selector: 'page-vocal-list',
   templateUrl: 'vocal-list.html',
-  providers: [HttpService, CookieService, Push, StoreService],
+  providers: [HttpService, CookieService, StoreService],
   entryComponents: [AudioRecorderComponent]
 })
 export class VocalListPage {
@@ -43,19 +40,7 @@ export class VocalListPage {
     public events: Events,
     private httpService: HttpService, 
     private cookieService: CookieService, 
-    private storeService: StoreService,
-    private push: Push) {
-
-    const connection = hubConnection(url.BaseUri, null);
-    const hubProxy = connection.createHubProxy('Vocal');
-    console.log(hubProxy);
-    connection.start()
-    .done(function(){ 
-      console.log('Now connected, connection ID=' + connection.id); 
-      hubProxy.invoke('Connect', params.User.Id);
-    })
-    .fail(function(){ console.log('Could not connect'); });
-    this.initPushNotification();
+    private storeService: StoreService) {
 
     events.subscribe('record:start', () => this.toggleContent());
     events.subscribe('edit-vocal:close', () => this.toggleContent());
@@ -123,71 +108,6 @@ export class VocalListPage {
       this.storeService.Set(key.toString(), data);
     else
       this.showAlert(error.Value);
-  }
-
-  initPushNotification() {
-    var pushOptions = {
-      notificationHubPath: 'vocal',
-      connectionString: 'Endpoint=sb://mobileappvocal.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=veeFqIaZyw/bB4lcGMHHqnbT5hOkz5g4/KThwhFqCZY=',
-      android: {
-          senderID: '1054724390279'
-      },
-      ios: {
-          alert: true,
-          badge: true,
-          sound: true
-      },
-      windows: {
-      }
-    };
-    const pushObject: PushObject = this.push.init(pushOptions);
-    pushObject.on('registration').subscribe((data: any) => {
-      console.log('device token -> ' + data.registrationId);
-      let request = new NotificationRegisterRequest();
-      request.Lang = params.Lang;
-      request.UserId = params.User.Id;
-      request.Channel = data.registrationId;
-      request.Platform = params.Platform;
-      let urlNotifRegister = url.NotificationRegister();
-      let cookie = this.cookieService.GetAuthorizeCookie(urlNotifRegister, params.User)
-      this.httpService.Post<NotificationRegisterRequest>(urlNotifRegister, request, cookie).subscribe(
-          resp => {
-
-        }
-      )
-    });
-    
-    pushObject.on('notification').subscribe((data: any) => {
-      console.log('data -> ' + data);
-      //if user using app and push notification comes
-      // if (data.additionalData.foreground) {
-      //   // if application open, show popup
-      //   let confirmAlert = this.alertCtrl.create({
-      //     title: 'New Notification',
-      //     message: data.message,
-      //     buttons: [{
-      //       text: 'Ignore',
-      //       role: 'cancel'
-      //     }, {
-      //       text: 'View',
-      //       handler: () => {
-      //         //TODO: Your logic here
-      //         this.nav.push(DetailsPage, { message: data.message });
-      //       }
-      //     }]
-      //   });
-      //   confirmAlert.present();
-      // } else {
-      //   //if user NOT using app and push notification comes
-      //   //TODO: Your logic on click of push notification directly
-      //   this.nav.push(DetailsPage, { message: data.message });
-      //   console.log('Push notification clicked');
-      // }
-    });
-
-    pushObject.on('error').subscribe(error => {
-      console.log('Error with Push plugin' + error);
-    });
   }
   
 }

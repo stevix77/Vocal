@@ -204,6 +204,16 @@ namespace Vocal.DAL
 
         #endregion
 
+        #region Monitoring
+
+        public void AddMonitoring(Monitoring obj)
+        {
+            var collection = _db.GetCollection<Monitoring>(Properties.Settings.Default.CollectionMonitoring);
+            collection.InsertOne(obj);
+        }
+
+        #endregion
+
         #region Private methods
 
         private List<People> Bind_UsersToFriends(List<User> users)

@@ -21,7 +21,7 @@ namespace Vocal.WebApi.Controllers
         public Response<InitResponse> Initialize(Request request)
         {
             var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
-            return InitBusiness.Initialize(obj.UserId, request.Lang);
+            return Business.Tools.Monitoring.Execute(InitBusiness.Initialize, obj.UserId, request.Lang);
         }
     }
 }
