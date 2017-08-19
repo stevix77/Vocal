@@ -23,21 +23,21 @@ namespace Vocal.WebApi.Controllers
         [Route("login")]
         public Response<UserResponse> Login(LoginRequest request)
         {
-            return AuthentificationBusiness.Login(request.Login, request.Password, request.Lang);
+            return Business.Tools.Monitoring.Execute(AuthentificationBusiness.Login, request.Login, request.Password, request.Lang);
         }
 
         [HttpPost]
         [Route("register")]
         public Response<UserResponse> Register(RegisterRequest request)
         {
-            return AuthentificationBusiness.Register(request.Email, request.Username, request.Password, request.Firstname, request.Lastname, request.BirthdayDate, request.Lang);
+            return Business.Tools.Monitoring.Execute(AuthentificationBusiness.Register, request.Email, request.Username, request.Password, request.Firstname, request.Lastname, request.BirthdayDate, request.Lang);
         }
         
         [HttpPost]
         [Route("askpassword")]
         public Response<bool> PasswordForgot(PasswordRequest request)
         {
-            return AuthentificationBusiness.PasswordForgot(request.Email, request.Lang);
+            return Business.Tools.Monitoring.Execute(AuthentificationBusiness.PasswordForgot, request.Email, request.Lang);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Vocal.WebApi.Controllers
         [Route("list")]
         public Response<List<TalkResponse>> GetTalks(TalkRequest request)
         {
-            return TalkBusiness.GetTalks(request.UserId, request.Lang);
+            return Business.Tools.Monitoring.Execute(TalkBusiness.GetTalks, request.UserId, request.Lang);
         }
     }
 }

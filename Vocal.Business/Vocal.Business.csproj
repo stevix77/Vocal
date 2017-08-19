@@ -118,6 +118,7 @@
     <Compile Include="Tools\Enums.cs" />
     <Compile Include="Tools\LogManager.cs" />
     <Compile Include="Tools\MailManager.cs" />
+    <Compile Include="Tools\Monitoring.cs" />
     <Compile Include="Tools\Resource.cs" />
   </ItemGroup>
   <ItemGroup>

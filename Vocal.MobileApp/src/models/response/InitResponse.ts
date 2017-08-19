@@ -1,4 +1,3 @@
-import {Response} from '../Response';
 import {SettingsResponse} from './SettingsResponse';
 import {UserResponse} from './UserResponse';
 import {TalkResponse} from './TalkResponse';

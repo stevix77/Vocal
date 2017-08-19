@@ -19,3 +19,8 @@ export enum Store {
     wns, // Windows
     gcm // Android
 }
+
+export enum MessageType {
+    Vocal = 1,
+    Text = 2
+}
