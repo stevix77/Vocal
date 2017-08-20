@@ -44,9 +44,10 @@
     <Compile Include="DB\Device.cs" />
     <Compile Include="DB\Enums.cs" />
     <Compile Include="DB\Message.cs" />
+    <Compile Include="DB\MessageType.cs" />
+    <Compile Include="DB\Monitoring.cs" />
     <Compile Include="DB\Settings.cs" />
     <Compile Include="DB\People.cs" />
-    <Compile Include="DB\MessageType.cs" />
     <Compile Include="DB\ResetPassword.cs" />
     <Compile Include="DB\Sign.cs" />
     <Compile Include="DB\Talk.cs" />
@@ -63,11 +64,13 @@
     <Compile Include="Request\SearchFriendsRequest.cs" />
     <Compile Include="Request\SendMessageRequest.cs" />
     <Compile Include="Response\SendMessageResponse.cs" />
+    <Compile Include="Request\SearchRequest.cs" />
     <Compile Include="Request\TalkRequest.cs" />
     <Compile Include="Request\UpdateRequest.cs" />
     <Compile Include="Request\UserExistsRequest.cs" />
     <Compile Include="Response\ChoiceResponse.cs" />
-    <Compile Include="Response\ResourceResponse.cs" />
+    <Compile Include="Response\KeyValueResponse.cs" />
+    <Compile Include="Response\InitResponse.cs" />
     <Compile Include="Response\SettingsResponse.cs" />
     <Compile Include="Response\TalkResponse.cs" />
     <Compile Include="Response\UserResponse.cs" />

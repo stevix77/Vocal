@@ -13,22 +13,16 @@ namespace Vocal.Business.Business
 {
     public static class ResourceBusiness
     {
-        public static Response<List<ResourceResponse>> GetAllResources(string lang)
+        public static Response<List<KeyValueResponse<string, string>>> GetAllResources(string lang)
         {
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-            var response = new Response<List<ResourceResponse>>();
+            var response = new Response<List<KeyValueResponse<string, string>>>();
             try
             {
                 var resource = Resources_Language.ResourceManager.GetResourceSet(new System.Globalization.CultureInfo(lang), true, true);
-                var list = new List<ResourceResponse>();
+                var list = new List<KeyValueResponse<string, string>>();
                 foreach (DictionaryEntry item in resource)
-                {
-                    list.Add(new ResourceResponse
-                    {
-                        Key = item.Key.ToString(),
-                        Value = item.Value.ToString()
-                    });
-                }
+                    list.Add(new KeyValueResponse<string, string>(item.Key.ToString(), item.Value.ToString()));
                 response.Data = list;
             }
             catch (TimeoutException tex)

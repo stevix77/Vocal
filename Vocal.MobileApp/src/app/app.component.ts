@@ -12,12 +12,18 @@ import { Globalization } from '@ionic-native/globalization';
 import { Device } from '@ionic-native/device';
 import {params} from '../services/params';
 import {Response} from '../models/response';
-import {ResourceResponse} from '../models/Response/resourceResponse';
-// import { WindowsAzure } from 'cordova-plugin-ms-azure-mobile-apps';
+import {KeyValueResponse} from '../models/response/keyValueResponse';
+import {Store} from '../models/enums';
+import { CookieService } from "../services/cookieService";
+import { Push, PushObject } from '@ionic-native/push';
+import { NotificationRegisterRequest } from "../models/request/notificationRegisterRequest";
+import { HubService } from '../services/hubService';
+
 declare var WindowsAzure: any;
+
 @Component({
   templateUrl: 'app.html',
-  providers: [StoreService, HttpService, Globalization, Device]
+  providers: [StoreService, HttpService, Globalization, Device, CookieService, Push, HubService]
 })
 export class VocalApp {
   @ViewChild(Nav) nav: Nav;
@@ -25,12 +31,14 @@ export class VocalApp {
   client : any;
   pages: Array<{title: string, component: any}>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private storeService: StoreService, private httpService: HttpService, private globalization: Globalization, private device: Device) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private storeService: StoreService, private httpService: HttpService, private globalization: Globalization, private device: Device, private cookieService: CookieService, private push: Push, private hubService: HubService) {
     
     this.storeService.Get("user").then(
       user => {
         if(user != null) {
           params.User = user;
+          this.hubService.Start();
+          this.initPushNotification();
           this.rootPage = VocalListPage;
         }
         else
@@ -69,7 +77,7 @@ export class VocalApp {
       if(resource == null) {
         this.httpService.Post(url.GetListResources(params.Lang), null).subscribe(
           resp => {
-            let response = resp.json() as Response<Array<ResourceResponse>>;
+            let response = resp.json() as Response<Array<KeyValueResponse<string, string>>>;
             this.storeService.Set("resource", response.Data);
             params.Resources = response.Data;
           }
@@ -79,6 +87,62 @@ export class VocalApp {
     ).catch(error => {
       console.log(error);
       this.rootPage = HomePage;
+    });
+  }
+
+  RegisterToNH(registrationId) {
+    let request = new NotificationRegisterRequest();
+      request.Lang = params.Lang;
+      request.UserId = params.User.Id;
+      request.Channel = registrationId;
+      request.Platform = params.Platform;
+      let urlNotifRegister = url.NotificationRegister();
+      let cookie = this.cookieService.GetAuthorizeCookie(urlNotifRegister, params.User)
+      this.httpService.Post<NotificationRegisterRequest>(urlNotifRegister, request, cookie);
+  }
+
+  initPushNotification() {
+    var pushOptions = {
+      android: { senderID: '1054724390279' },
+      ios: { alert: true, badge: true, sound: true },
+      windows: {}
+    };
+    const pushObject: PushObject = this.push.init(pushOptions);
+    pushObject.on('registration').subscribe((data: any) => {
+      console.log('device token -> ' + data.registrationId);
+      this.RegisterToNH(data.registrationId);
+    });
+    
+    pushObject.on('notification').subscribe((data: any) => {
+      console.log('data -> ' + data);
+      //if user using app and push notification comes
+      // if (data.additionalData.foreground) {
+      //   // if application open, show popup
+      //   let confirmAlert = this.alertCtrl.create({
+      //     title: 'New Notification',
+      //     message: data.message,
+      //     buttons: [{
+      //       text: 'Ignore',
+      //       role: 'cancel'
+      //     }, {
+      //       text: 'View',
+      //       handler: () => {
+      //         //TODO: Your logic here
+      //         this.nav.push(DetailsPage, { message: data.message });
+      //       }
+      //     }]
+      //   });
+      //   confirmAlert.present();
+      // } else {
+      //   //if user NOT using app and push notification comes
+      //   //TODO: Your logic on click of push notification directly
+      //   this.nav.push(DetailsPage, { message: data.message });
+      //   console.log('Push notification clicked');
+      // }
+    });
+
+    pushObject.on('error').subscribe(error => {
+      console.log('Error with Push plugin' + error);
     });
   }
 
@@ -92,22 +156,23 @@ export class VocalApp {
       this.SetLanguage();
       this.SetPlatform();
       //this.client = new WindowsAzure.MobileServiceClient("https://mobileappvocal.azurewebsites.net");
-      // this.client = new WindowsAzure.Messaging.NotificationHub("vocal", "Endpoint=sb://vocalnotif.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=DTSTAQTpFmB8KzmE7n496TNWUEeInaxLGtATc7Cl9Hk=");
     });
   }
+
+
 
   SetPlatform() {
     let platform = '';
     switch(this.device.platform) {
       case 'windows':
-        platform = 'wns';
+        platform = Store[Store.wns]
         break;
       case 'iOS':
-        platform = 'apns';
+        platform = Store[Store.apns];
         break;
       case 'android':
       case 'Android':
-        platform = 'gcm';
+        platform = Store[Store.gcm];
         break;
       default:
         platform = '';

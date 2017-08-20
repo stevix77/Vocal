@@ -39,5 +39,8 @@ var url = {
     },
     SendMessage() : string {
         return this.BaseUri + "talk/SendMessage";
+    },
+    Init() : string {
+        return this.BaseUri + "/api/home/init";
     }
 }

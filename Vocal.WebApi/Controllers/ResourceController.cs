@@ -15,9 +15,9 @@ namespace Vocal.WebApi.Controllers
     public class ResourceController : ApiController
     {
         [HttpPost, Route("list/{lang}")]
-        public Response<List<ResourceResponse>> List(string lang)
+        public Response<List<KeyValueResponse<string, string>>> List(string lang)
         {
-            return ResourceBusiness.GetAllResources(lang);
+            return Business.Tools.Monitoring.Execute(ResourceBusiness.GetAllResources, lang);
         }
     }
 }

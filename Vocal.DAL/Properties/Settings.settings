@@ -32,5 +32,14 @@
     <Setting Name="Hubname" Type="System.String" Scope="Application">
       <Value Profile="(Default)">vocal</Value>
     </Setting>
+    <Setting Name="DefaultFullSharedAccessSignature" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Endpoint=sb://mobileappvocal.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=h6TObd/MF8tY9JiQjiHRj4c3C2+XYjbYQe0CzgZnmoA=</Value>
+    </Setting>
+    <Setting Name="Hubname" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">vocal</Value>
+    </Setting>
+    <Setting Name="CollectionMonitoring" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Monitoring</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

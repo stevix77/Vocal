@@ -58,6 +58,7 @@ namespace Vocal.DAL
             MongoClient client = new MongoClient(settings);
             return client;
         }
+        
 
         #region Authentification
 
@@ -178,6 +179,13 @@ namespace Vocal.DAL
             return success;
         }
 
+        public List<People> GetFriends(string userId)
+        {
+            var list = new List<People>();
+
+            return list;
+        }
+
         #endregion
 
         #region Talk
@@ -270,6 +278,32 @@ namespace Vocal.DAL
             collection.InsertOne(obj);
             return obj;
         }
+
+        #region Search
+
+        public List<User> SearchPeople(string keyword)
+        {
+            var list = new List<User>();
+            var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            list = collection.Find(x => x.Username.ToLower().Contains(keyword) || 
+                                        x.Firstname.ToLower().Contains(keyword) || 
+                                        x.Lastname.ToLower().Contains(keyword))
+                                        .ToList();
+            return list;
+        }
+
+        #endregion
+
+        #region Monitoring
+
+        public void AddMonitoring(Monitoring obj)
+        {
+            var collection = _db.GetCollection<Monitoring>(Properties.Settings.Default.CollectionMonitoring);
+            collection.InsertOne(obj);
+        }
+
+        #endregion
+
 
         #region Private methods
 
