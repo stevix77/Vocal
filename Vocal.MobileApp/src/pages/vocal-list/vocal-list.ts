@@ -12,6 +12,8 @@ import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
 import {KeyStore} from '../../models/enums';
 import {KeyValueResponse} from '../../models/response/keyValueResponse';
 import { AudioRecorderComponent } from '../../components/audio-recorder/audio-recorder';
+import { MessagePage } from '../message/message';
+
 
 declare var WindowsAzure: any;
 
@@ -31,7 +33,8 @@ declare var WindowsAzure: any;
 export class VocalListPage {
   notificationHub : any;
   isApp: boolean = !document.URL.startsWith('http');
-
+  messagePage = MessagePage;
+  
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
     public alertCtrl: AlertController, 

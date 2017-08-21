@@ -7,6 +7,9 @@
         "files": {}
     },
     "installed_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "MyApp"
+        },
         "cordova-plugin-console": {
             "PACKAGE_NAME": "MyApp"
         },

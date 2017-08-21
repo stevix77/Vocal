@@ -153,6 +153,9 @@
   <data name="Nobody" xml:space="preserve">
     <value>Personne</value>
   </data>
+  <data name="NoDataMessage" xml:space="preserve">
+    <value>Erreur technique, votre message n'a pas été transmis.</value>
+  </data>
   <data name="PasswordRegex" xml:space="preserve">
     <value>Le mot de passe n'est pas au bon format</value>
   </data>

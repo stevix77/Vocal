@@ -150,6 +150,9 @@
   <data name="Nobody" xml:space="preserve">
     <value>Nobody</value>
   </data>
+  <data name="NoDataMessage" xml:space="preserve">
+    <value>Technical error, your message wasn't sent to the server</value>
+  </data>
   <data name="ResetPasswordSuccess" xml:space="preserve">
     <value>Password has been changed</value>
   </data>

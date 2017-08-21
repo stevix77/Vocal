@@ -169,6 +169,15 @@ namespace Vocal.Business.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Erreur technique, votre message n&apos;a pas été transmis..
+        /// </summary>
+        public static string NoDataMessage {
+            get {
+                return ResourceManager.GetString("NoDataMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Le mot de passe n&apos;est pas au bon format.
         /// </summary>
         public static string PasswordRegex {

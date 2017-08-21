@@ -16,7 +16,7 @@
     <RootNamespace>Vocal.WebApi</RootNamespace>
     <AssemblyName>Vocal.WebApi</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -203,6 +203,12 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Configs\Vocal.Business.Properties.Settings.localhost.config" />
+    <Content Include="Configs\Vocal.DAL.Properties.Settings.localhost.config" />
+    <Content Include="Configs\connectionStrings.localhost.config" />
+    <Content Include="Configs\connectionStrings.prod.config" />
+    <Content Include="Configs\Vocal.DAL.Properties.Settings.prod.config" />
+    <Content Include="Configs\Vocal.Business.Properties.Settings.prod.config" />
     <None Include="Properties\PublishProfiles\wsvocal - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\wsvocal - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\wsvocal - Web Deploy %282%29.pubxml" />
@@ -301,11 +307,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>52249</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:52847/</IISUrl>
+          <IISUrl>http://localhost/Vocal.WebApi</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

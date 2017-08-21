@@ -74,7 +74,7 @@ namespace Vocal.Business.Binder
                         Id = item.Id,
                         Name = item.VocalName,
                         Users = Bind_Users(item.Users),
-                        DateLastMessage = message.Date,
+                        DateLastMessage = message.SentTime,
                         HasNewMessage = !message.Users.SingleOrDefault(x => x.UserId == userId).ListenDate.HasValue
                     });
                 }

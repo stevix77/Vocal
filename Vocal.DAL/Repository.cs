@@ -123,6 +123,13 @@ namespace Vocal.DAL
             db.ReplaceOne(x => x.Id == user.Id, user);
         }
 
+        public bool CheckIfAllUsersExist(List<string> userIds)
+        {
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, userIds);
+            return db.Count(filter) == userIds.Count;
+        }
+
         public List<User> GetUsersById(List<string> userIds)
         {
             List<User> users = new List<User>();
@@ -192,17 +199,85 @@ namespace Vocal.DAL
         //    return list;
         //}
 
+        //public bool AddMessageToNewTalk(string idTalk, Message msg)
+        //{
+        //    var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
+        //    var talk = new Talk { Id = Guid.NewGuid().ToString(), Messages = new List<Message>(), VocalName = DateTime.Now.ToString("MM-dd-yyyy-HH-mm-ss") };
+        //    talk.Messages.Add(msg);
+        //    collection.ReplaceOne(x => x.Id == talk.Id, talk);
+        //    return true;
+
+        //    return false;
+        //}
+
+
+        //public bool AddMessageToTalk(string idTalk, Message msg)
+        //{
+        //    var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
+        //    var talk = collection.Find(x => x.Id == idTalk).SingleOrDefault();
+        //    if (talk != null)
+        //    {
+        //        talk.Messages.Add(msg);
+        //        collection.ReplaceOne(x => x.Id == talk.Id, talk);
+        //        return true
+        //    }
+        //    return false;
+        //}
+
+
+        public Talk GetTalk(string idTalk, string userId)
+        {
+            var fdb = new FilterDefinitionBuilder<Talk>();
+            return _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk)
+                .Find(fdb.Eq(x => x.Id, idTalk) & fdb.In("Users._id", new[] { userId }))
+                .SingleOrDefault();
+        }
+
         public List<Talk> GetListTalk(string userId)
         {
             var db = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
             var list = db.Find(x => x.Users.Exists(y => y.Id == userId))
-                        .Project(x => new Talk { Id = x.Id, VocalName = x.VocalName, Users = x.Users, Messages = x.Messages.OrderByDescending(y => y.Date).Take(1).ToList() })
-                        .SortByDescending(x => x.Messages.Select(y => y.Date))
+                        .Project(x => new Talk { Id = x.Id, VocalName = x.VocalName, Users = x.Users, Messages = x.Messages.OrderByDescending(y => y.SentTime).Take(1).ToList() })
+                        .SortByDescending(x => x.Messages.Select(y => y.SentTime))
                         .ToList();
             return list;
         }
 
+        public Talk AddTalk(Talk talk)
+        {
+            talk.Id = Guid.NewGuid().ToString();
+            var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
+            collection.InsertOne(talk);
+            return talk;
+        }
+
+        public Talk UpdateTalk(Talk talk)
+        {
+            var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
+            collection.ReplaceOne(x => x.Id == talk.Id, talk);
+            return talk;
+        }
+
+
+        public Talk UptOrCreateTalk(Talk talk)
+        {
+            return string.IsNullOrEmpty(talk.Id)
+                ? this.AddTalk(talk)
+                : this.UpdateTalk(talk);
+        }
+
+       
         #endregion
+
+
+
+
+        public T AddToDb<T>(T obj)
+        {
+            var collection = _db.GetCollection<T>(obj.GetType().Name);
+            collection.InsertOne(obj);
+            return obj;
+        }
 
         #region Search
 
@@ -218,6 +293,17 @@ namespace Vocal.DAL
         }
 
         #endregion
+
+        #region Monitoring
+
+        public void AddMonitoring(Monitoring obj)
+        {
+            var collection = _db.GetCollection<Monitoring>(Properties.Settings.Default.CollectionMonitoring);
+            collection.InsertOne(obj);
+        }
+
+        #endregion
+
 
         #region Private methods
 
