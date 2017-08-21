@@ -42,8 +42,7 @@ export class AudioRecorder {
     this.timer = new Timer();
     this.timer.startTimer();
     if(this.isApp) {
-      this.file.createFile(this.file.tempDirectory, this.filename, true).then(() => {
-      })
+      this.getMedia().startRecord();
     }
   }
 
