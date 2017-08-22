@@ -112,5 +112,9 @@ export class VocalListPage {
     else
       this.showAlert(error.Value);
   }
+
+  goToMessage() {
+    this.navCtrl.push(MessagePage);
+  }
   
 }
