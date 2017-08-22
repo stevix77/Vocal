@@ -42,5 +42,8 @@ var url = {
     },
     Init() : string {
         return this.BaseUri + "/api/home/init";
+    },
+    SearchPeople() : string {
+        return this.BaseUri + "/api/search/people";
     }
 }

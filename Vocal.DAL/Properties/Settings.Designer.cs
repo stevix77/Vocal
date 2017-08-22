@@ -123,5 +123,14 @@ namespace Vocal.DAL.Properties {
                 return ((string)(this["CollectionMonitoring"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Search")]
+        public string CollectionSearch {
+            get {
+                return ((string)(this["CollectionSearch"]));
+            }
+        }
     }
 }

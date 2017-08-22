@@ -37,6 +37,15 @@ namespace Vocal.Business.Business
                 listStart.AddRange(listContains);
                 listStart.AddRange(listEnd);
                 response.Data = Binder.Bind.Bind_Users(listStart);
+                Task.Run(() =>
+                {
+                    var search = new Search
+                    {
+                        Keyword = keyword,
+                        SearchDate = DateTime.Now
+                    };
+                    Repository.Instance.AddSearch(search);
+                });
             }
             catch (TimeoutException tex)
             {

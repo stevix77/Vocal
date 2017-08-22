@@ -292,6 +292,12 @@ namespace Vocal.DAL
             return list;
         }
 
+        public void AddSearch(Search search)
+        {
+            var collection = _db.GetCollection<Search>(Properties.Settings.Default.CollectionSearch);
+            collection.InsertOne(search);
+        }
+
         #endregion
 
         #region Monitoring
