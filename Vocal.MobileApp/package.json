@@ -24,6 +24,7 @@
         "@ionic-native/core": "^3.12.1",
         "@ionic-native/date-picker": "^3.12.1",
         "@ionic-native/device": "^4.1.0",
+        "@ionic-native/file": "^4.1.0",
         "@ionic-native/globalization": "^3.12.1",
         "@ionic-native/media": "^4.1.0",
         "@ionic-native/push": "^4.1.0",

@@ -49,6 +49,9 @@
         },
         "cordova-plugin-media": {
             "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "io.ionic.starter"
         }
     },
     "dependent_plugins": {
@@ -56,9 +59,6 @@
             "PACKAGE_NAME": "io.ionic.starter"
         },
         "cordova-sqlite-storage": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-file": {
             "PACKAGE_NAME": "io.ionic.starter"
         }
     }
