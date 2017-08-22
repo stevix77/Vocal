@@ -6,7 +6,9 @@ import { StoreService } from "../../services/storeService";
 import { KeyStore } from '../../models/enums';
 import { AudioRecorder } from '../../services/audiorecorder';
 import { MessageType } from '../../models/enums';
+import { SendMessageRequest } from '../../models/request/sendMessageRequest';
 import { params } from "../../services/params";
+import { url } from "../../services/url";
 import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { Response } from '../../models/response';
@@ -45,14 +47,16 @@ export class SendVocalPage {
           users.push(elt.Id);
         });
     let date = new Date();
-    let request = {
-      Content: this.FileValue,
-      SentTime: date,
-      IdsRecipient: users,
-      MessageType: MessageType.Vocal,
-      Lang: params.Lang
+    let request: SendMessageRequest = {
+      content: this.FileValue,
+      sentTime: date,
+      idsRecipient: users,
+      messageType: MessageType.Vocal,
+      Lang: params.Lang,
+      idSender: params.User.Id,
+      IdTalk: null
     }
-    let urlSendVocal = "";
+    let urlSendVocal = url.SendMessage();
     let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
     this.httpService.Post(urlSendVocal, request, cookie).subscribe(
       resp => {
@@ -68,14 +72,6 @@ export class SendVocalPage {
       
     });
     this.navCtrl.push(VocalListPage);
-  }
-
-  GetBase64File(){
-    this.audioRecorder.getFile().then(value => {
-      this.FileValue = value;
-    }).catch(err => {
-      
-    });
   }
 
   GetFriends() {

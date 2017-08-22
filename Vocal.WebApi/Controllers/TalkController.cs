@@ -13,16 +13,16 @@ namespace Vocal.WebApi.Controllers
     [RoutePrefix("api/talk"), CustomAuthorize]
     public class TalkController : ApiController
     {
-        [Route("list")]
+        [Route("list"), HttpPost]
         public Response<List<TalkResponse>> GetTalks(TalkRequest request)
         {
             return Business.Tools.Monitoring.Execute(TalkBusiness.GetTalks, request.UserId, request.Lang);
         }
 
-        [Route("SendMessage")]
+        [Route("SendMessage"), HttpPost]
         public Response<SendMessageResponse> SendMessage(SendMessageRequest request)
         {
-            return TalkBusiness.SendMessage(request);
+            return Business.Tools.Monitoring.Execute(TalkBusiness.SendMessage, request);
         }
     }
 }

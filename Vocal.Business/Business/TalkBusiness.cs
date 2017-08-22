@@ -52,10 +52,9 @@ namespace Vocal.Business.Business
             {
                 if (request != null)
                 {
+                    LogManager.LogDebug(request);
                     if (Repository.Instance.CheckIfAllUsersExist(request.IdsRecipient))
                     {
-                        LogManager.LogDebug(request);
-
                         Talk talk = null;
                         var user = Repository.Instance.GetUserById(request.IdSender);
 
@@ -67,7 +66,7 @@ namespace Vocal.Business.Business
                             talk = new Talk
                             {
                                 Messages = new List<Message>(),
-                                VocalName = DateTime.Now.ToString("MM-dd-yyyy-HH-mm-ss"),
+                                VocalName = string.Join(", ", AllUser.Select(x => x.Username)),
                                 Users = AllUser
                             };
                         }
