@@ -61,12 +61,9 @@ export class VocalApp {
   SetLanguage() {
     this.globalization.getPreferredLanguage()
     .then(res => {
-      console.log(res);
       params.Lang = res.value;
     })
     .catch(e => {
-      console.log(e)
-      console.log(navigator.language);
       params.Lang = navigator.language;
     });
   }
@@ -85,7 +82,6 @@ export class VocalApp {
       }
     }
     ).catch(error => {
-      console.log(error);
       this.rootPage = HomePage;
     });
   }
