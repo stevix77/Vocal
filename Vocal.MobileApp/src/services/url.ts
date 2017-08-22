@@ -3,7 +3,7 @@ var url = {
 
     //BaseUri: "http://192.168.1.14:8017",
     BaseUri: "http://wsvocal.azurewebsites.net",
-    // BaseUri: "http://localhost/Vocal.WebApi/api/",
+    //BaseUri: "http://localhost/Vocal.WebApi/api/",
     Login() : string {
         return this.BaseUri + "/api/auth/login";
     },
