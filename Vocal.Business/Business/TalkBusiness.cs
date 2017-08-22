@@ -66,7 +66,7 @@ namespace Vocal.Business.Business
                             talk = new Talk
                             {
                                 Messages = new List<Message>(),
-                                VocalName = string.Join(", ", AllUser.Select(x => x.Username)),
+                                VocalName = string.Join(", ", AllUser.Where(x => x.Id != request.IdSender).Select(x => x.Username)),
                                 Users = AllUser
                             };
                         }

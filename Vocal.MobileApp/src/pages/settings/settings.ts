@@ -15,7 +15,7 @@ import { SettingsMail } from './settingsMail/SettingsMail';
 @Component({
   selector: "app-settings",
   templateUrl: "./settings.html",
-  providers: [HttpService, CookieService]
+  providers: [HttpService, CookieService, StoreService]
 })
 
 export class SettingsPage implements OnInit {

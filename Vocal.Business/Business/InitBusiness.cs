@@ -44,7 +44,7 @@ namespace Vocal.Business.Business
                     else
                         response.Data.Errors.Add(new KeyValueResponse<string, string>(KeyStore.Friends.ToString(), response.ErrorMessage));
                 });
-                Parallel.Invoke(actionFriends, actionSettings);
+                Parallel.Invoke(actionFriends, actionSettings, actionTalks);
             }
             catch (TimeoutException tex)
             {

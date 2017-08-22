@@ -42,8 +42,6 @@ namespace Vocal.DAL
             var description = GetRegistrationDescriptionByPlatform(platform, channel);
             if (description.Tags == null)
                 description.Tags = new HashSet<string>() { tag };
-            description.PushVariables = new Dictionary<string, string>();
-            description.PushVariables.Add("test", "toto");
             description.RegistrationId = registrationId;
             var toto = await Hub.CreateOrUpdateRegistrationAsync(description);
         }

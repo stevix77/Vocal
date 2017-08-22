@@ -236,9 +236,9 @@ namespace Vocal.DAL
         public List<Talk> GetListTalk(string userId)
         {
             var db = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
-            var list = db.Find(x => x.Users.Exists(y => y.Id == userId))
+            var fdb = new FilterDefinitionBuilder<Talk>();
+            var list = db.Find(fdb.In("Users._id", new[] { userId }))
                         .Project(x => new Talk { Id = x.Id, VocalName = x.VocalName, Users = x.Users, Messages = x.Messages.OrderByDescending(y => y.SentTime).Take(1).ToList() })
-                        .SortByDescending(x => x.Messages.Select(y => y.SentTime))
                         .ToList();
             return list;
         }

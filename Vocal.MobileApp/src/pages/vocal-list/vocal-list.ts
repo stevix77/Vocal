@@ -1,16 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Events, ViewController, ModalController } from 'ionic-angular';
-import { params } from "../../services/params";
-import { url } from "../../services/url";
 import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
-import { Request } from "../../models/request/Request";
-import { InitResponse } from '../../models/response/InitResponse';
-import { Response } from '../../models/response';
+import { TalkResponse } from '../../models/response/talkResponse';
 import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
 import {KeyStore} from '../../models/enums';
-import {KeyValueResponse} from '../../models/response/keyValueResponse';
 import { AudioRecorderComponent } from '../../components/audio-recorder/audio-recorder';
 import { MessagePage } from '../message/message';
 
@@ -34,6 +29,7 @@ export class VocalListPage {
   notificationHub : any;
   isApp: boolean = !document.URL.startsWith('http');
   messagePage = MessagePage;
+  vocalList: Array<TalkResponse> = new Array<TalkResponse>();
   
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -56,7 +52,7 @@ export class VocalListPage {
     if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
   }
 
-  ionViewWillEnter() {
+  ionViewDidEnter() {
     this.initialize();
   }
 
@@ -84,37 +80,13 @@ export class VocalListPage {
   }
 
   initialize() {
-    let request = new Request();
-    request.Lang = params.Lang;
-    let urlInit = url.Init();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlInit, params.User)
-    this.httpService.Post(urlInit, request, cookie).subscribe(
-      resp => {
-        let response = resp.json() as Response<InitResponse>;
-        if(response.HasError)
-          this.showAlert(response.ErrorMessage)
-        else {
-          let errorSettings = response.Data.Errors.find(x => x.Key == KeyStore.Settings.toString());
-          let errorFriends = response.Data.Errors.find(x => x.Key == KeyStore.Friends.toString());
-          let errorTalks = response.Data.Errors.find(x => x.Key == KeyStore.Talks.toString());
-          this.SaveData(response.Data.Friends, errorFriends, KeyStore.Friends);
-          this.SaveData(response.Data.Talks, errorTalks, KeyStore.Talks);
-          this.SaveData(response.Data.Settings, errorSettings, KeyStore.Settings);
-        }
-      },
-      error => this.showAlert(error)
-    )
+    this.storeService.Get(KeyStore.Talks.toString()).then((list) => {
+      this.vocalList = list;
+    })
   }
 
-  SaveData(data: any, error: KeyValueResponse<string, string>, key: KeyStore) {
-    if(error == null)
-      this.storeService.Set(key.toString(), data);
-    else
-      this.showAlert(error.Value);
-  }
-
-  goToMessage() {
-    this.navCtrl.push(MessagePage);
+  goToMessage(id) {
+    this.navCtrl.push(MessagePage, {TalkId: id});
   }
   
 }
