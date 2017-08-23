@@ -47,7 +47,7 @@ export class MessagePage {
             //Must be set in a template.html but sorry guys I don't know how to do that yet
             document.getElementById("message-room").innerHTML += "<ion-col class='col' col-6></ion-col><ion-col class='col' col-6><div class='msg msg-current-user'>" + this.model.Message + "</div></ion-col>";
             this.model.Message =  "";
-            this.model.talkId = response.Data.IdTalk;
+            this.model.talkId = response.Data.Talk.Id;
           }else{
              //Must be set in a template.html but sorry guys I don't know how to do that yet
             document.getElementById("message-room").innerHTML += "<ion-col class='col' col-6></ion-col><ion-col class='col' col-6><div class='msg msg-current-user-not-sent'>" + this.model.Message + "</div></ion-col>";

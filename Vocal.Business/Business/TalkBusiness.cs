@@ -53,7 +53,7 @@ namespace Vocal.Business.Business
                 if (request != null)
                 {
                     LogManager.LogDebug(request);
-                    if (Repository.Instance.CheckIfAllUsersExist(request.IdsRecipient))
+                    if (/*Repository.Instance.CheckIfAllUsersExist(request.IdsRecipient)*/ true)
                     {
                         Talk talk = null;
                         var user = Repository.Instance.GetUserById(request.IdSender);
@@ -77,7 +77,7 @@ namespace Vocal.Business.Business
 
                         if (talk != null)
                         {
-                            talk.Messages.Add(new Message
+                            var m = new Message
                             {
                                 Id = Guid.NewGuid(),
                                 SentTime = request.SentTime,
@@ -86,9 +86,11 @@ namespace Vocal.Business.Business
                                 ContentType = (MessageType)request.MessageType,
                                 User = user,
                                 Users = request.IdsRecipient.Select(x => new UserListen() { UserId = x }).ToList()
-                            });
+                            };
+                            talk.Messages.Add(m);
                             talk = Repository.Instance.UptOrCreateTalk(talk);
-                            response.Data.IdTalk = talk.Id;
+                            response.Data.Talk = Bind.Bind_Talks(talk, request.IdSender);
+                            response.Data.Message = Bind.Bind_Message(m);
                             response.Data.IsSent = true;
                         }
                         else

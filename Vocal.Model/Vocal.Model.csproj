@@ -64,6 +64,7 @@
     <Compile Include="Request\Request.cs" />
     <Compile Include="Request\SearchFriendsRequest.cs" />
     <Compile Include="Request\SendMessageRequest.cs" />
+    <Compile Include="Response\MessageResponse.cs" />
     <Compile Include="Response\SendMessageResponse.cs" />
     <Compile Include="Request\SearchRequest.cs" />
     <Compile Include="Request\TalkRequest.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Response\InitResponse.cs" />
     <Compile Include="Response\SettingsResponse.cs" />
     <Compile Include="Response\TalkResponse.cs" />
+    <Compile Include="Response\UserListenResponse.cs" />
     <Compile Include="Response\UserResponse.cs" />
   </ItemGroup>
   <ItemGroup>
