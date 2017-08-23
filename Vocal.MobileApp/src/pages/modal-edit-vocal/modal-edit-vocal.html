@@ -18,11 +18,12 @@
 
 
 <ion-content padding>
-  <div text-center>
-    <button ion-button icon-only clear large class="btn-play" (click)="startPlayback()">
-      <ion-icon name="play"></ion-icon>
-    </button>
-  </div>
+  <button ion-button icon-only clear (click)="startPlayback()">
+    <ion-icon name="play"></ion-icon>
+  </button>
+  <ion-tabs>
+    <ion-tab [root]="audioFiltersPage"></ion-tab>
+  </ion-tabs>
 </ion-content>
 
 <ion-footer>

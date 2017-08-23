@@ -1,10 +1,14 @@
+import {TalkResponse} from './talkResponse';
+import {MessageResponse} from './messageResponse';
 export class SendMessageResponse {
 
-    IsSent: Date;
-    IdTalk: string;
+    IsSent: Boolean;
+    Talk: TalkResponse;
+    Message: MessageResponse;
 
-    constructor(IsSent, IdTalk) {
+    constructor(IsSent, talk, mess) {
         this.IsSent = IsSent;
-        this.IdTalk = IdTalk;
+        this.Message = mess;
+        this.Talk = talk;
     }
 }
