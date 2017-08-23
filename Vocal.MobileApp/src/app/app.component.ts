@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, AlertController } from 'ionic-angular';
+import { Nav, Platform, AlertController, Config } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -37,6 +37,7 @@ export class VocalApp {
   constructor(public platform: Platform, 
               public statusBar: StatusBar, 
               public splashScreen: SplashScreen, 
+              public config: Config, 
               private storeService: StoreService, 
               private httpService: HttpService, 
               private globalization: Globalization, 
@@ -62,7 +63,6 @@ export class VocalApp {
       console.log(error);
       this.rootPage = HomePage;
     });
-    
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -169,7 +169,7 @@ export class VocalApp {
       this.GetAllResources();
       this.SetLanguage();
       this.SetPlatform();
-      this.client = new WindowsAzure.MobileServiceClient("https://mobileappvocal.azurewebsites.net");
+      if(this.config.get('isApp')) this.client = new WindowsAzure.MobileServiceClient("https://mobileappvocal.azurewebsites.net");
     });
   }
 

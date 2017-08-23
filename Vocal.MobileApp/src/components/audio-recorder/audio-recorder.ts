@@ -16,8 +16,6 @@ import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-voca
 })
 export class AudioRecorderComponent {
 
-  isApp: boolean = !document.URL.startsWith('http');
-
   constructor(public events: Events,
     public audioRecorder: AudioRecorder,
     public alertCtrl: AlertController,

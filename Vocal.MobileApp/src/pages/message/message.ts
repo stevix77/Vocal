@@ -7,6 +7,7 @@ import { SendMessageResponse } from '../../models/response/sendMessageResponse';
 import { url } from '../../services/url';
 import { HttpService } from '../../services/httpService';
 import { CookieService } from '../../services/cookieService';
+import { VocalListPage } from '../../pages/vocal-list/vocal-list';
 
 /**
  * Generated class for the MessagePage page.
@@ -63,5 +64,9 @@ export class MessagePage {
       duration: 3000,
       position: 'top'
     }).present();
+  }
+
+  goToVocalList() {
+    this.navCtrl.push(VocalListPage);
   }
 }

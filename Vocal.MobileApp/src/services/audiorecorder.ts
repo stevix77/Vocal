@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Config } from 'ionic-angular';
 import { Timer } from './timer';
 import { params } from './params';
 import { Store } from '../models/enums';
@@ -9,11 +10,15 @@ import { File } from '@ionic-native/file';
 @Injectable()
 export class AudioRecorder {
   timer: Timer;
-  isApp: boolean = !document.URL.startsWith('http');
   mediaObject: MediaObject;
   filename: string;
-  constructor(private media: Media, private file: File) {
+  isApp: boolean;
+  constructor(
+    public config:Config,
+    private media: Media, 
+    private file: File) {
     this.filename = 'recording.' + this.getExtension();
+    this.isApp = this.config.get('isApp');
   }
 
   getExtension() {

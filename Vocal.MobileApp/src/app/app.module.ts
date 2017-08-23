@@ -66,7 +66,9 @@ let components = [
   imports: [
     BrowserModule,
     HttpModule,
-    IonicModule.forRoot(VocalApp),
+    IonicModule.forRoot(VocalApp, {
+      isApp: !document.URL.startsWith('http')
+    }),
   ],
   bootstrap: [IonicApp],
   entryComponents: components,

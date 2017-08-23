@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, Events, ViewController, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, Events, ViewController, ModalController, Config } from 'ionic-angular';
 import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
@@ -27,9 +27,9 @@ declare var WindowsAzure: any;
 })
 export class VocalListPage {
   notificationHub : any;
-  isApp: boolean = !document.URL.startsWith('http');
   messagePage = MessagePage;
   vocalList: Array<TalkResponse> = new Array<TalkResponse>();
+  isApp: boolean;
   
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -37,12 +37,15 @@ export class VocalListPage {
     public viewCtrl: ViewController,
     public modalCtrl: ModalController,
     public events: Events,
+    public config: Config,
     private httpService: HttpService, 
     private cookieService: CookieService, 
     private storeService: StoreService) {
 
     events.subscribe('record:start', () => this.toggleContent());
     events.subscribe('edit-vocal:close', () => this.toggleContent());
+
+    this.isApp = this.config.get('isApp');
   }
 
   ionViewDidLoad() {
