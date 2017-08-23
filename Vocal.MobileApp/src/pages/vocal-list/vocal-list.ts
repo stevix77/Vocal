@@ -114,7 +114,7 @@ export class VocalListPage {
   }
 
   goToMessage() {
-    this.navCtrl.push(MessagePage);
+    this.navCtrl.push(MessagePage, {}, {'direction':'back'});
   }
   
 }
