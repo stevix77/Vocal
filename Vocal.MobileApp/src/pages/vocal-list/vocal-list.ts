@@ -6,9 +6,9 @@ import { StoreService } from "../../services/storeService";
 import { TalkResponse } from '../../models/response/talkResponse';
 import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
 import {KeyStore} from '../../models/enums';
+import {KeyValueResponse} from '../../models/response/keyValueResponse';
 import { AudioRecorderComponent } from '../../components/audio-recorder/audio-recorder';
 import { MessagePage } from '../message/message';
-
 
 declare var WindowsAzure: any;
 
