@@ -52,6 +52,7 @@ export class VocalApp {
         if(user != null) {
           params.User = user;
           this.hubService.Start();
+          this.SubscribeHub();
           this.initPushNotification();
           this.init();
           this.rootPage = VocalListPage;
@@ -238,5 +239,11 @@ export class VocalApp {
       buttons: ['OK']
     });
     alert.present();
+  }
+
+  SubscribeHub() {
+    this.hubService.hubProxy.on("Receive", obj => {
+      console.log(obj);
+    })
   }
 }

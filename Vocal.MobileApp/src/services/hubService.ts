@@ -6,18 +6,18 @@ import { params } from "./params";
 @Injectable()
 export class HubService {
 
-  static connection: any;
-  static hubProxy: any;
+  private connection: any;
+  hubProxy: any;
   constructor() {
-    HubService.connection = hubConnection(url.BaseUri, null);
-    HubService.hubProxy = HubService.connection.createHubProxy('Vocal');
+    this.connection = hubConnection(url.BaseUri, null);
+    this.hubProxy = this.connection.createHubProxy('Vocal');
   }
 
   Start() {
-    HubService.connection.start()
-    .done(function(){ 
-      console.log('Now connected, connection ID=' + HubService.connection.id); 
-      HubService.hubProxy.invoke('Connect', params.User.Id);
+    this.connection.start()
+    .done(() => { 
+      console.log('Now connected, connection ID=' + this.connection.id); 
+      this.hubProxy.invoke('Connect', params.User.Id);
     })
     .fail(function(){ console.log('Could not connect'); });
   }
