@@ -1,11 +1,16 @@
 <ion-header>
-  <ion-item>
-    <ion-avatar item-start>
+  <ion-navbar hideBackButton="true">
+    <ion-avatar start>
       <img src="https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-1/p24x24/16602600_10154441388394576_4490155536874187938_n.jpg?oh=21c11ffc32c0b439c7ee5b32629d6b97&oe=5A1910E7">
     </ion-avatar>
-    DJ Tik
-    <p>12h de vocal</p>
-  </ion-item>
+    <ion-title>
+      DJ Tik
+      12h de vocal
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goToVocalList()"><ion-icon name="arrow-forward"></ion-icon></button>
+    </ion-buttons>
+  </ion-navbar>
 </ion-header>
 
 <ion-content padding>

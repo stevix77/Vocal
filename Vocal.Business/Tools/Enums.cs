@@ -13,4 +13,10 @@ namespace Vocal.Business.Tools
         Talks = 1,
         Settings = 2
     }
+
+    public enum HubMethod
+    {
+        Connect,
+        Send
+    }
 }

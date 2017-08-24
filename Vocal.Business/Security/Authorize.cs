@@ -39,7 +39,7 @@ namespace Vocal.Business.Security
                 if (sign.Equals(signature))
                 {
                     authorize = true;
-                    Task.Run(() => SaveSignature(id, sign));
+                    Task.Run(() => SaveSignature(sign, id));
                 }
             }
             return authorize;

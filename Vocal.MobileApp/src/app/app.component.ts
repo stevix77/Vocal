@@ -1,5 +1,6 @@
+import { TalkService } from './../services/talkService';
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+import { Nav, Platform, AlertController, Config, Events } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -18,12 +19,17 @@ import { CookieService } from "../services/cookieService";
 import { Push, PushObject } from '@ionic-native/push';
 import { NotificationRegisterRequest } from "../models/request/notificationRegisterRequest";
 import { HubService } from '../services/hubService';
+import {KeyStore} from '../models/enums';
+import {HubMethod} from '../models/enums';
+import { InitResponse } from '../models/response/InitResponse';
+import { Request } from "../models/request/Request";
+import { MessageResponse } from "../models/response/messageResponse";
 
 declare var WindowsAzure: any;
 
 @Component({
   templateUrl: 'app.html',
-  providers: [StoreService, HttpService, Globalization, Device, CookieService, Push, HubService]
+  providers: [StoreService, HttpService, Globalization, Device, CookieService, Push, HubService, TalkService]
 })
 export class VocalApp {
   @ViewChild(Nav) nav: Nav;
@@ -31,14 +37,28 @@ export class VocalApp {
   client : any;
   pages: Array<{title: string, component: any}>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private storeService: StoreService, private httpService: HttpService, private globalization: Globalization, private device: Device, private cookieService: CookieService, private push: Push, private hubService: HubService) {
+  constructor(public platform: Platform, 
+              public statusBar: StatusBar, 
+              public splashScreen: SplashScreen, 
+              public config: Config, 
+              private storeService: StoreService, 
+              private httpService: HttpService, 
+              private globalization: Globalization, 
+              private device: Device, 
+              private cookieService: CookieService, 
+              private push: Push, 
+              private hubService: HubService, 
+              private alertCtrl: AlertController,
+              private events: Events,
+              private talkService: TalkService ) {
     
     this.storeService.Get("user").then(
       user => {
         if(user != null) {
           params.User = user;
-          this.hubService.Start();
+          this.SubscribeHub();
           this.initPushNotification();
+          this.init();
           this.rootPage = VocalListPage;
         }
         else
@@ -48,7 +68,6 @@ export class VocalApp {
       console.log(error);
       this.rootPage = HomePage;
     });
-    
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -61,12 +80,9 @@ export class VocalApp {
   SetLanguage() {
     this.globalization.getPreferredLanguage()
     .then(res => {
-      console.log(res);
       params.Lang = res.value;
     })
     .catch(e => {
-      console.log(e)
-      console.log(navigator.language);
       params.Lang = navigator.language;
     });
   }
@@ -85,7 +101,6 @@ export class VocalApp {
       }
     }
     ).catch(error => {
-      console.log(error);
       this.rootPage = HomePage;
     });
   }
@@ -98,7 +113,11 @@ export class VocalApp {
       request.Platform = params.Platform;
       let urlNotifRegister = url.NotificationRegister();
       let cookie = this.cookieService.GetAuthorizeCookie(urlNotifRegister, params.User)
-      this.httpService.Post<NotificationRegisterRequest>(urlNotifRegister, request, cookie);
+      this.httpService.Post<NotificationRegisterRequest>(urlNotifRegister, request, cookie).subscribe(
+        resp => {
+          
+        }
+      );
   }
 
   initPushNotification() {
@@ -155,7 +174,7 @@ export class VocalApp {
       this.GetAllResources();
       this.SetLanguage();
       this.SetPlatform();
-      //this.client = new WindowsAzure.MobileServiceClient("https://mobileappvocal.azurewebsites.net");
+      if(this.config.get('isApp')) this.client = new WindowsAzure.MobileServiceClient("https://mobileappvocal.azurewebsites.net");
     });
   }
 
@@ -185,5 +204,61 @@ export class VocalApp {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
     this.nav.setRoot(page.component);
+  }
+
+  init() {
+    try {
+      let request = new Request();
+      request.Lang = params.Lang;
+      let urlInit = url.Init();
+      let cookie = this.cookieService.GetAuthorizeCookie(urlInit, params.User)
+      this.httpService.Post(urlInit, request, cookie).subscribe(
+        resp => {
+          let response = resp.json() as Response<InitResponse>;
+          if(response.HasError)
+            this.showAlert(response.ErrorMessage)
+          else {
+            let errorSettings = response.Data.Errors.find(x => x.Key == KeyStore.Settings.toString());
+            let errorFriends = response.Data.Errors.find(x => x.Key == KeyStore.Friends.toString());
+            let errorTalks = response.Data.Errors.find(x => x.Key == KeyStore.Talks.toString());
+            this.SaveData(response.Data.Friends, errorFriends, KeyStore.Friends);
+            this.SaveData(response.Data.Talks, errorTalks, KeyStore.Talks);
+            this.SaveData(response.Data.Settings, errorSettings, KeyStore.Settings);
+          }
+        },
+        error => this.showAlert(error)
+      )
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  SaveData(data: any, error: KeyValueResponse<string, string>, key: KeyStore) {
+    if(error == null)
+      this.storeService.Set(key.toString(), data);
+    else
+      this.showAlert(error.Value);
+  }
+
+  showAlert(message) {
+    let alert = this.alertCtrl.create({
+      title: 'Error',
+      subTitle: message,
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+
+  SubscribeHub() {
+    this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
+    this.hubService.hubProxy.on(HubMethod[HubMethod.Receive], (obj) => {
+      console.log(obj);
+      this.talkService.LoadList().then(() => {
+        obj.Talk.Messages = new Array<MessageResponse>();
+        obj.Talk.Messages.push(obj.Message);
+        this.talkService.UpdateList(obj.Talk);
+        this.talkService.SaveList();
+      }).then(() => this.events.publish(HubMethod[HubMethod.Receive], obj));
+    })
   }
 }

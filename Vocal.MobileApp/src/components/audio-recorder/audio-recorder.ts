@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Events, AlertController, ModalController } from 'ionic-angular';
+import { Events, AlertController, ModalController, Config } from 'ionic-angular';
 import { AudioRecorder } from '../../services/audiorecorder';
 import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-vocal';
 
@@ -16,17 +16,19 @@ import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-voca
 })
 export class AudioRecorderComponent {
 
-  isApp: boolean = !document.URL.startsWith('http');
+  isApp: boolean;
 
   constructor(public events: Events,
     public audioRecorder: AudioRecorder,
     public alertCtrl: AlertController,
     public modalCtrl: ModalController,
+    public config: Config
     ) {
     console.log('Hello AudioRecorderComponent Component');
 
     events.subscribe('record:start', () => this.startRecording());
     events.subscribe('record:stop', () => this.stopRecording());
+    this.isApp = this.config.get('isApp');
   }
 
 

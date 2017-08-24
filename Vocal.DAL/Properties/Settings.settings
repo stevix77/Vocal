@@ -41,5 +41,8 @@
     <Setting Name="CollectionMonitoring" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Monitoring</Value>
     </Setting>
+    <Setting Name="CollectionSearch" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Search</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

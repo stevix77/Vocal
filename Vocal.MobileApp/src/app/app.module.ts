@@ -66,7 +66,9 @@ let components = [
   imports: [
     BrowserModule,
     HttpModule,
-    IonicModule.forRoot(VocalApp),
+    IonicModule.forRoot(VocalApp, {
+      isApp: !document.URL.startsWith('http')
+    }),
   ],
   bootstrap: [IonicApp],
   entryComponents: components,
@@ -75,7 +77,7 @@ let components = [
     SplashScreen,
     Media,
     File,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
 export class AppModule {}

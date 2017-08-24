@@ -6,7 +6,7 @@ export class StoreService {
     storage: Storage = new Storage(null);
     constructor() {
     }
-    Get<T>(key: string){
+    Get(key: string){
         return this.storage.get(key);
     }
 

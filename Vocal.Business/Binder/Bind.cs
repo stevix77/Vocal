@@ -66,7 +66,8 @@ namespace Vocal.Business.Binder
         {
             var response = new List<TalkResponse>();
             if(list.Count > 0)
-                foreach(var item in list)
+            {
+                foreach (var item in list)
                 {
                     var message = item.Messages.LastOrDefault();
                     response.Add(new TalkResponse
@@ -75,9 +76,11 @@ namespace Vocal.Business.Binder
                         Name = item.VocalName,
                         Users = Bind_Users(item.Users),
                         DateLastMessage = message.SentTime,
-                        HasNewMessage = !message.Users.SingleOrDefault(x => x.UserId == userId).ListenDate.HasValue
+                        HasNewMessage = message.User.Id != userId && message.Users.SingleOrDefault(x => x.UserId == userId && x.ListenDate.HasValue) == null
                     });
                 }
+                response = response.OrderByDescending(x => x.DateLastMessage).ToList();
+            }
             return response;
         }
 
@@ -102,6 +105,44 @@ namespace Vocal.Business.Binder
                 new ChoiceResponse { Id = 1, IsChecked = isNotifiable == true, Label = Resources_Language.Active }
             };
             return choices;
+        }
+
+        internal static TalkResponse Bind_Talks(Talk talk, string userId)
+        {
+            var response = new TalkResponse();
+            var message = talk.Messages.LastOrDefault();
+            response.Id = talk.Id;
+            response.Name = talk.VocalName;
+            response.Users = Bind_Users(talk.Users);
+            response.DateLastMessage = message.SentTime;
+            response.HasNewMessage = message.User.Id != userId && !message.Users.Any(x => x.UserId == userId && !x.ListenDate.HasValue);
+            return response;
+        }
+
+        internal static MessageResponse Bind_Message(Message m)
+        {
+            var message = new MessageResponse();
+            message.ArrivedTime = m.ArrivedTime;
+            message.Content = m.Content;
+            message.ContentType = (int)m.ContentType;
+            message.Id = m.Id.ToString();
+            message.User = Bind_User(m.User);
+            message.Users = Bind_UsersListen(m.Users);
+            return message;
+        }
+
+        private static List<UserListenResponse> Bind_UsersListen(List<UserListen> users)
+        {
+            var response = new List<UserListenResponse>();
+            foreach(var item in users)
+            {
+                response.Add(new UserListenResponse
+                {
+                    ListenDate = item.ListenDate,
+                    UserId = item.UserId
+                });
+            }
+            return response;
         }
 
         private static List<ChoiceResponse> GetChoices(Contacted contact)

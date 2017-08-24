@@ -24,3 +24,10 @@ export enum MessageType {
     Vocal = 1,
     Text = 2
 }
+
+export enum HubMethod {
+    Connect,
+    Send,
+    Receive,
+    SubscribeToTalks
+}

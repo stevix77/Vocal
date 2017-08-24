@@ -7,6 +7,9 @@
         "files": {}
     },
     "installed_plugins": {
+        "cordova-azure-notification-hubs": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
         "cordova-plugin-console": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
@@ -44,9 +47,6 @@
             "PACKAGE_NAME": "io.ionic.starter"
         },
         "ionic-plugin-keyboard": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "phonegap-plugin-push": {
             "PACKAGE_NAME": "io.ionic.starter"
         }
     },

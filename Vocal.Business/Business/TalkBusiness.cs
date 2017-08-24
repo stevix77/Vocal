@@ -11,7 +11,7 @@ using Vocal.Model.Business;
 using Vocal.Model.Request;
 using Vocal.Model.Response;
 using Vocal.Model.DB;
-
+using Vocal.Business.Signalr;
 
 namespace Vocal.Business.Business
 {
@@ -52,10 +52,9 @@ namespace Vocal.Business.Business
             {
                 if (request != null)
                 {
-                    if (Repository.Instance.CheckIfAllUsersExist(request.IdsRecipient))
+                    LogManager.LogDebug(request);
+                    if (/*Repository.Instance.CheckIfAllUsersExist(request.IdsRecipient)*/ true)
                     {
-                        LogManager.LogDebug(request);
-
                         Talk talk = null;
                         var user = Repository.Instance.GetUserById(request.IdSender);
 
@@ -67,7 +66,7 @@ namespace Vocal.Business.Business
                             talk = new Talk
                             {
                                 Messages = new List<Message>(),
-                                VocalName = DateTime.Now.ToString("MM-dd-yyyy-HH-mm-ss"),
+                                VocalName = string.Join(", ", AllUser.Where(x => x.Id != request.IdSender).Select(x => x.Username)),
                                 Users = AllUser
                             };
                         }
@@ -78,7 +77,7 @@ namespace Vocal.Business.Business
 
                         if (talk != null)
                         {
-                            talk.Messages.Add(new Message
+                            var m = new Message
                             {
                                 Id = Guid.NewGuid(),
                                 SentTime = request.SentTime,
@@ -87,10 +86,15 @@ namespace Vocal.Business.Business
                                 ContentType = (MessageType)request.MessageType,
                                 User = user,
                                 Users = request.IdsRecipient.Select(x => new UserListen() { UserId = x }).ToList()
-                            });
+                            };
+                            talk.Messages.Add(m);
                             talk = Repository.Instance.UptOrCreateTalk(talk);
-                            response.Data.IdTalk = talk.Id;
+                            response.Data.Talk = Bind.Bind_Talks(talk, request.IdSender);
+                            response.Data.Message = Bind.Bind_Message(m);
                             response.Data.IsSent = true;
+                            Task.Run(async () => {
+                                await HubService.Instance.SendMessage(response.Data, request.IdsRecipient);
+                            });
                         }
                         else
                         {
