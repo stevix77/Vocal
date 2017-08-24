@@ -23,7 +23,7 @@ namespace Vocal.WebApi.Signalr
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            //_users.Remove(_users.SingleOrDefault(x => x.Value == Context.ConnectionId).Key);
+            _users.SingleOrDefault(x => x.Value.Any(y => y == Context.ConnectionId)).Value.Remove(Context.ConnectionId);
             return base.OnDisconnected(stopCalled);
         }
 

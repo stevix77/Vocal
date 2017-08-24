@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, AlertController, Config } from 'ionic-angular';
+import { Nav, Platform, AlertController, Config, Events } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -19,7 +19,10 @@ import { Push, PushObject } from '@ionic-native/push';
 import { NotificationRegisterRequest } from "../models/request/notificationRegisterRequest";
 import { HubService } from '../services/hubService';
 import {KeyStore} from '../models/enums';
+import {HubMethod} from '../models/enums';
 import { InitResponse } from '../models/response/InitResponse';
+import { SendMessageResponse } from '../models/response/sendMessageResponse';
+import { TalkResponse } from '../models/response/talkResponse';
 import { Request } from "../models/request/Request";
 
 declare var WindowsAzure: any;
@@ -45,7 +48,8 @@ export class VocalApp {
               private cookieService: CookieService, 
               private push: Push, 
               private hubService: HubService, 
-              private alertCtrl: AlertController) {
+              private alertCtrl: AlertController,
+              private events: Events ) {
     
     this.storeService.Get("user").then(
       user => {
@@ -242,8 +246,27 @@ export class VocalApp {
   }
 
   SubscribeHub() {
-    this.hubService.hubProxy.on("Receive", obj => {
+    this.hubService.hubProxy.on(HubMethod[HubMethod.Receive], obj => {
       console.log(obj);
+      this.events.publish(HubMethod[HubMethod.Receive], obj)
+      this.storeService.Get(KeyStore.Talks.toString()).then(list => {
+        let talks = list as Array<TalkResponse>;
+        if(talks != null) {
+          let talk = talks.find(x => x.Id == obj.Talk.Id);
+          if(talk != null) {
+            let index = talks.indexOf(talk);
+            talk.Messages.push(obj.Message);
+            talks[index] = talk;
+          }
+          else {
+            talk = obj.Talk as TalkResponse;
+            talk.Messages = new Array<any>();
+            talk.Messages.push(obj.Message);
+            talks.push(talk);
+          }
+          this.storeService.Set(KeyStore.Talks.toString(), talks);
+        }
+      })
     })
   }
 }

@@ -6,6 +6,7 @@ import { StoreService } from "../../services/storeService";
 import { TalkResponse } from '../../models/response/talkResponse';
 import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
 import {KeyStore} from '../../models/enums';
+import {HubMethod} from '../../models/enums';
 import {KeyValueResponse} from '../../models/response/keyValueResponse';
 import { AudioRecorderComponent } from '../../components/audio-recorder/audio-recorder';
 import { MessagePage } from '../message/message';
@@ -44,6 +45,7 @@ export class VocalListPage {
 
     events.subscribe('record:start', () => this.toggleContent());
     events.subscribe('edit-vocal:close', () => this.toggleContent());
+    events.subscribe(HubMethod[HubMethod.Receive], () => this.initialize())
 
     this.isApp = this.config.get('isApp');
   }
