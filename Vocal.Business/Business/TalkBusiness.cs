@@ -11,7 +11,7 @@ using Vocal.Model.Business;
 using Vocal.Model.Request;
 using Vocal.Model.Response;
 using Vocal.Model.DB;
-
+using Vocal.Business.Signalr;
 
 namespace Vocal.Business.Business
 {
@@ -92,6 +92,9 @@ namespace Vocal.Business.Business
                             response.Data.Talk = Bind.Bind_Talks(talk, request.IdSender);
                             response.Data.Message = Bind.Bind_Message(m);
                             response.Data.IsSent = true;
+                            Task.Run(async () => {
+                                await HubService.Instance.SendMessage(response.Data, request.IdsRecipient);
+                            });
                         }
                         else
                         {
