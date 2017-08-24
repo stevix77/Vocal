@@ -13,7 +13,7 @@ export class TalkService {
   public Talks: Array<TalkResponse>;
 
   constructor(private storeService: StoreService) {
-    
+    this.LoadList();
   }
 
   SaveList() {

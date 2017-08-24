@@ -56,7 +56,6 @@ export class VocalApp {
       user => {
         if(user != null) {
           params.User = user;
-          this.hubService.Start();
           this.SubscribeHub();
           this.initPushNotification();
           this.init();
@@ -251,6 +250,7 @@ export class VocalApp {
   }
 
   SubscribeHub() {
+    this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
     this.hubService.hubProxy.on(HubMethod[HubMethod.Receive], (obj) => {
       console.log(obj);
       this.talkService.LoadList().then(() => {

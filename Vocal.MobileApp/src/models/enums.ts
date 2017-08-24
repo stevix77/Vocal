@@ -28,5 +28,6 @@ export enum MessageType {
 export enum HubMethod {
     Connect,
     Send,
-    Receive
+    Receive,
+    SubscribeToTalks
 }

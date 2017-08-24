@@ -92,13 +92,6 @@ export class VocalListPage {
     })
   }
 
-  SaveData(data: any, error: KeyValueResponse<string, string>, key: KeyStore) {
-    if(error == null)
-      this.storeService.Set(key.toString(), data);
-    else
-      this.showAlert(error.Value);
-  }
-
   goToMessage(id) {
     this.navCtrl.push(MessagePage, {TalkId: id}, {'direction':'back'});
   }
