@@ -84,6 +84,25 @@ namespace Vocal.Business.Binder
             return response;
         }
 
+        internal static List<MessageResponse> Bind_Messages(List<Message> list)
+        {
+            var response = new List<MessageResponse>();
+            foreach(var item in list)
+            {
+                response.Add(new MessageResponse
+                {
+                    ArrivedTime = item.ArrivedTime,
+                    Content = item.Content,
+                    ContentType = (int)item.ContentType,
+                    Id = item.Id.ToString(),
+                    SentTime = item.SentTime,
+                    User = Bind_User(item.User),
+                    Users = Bind_UsersListen(item.Users)
+                });
+            }
+            return response;
+        }
+
         internal static SettingsResponse Bind_UserSettings(User user)
         {
             var settings = new SettingsResponse();

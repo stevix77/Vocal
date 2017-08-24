@@ -45,9 +45,38 @@ namespace Vocal.Business.Business
             return response;
         }
 
+        public static Response<List<MessageResponse>> GetMessages(string talkId, string lang)
+        {
+            var response = new Response<List<MessageResponse>>();
+            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+            LogManager.LogDebug(talkId, lang);
+            try
+            {
+                var list = Repository.Instance.GetMessages(talkId);
+                response.Data = Bind.Bind_Messages(list);
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
         public static Response<SendMessageResponse> SendMessage(SendMessageRequest request)
         {
             var response = new Response<SendMessageResponse> { Data = new SendMessageResponse { IsSent = false } };
+            Resources_Language.Culture = new System.Globalization.CultureInfo(request.Lang);
             try
             {
                 if (request != null)

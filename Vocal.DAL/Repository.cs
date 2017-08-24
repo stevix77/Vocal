@@ -58,8 +58,8 @@ namespace Vocal.DAL
             MongoClient client = new MongoClient(settings);
             return client;
         }
-        
 
+        
         #region Authentification
 
         public User Login(string login, string password)
@@ -266,7 +266,16 @@ namespace Vocal.DAL
                 : this.UpdateTalk(talk);
         }
 
-       
+        public List<Message> GetMessages(string talkId)
+        {
+            var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
+            var talk = collection.Find(x => x.Id == talkId).SingleOrDefault();
+            if (talk != null)
+                return talk.Messages;
+            else
+                return null;
+        }
+
         #endregion
 
 

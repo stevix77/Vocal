@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, Events } from 'ionic-angular';
 import { params } from '../../services/params';
 import { Response } from '../../models/Response';
 import { SendMessageRequest } from '../../models/request/sendMessageRequest';
@@ -8,6 +8,8 @@ import { url } from '../../services/url';
 import { HttpService } from '../../services/httpService';
 import { CookieService } from '../../services/cookieService';
 import { VocalListPage } from '../../pages/vocal-list/vocal-list';
+import { MessageResponse } from "../../models/response/messageResponse";
+import { TalkService } from "../../services/talkService";
 
 /**
  * Generated class for the MessagePage page.
@@ -19,13 +21,21 @@ import { VocalListPage } from '../../pages/vocal-list/vocal-list';
 @Component({
   selector: 'page-message',
   templateUrl: 'message.html',
-  providers: [HttpService, CookieService]
+  providers: [HttpService, CookieService, TalkService]
 })
 export class MessagePage {
 
   model = { Message: "", talkId: null }
+  Messages: Array<MessageResponse>;
+  constructor(public navCtrl: NavController, 
+              public navParams: NavParams, 
+              private httpService: HttpService, 
+              private toastCtrl: ToastController, 
+              private cookieService: CookieService,
+              private events: Events,
+              private talkService: TalkService) {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, private toastCtrl: ToastController, private cookieService: CookieService) {
+    // this.events.subscribe()
   }
 
 
@@ -56,6 +66,14 @@ export class MessagePage {
         }
       }
     );
+  }
+
+  loadMessages() {
+    this.talkService.
+  }
+
+  updateRoom(message) {
+
   }
 
   showToast(message: string) :any {

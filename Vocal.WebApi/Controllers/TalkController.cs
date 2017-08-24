@@ -2,6 +2,7 @@
 using System.Web.Http;
 using System.Web.Http.Cors;
 using Vocal.Business.Business;
+using Vocal.Business.Tools;
 using Vocal.Model.Business;
 using Vocal.Model.Request;
 using Vocal.Model.Response;
@@ -16,13 +17,19 @@ namespace Vocal.WebApi.Controllers
         [Route("list"), HttpPost]
         public Response<List<TalkResponse>> GetTalks(TalkRequest request)
         {
-            return Business.Tools.Monitoring.Execute(TalkBusiness.GetTalks, request.UserId, request.Lang);
+            return Monitoring.Execute(TalkBusiness.GetTalks, request.UserId, request.Lang);
         }
 
         [Route("SendMessage"), HttpPost]
         public Response<SendMessageResponse> SendMessage(SendMessageRequest request)
         {
-            return Business.Tools.Monitoring.Execute(TalkBusiness.SendMessage, request);
+            return Monitoring.Execute(TalkBusiness.SendMessage, request);
+        }
+
+        [Route("messages/{talkId}"), HttpPost]
+        public Response<List<MessageResponse>> GetMessages(string talkId, Request request)
+        {
+            return Monitoring.Execute(TalkBusiness.GetMessages, talkId, request.Lang);
         }
     }
 }
