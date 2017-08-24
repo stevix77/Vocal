@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, AlertController, Events } from 'ionic-angular';
 import { AudioRecorder } from '../../services/audiorecorder';
 import { SendVocalPage } from '../../pages/send-vocal/send-vocal';
+import { AudioFiltersPage } from '../../pages/audio-filters/audio-filters';
 
 /**
  * Generated class for the ModalEditVocalPage page.
@@ -16,6 +17,8 @@ import { SendVocalPage } from '../../pages/send-vocal/send-vocal';
   providers: [AudioRecorder]
 })
 export class ModalEditVocalPage {
+
+  tab1Filters = AudioFiltersPage;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,

@@ -18,12 +18,27 @@
 
 
 <ion-content padding>
-  <button ion-button icon-only clear (click)="startPlayback()">
-    <ion-icon name="play"></ion-icon>
-  </button>
-  <ion-tabs>
-    <ion-tab [root]="audioFiltersPage"></ion-tab>
-  </ion-tabs>
+  <div text-center>
+    <button ion-button icon-only clear class="btn-play" (click)="startPlayback()">
+      <ion-icon name="play"></ion-icon>
+    </button>
+  </div>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-3>
+        <button ion-button icon-only><ion-icon name="disc"></ion-icon></button>
+      </ion-col>
+      <ion-col col-3>
+        <button ion-button icon-only><ion-icon name="disc"></ion-icon></button>
+      </ion-col>
+      <ion-col col-3>
+        <button ion-button icon-only><ion-icon name="disc"></ion-icon></button>
+      </ion-col>
+      <ion-col col-3>
+        <button ion-button icon-only><ion-icon name="disc"></ion-icon></button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 
 <ion-footer>

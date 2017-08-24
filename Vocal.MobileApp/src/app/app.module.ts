@@ -31,6 +31,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Media } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
 
+import { AudioFiltersPage } from '../pages/audio-filters/audio-filters';
+
 let components = [
   VocalApp,
   HomePage,
@@ -59,6 +61,7 @@ let components = [
   ModalProfilePage,
 
   MessagePage,
+  AudioFiltersPage
 ];
 
 @NgModule({
