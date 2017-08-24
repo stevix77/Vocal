@@ -1,3 +1,4 @@
+import { TalkService } from './../../services/talkService';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { SelectFriendsComponent } from '../../components/select-friends/select-friends';
@@ -27,14 +28,20 @@ import { MessageResponse } from '../../models/response/messageResponse';
   selector: 'page-send-vocal',
   templateUrl: 'send-vocal.html',
   entryComponents: [SelectFriendsComponent],
-  providers: [StoreService, AudioRecorder, CookieService, HttpService]
+  providers: [StoreService, AudioRecorder, CookieService, HttpService, TalkService]
 })
 export class SendVocalPage {
 
   Friends: Array<any>;
   FileValue: string;
   Talks: Array<TalkResponse>;
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService, private audioRecorder: AudioRecorder, private cookieService: CookieService, private httpService: HttpService) {
+  constructor(public navCtrl: NavController, 
+              public navParams: NavParams, 
+              private storeService: StoreService, 
+              private audioRecorder: AudioRecorder, 
+              private cookieService: CookieService, 
+              private httpService: HttpService,
+              private talkService: TalkService) {
   }
 
   ionViewDidLoad() {
@@ -66,19 +73,10 @@ export class SendVocalPage {
       resp => {
         let response = resp.json() as Response<SendMessageResponse>;
         if(!response.HasError && response.Data.IsSent) {
-          this.GetTalkList().then(() => {
-            let talk = this.Talks.find(x => x.Id == response.Data.Talk.Id);
-            if(talk == null) {
-              talk = response.Data.Talk;
-              talk.Messages = new Array<MessageResponse>();
-              talk.Messages.push(response.Data.Message);
-              this.Talks.push(talk);
-            } else {
-              let index = this.Talks.indexOf(talk);
-              talk.Messages.push(response.Data.Message);
-              this.Talks[index] = talk;
-            }
-            this.SaveTalks();
+          this.talkService.LoadList().then(() => {
+            response.Data.Talk.Messages.push(response.Data.Message);
+            this.talkService.UpdateList(response.Data.Talk);
+            this.talkService.SaveList();
             this.navCtrl.push(VocalListPage);
           })
         }

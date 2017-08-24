@@ -1,3 +1,4 @@
+import { TalkService } from './../services/talkService';
 import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform, AlertController, Config, Events } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -21,15 +22,14 @@ import { HubService } from '../services/hubService';
 import {KeyStore} from '../models/enums';
 import {HubMethod} from '../models/enums';
 import { InitResponse } from '../models/response/InitResponse';
-import { SendMessageResponse } from '../models/response/sendMessageResponse';
-import { TalkResponse } from '../models/response/talkResponse';
 import { Request } from "../models/request/Request";
+import { MessageResponse } from "../models/response/messageResponse";
 
 declare var WindowsAzure: any;
 
 @Component({
   templateUrl: 'app.html',
-  providers: [StoreService, HttpService, Globalization, Device, CookieService, Push, HubService]
+  providers: [StoreService, HttpService, Globalization, Device, CookieService, Push, HubService, TalkService]
 })
 export class VocalApp {
   @ViewChild(Nav) nav: Nav;
@@ -49,7 +49,8 @@ export class VocalApp {
               private push: Push, 
               private hubService: HubService, 
               private alertCtrl: AlertController,
-              private events: Events ) {
+              private events: Events,
+              private talkService: TalkService ) {
     
     this.storeService.Get("user").then(
       user => {
@@ -207,26 +208,30 @@ export class VocalApp {
   }
 
   init() {
-    let request = new Request();
-    request.Lang = params.Lang;
-    let urlInit = url.Init();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlInit, params.User)
-    this.httpService.Post(urlInit, request, cookie).subscribe(
-      resp => {
-        let response = resp.json() as Response<InitResponse>;
-        if(response.HasError)
-          this.showAlert(response.ErrorMessage)
-        else {
-          let errorSettings = response.Data.Errors.find(x => x.Key == KeyStore.Settings.toString());
-          let errorFriends = response.Data.Errors.find(x => x.Key == KeyStore.Friends.toString());
-          let errorTalks = response.Data.Errors.find(x => x.Key == KeyStore.Talks.toString());
-          this.SaveData(response.Data.Friends, errorFriends, KeyStore.Friends);
-          this.SaveData(response.Data.Talks, errorTalks, KeyStore.Talks);
-          this.SaveData(response.Data.Settings, errorSettings, KeyStore.Settings);
-        }
-      },
-      error => this.showAlert(error)
-    )
+    try {
+      let request = new Request();
+      request.Lang = params.Lang;
+      let urlInit = url.Init();
+      let cookie = this.cookieService.GetAuthorizeCookie(urlInit, params.User)
+      this.httpService.Post(urlInit, request, cookie).subscribe(
+        resp => {
+          let response = resp.json() as Response<InitResponse>;
+          if(response.HasError)
+            this.showAlert(response.ErrorMessage)
+          else {
+            let errorSettings = response.Data.Errors.find(x => x.Key == KeyStore.Settings.toString());
+            let errorFriends = response.Data.Errors.find(x => x.Key == KeyStore.Friends.toString());
+            let errorTalks = response.Data.Errors.find(x => x.Key == KeyStore.Talks.toString());
+            this.SaveData(response.Data.Friends, errorFriends, KeyStore.Friends);
+            this.SaveData(response.Data.Talks, errorTalks, KeyStore.Talks);
+            this.SaveData(response.Data.Settings, errorSettings, KeyStore.Settings);
+          }
+        },
+        error => this.showAlert(error)
+      )
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   SaveData(data: any, error: KeyValueResponse<string, string>, key: KeyStore) {
@@ -246,27 +251,14 @@ export class VocalApp {
   }
 
   SubscribeHub() {
-    this.hubService.hubProxy.on(HubMethod[HubMethod.Receive], obj => {
+    this.hubService.hubProxy.on(HubMethod[HubMethod.Receive], (obj) => {
       console.log(obj);
-      this.events.publish(HubMethod[HubMethod.Receive], obj)
-      this.storeService.Get(KeyStore.Talks.toString()).then(list => {
-        let talks = list as Array<TalkResponse>;
-        if(talks != null) {
-          let talk = talks.find(x => x.Id == obj.Talk.Id);
-          if(talk != null) {
-            let index = talks.indexOf(talk);
-            talk.Messages.push(obj.Message);
-            talks[index] = talk;
-          }
-          else {
-            talk = obj.Talk as TalkResponse;
-            talk.Messages = new Array<any>();
-            talk.Messages.push(obj.Message);
-            talks.push(talk);
-          }
-          this.storeService.Set(KeyStore.Talks.toString(), talks);
-        }
-      })
+      this.talkService.LoadList().then(() => {
+        obj.Talk.Messages = new Array<MessageResponse>();
+        obj.Talk.Messages.push(obj.Message);
+        this.talkService.UpdateList(obj.Talk);
+        this.talkService.SaveList();
+      }).then(() => this.events.publish(HubMethod[HubMethod.Receive], obj));
     })
   }
 }

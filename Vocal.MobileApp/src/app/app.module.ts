@@ -30,7 +30,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Media } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
-import { TalksProvider } from '../providers/talks/talks';
 
 let components = [
   VocalApp,
@@ -78,8 +77,7 @@ let components = [
     SplashScreen,
     Media,
     File,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
-    TalksProvider,
+    {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
 export class AppModule {}

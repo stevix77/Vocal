@@ -1,3 +1,4 @@
+import { TalkService } from './../../services/talkService';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Events, ViewController, ModalController, Config } from 'ionic-angular';
 import { HttpService } from "../../services/httpService";
@@ -23,7 +24,7 @@ declare var WindowsAzure: any;
 @Component({
   selector: 'page-vocal-list',
   templateUrl: 'vocal-list.html',
-  providers: [HttpService, CookieService, StoreService],
+  providers: [HttpService, CookieService, StoreService, TalkService],
   entryComponents: [AudioRecorderComponent]
 })
 export class VocalListPage {
@@ -41,7 +42,8 @@ export class VocalListPage {
     public config: Config,
     private httpService: HttpService, 
     private cookieService: CookieService, 
-    private storeService: StoreService) {
+    private storeService: StoreService,
+    private talkService: TalkService) {
 
     events.subscribe('record:start', () => this.toggleContent());
     events.subscribe('edit-vocal:close', () => this.toggleContent());
@@ -85,8 +87,8 @@ export class VocalListPage {
   }
 
   initialize() {
-    this.storeService.Get(KeyStore.Talks.toString()).then((list) => {
-      this.vocalList = list;
+    this.talkService.LoadList().then(() => {
+      this.vocalList = this.talkService.Talks;
     })
   }
 

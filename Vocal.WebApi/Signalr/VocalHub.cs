@@ -35,6 +35,12 @@ namespace Vocal.WebApi.Signalr
                 _users.Add(userId, new List<string> { Context.ConnectionId });
         }
 
+        public void SubscribeToTalks(List<string> talks)
+        {
+            foreach (var item in talks)
+                Groups.Add(Context.ConnectionId, item);
+        }
+
         private List<string> GetConnectionsId(string userId)
         {
             if (_users.ContainsKey(userId))
@@ -45,25 +51,22 @@ namespace Vocal.WebApi.Signalr
 
         public void JoinTalk(string userId, string talkId)
         {
-            var connectionId = _users[userId];
-            foreach(var item in connectionId)
+            var connectionsId = _users[userId];
+            foreach(var item in connectionsId)
                 Groups.Add(item, talkId);
         }
 
         public void LeaveTalk(string userId, string talkId)
         {
-            //var connectionId = _users[userId];
-            //Groups.Remove(connectionId, talkId);
+            var connectionsId = _users[userId];
+            foreach(var item in connectionsId)
+                Groups.Remove(item, talkId);
         }
 
         public void Send(SendMessageResponse response, List<string> usersId)
         {
             foreach(var item in usersId)
-            {
-                var connectionsId = GetConnectionsId(item);
-                if(connectionsId != null)
-                    JoinTalk(response.Message.User.Id, response.Talk.Id);
-            }
+                JoinTalk(item, response.Talk.Id);
             JoinTalk(response.Message.User.Id, response.Talk.Id);
             this.Clients.Group(response.Talk.Id).Receive(response);
         }
