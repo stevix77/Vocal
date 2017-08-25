@@ -11,7 +11,7 @@ using Vocal.Model.Business;
 using Vocal.Model.Request;
 using Vocal.Model.Response;
 using Vocal.Model.DB;
-
+using Vocal.Business.Signalr;
 
 namespace Vocal.Business.Business
 {
@@ -45,11 +45,40 @@ namespace Vocal.Business.Business
             return response;
         }
 
+        public static Response<List<MessageResponse>> GetMessages(string talkId, string lang)
+        {
+            var response = new Response<List<MessageResponse>>();
+            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+            LogManager.LogDebug(talkId, lang);
+            try
+            {
+                var list = Repository.Instance.GetMessages(talkId);
+                response.Data = Bind.Bind_Messages(list);
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
         public static Response<SendMessageResponse> SendMessage(SendMessageRequest request)
         {
             var response = new Response<SendMessageResponse> { Data = new SendMessageResponse { IsSent = false } };
             try
             {
+                Resources_Language.Culture = new System.Globalization.CultureInfo(request.Lang);
                 if (request != null)
                 {
                     LogManager.LogDebug(request);
@@ -92,6 +121,9 @@ namespace Vocal.Business.Business
                             response.Data.Talk = Bind.Bind_Talks(talk, request.IdSender);
                             response.Data.Message = Bind.Bind_Message(m);
                             response.Data.IsSent = true;
+                            Task.Run(async () => {
+                                await HubService.Instance.SendMessage(response.Data, request.IdsRecipient);
+                            });
                         }
                         else
                         {

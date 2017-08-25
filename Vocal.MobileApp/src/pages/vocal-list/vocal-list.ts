@@ -1,3 +1,4 @@
+import { TalkService } from './../../services/talkService';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Events, ViewController, ModalController, Config } from 'ionic-angular';
 import { HttpService } from "../../services/httpService";
@@ -5,12 +6,9 @@ import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
 import { TalkResponse } from '../../models/response/talkResponse';
 import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
-import {KeyStore} from '../../models/enums';
-import {KeyValueResponse} from '../../models/response/keyValueResponse';
+import {HubMethod} from '../../models/enums';
 import { AudioRecorderComponent } from '../../components/audio-recorder/audio-recorder';
 import { MessagePage } from '../message/message';
-
-declare var WindowsAzure: any;
 
 /**
  * Generated class for the VocalListPage page.
@@ -22,7 +20,7 @@ declare var WindowsAzure: any;
 @Component({
   selector: 'page-vocal-list',
   templateUrl: 'vocal-list.html',
-  providers: [HttpService, CookieService, StoreService],
+  providers: [HttpService, CookieService, StoreService, TalkService],
   entryComponents: [AudioRecorderComponent]
 })
 export class VocalListPage {
@@ -40,10 +38,12 @@ export class VocalListPage {
     public config: Config,
     private httpService: HttpService, 
     private cookieService: CookieService, 
-    private storeService: StoreService) {
+    private storeService: StoreService,
+    private talkService: TalkService) {
 
     events.subscribe('record:start', () => this.toggleContent());
     events.subscribe('edit-vocal:close', () => this.toggleContent());
+    events.subscribe(HubMethod[HubMethod.Receive], () => this.initialize())
 
     this.isApp = this.config.get('isApp');
   }
@@ -83,16 +83,10 @@ export class VocalListPage {
   }
 
   initialize() {
-    this.storeService.Get(KeyStore.Talks.toString()).then((list) => {
-      this.vocalList = list;
+    this.talkService.LoadList().then(() => {
+      this.vocalList = this.talkService.Talks;
     })
-  }
-
-  SaveData(data: any, error: KeyValueResponse<string, string>, key: KeyStore) {
-    if(error == null)
-      this.storeService.Set(key.toString(), data);
-    else
-      this.showAlert(error.Value);
+    // this.vocalList = this.talkService.Talks;
   }
 
   goToMessage(id) {

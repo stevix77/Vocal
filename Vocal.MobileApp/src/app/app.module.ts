@@ -77,7 +77,7 @@ let components = [
     SplashScreen,
     Media,
     File,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
 export class AppModule {}

@@ -66,7 +66,8 @@ namespace Vocal.Business.Binder
         {
             var response = new List<TalkResponse>();
             if(list.Count > 0)
-                foreach(var item in list)
+            {
+                foreach (var item in list)
                 {
                     var message = item.Messages.LastOrDefault();
                     response.Add(new TalkResponse
@@ -78,6 +79,27 @@ namespace Vocal.Business.Binder
                         HasNewMessage = message.User.Id != userId && message.Users.SingleOrDefault(x => x.UserId == userId && x.ListenDate.HasValue) == null
                     });
                 }
+                response = response.OrderByDescending(x => x.DateLastMessage).ToList();
+            }
+            return response;
+        }
+
+        internal static List<MessageResponse> Bind_Messages(List<Message> list)
+        {
+            var response = new List<MessageResponse>();
+            foreach(var item in list)
+            {
+                response.Add(new MessageResponse
+                {
+                    ArrivedTime = item.ArrivedTime,
+                    Content = item.Content,
+                    ContentType = (int)item.ContentType,
+                    Id = item.Id.ToString(),
+                    SentTime = item.SentTime,
+                    User = Bind_User(item.User),
+                    Users = Bind_UsersListen(item.Users)
+                });
+            }
             return response;
         }
 

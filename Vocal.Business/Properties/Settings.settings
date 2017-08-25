@@ -44,5 +44,8 @@
     <Setting Name="TagUser" Type="System.String" Scope="Application">
       <Value Profile="(Default)">User</Value>
     </Setting>
+    <Setting Name="Hubname" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Vocal</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
