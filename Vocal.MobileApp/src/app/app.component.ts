@@ -229,7 +229,7 @@ export class VocalApp {
         error => this.showAlert(error)
       )
     } catch (error) {
-      console.log(error);
+      this.showAlert(error);
     }
   }
 

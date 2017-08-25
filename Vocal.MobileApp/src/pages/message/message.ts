@@ -24,9 +24,9 @@ import { TalkService } from "../../services/talkService";
   providers: [HttpService, CookieService, TalkService]
 })
 export class MessagePage {
-
+  
   model = { Message: "", talkId: null }
-  Messages: Array<MessageResponse>;
+  Messages: Array<MessageResponse> = new Array<MessageResponse>();
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
               private httpService: HttpService, 
@@ -50,6 +50,7 @@ export class MessagePage {
 
   sendMessage(){
     var obj = new SendMessageRequest(params.User.Id, this.model.talkId, this.model.Message, 2, []);
+    obj.Lang = params.Lang;
     let urlSearch = url.SendMessage();
     let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
     this.httpService.Post<SendMessageRequest>(url.SendMessage(), obj, cookie).subscribe(
@@ -74,10 +75,42 @@ export class MessagePage {
   }
 
   loadMessages() {
-    let talk = this.talkService.Talks.find(x => x.Id == this.model.talkId);
-    if(talk != null) {
-      this.Messages = talk.Messages;
-    }
+    this.talkService.GetMessages(this.model.talkId).then(() => {
+      if(this.talkService.Messages != null) {
+        let mess = this.talkService.Messages.find(x => x.Key == this.model.talkId)
+        if(mess != null)
+          this.Messages = mess.Value;
+      }
+    }).then(() => {
+      this.getMessages();
+    })
+  }
+
+  getMessages() {
+    let urlMessages = url.GetMessages(this.model.talkId);
+    let cookie = this.cookieService.GetAuthorizeCookie(urlMessages, params.User);
+    let request = {Lang: params.Lang};
+    this.httpService.Post(urlMessages, request, cookie).subscribe(
+      resp => {
+        let response = resp.json();
+        if(!response.HasError) {
+          this.sortMessages(response.Data);
+          this.talkService.SaveMessages(this.model.talkId, this.Messages);
+        } else {
+          this.showToast(response.ErrorMessage);
+        }
+      }
+    )
+  }
+
+  sortMessages(messages: Array<MessageResponse>) {
+    let index = 0;
+    messages.forEach(element => {
+      let mess = this.Messages.find(x => x.Id == element.Id);
+      if(mess == null) {
+        this.Messages.splice(index, 0, element);
+      }
+    });
   }
 
   updateRoom(message) {

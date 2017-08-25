@@ -14,8 +14,7 @@ import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { Response } from '../../models/response';
 import { TalkResponse } from '../../models/response/talkResponse';
-import { SendMessageResponse } from '../../models/response/sendMessageResponse'
-import { MessageResponse } from '../../models/response/messageResponse';
+import { SendMessageResponse } from '../../models/response/sendMessageResponse';
 
 /**
  * Generated class for the SendVocalPage page.

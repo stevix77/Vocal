@@ -76,9 +76,9 @@ namespace Vocal.Business.Business
         public static Response<SendMessageResponse> SendMessage(SendMessageRequest request)
         {
             var response = new Response<SendMessageResponse> { Data = new SendMessageResponse { IsSent = false } };
-            Resources_Language.Culture = new System.Globalization.CultureInfo(request.Lang);
             try
             {
+                Resources_Language.Culture = new System.Globalization.CultureInfo(request.Lang);
                 if (request != null)
                 {
                     LogManager.LogDebug(request);

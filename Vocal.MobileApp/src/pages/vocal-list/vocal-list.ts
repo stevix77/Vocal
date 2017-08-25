@@ -6,13 +6,9 @@ import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
 import { TalkResponse } from '../../models/response/talkResponse';
 import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
-import {KeyStore} from '../../models/enums';
 import {HubMethod} from '../../models/enums';
-import {KeyValueResponse} from '../../models/response/keyValueResponse';
 import { AudioRecorderComponent } from '../../components/audio-recorder/audio-recorder';
 import { MessagePage } from '../message/message';
-
-declare var WindowsAzure: any;
 
 /**
  * Generated class for the VocalListPage page.
@@ -87,9 +83,10 @@ export class VocalListPage {
   }
 
   initialize() {
-    this.talkService.LoadList().then(() => {
-      this.vocalList = this.talkService.Talks;
-    })
+    // this.talkService.LoadList().then(() => {
+    //   this.vocalList = this.talkService.Talks;
+    // })
+    this.vocalList = this.talkService.Talks;
   }
 
   goToMessage(id) {

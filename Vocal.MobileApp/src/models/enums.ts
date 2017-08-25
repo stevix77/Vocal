@@ -11,7 +11,8 @@ export enum KeyStore {
     Settings = 0,
     User = 1,
     Friends = 2,
-    Talks = 3
+    Talks = 3,
+    Messages = 4
 }
 
 export enum Store {
