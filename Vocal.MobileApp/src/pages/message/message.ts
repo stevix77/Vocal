@@ -36,11 +36,16 @@ export class MessagePage {
               private talkService: TalkService) {
 
     // this.events.subscribe()
+    this.model.talkId = this.navParams.get("TalkId")
   }
 
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MessagePage');
+  }
+
+  ionViewWillEnter() {
+    this.loadMessages();
   }
 
   sendMessage(){
@@ -69,7 +74,10 @@ export class MessagePage {
   }
 
   loadMessages() {
-    this.talkService.
+    let talk = this.talkService.Talks.find(x => x.Id == this.model.talkId);
+    if(talk != null) {
+      this.Messages = talk.Messages;
+    }
   }
 
   updateRoom(message) {
