@@ -1,6 +1,6 @@
 import { TalkService } from './../services/talkService';
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, AlertController, Config, Events } from 'ionic-angular';
+import { Nav, Platform, AlertController, Config, Events, ToastController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -23,7 +23,6 @@ import {KeyStore} from '../models/enums';
 import {HubMethod} from '../models/enums';
 import { InitResponse } from '../models/response/InitResponse';
 import { Request } from "../models/request/Request";
-import { MessageResponse } from "../models/response/messageResponse";
 
 declare var WindowsAzure: any;
 
@@ -50,7 +49,8 @@ export class VocalApp {
               private hubService: HubService, 
               private alertCtrl: AlertController,
               private events: Events,
-              private talkService: TalkService ) {
+              private talkService: TalkService,
+              private toastCtrl: ToastController ) {
     
     this.storeService.Get("user").then(
       user => {
@@ -249,13 +249,28 @@ export class VocalApp {
     alert.present();
   }
 
+  showToast(message) {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 3000,
+      position: 'top'
+    });
+    toast.present();
+  }
+
   SubscribeHub() {
     this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
+
     this.hubService.hubProxy.on(HubMethod[HubMethod.Receive], (obj) => {
       console.log(obj);
+      // if(obj.Message.User.Id != params.User.Id) {
+      //   let mess = 'Nouveau message de ' + obj.Message.User.Username;
+      //   this.showToast(mess);
+      // }
+      let mess = 'Nouveau message de ' + obj.Message.User.Username;
+      this.showToast(mess);
       this.talkService.LoadList().then(() => {
-        obj.Talk.Messages = new Array<MessageResponse>();
-        obj.Talk.Messages.push(obj.Message);
+        obj.Talk.DateLastMessage = obj.Message.ArrivedTime;
         this.talkService.UpdateList(obj.Talk);
         this.talkService.SaveList();
       }).then(() => this.events.publish(HubMethod[HubMethod.Receive], obj));

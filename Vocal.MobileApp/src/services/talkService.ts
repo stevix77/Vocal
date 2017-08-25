@@ -42,9 +42,16 @@ export class TalkService {
       this.Talks.unshift(talk);
     } else {
       let index = this.Talks.indexOf(t);
-      //t.Messages.push(talk.Messages[0]);
-      this.Talks[index] = t;
+      this.Talks[index] = talk;
+      this.Talks = this.SortTalks();
     }
+  }
+
+  SortTalks() {
+    let lst = this.Talks.sort(function(a,b) {
+      return new Date(b.DateLastMessage).getTime() - new Date(a.DateLastMessage).getTime()
+    });
+    return lst;
   }
 
   GetMessages(talkId) {
