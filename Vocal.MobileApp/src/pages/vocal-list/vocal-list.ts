@@ -83,10 +83,10 @@ export class VocalListPage {
   }
 
   initialize() {
-    // this.talkService.LoadList().then(() => {
-    //   this.vocalList = this.talkService.Talks;
-    // })
-    this.vocalList = this.talkService.Talks;
+    this.talkService.LoadList().then(() => {
+      this.vocalList = this.talkService.Talks;
+    })
+    // this.vocalList = this.talkService.Talks;
   }
 
   goToMessage(id) {

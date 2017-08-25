@@ -12,7 +12,7 @@ import { MessageResponse } from "../models/response/messageResponse";
 @Injectable()
 export class TalkService {
 
-  public Talks: Array<TalkResponse>;
+  public Talks: Array<TalkResponse> = new Array<TalkResponse>();
   // public Messages: Array<MessageResponse>;
   public Messages: Array<KeyValueResponse<string, Array<MessageResponse>>> = new Array<KeyValueResponse<string, Array<MessageResponse>>>();
 
@@ -27,7 +27,8 @@ export class TalkService {
   LoadList() {
     return this.storeService.Get(KeyStore.Talks.toString()).then(
       talks => {
-        this.Talks = talks;
+        if(talks != null)
+          this.Talks = talks;
       }
     ).catch(error => {
       console.log(error);

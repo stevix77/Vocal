@@ -1,3 +1,5 @@
+import { HubMethod } from '../../models/enums';
+import { MessageResponse } from './../../models/response/messageResponse';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, Events } from 'ionic-angular';
 import { params } from '../../services/params';
@@ -8,7 +10,6 @@ import { url } from '../../services/url';
 import { HttpService } from '../../services/httpService';
 import { CookieService } from '../../services/cookieService';
 import { VocalListPage } from '../../pages/vocal-list/vocal-list';
-import { MessageResponse } from "../../models/response/messageResponse";
 import { TalkService } from "../../services/talkService";
 
 /**
@@ -36,7 +37,8 @@ export class MessagePage {
               private talkService: TalkService) {
 
     // this.events.subscribe()
-    this.model.talkId = this.navParams.get("TalkId")
+    this.model.talkId = this.navParams.get("TalkId");
+    this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj.Message))
   }
 
 
@@ -45,7 +47,7 @@ export class MessagePage {
   }
 
   ionViewWillEnter() {
-    this.loadMessages();
+    this.getMessages();
   }
 
   sendMessage(){
@@ -81,26 +83,32 @@ export class MessagePage {
         if(mess != null)
           this.Messages = mess.Value;
       }
-    }).then(() => {
-      this.getMessages();
+    }).catch((err) => {
+      
     })
   }
 
   getMessages() {
-    let urlMessages = url.GetMessages(this.model.talkId);
-    let cookie = this.cookieService.GetAuthorizeCookie(urlMessages, params.User);
-    let request = {Lang: params.Lang};
-    this.httpService.Post(urlMessages, request, cookie).subscribe(
-      resp => {
-        let response = resp.json();
-        if(!response.HasError) {
-          this.sortMessages(response.Data);
-          this.talkService.SaveMessages(this.model.talkId, this.Messages);
-        } else {
-          this.showToast(response.ErrorMessage);
+    try {
+      let urlMessages = url.GetMessages(this.model.talkId);
+      let cookie = this.cookieService.GetAuthorizeCookie(urlMessages, params.User);
+      let request = {Lang: params.Lang};
+      this.httpService.Post(urlMessages, request, cookie).subscribe(
+        resp => {
+          let response = resp.json() as Response<Array<MessageResponse>>;
+          if(!response.HasError) {
+            //this.sortMessages(response.Data);
+            this.Messages = response.Data;
+            this.talkService.SaveMessages(this.model.talkId, this.Messages);
+          } else {
+            this.showToast(response.ErrorMessage);
+            this.loadMessages();
+          }
         }
-      }
-    )
+      )
+    } catch(err) {
+      this.loadMessages();
+    }
   }
 
   sortMessages(messages: Array<MessageResponse>) {
@@ -114,7 +122,7 @@ export class MessagePage {
   }
 
   updateRoom(message) {
-
+    this.Messages.push(message);
   }
 
   showToast(message: string) :any {
