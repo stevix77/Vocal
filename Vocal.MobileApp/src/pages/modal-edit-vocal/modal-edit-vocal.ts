@@ -35,6 +35,10 @@ export class ModalEditVocalPage {
     console.log('ionViewDidLoad ModalEditVocalPage');
   }
 
+  editVocalWithFilter() {
+    
+  }
+
   startPlayback() {
     try {
       this.audioRecorder.startPlayback();
