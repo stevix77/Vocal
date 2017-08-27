@@ -23,12 +23,13 @@ import {KeyStore} from '../models/enums';
 import {HubMethod} from '../models/enums';
 import { InitResponse } from '../models/response/InitResponse';
 import { Request } from "../models/request/Request";
+import { ExceptionService } from "../services/exceptionService";
 
 declare var WindowsAzure: any;
 
 @Component({
   templateUrl: 'app.html',
-  providers: [StoreService, HttpService, Globalization, Device, CookieService, Push, HubService, TalkService]
+  providers: [StoreService, HttpService, Globalization, Device, CookieService, Push, HubService, TalkService, ExceptionService]
 })
 export class VocalApp {
   @ViewChild(Nav) nav: Nav;
@@ -50,7 +51,8 @@ export class VocalApp {
               private alertCtrl: AlertController,
               private events: Events,
               private talkService: TalkService,
-              private toastCtrl: ToastController ) {
+              private toastCtrl: ToastController,
+              private exceptionService: ExceptionService ) {
     
     this.storeService.Get("user").then(
       user => {
@@ -226,10 +228,14 @@ export class VocalApp {
             this.SaveData(response.Data.Settings, errorSettings, KeyStore.Settings);
           }
         },
-        error => this.showAlert(error)
+        error => {
+          this.showAlert(error)
+          this.exceptionService.Add(error);
+        }
       )
     } catch (error) {
       this.showAlert(error);
+      this.exceptionService.Add(error);
     }
   }
 
