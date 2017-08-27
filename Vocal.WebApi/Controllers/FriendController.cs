@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using Vocal.Business.Business;
@@ -21,6 +17,12 @@ namespace Vocal.WebApi.Controllers
         public Response<List<UserResponse>> SearchFriends(SearchFriendsRequest request)
         {
             return Business.Tools.Monitoring.Execute(FriendBusiness.SearchFriends, request.Emails, request.Lang);
+        }
+
+        [HttpPost, CustomAuthorize, Route("getFriends")]
+        public Response<List<UserResponse>> GetFriends(GetFriendsRequest request)
+        {
+            return Business.Tools.Monitoring.Execute(FriendBusiness.GetFriends, request.UserId, request.PageNumber, request.PageSize, request.Lang);
         }
 
         [HttpPost, CustomAuthorize, Route("add")]

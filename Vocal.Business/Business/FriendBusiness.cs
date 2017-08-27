@@ -41,15 +41,14 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<List<UserResponse>> GetFriends(string userId, string lang)
+        public static Response<List<UserResponse>> GetFriends(string userId, int pageNumber, int pageSize, string lang)
         {
             var response = new Response<List<UserResponse>>();
             LogManager.LogDebug(userId, lang);
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {
-                var list = Data.Instance.Users;
-                //var list = Repository.Instance.GetFriends(userId);
+                var list = Repository.Instance.GetFriends(userId, pageSize, pageNumber);
                 response.Data = Binder.Bind.Bind_Users(list);
             }
             catch (TimeoutException tex)

@@ -179,11 +179,18 @@ namespace Vocal.DAL
             return success;
         }
 
-        public List<People> GetFriends(string userId)
+        public List<People> GetFriends(string userId, int pageSize, int pageNumber)
         {
-            var list = new List<People>();
-
-            return list;
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var currentUser = db.Find(x => x.Id == userId).SingleOrDefault();
+            if (currentUser != null)
+            {
+                var list = pageSize == 0 || pageNumber == 0
+                    ? currentUser.Friends
+                    : currentUser.Friends.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                return list.ToList();
+            }
+            return null;
         }
 
         #endregion
