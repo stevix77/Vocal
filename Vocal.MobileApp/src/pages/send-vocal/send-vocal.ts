@@ -57,15 +57,8 @@ export class SendVocalPage {
           users.push(elt.Id);
         });
     let date = new Date();
-    let request: SendMessageRequest = {
-      content: this.FileValue,
-      sentTime: date,
-      idsRecipient: users,
-      messageType: MessageType.Vocal,
-      Lang: params.Lang,
-      idSender: params.User.Id,
-      IdTalk: null
-    }
+    let request = new SendMessageRequest(params.User.Id, null, this.FileValue, MessageType.Vocal, users)
+    request.Lang = params.Lang;
     let urlSendVocal = url.SendMessage();
     let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
     this.httpService.Post(urlSendVocal, request, cookie).subscribe(
