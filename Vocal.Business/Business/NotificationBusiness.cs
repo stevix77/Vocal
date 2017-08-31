@@ -23,8 +23,8 @@ namespace Vocal.Business.Business
                 var user = Repository.Instance.GetUserById(userId);
                 if(user != null)
                 {
-                    //if(true)
-                    if (!user.Devices.Exists(x => x.Channel == channel))
+                    if(true)
+                    //if (!user.Devices.Exists(x => x.Channel == channel))
                     {
                         var registrationId = await NotificationHub.Instance.GetRegistrationId(channel);
                         var tag = $"{Properties.Settings.Default.TagUser}:{userId}";
@@ -37,7 +37,7 @@ namespace Vocal.Business.Business
                         });
                         Repository.Instance.UpdateUser(user);
                         await NotificationHub.Instance.RegistrationUser(registrationId, channel, platform, tag);
-                        //await NotificationHub.Instance.SendNotification(user.Devices.Select(x => x.Platform).Distinct().ToList(), tag, "toto");
+                        await NotificationHub.Instance.SendNotification(user.Devices.Select(x => x.Platform).Distinct().ToList(), tag, "toto");
                         response.Data = registrationId;
                     }
                 }

@@ -94,10 +94,12 @@ namespace Vocal.Business.Business
 
                             talk = new Talk
                             {
+                                Id = Guid.NewGuid().ToString(),
                                 Messages = new List<Message>(),
                                 VocalName = string.Join(", ", AllUser.Where(x => x.Id != request.IdSender).Select(x => x.Username)),
                                 Users = AllUser
                             };
+                            //Task.Run(async () => await RegisterNotificationToTalk(AllUser, talk.Id));
                         }
                         else
                         {
@@ -123,6 +125,11 @@ namespace Vocal.Business.Business
                             response.Data.IsSent = true;
                             Task.Run(async () => {
                                 await HubService.Instance.SendMessage(response.Data, request.IdsRecipient);
+                                var users = talk.Users.Where(x => x.Id != request.IdSender);
+                                var titleNotif = GenerateTitleNotif(m, talk.VocalName);
+                                var messNotif = GenerateMessageNotif(m);
+                                foreach (var item in users)
+                                    await NotificationHub.Instance.SendNotification(item.Devices.Select(x => x.Platform).ToList(), $"{Properties.Settings.Default.TagUser}:{item.Id}", titleNotif, messNotif, talk.Id);
                             });
                         }
                         else
@@ -150,5 +157,34 @@ namespace Vocal.Business.Business
             }
             return response;
         }
+
+        private static string GenerateTitleNotif(Message m, string vocalName)
+        {
+            var title = string.Empty;
+            if (m.ContentType == MessageType.Vocal)
+                title = $"{m.User.Username} @{vocalName} a envoyé un vocal";
+            else
+                title = $"{m.User.Username} @{vocalName} a envoyé un message texte";
+            return title;
+        }
+
+        private static string GenerateMessageNotif(Message m)
+        {
+            var message = string.Empty;
+            if (m.ContentType == MessageType.Text)
+                message = m.Content.Substring(0, 20);
+            return message;
+        }
+
+        //private static async Task RegisterNotificationToTalk(List<User> allUser, string talkId)
+        //{
+        //    foreach(var item in allUser)
+        //    {
+        //        foreach(var device in item.Devices)
+        //        {
+        //            await NotificationHub.Instance.RegistrationUser(device.RegistrationId, device.Channel, device.Platform, string.Format(Properties.Settings.Default.TagTalk, talkId))
+        //        }
+        //    }
+        //}
     }
 }

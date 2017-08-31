@@ -44,7 +44,7 @@ namespace Vocal.Business.Business
         public static Response<List<UserResponse>> GetFriends(string userId, int pageNumber, int pageSize, string lang)
         {
             var response = new Response<List<UserResponse>>();
-            LogManager.LogDebug(userId, lang);
+            LogManager.LogDebug(userId, pageNumber, pageSize, lang);
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {

@@ -252,7 +252,6 @@ namespace Vocal.DAL
 
         public Talk AddTalk(Talk talk)
         {
-            talk.Id = Guid.NewGuid().ToString();
             var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
             collection.InsertOne(talk);
             return talk;
