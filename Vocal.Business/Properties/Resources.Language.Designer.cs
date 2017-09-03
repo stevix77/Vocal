@@ -232,6 +232,15 @@ namespace Vocal.Business.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à vous suit.
+        /// </summary>
+        public static string TextNotifFollowYou {
+            get {
+                return ResourceManager.GetString("TextNotifFollowYou", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Délai d&apos;attente dépassé.
         /// </summary>
         public static string TimeoutError {
