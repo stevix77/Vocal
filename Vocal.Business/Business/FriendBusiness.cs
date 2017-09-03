@@ -105,6 +105,33 @@ namespace Vocal.Business.Business
             return response;
         }
 
+        public static Response<bool> RemoveFriends(string userId, List<string> ids, string lang)
+        {
+            var response = new Response<bool>();
+            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+            LogManager.LogDebug(userId, ids, lang);
+            try
+            {
+                response.Data = Repository.Instance.RemoveFriends(userId, ids);
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
         private static async Task SendNotif(List<string> ids, string mess)
         {
             foreach(var item in ids)

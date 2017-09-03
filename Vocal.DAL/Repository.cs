@@ -179,6 +179,23 @@ namespace Vocal.DAL
             return success;
         }
 
+        public bool RemoveFriends(string userId, List<string> ids)
+        {
+            bool success = false;
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, ids);
+            var users = db.Find(filter).ToList();
+            var user = db.Find(x => x.Id == userId).SingleOrDefault();
+            if (user != null)
+            {
+                var friends = Bind_UsersToFriends(users);
+                user.Friends.RemoveAll(x => friends.Select(y => y.Id).Contains(x.Id));
+                db.ReplaceOne(x => x.Id == userId, user);
+                success = true;
+            }
+            return success;
+        }
+
         public List<People> GetFriends(string userId, int pageSize, int pageNumber)
         {
             var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
