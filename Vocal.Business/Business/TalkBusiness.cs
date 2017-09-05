@@ -128,8 +128,7 @@ namespace Vocal.Business.Business
                                 var users = talk.Users.Where(x => x.Id != request.IdSender);
                                 var titleNotif = GenerateTitleNotif(m, talk.VocalName);
                                 var messNotif = GenerateMessageNotif(m);
-                                foreach (var item in users)
-                                    await NotificationHub.Instance.SendNotification(item.Devices.Select(x => x.Platform).ToList(), $"{Properties.Settings.Default.TagUser}:{item.Id}", titleNotif, messNotif, talk.Id);
+                                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), NotifType.Talk, messNotif, titleNotif, talk.Id);
                             });
                         }
                         else

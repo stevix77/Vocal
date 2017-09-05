@@ -7,9 +7,6 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-azure-notification-hubs": {
-            "PACKAGE_NAME": "MyApp"
-        },
         "cordova-plugin-console": {
             "PACKAGE_NAME": "MyApp"
         },

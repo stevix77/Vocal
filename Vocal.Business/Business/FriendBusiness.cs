@@ -77,15 +77,13 @@ namespace Vocal.Business.Business
             try
             {
                 response.Data = Repository.Instance.AddFriends(userId, ids);
-                Task.Run(async () =>
-                {
-                    var user = Repository.Instance.GetUserById(userId);
-                    if(user != null)
+                if (response.Data)
+                    Task.Run(async () =>
                     {
-                        var mess = $"{user.Username} {Resources_Language.TextNotifAddFriend}";
-                        await SendNotif(ids, mess);
-                    }
-                });
+                        var user = Repository.Instance.GetUserById(userId);
+                        if(user != null)
+                            await NotificationBusiness.SendNotification(ids, NotifType.AddFriend);
+                    });
             }
             catch (TimeoutException tex)
             {
@@ -105,13 +103,6 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        private static async Task SendNotif(List<string> ids, string mess)
-        {
-            foreach(var item in ids)
-            {
-                var tag = $"{Settings.Default.TagUser}:{item}";
-                await NotificationBusiness.SendNotification(new List<string> { item }, tag, mess);
-            }
-        }
+        
     }
 }

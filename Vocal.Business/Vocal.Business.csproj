@@ -90,6 +90,11 @@
     <Compile Include="Business\TalkBusiness.cs" />
     <Compile Include="Business\UserBusiness.cs" />
     <Compile Include="Exception\CustomException.cs" />
+    <Compile Include="Properties\PayloadSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>PayloadSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Signalr\HubService.cs" />
     <Compile Include="Tools\CacheManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -156,6 +161,10 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\PayloadSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>PayloadSettings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

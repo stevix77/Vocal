@@ -48,15 +48,15 @@ namespace Vocal.DAL
             var toto = await Hub.CreateOrUpdateRegistrationAsync(description);
         }
 
-        public async Task SendNotification(List<string> platform, string tag, string text)
-        {
-            foreach(var item in platform)
-            {
-                string mess = GenerateTextNotif(item, text);
-                var notif = GenerateNotif(item, mess);
-                var toto = await Hub.SendNotificationAsync(notif, tag);
-            }
-        }
+        //public async Task SendNotification(List<string> platform, string tag, string text)
+        //{
+        //    foreach(var item in platform)
+        //    {
+        //        string mess = GenerateTextNotif(item, text);
+        //        var notif = GenerateNotif(item, mess);
+        //        var toto = await Hub.SendNotificationAsync(notif, tag);
+        //    }
+        //}
 
         private async Task DeleteRegistrations(string channel)
         {
@@ -113,59 +113,10 @@ namespace Vocal.DAL
             return notification;
         }
 
-        private string GenerateTextNotif(string platform, string text)
+        public async Task SendNotification(string platform, string tag, string payload)
         {
-            string textNotif = string.Empty;
-            switch (platform)
-            {
-                case "gcm":
-                    textNotif = string.Format("{\"data\" : {\"message\" : \"{0}\" }}", text);
-                    break;
-                case "apns":
-                    textNotif = string.Format("{\"aps\" : {\"alert\" : \"{0}\" }}", text);
-                    break;
-                case "wns":
-                    textNotif = string.Format("<toast><visual><binding template = \"ToastText01\"><text id=\"1\">{0}</text></binding></visual></toast>", text);
-                    break;
-                case "mpns":
-                    textNotif = $"<wp:Notification xmlns:wp=\"WPNotification\"><wp:Toast><wp:Text1>{text}</wp:Text1></wp:Toast></wp:Notification>";
-                    break;
-                default:
-                    textNotif = null;
-                    break;
-            }
-            return textNotif;
-        }
-
-        private string GenerateTextNotif(string platform, string title, string message, string talkId)
-        {
-            string textNotif = string.Empty;
-            switch (platform)
-            {
-                case "gcm":
-                    textNotif = string.Format("{\"data\" : {\"message\" : \"{0}\", \"title\" : {1}, \"talkId\" : {2} }}", message, title, talkId);
-                    break;
-                case "apns":
-                    textNotif = string.Format("{\"aps\" : {\"alert\" : \"{0}\", \"title\" : {1}, \"talkId\" : {2} }}", message, title, talkId);
-                    break;
-                case "wns":
-                    textNotif = string.Format("<toast launch=\"talkId={0}\"><visual><binding template = \"ToastText02\"><text id=\"1\">{0}</text><text id=\"2\">{1}</text></binding></visual></toast>", talkId, title, message);
-                    break;
-                default:
-                    textNotif = null;
-                    break;
-            }
-            return textNotif;
-        }
-
-        public async Task SendNotification(List<string> platforms, string tag, string titlesNotif, string messNotif, string talkId)
-        {
-            foreach(var item in platforms)
-            {
-                var payload = GenerateTextNotif(item, titlesNotif, messNotif, talkId);
-                var notif = GenerateNotif(item, payload);
-                var result = await Hub.SendNotificationAsync(notif, tag);
-            }
+            var notif = GenerateNotif(platform, payload);
+            var result = await Hub.SendNotificationAsync(notif, tag);
         }
     }
 }

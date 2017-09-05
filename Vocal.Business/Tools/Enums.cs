@@ -19,4 +19,10 @@ namespace Vocal.Business.Tools
         Connect,
         Send
     }
+
+    public enum NotifType
+    {
+        Talk,
+        AddFriend
+    }
 }
