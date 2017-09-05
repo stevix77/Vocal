@@ -38,7 +38,7 @@ namespace Vocal.Business.Business
                 });
                 var actionFriends = new Action(() =>
                 {
-                    var resp = FriendBusiness.GetFriends(userId, lang);
+                    var resp = FriendBusiness.GetFriends(userId, 0, 0, lang);
                     if (!resp.HasError)
                         response.Data.Friends = resp.Data;
                     else

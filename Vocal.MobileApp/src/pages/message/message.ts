@@ -1,5 +1,7 @@
+import { HubMethod } from '../../models/enums';
+import { MessageResponse } from './../../models/response/messageResponse';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, Events } from 'ionic-angular';
 import { params } from '../../services/params';
 import { Response } from '../../models/Response';
 import { SendMessageRequest } from '../../models/request/sendMessageRequest';
@@ -8,6 +10,7 @@ import { url } from '../../services/url';
 import { HttpService } from '../../services/httpService';
 import { CookieService } from '../../services/cookieService';
 import { VocalListPage } from '../../pages/vocal-list/vocal-list';
+import { TalkService } from "../../services/talkService";
 
 /**
  * Generated class for the MessagePage page.
@@ -19,13 +22,23 @@ import { VocalListPage } from '../../pages/vocal-list/vocal-list';
 @Component({
   selector: 'page-message',
   templateUrl: 'message.html',
-  providers: [HttpService, CookieService]
+  providers: [HttpService, CookieService, TalkService]
 })
 export class MessagePage {
-
+  
   model = { Message: "", talkId: null }
+  Messages: Array<MessageResponse> = new Array<MessageResponse>();
+  constructor(public navCtrl: NavController, 
+              public navParams: NavParams, 
+              private httpService: HttpService, 
+              private toastCtrl: ToastController, 
+              private cookieService: CookieService,
+              private events: Events,
+              private talkService: TalkService) {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, private toastCtrl: ToastController, private cookieService: CookieService) {
+    // this.events.subscribe()
+    this.model.talkId = this.navParams.get("TalkId");
+    this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj.Message))
   }
 
 
@@ -33,8 +46,13 @@ export class MessagePage {
     console.log('ionViewDidLoad MessagePage');
   }
 
+  ionViewWillEnter() {
+    this.getMessages();
+  }
+
   sendMessage(){
     var obj = new SendMessageRequest(params.User.Id, this.model.talkId, this.model.Message, 2, []);
+    obj.Lang = params.Lang;
     let urlSearch = url.SendMessage();
     let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
     this.httpService.Post<SendMessageRequest>(url.SendMessage(), obj, cookie).subscribe(
@@ -56,6 +74,55 @@ export class MessagePage {
         }
       }
     );
+  }
+
+  loadMessages() {
+    this.talkService.GetMessages(this.model.talkId).then(() => {
+      if(this.talkService.Messages != null) {
+        let mess = this.talkService.Messages.find(x => x.Key == this.model.talkId)
+        if(mess != null)
+          this.Messages = mess.Value;
+      }
+    }).catch((err) => {
+      
+    })
+  }
+
+  getMessages() {
+    try {
+      let urlMessages = url.GetMessages(this.model.talkId);
+      let cookie = this.cookieService.GetAuthorizeCookie(urlMessages, params.User);
+      let request = {Lang: params.Lang};
+      this.httpService.Post(urlMessages, request, cookie).subscribe(
+        resp => {
+          let response = resp.json() as Response<Array<MessageResponse>>;
+          if(!response.HasError) {
+            //this.sortMessages(response.Data);
+            this.Messages = response.Data;
+            this.talkService.SaveMessages(this.model.talkId, this.Messages);
+          } else {
+            this.showToast(response.ErrorMessage);
+            this.loadMessages();
+          }
+        }
+      )
+    } catch(err) {
+      this.loadMessages();
+    }
+  }
+
+  sortMessages(messages: Array<MessageResponse>) {
+    let index = 0;
+    messages.forEach(element => {
+      let mess = this.Messages.find(x => x.Id == element.Id);
+      if(mess == null) {
+        this.Messages.splice(index, 0, element);
+      }
+    });
+  }
+
+  updateRoom(message) {
+    this.Messages.push(message);
   }
 
   showToast(message: string) :any {

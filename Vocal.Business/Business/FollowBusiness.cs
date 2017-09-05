@@ -11,44 +11,17 @@ using Vocal.Model.Response;
 
 namespace Vocal.Business.Business
 {
-    public static class FriendBusiness
+    public static class FollowBusiness
     {
-        public static Response<List<UserResponse>> SearchFriends(List<string> emails, string lang)
-        {
-            var response = new Response<List<UserResponse>>();
-            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-            LogManager.LogDebug(emails, lang);
-            try
-            {
-                var list = Repository.Instance.SearchFriendsByEmails(emails);
-                response.Data = Binder.Bind.Bind_Users(list);
-            }
-            catch (TimeoutException tex)
-            {
-                LogManager.LogError(tex);
-                response.ErrorMessage = Resources_Language.TimeoutError;
-            }
-            catch (CustomException cex)
-            {
-                LogManager.LogError(cex);
-                response.ErrorMessage = cex.Message;
-            }
-            catch (Exception ex)
-            {
-                LogManager.LogError(ex);
-                response.ErrorMessage = Resources_Language.TechnicalError;
-            }
-            return response;
-        }
-
-        public static Response<List<UserResponse>> GetFriends(string userId, int pageNumber, int pageSize, string lang)
+        
+        public static Response<List<UserResponse>> GetFollowers(string userId, int pageNumber, int pageSize, string lang)
         {
             var response = new Response<List<UserResponse>>();
             LogManager.LogDebug(userId, lang);
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {
-                var list = Repository.Instance.GetFriends(userId, pageSize, pageNumber);
+                var list = Repository.Instance.GetFollowers(userId, pageSize, pageNumber);
                 response.Data = Binder.Bind.Bind_Users(list);
             }
             catch (TimeoutException tex)
@@ -69,20 +42,48 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<bool> AddFriends(string userId, List<string> ids, string lang)
+        public static Response<List<UserResponse>> GetFollowing(string userId, int pageNumber, int pageSize, string lang)
+        {
+            var response = new Response<List<UserResponse>>();
+            LogManager.LogDebug(userId, lang);
+            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+            try
+            {
+                var list = Repository.Instance.GetFollowing(userId, pageSize, pageNumber);
+                response.Data = Binder.Bind.Bind_Users(list);
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
+        public static Response<bool> Follow(string userId, List<string> ids, string lang)
         {
             var response = new Response<bool>();
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             LogManager.LogDebug(userId, ids, lang);
             try
             {
-                response.Data = Repository.Instance.AddFriends(userId, ids);
+                response.Data = Repository.Instance.Follow(userId, ids);
                 Task.Run(async () =>
                 {
                     var user = Repository.Instance.GetUserById(userId);
                     if(user != null)
                     {
-                        var mess = $"{user.Username} {Resources_Language.TextNotifAddFriend}";
+                        var mess = $"{user.Username} {Resources_Language.TextNotifFollowYou}";
                         await SendNotif(ids, mess);
                     }
                 });
@@ -105,14 +106,14 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<bool> RemoveFriends(string userId, List<string> ids, string lang)
+        public static Response<bool> Unfollow(string userId, List<string> ids, string lang)
         {
             var response = new Response<bool>();
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             LogManager.LogDebug(userId, ids, lang);
             try
             {
-                response.Data = Repository.Instance.RemoveFriends(userId, ids);
+                response.Data = Repository.Instance.Unfollow(userId, ids);
             }
             catch (TimeoutException tex)
             {

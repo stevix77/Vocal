@@ -174,4 +174,7 @@
   <data name="UsernameExisting" xml:space="preserve">
     <value>This username is already existing</value>
   </data>
+  <data name="TextNotifFollowYou" xml:space="preserve">
+    <value>follow you</value>
+  </data>
 </root>

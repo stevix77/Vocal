@@ -1,5 +1,6 @@
+import { TalkService } from './../services/talkService';
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, AlertController, Config } from 'ionic-angular';
+import { Nav, Platform, AlertController, Config, Events, ToastController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -19,14 +20,16 @@ import { Push, PushObject } from '@ionic-native/push';
 import { NotificationRegisterRequest } from "../models/request/notificationRegisterRequest";
 import { HubService } from '../services/hubService';
 import {KeyStore} from '../models/enums';
+import {HubMethod} from '../models/enums';
 import { InitResponse } from '../models/response/InitResponse';
 import { Request } from "../models/request/Request";
+import { ExceptionService } from "../services/exceptionService";
 
 declare var WindowsAzure: any;
 
 @Component({
   templateUrl: 'app.html',
-  providers: [StoreService, HttpService, Globalization, Device, CookieService, Push, HubService]
+  providers: [StoreService, HttpService, Globalization, Device, CookieService, Push, HubService, TalkService, ExceptionService]
 })
 export class VocalApp {
   @ViewChild(Nav) nav: Nav;
@@ -45,13 +48,17 @@ export class VocalApp {
               private cookieService: CookieService, 
               private push: Push, 
               private hubService: HubService, 
-              private alertCtrl: AlertController) {
+              private alertCtrl: AlertController,
+              private events: Events,
+              private talkService: TalkService,
+              private toastCtrl: ToastController,
+              private exceptionService: ExceptionService ) {
     
     this.storeService.Get("user").then(
       user => {
         if(user != null) {
           params.User = user;
-          this.hubService.Start();
+          this.SubscribeHub();
           this.initPushNotification();
           this.init();
           this.rootPage = VocalListPage;
@@ -202,26 +209,34 @@ export class VocalApp {
   }
 
   init() {
-    let request = new Request();
-    request.Lang = params.Lang;
-    let urlInit = url.Init();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlInit, params.User)
-    this.httpService.Post(urlInit, request, cookie).subscribe(
-      resp => {
-        let response = resp.json() as Response<InitResponse>;
-        if(response.HasError)
-          this.showAlert(response.ErrorMessage)
-        else {
-          let errorSettings = response.Data.Errors.find(x => x.Key == KeyStore.Settings.toString());
-          let errorFriends = response.Data.Errors.find(x => x.Key == KeyStore.Friends.toString());
-          let errorTalks = response.Data.Errors.find(x => x.Key == KeyStore.Talks.toString());
-          this.SaveData(response.Data.Friends, errorFriends, KeyStore.Friends);
-          this.SaveData(response.Data.Talks, errorTalks, KeyStore.Talks);
-          this.SaveData(response.Data.Settings, errorSettings, KeyStore.Settings);
+    try {
+      let request = new Request();
+      request.Lang = params.Lang;
+      let urlInit = url.Init();
+      let cookie = this.cookieService.GetAuthorizeCookie(urlInit, params.User)
+      this.httpService.Post(urlInit, request, cookie).subscribe(
+        resp => {
+          let response = resp.json() as Response<InitResponse>;
+          if(response.HasError)
+            this.showAlert(response.ErrorMessage)
+          else {
+            let errorSettings = response.Data.Errors.find(x => x.Key == KeyStore.Settings.toString());
+            let errorFriends = response.Data.Errors.find(x => x.Key == KeyStore.Friends.toString());
+            let errorTalks = response.Data.Errors.find(x => x.Key == KeyStore.Talks.toString());
+            this.SaveData(response.Data.Friends, errorFriends, KeyStore.Friends);
+            this.SaveData(response.Data.Talks, errorTalks, KeyStore.Talks);
+            this.SaveData(response.Data.Settings, errorSettings, KeyStore.Settings);
+          }
+        },
+        error => {
+          this.showAlert(error)
+          this.exceptionService.Add(error);
         }
-      },
-      error => this.showAlert(error)
-    )
+      )
+    } catch (error) {
+      this.showAlert(error);
+      this.exceptionService.Add(error);
+    }
   }
 
   SaveData(data: any, error: KeyValueResponse<string, string>, key: KeyStore) {
@@ -238,5 +253,33 @@ export class VocalApp {
       buttons: ['OK']
     });
     alert.present();
+  }
+
+  showToast(message) {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 3000,
+      position: 'top'
+    });
+    toast.present();
+  }
+
+  SubscribeHub() {
+    this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
+
+    this.hubService.hubProxy.on(HubMethod[HubMethod.Receive], (obj) => {
+      console.log(obj);
+      // if(obj.Message.User.Id != params.User.Id) {
+      //   let mess = 'Nouveau message de ' + obj.Message.User.Username;
+      //   this.showToast(mess);
+      // }
+      let mess = 'Nouveau message de ' + obj.Message.User.Username;
+      this.showToast(mess);
+      this.talkService.LoadList().then(() => {
+        obj.Talk.DateLastMessage = obj.Message.ArrivedTime;
+        this.talkService.UpdateList(obj.Talk);
+        this.talkService.SaveList();
+      }).then(() => this.events.publish(HubMethod[HubMethod.Receive], obj));
+    })
   }
 }
