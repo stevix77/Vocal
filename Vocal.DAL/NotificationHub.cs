@@ -47,17 +47,7 @@ namespace Vocal.DAL
             description.RegistrationId = registrationId;
             var toto = await Hub.CreateOrUpdateRegistrationAsync(description);
         }
-
-        //public async Task SendNotification(List<string> platform, string tag, string text)
-        //{
-        //    foreach(var item in platform)
-        //    {
-        //        string mess = GenerateTextNotif(item, text);
-        //        var notif = GenerateNotif(item, mess);
-        //        var toto = await Hub.SendNotificationAsync(notif, tag);
-        //    }
-        //}
-
+        
         private async Task DeleteRegistrations(string channel)
         {
             var registrations = await Hub.GetRegistrationsByChannelAsync(channel, 100);

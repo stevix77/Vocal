@@ -68,7 +68,7 @@ namespace Vocal.Business.Business
             {
                 foreach (var id in ids)
                 {
-                    var u = DAL.Repository.Instance.GetUserById(id);
+                    var u = Repository.Instance.GetUserById(id);
                     var tag = $"{Properties.Settings.Default.TagUser}:{id}";
                     foreach (var ptf in u.Devices.Select(x => x.Platform).Distinct())
                     {
