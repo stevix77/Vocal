@@ -37,7 +37,7 @@ namespace Vocal.WebApi.Controllers
             return Business.Tools.Monitoring.Execute(UserBusiness.GetSettings, obj.UserId, request.Lang);
         }
 
-        [HttpPost, Route("me/update")/*, CustomAuthorize*/]
+        [HttpPost, Route("me/update"), CustomAuthorize]
         public Response<bool> UpdateUser(UpdateRequest request)
         {
             var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);

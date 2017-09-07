@@ -31,5 +31,6 @@ export enum HubMethod {
     Connect,
     Send,
     Receive,
-    SubscribeToTalks
+    SubscribeToTalks,
+    UpdateListenUser
 }

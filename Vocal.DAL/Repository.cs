@@ -418,12 +418,12 @@ namespace Vocal.DAL
                 : this.UpdateTalk(talk);
         }
 
-        public List<Message> GetMessages(string talkId)
+        public List<Message> GetMessages(string talkId, string userId)
         {
             var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
             var talk = collection.Find(x => x.Id == talkId).SingleOrDefault();
             if (talk != null)
-                return talk.Messages;
+                return talk.Messages.Where(x => x.Users.Any(y => !y.ListenDate.HasValue && y.UserId == userId)).ToList();
             else
                 return null;
         }

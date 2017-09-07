@@ -45,15 +45,17 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<List<MessageResponse>> GetMessages(string talkId, string lang)
+        public static Response<List<MessageResponse>> GetMessages(string talkId, string userId, string lang)
         {
             var response = new Response<List<MessageResponse>>();
-            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-            LogManager.LogDebug(talkId, lang);
             try
             {
-                var list = Repository.Instance.GetMessages(talkId);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                LogManager.LogDebug(talkId, userId, lang);
+                var list = Repository.Instance.GetMessages(talkId, userId);
                 response.Data = Bind.Bind_Messages(list);
+                if(list.Count > 0)
+                    Task.Run(() => UpdateListenUser(list, userId, talkId));
             }
             catch (TimeoutException tex)
             {
@@ -71,6 +73,23 @@ namespace Vocal.Business.Business
                 response.ErrorMessage = Resources_Language.TechnicalError;
             }
             return response;
+        }
+
+        public static void UpdateListenUser(List<Message> list, string userId, string talkId)
+        {
+            var talk = Repository.Instance.GetTalk(talkId, userId);
+            DateTime dt = DateTime.Now;
+            if(list == null)
+                list = Repository.Instance.GetMessages(talkId, userId);
+            foreach (var item in list)
+            {
+                var user = item.Users.SingleOrDefault(x => x.UserId == userId);
+                user.ListenDate = dt;
+                var m = talk.Messages.SingleOrDefault(x => x.Id == item.Id);
+                m = item;
+            }
+            Repository.Instance.UpdateTalk(talk);
+            HubService.Instance.UpdateTalk(talkId, Bind.Bind_Messages(list));
         }
 
         public static Response<SendMessageResponse> SendMessage(SendMessageRequest request)
@@ -116,7 +135,7 @@ namespace Vocal.Business.Business
                                 Content = request.Content,
                                 ContentType = (MessageType)request.MessageType,
                                 User = user,
-                                Users = request.IdsRecipient.Select(x => new UserListen() { UserId = x }).ToList()
+                                Users = request.IdsRecipient.Select(x => new UserListen() { UserId = x/*, ListenDate = x == user.Id ? DateTime.Now : new DateTime?()*/ }).ToList()
                             };
                             talk.Messages.Add(m);
                             talk = Repository.Instance.UptOrCreateTalk(talk);

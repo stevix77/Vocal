@@ -281,5 +281,6 @@ export class VocalApp {
         this.talkService.SaveList();
       }).then(() => this.events.publish(HubMethod[HubMethod.Receive], obj));
     })
+    
   }
 }

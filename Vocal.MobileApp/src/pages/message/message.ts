@@ -11,6 +11,7 @@ import { HttpService } from '../../services/httpService';
 import { CookieService } from '../../services/cookieService';
 import { VocalListPage } from '../../pages/vocal-list/vocal-list';
 import { TalkService } from "../../services/talkService";
+import { HubService } from "../../services/hubService";
 
 /**
  * Generated class for the MessagePage page.
@@ -22,7 +23,7 @@ import { TalkService } from "../../services/talkService";
 @Component({
   selector: 'page-message',
   templateUrl: 'message.html',
-  providers: [HttpService, CookieService, TalkService]
+  providers: [HttpService, CookieService, TalkService, HubService]
 })
 export class MessagePage {
   
@@ -34,7 +35,8 @@ export class MessagePage {
               private toastCtrl: ToastController, 
               private cookieService: CookieService,
               private events: Events,
-              private talkService: TalkService) {
+              private talkService: TalkService,
+              private hubService: HubService) {
 
     // this.events.subscribe()
     this.model.talkId = this.navParams.get("TalkId");
@@ -47,7 +49,9 @@ export class MessagePage {
   }
 
   ionViewWillEnter() {
-    this.getMessages();
+    this.loadMessages().then(() => {
+      this.getMessages();
+    });
   }
 
   sendMessage(){
@@ -77,7 +81,7 @@ export class MessagePage {
   }
 
   loadMessages() {
-    this.talkService.GetMessages(this.model.talkId).then(() => {
+   return this.talkService.GetMessages(this.model.talkId).then(() => {
       if(this.talkService.Messages != null) {
         let mess = this.talkService.Messages.find(x => x.Key == this.model.talkId)
         if(mess != null)
@@ -98,7 +102,9 @@ export class MessagePage {
           let response = resp.json() as Response<Array<MessageResponse>>;
           if(!response.HasError) {
             //this.sortMessages(response.Data);
-            this.Messages = response.Data;
+            response.Data.forEach(item => {
+              this.Messages.push(item);
+            });
             this.talkService.SaveMessages(this.model.talkId, this.Messages);
           } else {
             this.showToast(response.ErrorMessage);
@@ -123,6 +129,7 @@ export class MessagePage {
 
   updateRoom(message) {
     this.Messages.push(message);
+    this.hubService.Invoke(HubMethod[HubMethod.UpdateListenUser], this.model.talkId)
   }
 
   showToast(message: string) :any {
