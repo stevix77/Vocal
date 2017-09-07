@@ -9,6 +9,11 @@ import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
 import {HubMethod} from '../../models/enums';
 import { AudioRecorderComponent } from '../../components/audio-recorder/audio-recorder';
 import { MessagePage } from '../message/message';
+import {params} from '../../services/params';
+import { Response } from '../../models/Response';
+import {url} from '../../services/url';
+
+
 
 /**
  * Generated class for the VocalListPage page.
@@ -84,7 +89,26 @@ export class VocalListPage {
 
   initialize() {
     this.talkService.LoadList().then(() => {
-      this.vocalList = this.talkService.Talks;
+      if(this.talkService.Talks != null)
+        this.vocalList = this.talkService.Talks;
+      else {  
+      let request = {Lang: params.Lang, UserId: params.User.Id}
+      let urlTalks = url.GetTalkList();
+      let cookie = this.cookieService.GetAuthorizeCookie(urlTalks, params.User);
+      this.httpService.Post(urlTalks, request, cookie).subscribe(
+        resp => {
+          let response = resp.json() as Response<Array<TalkResponse>>;
+          if(response.HasError)
+            this.showAlert(response.ErrorMessage)
+          else {
+            if(response.Data.length > 0) {
+              this.vocalList = this.talkService.Talks = response.Data;
+              this.talkService.SaveList();
+            }
+          }
+        }
+      );
+      }
     })
     // this.vocalList = this.talkService.Talks;
   }
