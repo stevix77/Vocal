@@ -26,9 +26,15 @@ namespace Vocal.WebApi.Controllers
         }
 
         [HttpPost, CustomAuthorize, Route("add")]
-        public Response<bool> AddFriends(AddFriendsRequest request)
+        public Response<bool> AddFriends(ManageFriendsRequest request)
         {
             return Business.Tools.Monitoring.Execute(FriendBusiness.AddFriends, request.UserId, request.Ids, request.Lang);
+        }
+
+        [HttpPost, CustomAuthorize, Route("Remove")]
+        public Response<bool> RemoveFriends(ManageFriendsRequest request)
+        {
+            return Business.Tools.Monitoring.Execute(FriendBusiness.RemoveFriends, request.UserId, request.Ids, request.Lang);
         }
     }
 }
