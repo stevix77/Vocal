@@ -54,6 +54,10 @@ export class MessagePage {
     });
   }
 
+  ionViewWillLeave() {
+    this.talkService.SaveMessages(this.model.talkId, this.Messages);
+  }
+
   sendMessage(){
     var obj = new SendMessageRequest(params.User.Id, this.model.talkId, this.model.Message, 2, []);
     obj.Lang = params.Lang;
@@ -70,6 +74,7 @@ export class MessagePage {
             document.getElementById("message-room").innerHTML += "<ion-col class='col' col-6></ion-col><ion-col class='col' col-6><div class='msg msg-current-user'>" + this.model.Message + "</div></ion-col>";
             this.model.Message =  "";
             this.model.talkId = response.Data.Talk.Id;
+            this.Messages.push(response.Data.Message);
           }else{
              //Must be set in a template.html but sorry guys I don't know how to do that yet
             document.getElementById("message-room").innerHTML += "<ion-col class='col' col-6></ion-col><ion-col class='col' col-6><div class='msg msg-current-user-not-sent'>" + this.model.Message + "</div></ion-col>";
