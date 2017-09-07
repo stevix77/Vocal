@@ -83,8 +83,7 @@ namespace Vocal.Business.Business
                     var user = Repository.Instance.GetUserById(userId);
                     if(user != null)
                     {
-                        var mess = $"{user.Username} {Resources_Language.TextNotifFollowYou}";
-                        await SendNotif(ids, mess);
+                        await NotificationBusiness.SendNotification(ids, NotifType.Follow, user.Username);
                     }
                 });
             }
@@ -131,15 +130,6 @@ namespace Vocal.Business.Business
                 response.ErrorMessage = Resources_Language.TechnicalError;
             }
             return response;
-        }
-
-        private static async Task SendNotif(List<string> ids, string mess)
-        {
-            foreach(var item in ids)
-            {
-                var tag = $"{Settings.Default.TagUser}:{item}";
-                await NotificationBusiness.SendNotification(new List<string> { item }, tag, mess);
-            }
         }
     }
 }

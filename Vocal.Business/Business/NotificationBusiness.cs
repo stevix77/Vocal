@@ -122,6 +122,26 @@ namespace Vocal.Business.Business
             switch (platform)
             {
                 case "gcm":
+                    payload = PayloadSettings.Default.AddFriendsAndroid;
+                    break;
+                case "apns":
+                    payload = PayloadSettings.Default.AddFriendsiOs;
+                    break;
+                case "wns":
+                    payload = PayloadSettings.Default.AddFriendsWindows;
+                    break;
+                default:
+                    break;
+            }
+            return payload;
+        }
+
+        private static string GetPayloadFollow(string platform)
+        {
+            string payload = string.Empty;
+            switch (platform)
+            {
+                case "gcm":
                     payload = PayloadSettings.Default.FollowAndroid;
                     break;
                 case "apns":
@@ -142,10 +162,13 @@ namespace Vocal.Business.Business
             switch (type)
             {
                 case NotifType.AddFriend:
-                    template = GetPayloadAddFriends(platform);
+                    template = string.Format(GetPayloadAddFriends(platform), param.GetValue(0));
                     break;
                 case NotifType.Talk:
                     template = string.Format(GetPayloadTalk(platform), param.GetValue(0), param.GetValue(1), param.GetValue(2));
+                    break;
+                case NotifType.Follow:
+                    template = string.Format(GetPayloadFollow(platform), param.GetValue(0));
                     break;
                 default:
                     break;

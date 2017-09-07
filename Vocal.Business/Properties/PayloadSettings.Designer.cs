@@ -77,5 +77,32 @@ namespace Vocal.Business.Properties {
                 return ((string)(this["FollowWindows"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AddFriendsAndroid {
+            get {
+                return ((string)(this["AddFriendsAndroid"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AddFriendsiOs {
+            get {
+                return ((string)(this["AddFriendsiOs"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AddFriendsWindows {
+            get {
+                return ((string)(this["AddFriendsWindows"]));
+            }
+        }
     }
 }

@@ -82,7 +82,7 @@ namespace Vocal.Business.Business
                     {
                         var user = Repository.Instance.GetUserById(userId);
                         if(user != null)
-                            await NotificationBusiness.SendNotification(ids, NotifType.AddFriend);
+                            await NotificationBusiness.SendNotification(ids, NotifType.AddFriend, user.Username);
                     });
             }
             catch (TimeoutException tex)
@@ -128,15 +128,6 @@ namespace Vocal.Business.Business
                 response.ErrorMessage = Resources_Language.TechnicalError;
             }
             return response;
-        }
-
-        private static async Task SendNotif(List<string> ids, string mess)
-        {
-            foreach(var item in ids)
-            {
-                var tag = $"{Settings.Default.TagUser}:{item}";
-                await NotificationBusiness.SendNotification(new List<string> { item }, tag, mess);
-            }
         }
     }
 }
