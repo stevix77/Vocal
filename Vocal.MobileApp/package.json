@@ -83,18 +83,23 @@
             "ionic-plugin-keyboard": {},
             "cordova-plugin-datepicker": {},
             "cordova-plugin-globalization": {},
-            "cordova-plugin-contacts": {},
+            "cordova-plugin-contacts": {
+                "CONTACTS_USAGE_DESCRIPTION": " "
+            },
             "cordova-plugin-ms-azure-mobile-apps": {},
             "phonegap-plugin-push": {
                 "SENDER_ID": "1054724390279"
             },
             "cordova-plugin-file": {},
             "cordova-plugin-inappbrowser": {},
-            "cordova-plugin-media": {}
+            "cordova-plugin-media": {
+                "MICROPHONE_USAGE_DESCRIPTION": " "
+            }
         },
         "platforms": [
             "android",
             "browser",
+            "ios",
             "windows"
         ]
     }

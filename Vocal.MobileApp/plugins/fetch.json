@@ -69,7 +69,9 @@
             "id": "cordova-plugin-contacts@^2.3.1"
         },
         "is_top_level": true,
-        "variables": {}
+        "variables": {
+            "CONTACTS_USAGE_DESCRIPTION": " "
+        }
     },
     "cordova-plugin-compat": {
         "source": {
@@ -90,7 +92,7 @@
     "phonegap-plugin-push": {
         "source": {
             "type": "registry",
-            "id": "phonegap-plugin-push@^2.0.0-rc5"
+            "id": "phonegap-plugin-push@^2.0.0"
         },
         "is_top_level": true,
         "variables": {
@@ -108,7 +110,7 @@
     "cordova-plugin-inappbrowser": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-inappbrowser@^1.5.0"
+            "id": "cordova-plugin-inappbrowser@^1.7.1"
         },
         "is_top_level": true,
         "variables": {}
@@ -144,6 +146,8 @@
             "id": "cordova-plugin-media@^3.0.1"
         },
         "is_top_level": true,
-        "variables": {}
+        "variables": {
+            "MICROPHONE_USAGE_DESCRIPTION": " "
+        }
     }
 }
