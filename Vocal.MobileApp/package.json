@@ -93,6 +93,7 @@
         },
         "platforms": [
             "browser",
+            "ios",
             "windows"
         ]
     }
