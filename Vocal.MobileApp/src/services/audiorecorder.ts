@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Config } from 'ionic-angular';
+import { Config, AlertController } from 'ionic-angular';
 import { Timer } from './timer';
 import { params } from './params';
 import { Store } from '../models/enums';
@@ -16,6 +16,7 @@ export class AudioRecorder {
   constructor(
     public config:Config,
     private media: Media, 
+    public alertCtrl: AlertController,
     private file: File) {
     this.filename = 'recording.' + this.getExtension();
     this.isApp = this.config.get('isApp');
@@ -38,7 +39,8 @@ export class AudioRecorder {
 
   getMedia() {
     if(this.mediaObject == null) {
-      this.mediaObject = this.media.create(this.file.tempDirectory.replace(/^file:\/\//, '') + this.filename)
+      //this.mediaObject = this.media.create(this.file.tempDirectory.replace(/^file:\/\//, '') + this.filename)
+      this.mediaObject = this.media.create('../Library/NoCloud/recording.wav');
     }
     return this.mediaObject;
   }
@@ -62,6 +64,15 @@ export class AudioRecorder {
 
   stopPlayback() {
     if(this.isApp) this.getMedia().stop();
+  }
+
+  showAlert(message) {
+    let alert = this.alertCtrl.create({
+      title: 'Error',
+      subTitle: message,
+      buttons: ['OK']
+    });
+    alert.present();
   }
 
 }
