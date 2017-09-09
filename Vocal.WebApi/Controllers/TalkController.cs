@@ -29,7 +29,8 @@ namespace Vocal.WebApi.Controllers
         [Route("messages/{talkId}"), HttpPost]
         public Response<List<MessageResponse>> GetMessages(string talkId, Request request)
         {
-            return Monitoring.Execute(TalkBusiness.GetMessages, talkId, request.Lang);
+            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
+            return Monitoring.Execute(TalkBusiness.GetMessages, talkId, obj.UserId, request.Lang);
         }
     }
 }

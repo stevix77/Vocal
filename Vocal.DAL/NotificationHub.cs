@@ -42,20 +42,12 @@ namespace Vocal.DAL
             var description = GetRegistrationDescriptionByPlatform(platform, channel);
             if (description.Tags == null)
                 description.Tags = new HashSet<string>() { tag };
+            else
+                description.Tags.Add(tag);
             description.RegistrationId = registrationId;
             var toto = await Hub.CreateOrUpdateRegistrationAsync(description);
         }
-
-        public async Task SendNotification(List<string> platform, string tag, string text)
-        {
-            foreach(var item in platform)
-            {
-                string mess = GenerateTextNotif(item, text);
-                var notif = GenerateNotif(item, mess);
-                var toto = await Hub.SendNotificationAsync(notif, tag);
-            }
-        }
-
+        
         private async Task DeleteRegistrations(string channel)
         {
             var registrations = await Hub.GetRegistrationsByChannelAsync(channel, 100);
@@ -111,28 +103,10 @@ namespace Vocal.DAL
             return notification;
         }
 
-        private string GenerateTextNotif(string platform, string text)
+        public async Task SendNotification(string platform, string tag, string payload)
         {
-            string textNotif = string.Empty;
-            switch (platform)
-            {
-                case "gcm":
-                    textNotif = string.Format("{\"data\" : {\"message\" : \"{0}\" }}", text);
-                    break;
-                case "apns":
-                    textNotif = string.Format("{\"aps\" : {\"alert\" : \"{0}\" }}", text);
-                    break;
-                case "wns":
-                    textNotif = string.Format("<toast><visual><binding template = \"ToastText01\"><text id=\"1\">{0}</text></binding></visual></toast>", text);
-                    break;
-                case "mpns":
-                    textNotif = $"<wp:Notification xmlns:wp=\"WPNotification\"><wp:Toast><wp:Text1>{text}</wp:Text1></wp:Toast></wp:Notification>";
-                    break;
-                default:
-                    textNotif = null;
-                    break;
-            }
-            return textNotif;
+            var notif = GenerateNotif(platform, payload);
+            var result = await Hub.SendNotificationAsync(notif, tag);
         }
     }
 }

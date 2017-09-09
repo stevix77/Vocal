@@ -7,9 +7,6 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-azure-notification-hubs": {
-            "PACKAGE_NAME": "MyApp"
-        },
         "cordova-plugin-console": {
             "PACKAGE_NAME": "MyApp"
         },
@@ -49,7 +46,11 @@
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "MyApp"
         },
+        "msopentech.azure.NotificationHub": {
+            "PACKAGE_NAME": "MyApp"
+        },
         "phonegap-plugin-push": {
+            "SENDER_ID": "1054724390279",
             "PACKAGE_NAME": "MyApp"
         }
     },
@@ -58,6 +59,9 @@
             "PACKAGE_NAME": "MyApp"
         },
         "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "MyApp"
+        },
+        "cordova-plugin-nativeaudio": {
             "PACKAGE_NAME": "MyApp"
         }
     }

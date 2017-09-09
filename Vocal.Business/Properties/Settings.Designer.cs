@@ -157,5 +157,14 @@ namespace Vocal.Business.Properties {
                 return ((string)(this["Hubname"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Talk:{0}")]
+        public string TagTalk {
+            get {
+                return ((string)(this["TagTalk"]));
+            }
+        }
     }
 }

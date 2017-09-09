@@ -78,10 +78,21 @@ namespace Vocal.WebApi.Signalr
             Clients.OthersInGroup(talkId).Talking(message);
         }
 
-        public void EndTalkMess(string username, string talkId, string lang)
+        public void EndTalkMess(string talkId)
         {
             Clients.OthersInGroup(talkId).EndTalking();
         }
 
+        public void UpdateListenUser(string talkId, List<MessageResponse> messages)
+        {
+            Clients.Group(talkId).UpdateListenUser(messages);
+        }
+
+        public void UpdateListenUser(string talkId)
+        {
+            var user = _users.SingleOrDefault(x => x.Value.Any(y => y == Context.ConnectionId));
+            if(!string.IsNullOrEmpty(user.Key))
+                Business.Business.TalkBusiness.UpdateListenUser(null, user.Key, talkId);
+        }
     }
 }

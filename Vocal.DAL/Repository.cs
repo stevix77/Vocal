@@ -188,10 +188,10 @@ namespace Vocal.DAL
             var user = db.Find(x => x.Id == userId).SingleOrDefault();
             if (user != null)
             {
-                var friends = Bind_UsersToFriends(users);
-                user.Friends.RemoveAll(x => friends.Select(y => y.Id).Contains(x.Id));
-                db.ReplaceOne(x => x.Id == userId, user);
-                success = true;
+                var friends = Bind_UsersToFriends(users); // traitement pas utile je pense ?
+                user.Friends.RemoveAll(x => users.Select(y => y.Id).Contains(x.Id));
+                var replace = db.ReplaceOne(x => x.Id == userId, user);
+                success = replace.ModifiedCount > 0;
             }
             return success;
         }
@@ -398,7 +398,6 @@ namespace Vocal.DAL
 
         public Talk AddTalk(Talk talk)
         {
-            talk.Id = Guid.NewGuid().ToString();
             var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
             collection.InsertOne(talk);
             return talk;
@@ -419,12 +418,12 @@ namespace Vocal.DAL
                 : this.UpdateTalk(talk);
         }
 
-        public List<Message> GetMessages(string talkId)
+        public List<Message> GetMessages(string talkId, string userId)
         {
             var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
             var talk = collection.Find(x => x.Id == talkId).SingleOrDefault();
             if (talk != null)
-                return talk.Messages;
+                return talk.Messages.Where(x => x.Users.Any(y => !y.ListenDate.HasValue && y.UserId == userId)).ToList();
             else
                 return null;
         }
