@@ -15,6 +15,8 @@ import { CookieService } from "../../services/cookieService";
 import { Response } from '../../models/response';
 import { TalkResponse } from '../../models/response/talkResponse';
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
+import { GetFriendsRequest } from '../../models/request/getFriendsRequest';
+import { UserResponse } from '../../models/response/userResponse';
 
 /**
  * Generated class for the SendVocalPage page.
@@ -57,8 +59,15 @@ export class SendVocalPage {
           users.push(elt.Id);
         });
     let date = new Date();
-    let request = new SendMessageRequest(params.User.Id, null, this.FileValue, MessageType.Vocal, users)
-    request.Lang = params.Lang;
+    let request: SendMessageRequest = {
+      content: this.FileValue,
+      sentTime: date,
+      idsRecipient: users,
+      messageType: MessageType.Vocal,
+      Lang: params.Lang,
+      idSender: params.User.Id,
+      IdTalk: null
+    }
     let urlSendVocal = url.SendMessage();
     let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
     this.httpService.Post(urlSendVocal, request, cookie).subscribe(
@@ -66,7 +75,6 @@ export class SendVocalPage {
         let response = resp.json() as Response<SendMessageResponse>;
         if(!response.HasError && response.Data.IsSent) {
           this.talkService.LoadList().then(() => {
-            response.Data.Talk.Messages.push(response.Data.Message);
             this.talkService.UpdateList(response.Data.Talk);
             this.talkService.SaveList();
             this.navCtrl.push(VocalListPage);
@@ -85,12 +93,36 @@ export class SendVocalPage {
   GetFriends() {
     this.storeService.Get(KeyStore.Friends.toString()).then(
       friends => {
-        this.Friends = friends;
+        if(friends != null)
+          this.Friends = friends;
+        else
+          this.loadFriends();
       }
     ).catch(error => {
       console.log(error);
       
     });
+  }
+
+  loadFriends() {
+    var request = new GetFriendsRequest();
+    request.Lang = params.Lang;
+    request.UserId = params.User.Id;
+    request.PageSize = 0;
+    request.PageNumber = 0;
+    let urlFriends = url.GetFriends();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlFriends, params.User)
+    this.httpService.Post<GetFriendsRequest>(urlFriends, request, cookie).subscribe(
+      resp => { 
+        let response = resp.json() as Response<Array<UserResponse>>;
+        if(!response.HasError) {
+          this.Friends = response.Data;
+          this.storeService.Set(KeyStore.Friends.toString(), this.Friends)
+        } else {
+          
+        }
+      }
+    );
   }
 
   GetTalkList() {

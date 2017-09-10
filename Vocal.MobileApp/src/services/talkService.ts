@@ -45,6 +45,7 @@ export class TalkService {
       this.Talks[index] = talk;
       this.Talks = this.SortTalks();
     }
+    this.SaveList();
   }
 
   SortTalks() {

@@ -73,8 +73,8 @@ export class MessagePage {
             //Must be set in a template.html but sorry guys I don't know how to do that yet
             document.getElementById("message-room").innerHTML += "<ion-col class='col' col-6></ion-col><ion-col class='col' col-6><div class='msg msg-current-user'>" + this.model.Message + "</div></ion-col>";
             this.model.Message =  "";
-            this.model.talkId = response.Data.Talk.Id;
             this.Messages.push(response.Data.Message);
+            this.talkService.UpdateList(response.Data.Talk);
           }else{
              //Must be set in a template.html but sorry guys I don't know how to do that yet
             document.getElementById("message-room").innerHTML += "<ion-col class='col' col-6></ion-col><ion-col class='col' col-6><div class='msg msg-current-user-not-sent'>" + this.model.Message + "</div></ion-col>";
@@ -108,7 +108,9 @@ export class MessagePage {
           if(!response.HasError) {
             //this.sortMessages(response.Data);
             response.Data.forEach(item => {
-              this.Messages.push(item);
+              let mess = this.Messages.find(x => x.Id == item.Id);
+              if(mess == null)
+                this.Messages.push(item);
             });
             this.talkService.SaveMessages(this.model.talkId, this.Messages);
           } else {

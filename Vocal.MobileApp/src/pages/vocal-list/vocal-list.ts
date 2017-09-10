@@ -87,30 +87,33 @@ export class VocalListPage {
     alert.present();
   }
 
+  getVocalList() {
+    let request = {Lang: params.Lang, UserId: params.User.Id}
+    let urlTalks = url.GetTalkList();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlTalks, params.User);
+    this.httpService.Post(urlTalks, request, cookie).subscribe(
+      resp => {
+        let response = resp.json() as Response<Array<TalkResponse>>;
+        if(response.HasError)
+          this.showAlert(response.ErrorMessage)
+        else {
+          if(response.Data.length > 0) {
+            this.vocalList = this.talkService.Talks = response.Data;
+            this.talkService.SaveList();
+          }
+        }
+      }
+    );
+  }
+
   initialize() {
     this.talkService.LoadList().then(() => {
       if(this.talkService.Talks != null)
         this.vocalList = this.talkService.Talks;
       else {  
-      let request = {Lang: params.Lang, UserId: params.User.Id}
-      let urlTalks = url.GetTalkList();
-      let cookie = this.cookieService.GetAuthorizeCookie(urlTalks, params.User);
-      this.httpService.Post(urlTalks, request, cookie).subscribe(
-        resp => {
-          let response = resp.json() as Response<Array<TalkResponse>>;
-          if(response.HasError)
-            this.showAlert(response.ErrorMessage)
-          else {
-            if(response.Data.length > 0) {
-              this.vocalList = this.talkService.Talks = response.Data;
-              this.talkService.SaveList();
-            }
-          }
-        }
-      );
+        this.getVocalList();
       }
     })
-    // this.vocalList = this.talkService.Talks;
   }
 
   goToMessage(id) {
