@@ -54,5 +54,8 @@ var url = {
     },
     GetTalkList() : string {
         return this.BaseUri + "/api/talk/list";
+    },
+    GetFriends() : string {
+        return this.BaseUri + "/api/friend/getFriends";
     }
 }

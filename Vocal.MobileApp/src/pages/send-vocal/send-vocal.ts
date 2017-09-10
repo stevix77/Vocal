@@ -1,3 +1,4 @@
+import { UserResponse } from '../../models/response/userResponse';
 import { TalkService } from './../../services/talkService';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
@@ -8,6 +9,7 @@ import { KeyStore } from '../../models/enums';
 import { AudioRecorder } from '../../services/audiorecorder';
 import { MessageType } from '../../models/enums';
 import { SendMessageRequest } from '../../models/request/sendMessageRequest';
+import { GetFriendsRequest } from '../../models/request/getFriendsRequest';
 import { params } from "../../services/params";
 import { url } from "../../services/url";
 import { HttpService } from "../../services/httpService";
@@ -92,12 +94,36 @@ export class SendVocalPage {
   GetFriends() {
     this.storeService.Get(KeyStore.Friends.toString()).then(
       friends => {
-        this.Friends = friends;
+        if(friends != null)
+          this.Friends = friends;
+        else
+          this.loadFriends();
       }
     ).catch(error => {
       console.log(error);
       
     });
+  }
+
+  loadFriends() {
+    var request = new GetFriendsRequest();
+    request.Lang = params.Lang;
+    request.UserId = params.User.Id;
+    request.PageSize = 0;
+    request.PageNumber = 0;
+    let urlFriends = url.GetFriends();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlFriends, params.User)
+    this.httpService.Post<GetFriendsRequest>(urlFriends, request, cookie).subscribe(
+      resp => { 
+        let response = resp.json() as Response<Array<UserResponse>>;
+        if(!response.HasError) {
+          this.Friends = response.Data;
+          this.storeService.Set(KeyStore.Friends.toString(), this.Friends)
+        } else {
+          
+        }
+      }
+    );
   }
 
   GetTalkList() {
