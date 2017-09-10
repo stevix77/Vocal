@@ -12,11 +12,12 @@ import {HttpService} from '../../services/httpService';
 
 import { VocalListPage } from '../vocal-list/vocal-list';
 import { PasswordForgotPage } from '../passwordForgot/passwordForgot';
+import { ExceptionService } from "../../services/exceptionService";
 
 @Component({
   selector: 'page-connexion',
   templateUrl: 'connexion.html',
-  providers: [HttpService, StoreService]
+  providers: [HttpService, StoreService, ExceptionService]
 })
 
 export class Connexion {
@@ -28,7 +29,7 @@ export class Connexion {
     ErrorPassword: ""
   };
 
-  constructor(public navCtrl: NavController, private httpService: HttpService, private storeService: StoreService, private toastCtrl: ToastController) {
+  constructor(public navCtrl: NavController, private httpService: HttpService, private storeService: StoreService, private toastCtrl: ToastController, private exceptionService: ExceptionService) {
     
   }
 
@@ -37,7 +38,8 @@ export class Connexion {
       let pwd = functions.Crypt(this.model.Password);
       var obj = new LoginRequest(this.model.Username, pwd);
       obj.Lang = params.Lang;
-      this.httpService.Post<LoginRequest>(url.Login(), obj).subscribe(
+      let urlConnect = url.Login();
+      this.httpService.Post<LoginRequest>(urlConnect, obj).subscribe(
         resp => {
           var response = resp.json() as Response<UserResponse>;
           if(response.HasError) {
@@ -54,6 +56,11 @@ export class Connexion {
             params.User = appUser;
             this.navCtrl.push(VocalListPage);
           }
+        },
+        error => {
+          console.log(error);
+          this.showToast(error);
+          this.exceptionService.Add(error);
         }
       )
     } else {

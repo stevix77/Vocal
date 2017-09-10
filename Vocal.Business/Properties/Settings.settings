@@ -47,5 +47,8 @@
     <Setting Name="Hubname" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Vocal</Value>
     </Setting>
+    <Setting Name="TagTalk" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Talk:{0}</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

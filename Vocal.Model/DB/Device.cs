@@ -12,5 +12,6 @@ namespace Vocal.Model.DB
         public string RegistrationId { get; set; }
         public List<string> Tags { get; set; }
         public string Channel { get; set; }
+        public string Lang { get; set; }
     }
 }

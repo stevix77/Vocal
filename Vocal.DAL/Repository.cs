@@ -179,11 +179,164 @@ namespace Vocal.DAL
             return success;
         }
 
-        public List<People> GetFriends(string userId)
+        public bool RemoveFriends(string userId, List<string> ids)
         {
-            var list = new List<People>();
+            bool success = false;
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, ids);
+            var users = db.Find(filter).ToList();
+            var user = db.Find(x => x.Id == userId).SingleOrDefault();
+            if (user != null)
+            {
+                var friends = Bind_UsersToFriends(users); // traitement pas utile je pense ?
+                user.Friends.RemoveAll(x => users.Select(y => y.Id).Contains(x.Id));
+                var replace = db.ReplaceOne(x => x.Id == userId, user);
+                success = replace.ModifiedCount > 0;
+            }
+            return success;
+        }
 
-            return list;
+        public List<People> GetFriends(string userId, int pageSize, int pageNumber)
+        {
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var currentUser = db.Find(x => x.Id == userId).SingleOrDefault();
+            if (currentUser != null)
+            {
+                var list = pageSize == 0 || pageNumber == 0
+                    ? currentUser.Friends
+                    : currentUser.Friends.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                return list.ToList();
+            }
+            return null;
+        }
+
+        #endregion
+
+        #region followers
+
+        //people who follow me
+        public List<People> GetFollowers(string userId, int pageSize, int pageNumber)
+        {
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var currentUser = db.Find(x => x.Id == userId).SingleOrDefault();
+            if (currentUser != null)
+            {
+                var list = pageSize == 0 || pageNumber == 0
+                    ? currentUser.Followers
+                    : currentUser.Followers.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                return list.ToList();
+            }
+            return null;
+        }
+
+        //people i follow
+        public List<People> GetFollowing(string userId, int pageSize, int pageNumber)
+        {
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var currentUser = db.Find(x => x.Id == userId).SingleOrDefault();
+            if (currentUser != null)
+            {
+                var list = pageSize == 0 || pageNumber == 0
+                    ? currentUser.Following
+                    : currentUser.Following.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                return list.ToList();
+            }
+            return null;
+        }
+
+        public bool Follow(string userId, List<string> ids)
+        {
+            bool success = false;
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, ids);
+            var users = db.Find(filter).ToList();
+            var user = db.Find(x => x.Id == userId).SingleOrDefault();
+            if (user != null)
+            {
+                List<People> people = Bind_UsersToFriends(users);
+                people.RemoveAll(x => user.Friends.Select(y => y.Id).Contains(x.Id));
+                user.Following.AddRange(people);
+                Task.Run(() =>
+                {
+                    foreach (var p in people)
+                    {
+                        AddInFollowers(p.Id, user.Id);
+                    }
+                });
+                db.ReplaceOne(x => x.Id == userId, user);
+                success = true;
+            }
+            return success;
+        }
+
+        public bool AddInFollowers(string userId, string newFollower)
+        {
+            bool success = false;
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+
+            var user = db.Find(x => x.Id == userId).SingleOrDefault();
+            if (user != null)
+            {
+                var userFollowers = db.Find(x => x.Id == newFollower).SingleOrDefault();
+                if (userFollowers != null && user.Followers.All(x => x.Id != userFollowers.Id))
+                {
+                    user.Followers.Add(new People
+                    {
+                        Email = userFollowers.Email,
+                        Firstname = userFollowers.Firstname,
+                        Id = userFollowers.Id,
+                        Lastname = userFollowers.Lastname,
+                        Picture = userFollowers.Picture,
+                        Username = userFollowers.Username
+                    });
+                    db.ReplaceOne(x => x.Id == userId, user);
+                    success = true;
+                }
+            }
+            return success;
+        }
+
+        public bool Unfollow(string userId, List<string> ids)
+        {
+            bool success = false;
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, ids);
+            var users = db.Find(filter).ToList();
+            var user = db.Find(x => x.Id == userId).SingleOrDefault();
+            if (user != null)
+            {
+                var people = Bind_UsersToFriends(users);
+                user.Following.RemoveAll(x => people.Select(y => y.Id).Contains(x.Id));
+                Task.Run(() =>
+                {
+                    foreach (var p in people)
+                    {
+                        RemoveInFollowers(p.Id, user.Id);
+                    }
+                });
+                db.ReplaceOne(x => x.Id == userId, user);
+                success = true;
+            }
+            return success;
+        }
+
+
+        public bool RemoveInFollowers(string userId, string newFollower)
+        {
+            bool success = false;
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var user = db.Find(x => x.Id == userId).SingleOrDefault();
+            if (user != null)
+            {
+                var userFollowers = user.Followers.SingleOrDefault(x => x.Id == newFollower);
+                if (userFollowers != null)
+                {
+                    user.Followers.Remove(userFollowers);
+                    db.ReplaceOne(x => x.Id == userId, user);
+                    success = true;
+                }
+            }
+            return success;
         }
 
         #endregion
@@ -266,7 +419,7 @@ namespace Vocal.DAL
                 : this.UpdateTalk(talk);
         }
 
-        public List<Message> GetMessages(string talkId)
+        public List<Message> GetMessages(string talkId, string userId)
         {
             var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
             var talk = collection.Find(x => x.Id == talkId).SingleOrDefault();

@@ -189,4 +189,7 @@
   <data name="UsernameNotExisting" xml:space="preserve">
     <value>Ce nom d'utilisateur n'existe pas</value>
   </data>
+  <data name="TextNotifFollowYou" xml:space="preserve">
+    <value>vous suit</value>
+  </data>
 </root>

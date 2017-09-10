@@ -17,6 +17,14 @@ namespace Vocal.Business.Tools
     public enum HubMethod
     {
         Connect,
-        Send
+        Send,
+        UpdateListenUser
+    }
+
+    public enum NotifType
+    {
+        Talk,
+        AddFriend,
+        Follow
     }
 }

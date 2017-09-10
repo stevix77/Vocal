@@ -24,4 +24,8 @@ export class HubService {
     .fail(function(){ console.log('Could not connect'); });
   }
 
+  Invoke(method: string, ...param: any[]) {
+    this.hubProxy.invoke(method, param);
+  }
+
 }

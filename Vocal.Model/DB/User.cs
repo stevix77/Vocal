@@ -21,5 +21,7 @@ namespace Vocal.Model.DB
         public List<string> Signs { get; set; } = new List<string>();
         public List<Device> Devices { get; set; } = new List<Device>();
         public Settings Settings { get; set; } = new Settings();
+        public List<People> Followers { get; set; } = new List<People>();
+        public List<People> Following { get; set; } = new List<People>();
     }
 }
