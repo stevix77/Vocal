@@ -114,7 +114,6 @@ export class VocalListPage {
         this.getVocalList();
       }
     })
-    // this.vocalList = this.talkService.Talks;
   }
 
   goToMessage(id) {

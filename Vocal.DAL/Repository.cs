@@ -398,6 +398,7 @@ namespace Vocal.DAL
 
         public Talk AddTalk(Talk talk)
         {
+            talk.Id = Guid.NewGuid().ToString();
             var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
             collection.InsertOne(talk);
             return talk;
@@ -423,7 +424,7 @@ namespace Vocal.DAL
             var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
             var talk = collection.Find(x => x.Id == talkId).SingleOrDefault();
             if (talk != null)
-                return talk.Messages.Where(x => x.Users.Any(y => !y.ListenDate.HasValue && y.UserId == userId)).ToList();
+                return talk.Messages;
             else
                 return null;
         }

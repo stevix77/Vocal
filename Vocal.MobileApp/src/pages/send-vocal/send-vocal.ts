@@ -17,6 +17,8 @@ import { CookieService } from "../../services/cookieService";
 import { Response } from '../../models/response';
 import { TalkResponse } from '../../models/response/talkResponse';
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
+import { GetFriendsRequest } from '../../models/request/getFriendsRequest';
+import { UserResponse } from '../../models/response/userResponse';
 
 /**
  * Generated class for the SendVocalPage page.
@@ -75,7 +77,6 @@ export class SendVocalPage {
         let response = resp.json() as Response<SendMessageResponse>;
         if(!response.HasError && response.Data.IsSent) {
           this.talkService.LoadList().then(() => {
-            response.Data.Talk.Messages.push(response.Data.Message);
             this.talkService.UpdateList(response.Data.Talk);
             this.talkService.SaveList();
             this.navCtrl.push(VocalListPage);

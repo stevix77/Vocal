@@ -113,7 +113,6 @@ namespace Vocal.Business.Business
 
                             talk = new Talk
                             {
-                                Id = Guid.NewGuid().ToString(),
                                 Messages = new List<Message>(),
                                 VocalName = string.Join(", ", AllUser.Where(x => x.Id != request.IdSender).Select(x => x.Username)),
                                 Users = AllUser

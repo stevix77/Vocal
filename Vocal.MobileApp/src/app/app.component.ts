@@ -276,7 +276,7 @@ export class VocalApp {
       let mess = 'Nouveau message de ' + obj.Message.User.Username;
       this.showToast(mess);
       this.talkService.LoadList().then(() => {
-        obj.Talk.DateLastMessage = obj.Message.ArrivedTime;
+        obj.Talk.DateLastMessage = obj.Message.SentTime;
         this.talkService.UpdateList(obj.Talk);
         this.talkService.SaveList();
       }).then(() => this.events.publish(HubMethod[HubMethod.Receive], obj));
