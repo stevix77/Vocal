@@ -93,7 +93,6 @@
             "cordova-plugin-media": {}
         },
         "platforms": [
-            "android",
             "browser",
             "windows"
         ]
