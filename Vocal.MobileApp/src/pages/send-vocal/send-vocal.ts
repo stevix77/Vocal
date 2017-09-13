@@ -17,8 +17,6 @@ import { CookieService } from "../../services/cookieService";
 import { Response } from '../../models/response';
 import { TalkResponse } from '../../models/response/talkResponse';
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
-import { GetFriendsRequest } from '../../models/request/getFriendsRequest';
-import { UserResponse } from '../../models/response/userResponse';
 
 /**
  * Generated class for the SendVocalPage page.

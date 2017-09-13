@@ -141,5 +141,13 @@
         "variables": {
             "MICROPHONE_USAGE_DESCRIPTION": " "
         }
+    },
+    "com-badrit-base64": {
+        "source": {
+            "type": "registry",
+            "id": "com-badrit-base64@^0.2.0"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

@@ -20,6 +20,7 @@
         "@angular/http": "4.1.0",
         "@angular/platform-browser": "4.1.0",
         "@angular/platform-browser-dynamic": "4.1.0",
+        "@ionic-native/base64": "^4.2.1",
         "@ionic-native/contacts": "^3.12.1",
         "@ionic-native/core": "^3.12.1",
         "@ionic-native/date-picker": "^3.12.1",
@@ -31,6 +32,7 @@
         "@ionic-native/splash-screen": "3.7.0",
         "@ionic-native/status-bar": "3.7.0",
         "@ionic/storage": "2.0.1",
+        "com-badrit-base64": "^0.2.0",
         "cookie-storage": "^3.0.0",
         "cordova-android": "^6.2.3",
         "cordova-browser": "^4.1.0",
@@ -61,6 +63,7 @@
         "rxjs": "5.1.1",
         "signalr-no-jquery": "^0.1.8",
         "sw-toolbox": "3.6.0",
+        "tunajs": "^1.0.0",
         "zone.js": "0.8.10"
     },
     "devDependencies": {
@@ -93,7 +96,8 @@
             "cordova-plugin-inappbrowser": {},
             "cordova-plugin-media": {
                 "MICROPHONE_USAGE_DESCRIPTION": " "
-            }
+            },
+            "com-badrit-base64": {}
         },
         "platforms": [
             "browser",

@@ -30,6 +30,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Media } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
+import { Base64 } from '@ionic-native/base64';
 
 import { AudioFiltersPage } from '../pages/audio-filters/audio-filters';
 
@@ -80,6 +81,7 @@ let components = [
     SplashScreen,
     Media,
     File,
+    Base64,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

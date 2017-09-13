@@ -1,5 +1,8 @@
 {
   "name": "Vocal.MobileApp",
   "app_id": "97384a92",
-  "type": "ionic-angular"
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
 }
