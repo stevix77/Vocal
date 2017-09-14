@@ -84,9 +84,12 @@ namespace Vocal.Business.Business
             foreach (var item in list)
             {
                 var user = item.Users.SingleOrDefault(x => x.UserId == userId);
-                user.ListenDate = dt;
-                var m = talk.Messages.SingleOrDefault(x => x.Id == item.Id);
-                m = item;
+                if(user != null)
+                {
+                    user.ListenDate = dt;
+                    var index = talk.Messages.FindIndex(x => x.Id == item.Id);
+                    talk.Messages[index] = item;
+                }
             }
             Repository.Instance.UpdateTalk(talk);
             HubService.Instance.UpdateTalk(talkId, Bind.Bind_Messages(list));
@@ -121,7 +124,8 @@ namespace Vocal.Business.Business
                         }
                         else
                         {
-                           talk = Repository.Instance.GetTalk(request.IdTalk, request.IdSender);
+                            talk = Repository.Instance.GetTalk(request.IdTalk, request.IdSender);
+                            request.IdsRecipient = talk.Users.Select(x => x.Id).ToList();
                         }
 
                         if (talk != null)
@@ -141,7 +145,8 @@ namespace Vocal.Business.Business
                             response.Data.Talk = Bind.Bind_Talks(talk, request.IdSender);
                             response.Data.Message = Bind.Bind_Message(m);
                             response.Data.IsSent = true;
-                            Task.Run(async () => {
+                            Task.Run(async() =>
+                            {
                                 await HubService.Instance.SendMessage(response.Data, request.IdsRecipient);
                                 var users = talk.Users.Where(x => x.Id != request.IdSender);
                                 var titleNotif = GenerateTitleNotif(m, talk.VocalName);
@@ -189,7 +194,7 @@ namespace Vocal.Business.Business
         {
             var message = string.Empty;
             if (m.ContentType == MessageType.Text)
-                message = m.Content.Substring(0, 20);
+                message = m.Content.Length > 20 ? m.Content.Substring(0, 20) : m.Content;
             return message;
         }
 
