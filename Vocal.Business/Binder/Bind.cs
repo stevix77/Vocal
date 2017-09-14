@@ -70,10 +70,11 @@ namespace Vocal.Business.Binder
                 foreach (var item in list)
                 {
                     var message = item.Messages.LastOrDefault();
+                    var users = item.Users.Where(x => x.Id != userId);
                     response.Add(new TalkResponse
                     {
                         Id = item.Id,
-                        Name = item.VocalName,
+                        Name = string.Join(", ", users.Select(x => x.Username)),
                         Users = Bind_Users(item.Users),
                         DateLastMessage = message.SentTime,
                         HasNewMessage = message.User.Id != userId && message.Users.SingleOrDefault(x => x.UserId == userId && x.ListenDate.HasValue) == null
