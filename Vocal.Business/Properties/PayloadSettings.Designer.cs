@@ -25,7 +25,7 @@ namespace Vocal.Business.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\"{\\\"data\\\" : {\\\"message\\\" : \\\"{0}\\\", \\\"title\\\" : {1}, \\\"talkId\\\" : {2} }}\"")]
+        [global::System.Configuration.DefaultSettingValueAttribute("{\"data\" : {\"message\" : \"{0}\", \"title\" : {1}, \"talkId\" : {2} }}")]
         public string TalkAndroid {
             get {
                 return ((string)(this["TalkAndroid"]));
@@ -34,7 +34,7 @@ namespace Vocal.Business.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\"{\\\"aps\\\" : {\\\"alert\\\" : \\\"{0}\\\", \\\"title\\\" : {1}, \\\"talkId\\\" : {2} }}\"")]
+        [global::System.Configuration.DefaultSettingValueAttribute("{\"aps\" : {\"alert\" : \"{0}\", \"title\" : {1}, \"talkId\" : {2} }}")]
         public string TalkiOs {
             get {
                 return ((string)(this["TalkiOs"]));
@@ -43,8 +43,8 @@ namespace Vocal.Business.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\"<toast launch=\\\"talkId={0}\\\"><visual><binding template = \\\"ToastText02\\\"><text i" +
-            "d=\\\"1\\\">{0}</text><text id=\\\"2\\\">{1}</text></binding></visual></toast>\"")]
+        [global::System.Configuration.DefaultSettingValueAttribute("<toast launch=\"talkId={2}\"><visual><binding template =\"ToastText02\"><text id=\"1\">" +
+            "{1}</text><text id=\"2\">{0}</text></binding></visual></toast>")]
         public string TalkWindows {
             get {
                 return ((string)(this["TalkWindows"]));

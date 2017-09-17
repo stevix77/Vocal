@@ -23,7 +23,7 @@ import { HubService } from "../../services/hubService";
 @Component({
   selector: 'page-message',
   templateUrl: 'message.html',
-  providers: [HttpService, CookieService, TalkService, HubService]
+  providers: [HttpService, CookieService, TalkService]
 })
 export class MessagePage {
   

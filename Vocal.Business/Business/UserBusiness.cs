@@ -22,6 +22,7 @@ namespace Vocal.Business.Business
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {
+                username = username.ToLower();
                 var user = Repository.Instance.GetUserByUsername(username);
                 if (user != null)
                 {
@@ -166,6 +167,7 @@ namespace Vocal.Business.Business
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {
+                email = email.ToLower();
                 var user = Repository.Instance.GetUserByEmail(email);
                 if (user != null)
                 {

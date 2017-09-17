@@ -51,9 +51,10 @@ namespace Vocal.WebApi.Signalr
 
         public void JoinTalk(string userId, string talkId)
         {
-            var connectionsId = _users[userId];
-            foreach(var item in connectionsId)
-                Groups.Add(item, talkId);
+            var connectionsId = GetConnectionsId(userId);
+            if(connectionsId!=null)
+                foreach(var item in connectionsId)
+                    Groups.Add(item, talkId);
         }
 
         public void LeaveTalk(string userId, string talkId)
