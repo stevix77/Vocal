@@ -57,5 +57,8 @@ var url = {
     },
     GetFriends() : string {
         return this.BaseUri + "/api/friend/getFriends";
+    },
+    GetAllUsers() : string {
+        return this.BaseUri + "/api/user/list";
     }
 }
