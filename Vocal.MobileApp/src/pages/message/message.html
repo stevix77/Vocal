@@ -19,12 +19,12 @@
       Conversation
     </ion-list-header>
     <ion-item-sliding>
-      <ion-item>
-        <ion-icon name="play"></ion-icon>
-        <p item-end>2:30</p>
-      </ion-item>
       <ion-item *ngFor="let mess of Messages">
-        <p>{{mess.Content}}</p>
+        <p *ngIf="mess.ContentType == 2">{{mess.Content}}</p>
+        <p *ngIf="mess.ContentType == 1">
+          <audio controls src="{{mess.Content}}">
+          </audio>
+        </p>
       </ion-item>
       <ion-item-options side="right">
         <button ion-button icon-only><ion-icon name="closed-captioning"></ion-icon></button>
