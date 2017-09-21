@@ -52,6 +52,9 @@
         },
         "cordova-plugin-file": {
             "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "com-badrit-base64": {
+            "PACKAGE_NAME": "io.ionic.starter"
         }
     },
     "dependent_plugins": {

@@ -139,6 +139,14 @@ namespace Vocal.DAL
             return users;
         }
 
+        public List<User> GetAllUsers()
+        {
+            List<User> users = new List<User>();
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            users = db.AsQueryable().ToList();
+            return users;
+        }
+
         #endregion
 
         #region Friends

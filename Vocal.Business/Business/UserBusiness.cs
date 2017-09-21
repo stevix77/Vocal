@@ -110,6 +110,34 @@ namespace Vocal.Business.Business
             return response;
         }
 
+        public static Response<List<UserResponse>> GetListUsers(string lang)
+        {
+            var response = new Response<List<UserResponse>>();
+            try
+            {
+                LogManager.LogDebug(lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var list = Repository.Instance.GetAllUsers();
+                response.Data = Binder.Bind.Bind_Users(list);
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
         private static void BlockedUser(User user, string userId)
         {
             var index = user.Settings.Blocked.FindIndex(x => x.Id == userId);
