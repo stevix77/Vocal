@@ -28,6 +28,9 @@ var url = {
     AddFriends() : string {
         return this.BaseUri + "/api/friend/add";
     },
+    RemoveFriends() : string {
+        return this.BaseUri + "/api/friend/remove";
+    },
     NotificationRegister() : string {
         return this.BaseUri + "/api/notification/register"
     },
