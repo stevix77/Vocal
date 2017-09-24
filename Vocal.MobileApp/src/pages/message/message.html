@@ -22,7 +22,7 @@
       <ion-item *ngFor="let mess of Messages">
         <p *ngIf="mess.ContentType == 2">{{mess.Content}}</p>
         <p *ngIf="mess.ContentType == 1">
-          <audio controls src="{{mess.Content}}">
+          <audio controls [src]="domSanitizer.bypassSecurityTrustUrl(mess.Content)">
           </audio>
         </p>
       </ion-item>
