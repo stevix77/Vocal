@@ -12,6 +12,7 @@ namespace Vocal.Business.Tools
     {
         public static byte[] ConvertToWav(string base64File)
         {
+            LogManager.LogDebug(base64File);
             byte[] stream = null;
             using (var file = new StreamMediaFoundationReader(new MemoryStream(Convert.FromBase64String(base64File))))
             {

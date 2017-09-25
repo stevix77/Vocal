@@ -112,7 +112,7 @@ namespace Vocal.Business.Business
                             var file = Converter.ConvertToWav(bs64);
                             if (file == null)
                                 throw new Exception();
-                            request.Content = Convert.ToBase64String(file);
+                            request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
                         }
                         Talk talk = null;
                         var user = Repository.Instance.GetUserById(request.IdSender);
