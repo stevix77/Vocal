@@ -7,7 +7,7 @@ import { params } from '../../services/params';
 import { SearchFriendsRequest } from '../../models/request/searchFriendsRequest';
 import { UserResponse } from '../../models/response/userResponse';
 import { Response } from '../../models/response';
-import {AddFriendsRequest} from '../../models/request/addFriendsRequest';
+import {ManageFriendsRequest} from '../../models/request/manageFriendsRequest';
 import {url} from '../../services/url';
 import {CookieService} from '../../services/cookieService';
 import {StoreService} from '../../services/storeService'
@@ -64,13 +64,13 @@ export class InscriptionFindFriendsPage {
   }
 
   addFriends(ids: Array<string>) {
-    let obj = new AddFriendsRequest();
+    let obj = new ManageFriendsRequest();
     obj.Lang = params.Lang;
     obj.Ids = ids;
     obj.UserId = params.User.Id;
     let urlAddFriends = url.AddFriends();
     let cookie = this.cookieService.GetAuthorizeCookie(urlAddFriends, params.User)
-    this.httpService.Post<AddFriendsRequest>(urlAddFriends, obj, cookie).subscribe(
+    this.httpService.Post<ManageFriendsRequest>(urlAddFriends, obj, cookie).subscribe(
       resp => {
         let response = resp.json() as Response<boolean>;
         if(!response.HasError) {

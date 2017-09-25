@@ -20,7 +20,7 @@ namespace Vocal.WebApi.Controllers
         [HttpPost, Route("people")]
         public Response<List<UserResponse>> SearchPeople(SearchRequest request)
         {
-            return SearchBusiness.SearchPeople(request.Keyword, request.Lang);
+            return Business.Tools.Monitoring.Execute(SearchBusiness.SearchPeople, request.Keyword, request.Lang);
         }
     }
 }

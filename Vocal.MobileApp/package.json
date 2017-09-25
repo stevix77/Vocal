@@ -33,7 +33,6 @@
         "@ionic/storage": "2.0.1",
         "cookie-storage": "^3.0.0",
         "cordova-android": "^6.2.3",
-        "cordova-azure-notification-hubs": "^1.0.2",
         "cordova-browser": "^4.1.0",
         "cordova-ios": "^4.4.0",
         "cordova-plugin-compat": "^1.1.0",
@@ -94,6 +93,7 @@
         },
         "platforms": [
             "browser",
+            "ios",
             "windows"
         ]
     }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Vocal.Business.Properties;
 using Vocal.Business.Tools;
 using Vocal.Model.Response;
+using Vocal.Model.DB;
 
 namespace Vocal.Business.Signalr
 {
@@ -17,9 +18,10 @@ namespace Vocal.Business.Signalr
         {
             Thread = new Thread(async () =>
             {
-                Connection = new HubConnection(Settings.Default.HostHub);
-                Proxy = Connection.CreateHubProxy(Settings.Default.Hubname);
+                Connection = new HubConnection(Properties.Settings.Default.HostHub);
+                Proxy = Connection.CreateHubProxy(Properties.Settings.Default.Hubname);
                 await Connection.Start();
+                Connection.StateChanged += async (e) => { if (e.NewState == ConnectionState.Disconnected) await Connection.Start(); };
             })
             { IsBackground = true };
 
@@ -45,6 +47,11 @@ namespace Vocal.Business.Signalr
         internal async Task SendMessage(SendMessageResponse data, List<string> idsRecipient)
         {
             await Proxy.Invoke(HubMethod.Send.ToString(), data, idsRecipient);
+        }
+
+        internal void UpdateTalk(string talkId, List<MessageResponse> list)
+        {
+            Proxy.Invoke(HubMethod.UpdateListenUser.ToString(), talkId, list);
         }
     }
 }

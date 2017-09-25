@@ -45,15 +45,17 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<List<MessageResponse>> GetMessages(string talkId, string lang)
+        public static Response<List<MessageResponse>> GetMessages(string talkId, string userId, string lang)
         {
             var response = new Response<List<MessageResponse>>();
-            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-            LogManager.LogDebug(talkId, lang);
             try
             {
-                var list = Repository.Instance.GetMessages(talkId);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                LogManager.LogDebug(talkId, userId, lang);
+                var list = Repository.Instance.GetMessages(talkId, userId);
                 response.Data = Bind.Bind_Messages(list);
+                if(list.Count > 0)
+                    Task.Run(() => UpdateListenUser(list, userId, talkId));
             }
             catch (TimeoutException tex)
             {
@@ -71,6 +73,26 @@ namespace Vocal.Business.Business
                 response.ErrorMessage = Resources_Language.TechnicalError;
             }
             return response;
+        }
+
+        public static void UpdateListenUser(List<Message> list, string userId, string talkId)
+        {
+            var talk = Repository.Instance.GetTalk(talkId, userId);
+            DateTime dt = DateTime.Now;
+            if(list == null)
+                list = Repository.Instance.GetMessages(talkId, userId);
+            foreach (var item in list)
+            {
+                var user = item.Users.SingleOrDefault(x => x.UserId == userId);
+                if(user != null)
+                {
+                    user.ListenDate = dt;
+                    var index = talk.Messages.FindIndex(x => x.Id == item.Id);
+                    talk.Messages[index] = item;
+                }
+            }
+            Repository.Instance.UpdateTalk(talk);
+            HubService.Instance.UpdateTalk(talkId, Bind.Bind_Messages(list));
         }
 
         public static Response<SendMessageResponse> SendMessage(SendMessageRequest request)
@@ -95,13 +117,15 @@ namespace Vocal.Business.Business
                             talk = new Talk
                             {
                                 Messages = new List<Message>(),
-                                VocalName = string.Join(", ", AllUser.Where(x => x.Id != request.IdSender).Select(x => x.Username)),
+                                //VocalName = string.Join(", ", AllUser.Where(x => x.Id != request.IdSender).Select(x => x.Username)),
                                 Users = AllUser
                             };
+                            //Task.Run(async () => await RegisterNotificationToTalk(AllUser, talk.Id));
                         }
                         else
                         {
-                           talk = Repository.Instance.GetTalk(request.IdTalk, request.IdSender);
+                            talk = Repository.Instance.GetTalk(request.IdTalk, request.IdSender);
+                            request.IdsRecipient = talk.Users.Select(x => x.Id).ToList();
                         }
 
                         if (talk != null)
@@ -114,15 +138,20 @@ namespace Vocal.Business.Business
                                 Content = request.Content,
                                 ContentType = (MessageType)request.MessageType,
                                 User = user,
-                                Users = request.IdsRecipient.Select(x => new UserListen() { UserId = x }).ToList()
+                                Users = request.IdsRecipient.Select(x => new UserListen() { UserId = x/*, ListenDate = x == user.Id ? DateTime.Now : new DateTime?()*/ }).ToList()
                             };
                             talk.Messages.Add(m);
                             talk = Repository.Instance.UptOrCreateTalk(talk);
                             response.Data.Talk = Bind.Bind_Talks(talk, request.IdSender);
                             response.Data.Message = Bind.Bind_Message(m);
                             response.Data.IsSent = true;
-                            Task.Run(async () => {
+                            Task.Run(async() =>
+                            {
                                 await HubService.Instance.SendMessage(response.Data, request.IdsRecipient);
+                                var users = talk.Users.Where(x => x.Id != request.IdSender);
+                                var titleNotif = GenerateTitleNotif(m, talk.VocalName);
+                                var messNotif = GenerateMessageNotif(m);
+                                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), NotifType.Talk, messNotif, titleNotif, talk.Id);
                             });
                         }
                         else
@@ -150,5 +179,34 @@ namespace Vocal.Business.Business
             }
             return response;
         }
+
+        private static string GenerateTitleNotif(Message m, string vocalName)
+        {
+            var title = string.Empty;
+            if (m.ContentType == MessageType.Vocal)
+                title = $"{m.User.Username} @{vocalName} a envoyé un vocal";
+            else
+                title = $"{m.User.Username} @{vocalName} a envoyé un message texte";
+            return title;
+        }
+
+        private static string GenerateMessageNotif(Message m)
+        {
+            var message = string.Empty;
+            if (m.ContentType == MessageType.Text)
+                message = m.Content.Length > 20 ? m.Content.Substring(0, 20) : m.Content;
+            return message;
+        }
+
+        //private static async Task RegisterNotificationToTalk(List<User> allUser, string talkId)
+        //{
+        //    foreach(var item in allUser)
+        //    {
+        //        foreach(var device in item.Devices)
+        //        {
+        //            await NotificationHub.Instance.RegistrationUser(device.RegistrationId, device.Channel, device.Platform, string.Format(Properties.Settings.Default.TagTalk, talkId))
+        //        }
+        //    }
+        //}
     }
 }

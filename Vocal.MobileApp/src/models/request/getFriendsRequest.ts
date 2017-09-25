@@ -1,9 +1,10 @@
 import {Request} from './Request';
 
-export class AddFriendsRequest extends Request {
-
-    Ids: Array<string> = [];
+export class GetFriendsRequest extends Request {
     UserId: string;
+    PageSize: number;
+    PageNumber: number;
+    
     constructor() {
         super();
     }

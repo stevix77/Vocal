@@ -13,7 +13,9 @@ export class HttpService {
   }
 
   Post<T>(url: string, obj: T, cookie?: any) {
-    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let headers = new Headers({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin' : '*',
+        'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+    'Accept': 'application/json'});
     if(cookie != null)
       headers.set('Set-Cookie', cookie)
     let options = new RequestOptions({ headers: headers });
@@ -22,7 +24,9 @@ export class HttpService {
   }
 
   Get(url: string) {
-    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let headers = new Headers({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin' : '*',
+        'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+    'Accept': 'application/json' });
     let options = new RequestOptions({ headers: headers });
     var response = this.http.get(url, options);
     return response;
