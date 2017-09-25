@@ -106,6 +106,13 @@ namespace Vocal.Business.Business
                     LogManager.LogDebug(request);
                     if (/*Repository.Instance.CheckIfAllUsersExist(request.IdsRecipient)*/ true)
                     {
+                        if((MessageType)request.MessageType == MessageType.Vocal)
+                        {
+                            var file = Converter.ConvertToWav(request.Content);
+                            if (file == null)
+                                throw new Exception();
+                            request.Content = Convert.ToBase64String(file);
+                        }
                         Talk talk = null;
                         var user = Repository.Instance.GetUserById(request.IdSender);
 
@@ -117,10 +124,8 @@ namespace Vocal.Business.Business
                             talk = new Talk
                             {
                                 Messages = new List<Message>(),
-                                //VocalName = string.Join(", ", AllUser.Where(x => x.Id != request.IdSender).Select(x => x.Username)),
                                 Users = AllUser
                             };
-                            //Task.Run(async () => await RegisterNotificationToTalk(AllUser, talk.Id));
                         }
                         else
                         {
@@ -170,7 +175,17 @@ namespace Vocal.Business.Business
                 {
                     LogManager.LogError(new Exception("No Data"));
                     response.ErrorMessage = Resources_Language.NoDataMessage;
-                }    
+                }
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
             }
             catch (Exception ex)
             {
