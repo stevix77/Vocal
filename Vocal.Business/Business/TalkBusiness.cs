@@ -108,7 +108,8 @@ namespace Vocal.Business.Business
                     {
                         if((MessageType)request.MessageType == MessageType.Vocal)
                         {
-                            var file = Converter.ConvertToWav(request.Content);
+                            var bs64 = request.Content.Split(',').LastOrDefault();
+                            var file = Converter.ConvertToWav(bs64);
                             if (file == null)
                                 throw new Exception();
                             request.Content = Convert.ToBase64String(file);
