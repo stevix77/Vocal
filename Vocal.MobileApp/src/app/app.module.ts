@@ -32,6 +32,7 @@ import { Media } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
 
 import { AudioFiltersPage } from '../pages/audio-filters/audio-filters';
+import { FriendsListPage } from '../pages/friends-list/friends-list';
 
 let components = [
   VocalApp,
@@ -61,7 +62,8 @@ let components = [
   ModalProfilePage,
 
   MessagePage,
-  AudioFiltersPage
+  AudioFiltersPage,
+  FriendsListPage
 ];
 
 @NgModule({

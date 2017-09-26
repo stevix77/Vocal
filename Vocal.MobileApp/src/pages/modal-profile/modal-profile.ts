@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { SettingsPage } from '../../pages/settings/settings';
+import { FriendsListPage } from '../../pages/friends-list/friends-list';
 
 /**
  * Generated class for the ModalProfilePage page.
@@ -23,6 +24,10 @@ export class ModalProfilePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ModalProfilePage');
+  }
+
+  goToFriendsList() {
+    this.navCtrl.push(FriendsListPage);
   }
 
   goToSettings() {
