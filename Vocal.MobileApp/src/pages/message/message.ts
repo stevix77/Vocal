@@ -29,7 +29,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 export class MessagePage {
   
   model = { Message: "", talkId: null }
-  VocalName: string;
+  VocalName: string = "";
   Messages: Array<MessageResponse> = new Array<MessageResponse>();
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
