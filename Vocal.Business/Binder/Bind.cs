@@ -132,7 +132,7 @@ namespace Vocal.Business.Binder
             var response = new TalkResponse();
             var message = talk.Messages.LastOrDefault();
             response.Id = talk.Id;
-            response.Name = talk.VocalName;
+            response.Name = string.Join(", ", talk.Users.Where(x => x.Id != userId).Select(x => x.Username));
             response.Users = Bind_Users(talk.Users);
             response.DateLastMessage = message.SentTime;
             response.HasNewMessage = message.User.Id != userId && !message.Users.Any(x => x.UserId == userId && !x.ListenDate.HasValue);

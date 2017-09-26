@@ -12,6 +12,7 @@ import { CookieService } from '../../services/cookieService';
 import { VocalListPage } from '../../pages/vocal-list/vocal-list';
 import { TalkService } from "../../services/talkService";
 import { HubService } from "../../services/hubService";
+import {DomSanitizer} from '@angular/platform-browser';
 
 /**
  * Generated class for the MessagePage page.
@@ -36,7 +37,8 @@ export class MessagePage {
               private cookieService: CookieService,
               private events: Events,
               private talkService: TalkService,
-              private hubService: HubService) {
+              private hubService: HubService,
+              private domSanitizer: DomSanitizer) {
 
     // this.events.subscribe()
     this.model.talkId = this.navParams.get("TalkId");

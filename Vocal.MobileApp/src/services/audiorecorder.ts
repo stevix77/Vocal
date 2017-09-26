@@ -5,7 +5,6 @@ import { params } from './params';
 import { Store } from '../models/enums';
 import { Media, MediaObject } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
-import { Base64 } from '@ionic-native/base64';
 
 
 @Injectable()
@@ -21,8 +20,7 @@ export class AudioRecorder {
     public config:Config,
     public alertCtrl: AlertController,
     private media: Media, 
-    private file: File,
-    private base64: Base64) {
+    private file: File) {
     this.filename = 'recording.' + this.getExtension();
     this.isApp = this.config.get('isApp');
     this.initEffects();

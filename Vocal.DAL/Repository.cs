@@ -139,6 +139,14 @@ namespace Vocal.DAL
             return users;
         }
 
+        public List<User> GetAllUsers()
+        {
+            List<User> users = new List<User>();
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            users = db.AsQueryable().ToList();
+            return users;
+        }
+
         #endregion
 
         #region Friends
@@ -256,13 +264,14 @@ namespace Vocal.DAL
                 List<People> people = Bind_UsersToFriends(users);
                 people.RemoveAll(x => user.Friends.Select(y => y.Id).Contains(x.Id));
                 user.Following.AddRange(people);
-                Task.Run(() =>
-                {
-                    foreach (var p in people)
-                    {
-                        AddInFollowers(p.Id, user.Id);
-                    }
-                });
+                //Task.Run(() =>
+                //{
+                //    foreach (var p in people)
+                //    {
+                //        AddInFollowers(p.Id, user.Id);
+                //    }
+                //});
+                Parallel.ForEach(people, (p) => AddInFollowers(p.Id, user.Id));
                 db.ReplaceOne(x => x.Id == userId, user);
                 success = true;
             }

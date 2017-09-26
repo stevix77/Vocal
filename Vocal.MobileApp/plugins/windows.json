@@ -49,6 +49,9 @@
         "phonegap-plugin-push": {
             "SENDER_ID": "1054724390279",
             "PACKAGE_NAME": "Vocal"
+        },
+        "com-badrit-base64": {
+            "PACKAGE_NAME": "Vocal"
         }
     },
     "dependent_plugins": {

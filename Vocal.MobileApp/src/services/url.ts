@@ -28,6 +28,9 @@ var url = {
     AddFriends() : string {
         return this.BaseUri + "/api/friend/add";
     },
+    RemoveFriends() : string {
+        return this.BaseUri + "/api/friend/remove";
+    },
     NotificationRegister() : string {
         return this.BaseUri + "/api/notification/register"
     },
@@ -57,5 +60,8 @@ var url = {
     },
     GetFriends() : string {
         return this.BaseUri + "/api/friend/getFriends";
+    },
+    GetAllUsers() : string {
+        return this.BaseUri + "/api/user/list";
     }
 }
