@@ -23,7 +23,7 @@ export class AudioRecorder {
     private file: File) {
     this.filename = 'recording.' + this.getExtension();
     this.isApp = this.config.get('isApp');
-    this.initEffects();
+    //this.initEffects();
   }
 
   applyEffect(filter) {

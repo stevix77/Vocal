@@ -29,6 +29,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 export class MessagePage {
   
   model = { Message: "", talkId: null }
+  VocalName: string;
   Messages: Array<MessageResponse> = new Array<MessageResponse>();
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
@@ -91,8 +92,13 @@ export class MessagePage {
    return this.talkService.GetMessages(this.model.talkId).then(() => {
       if(this.talkService.Messages != null) {
         let mess = this.talkService.Messages.find(x => x.Key == this.model.talkId)
-        if(mess != null)
+        this.talkService.Talks.find(x => x.Id == this.model.talkId).Users.forEach(x => {
+          if(x.Id != params.User.Id)
+            this.VocalName += x.Username + ",";
+        })
+        if(mess != null) {
           this.Messages = mess.Value;
+        }
       }
     }).catch((err) => {
       

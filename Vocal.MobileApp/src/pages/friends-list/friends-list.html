@@ -23,11 +23,11 @@
     Mes vocals
   </ion-list-header>
   <ion-item-sliding>
-    <ion-item>
+    <ion-item *ngFor="let friend of Friends">
       <ion-avatar item-start>
         <img alt="picture" src="https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-1/p24x24/16602600_10154441388394576_4490155536874187938_n.jpg?oh=21c11ffc32c0b439c7ee5b32629d6b97&oe=5A1910E7">
       </ion-avatar>
-      <h3>Name</h3>
+      <h3>{{ friend.Username }}</h3>
     </ion-item>
     <ion-item-options side="right">
       <button (click)="showConfirm()" ion-button icon-only color="danger"><ion-icon name="trash"></ion-icon></button>
