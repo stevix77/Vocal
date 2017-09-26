@@ -68,7 +68,7 @@ export class FriendsListPage {
         let response = resp.json() as Response<boolean>;
         if(!response.HasError) {
           let index = this.Friends.findIndex(x => x.Id == userId);
-          this.Friends = this.Friends.slice(index, index)
+          this.Friends.splice(index, 1);
           this.storeService.Set(KeyStore.Friends.toString(), this.Friends)
         } else {
           console.log("error ->" + response.ErrorMessage);
