@@ -34,9 +34,6 @@
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
-        "msopentech.azure.NotificationHub": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
         "phonegap-plugin-push": {
             "SENDER_ID": "85075801930",
             "PACKAGE_NAME": "io.ionic.starter"

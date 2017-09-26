@@ -46,9 +46,6 @@
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "Vocal"
         },
-        "msopentech.azure.NotificationHub": {
-            "PACKAGE_NAME": "Vocal"
-        },
         "phonegap-plugin-push": {
             "SENDER_ID": "1054724390279",
             "PACKAGE_NAME": "Vocal"
