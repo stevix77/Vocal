@@ -26,6 +26,10 @@ export class ModalProfilePage {
     console.log('ionViewDidLoad ModalProfilePage');
   }
 
+  goToProfilePic() {
+    console.log('go to profile pic');
+  }
+
   goToFriendsList() {
     this.navCtrl.push(FriendsListPage);
   }
