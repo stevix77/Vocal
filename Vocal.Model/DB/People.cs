@@ -14,5 +14,6 @@ namespace Vocal.Model.DB
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Picture { get; set; }
+        public DateTime DateAdded { get; set; }
     }
 }

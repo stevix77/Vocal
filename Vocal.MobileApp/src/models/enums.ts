@@ -13,7 +13,8 @@ export enum KeyStore {
     User = 1,
     Friends = 2,
     Talks = 3,
-    Messages = 4
+    Messages = 4,
+    FriendsAddedMe = 5
 }
 
 export enum Store {

@@ -23,13 +23,13 @@
       Modifier sa photo
     </div>
   </div>
-  <h2>John Doe</h2>
+  <h2>{{User.Firstname}} {{User.Lastname}}</h2>
   <span class="vocal-total">35h de vocal à votre actif</span>
 </div>
 
 <ion-list inset>
-  <ion-item>
-    <ion-badge>1</ion-badge>
+  <ion-item (click)="goToFriendsAddedMeList()">
+    <ion-badge>{{CountFriendsAddedMe}}</ion-badge>
     Ils m'ont ajouté
   </ion-item>
   <ion-item>

@@ -48,8 +48,8 @@ export class Connexion {
             var appUser = new AppUser();
             appUser.Email = response.Data.Email;
             appUser.Id = response.Data.Id;
-            appUser.FirstName = response.Data.Firstname;
-            appUser.LastName = response.Data.Lastname;
+            appUser.Firstname = response.Data.Firstname;
+            appUser.Lastname = response.Data.Lastname;
             appUser.Username = response.Data.Username;
             appUser.Token = functions.GenerateToken(response.Data.Username, this.model.Password);
             this.storeService.Set("user", appUser);

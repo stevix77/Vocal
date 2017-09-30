@@ -2,6 +2,10 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { SettingsPage } from '../../pages/settings/settings';
 import { FriendsListPage } from '../../pages/friends-list/friends-list';
+import { AppUser } from '../../models/appUser';
+import { params } from "../../services/params";
+import { StoreService } from '../../services/storeService';
+import { KeyStore } from "../../models/enums";
 
 /**
  * Generated class for the ModalProfilePage page.
@@ -16,14 +20,24 @@ import { FriendsListPage } from '../../pages/friends-list/friends-list';
 })
 export class ModalProfilePage {
 
+  private User: AppUser;
+  private CountFriendsAddedMe: number = 0;
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
-    public viewCtrl: ViewController
+    public viewCtrl: ViewController,
+    private storeService: StoreService
     ) {
+    this.User = params.User;
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ModalProfilePage');
+    this.storeService.Get(KeyStore.FriendsAddedMe.toString()).then(
+      friends => {
+        if(friends != null)
+          this.CountFriendsAddedMe = friends.length;
+      }
+    )
   }
 
   goToProfilePic() {
@@ -32,6 +46,10 @@ export class ModalProfilePage {
 
   goToFriendsList() {
     this.navCtrl.push(FriendsListPage);
+  }
+
+  goToFriendsAddedMeList() {
+
   }
 
   goToSettings() {

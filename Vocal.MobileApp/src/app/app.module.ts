@@ -34,6 +34,8 @@ import { File } from '@ionic-native/file';
 import { AudioFiltersPage } from '../pages/audio-filters/audio-filters';
 import { FriendsListPage } from '../pages/friends-list/friends-list';
 
+import { StoreService } from '../services/storeService';
+
 let components = [
   VocalApp,
   HomePage,
@@ -82,6 +84,7 @@ let components = [
     SplashScreen,
     Media,
     File,
+    StoreService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

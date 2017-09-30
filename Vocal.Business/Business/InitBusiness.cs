@@ -15,10 +15,10 @@ namespace Vocal.Business.Business
         public static Response<InitResponse> Initialize(string userId, string lang)
         {
             var response = new Response<InitResponse>();
-            LogManager.LogDebug(userId, lang);
-            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {
+                LogManager.LogDebug(userId, lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
                 response.Data = new InitResponse();
                 var actionSettings = new Action(() =>
                 {
@@ -44,7 +44,15 @@ namespace Vocal.Business.Business
                     else
                         response.Data.Errors.Add(new KeyValueResponse<string, string>(KeyStore.Friends.ToString(), response.ErrorMessage));
                 });
-                Parallel.Invoke(actionFriends, actionSettings, actionTalks);
+                var actionFriendsAddedMe = new Action(() =>
+                {
+                    var resp = FriendBusiness.GetFriendsAddedMe(userId, lang);
+                    if (!resp.HasError)
+                        response.Data.FriendsAddedMe = resp.Data;
+                    else
+                        response.Data.Errors.Add(new KeyValueResponse<string, string>(KeyStore.FriendsAddedMe.ToString(), response.ErrorMessage));
+                });
+                Parallel.Invoke(actionFriends, actionSettings, actionTalks, actionFriendsAddedMe);
             }
             catch (TimeoutException tex)
             {

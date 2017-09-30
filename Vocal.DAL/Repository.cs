@@ -180,6 +180,7 @@ namespace Vocal.DAL
             {
                 List<People> friends = Bind_UsersToFriends(users);
                 friends.RemoveAll(x => user.Friends.Select(y => y.Id).Contains(x.Id));
+                friends.ForEach(x => x.DateAdded = DateTime.Now);
                 user.Friends.AddRange(friends);
                 db.ReplaceOne(x => x.Id == userId, user);
                 success = true;
@@ -217,6 +218,14 @@ namespace Vocal.DAL
             }
             return null;
         }
+
+        public List<User> GetFriendsAddedMe(string userId)
+        {
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var list = db.Find(x => x.Friends.Any(y => y.Id == userId && y.DateAdded > DateTime.Now.AddDays(-7))).ToList();
+            return list;
+        }
+        
 
         #endregion
 
