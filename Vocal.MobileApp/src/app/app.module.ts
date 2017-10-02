@@ -33,6 +33,7 @@ import { File } from '@ionic-native/file';
 
 import { AudioFiltersPage } from '../pages/audio-filters/audio-filters';
 import { FriendsListPage } from '../pages/friends-list/friends-list';
+import { AddFriendPage } from '../pages/add-friend/add-friend';
 
 import { StoreService } from '../services/storeService';
 
@@ -65,7 +66,8 @@ let components = [
 
   MessagePage,
   AudioFiltersPage,
-  FriendsListPage
+  FriendsListPage,
+  AddFriendPage
 ];
 
 @NgModule({

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { SettingsPage } from '../../pages/settings/settings';
 import { FriendsListPage } from '../../pages/friends-list/friends-list';
+import { AddFriendPage } from '../../pages/add-friend/add-friend';
 import { AppUser } from '../../models/appUser';
 import { params } from "../../services/params";
 import { StoreService } from '../../services/storeService';
@@ -42,6 +43,10 @@ export class ModalProfilePage {
 
   goToProfilePic() {
     console.log('go to profile pic');
+  }
+
+  goToAddFriend() {
+    this.navCtrl.push(AddFriendPage);
   }
 
   goToFriendsList() {
