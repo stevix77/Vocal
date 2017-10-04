@@ -34,6 +34,9 @@ import { File } from '@ionic-native/file';
 import { AudioFiltersPage } from '../pages/audio-filters/audio-filters';
 import { FriendsListPage } from '../pages/friends-list/friends-list';
 import { AddFriendPage } from '../pages/add-friend/add-friend';
+import { SearchUsernamePage } from '../pages/search-username/search-username';
+import { SearchPhonePage } from '../pages/search-phone/search-phone';
+import { SearchMailPage } from '../pages/search-mail/search-mail';
 
 import { StoreService } from '../services/storeService';
 
@@ -67,7 +70,10 @@ let components = [
   MessagePage,
   AudioFiltersPage,
   FriendsListPage,
-  AddFriendPage
+  AddFriendPage,
+  SearchUsernamePage,
+  SearchPhonePage,
+  SearchMailPage
 ];
 
 @NgModule({

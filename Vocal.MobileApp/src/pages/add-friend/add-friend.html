@@ -15,27 +15,25 @@
 
 <ion-content padding>
   <ion-list>
-    <ion-item>
-      <ion-label><ion-icon name="search"></ion-icon></ion-label>
-      <ion-input type="text" placeholder="Nom d'utilisateur" (input)="viewUsersByName($event.target.value)"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label><ion-icon name="call"></ion-icon></ion-label>
-      <ion-input type="text" placeholder="N° de téléphone"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label><ion-icon name="mail"></ion-icon></ion-label>
-      <ion-input type="text" placeholder="Adresse e-mail"></ion-input>
-    </ion-item>
-
-    <ion-list-header>Depuis</ion-list-header>
-    <ion-item>
-      <button ion-button>Facebook</button>
-    </ion-item>
-    <ion-item>
-      <button ion-button>Twitter</button>
-    </ion-item>
+    <button ion-item (click)="goToSearchByUsername()">
+      <ion-icon name="search"></ion-icon>
+      Nom d'utilisateur
+      <!-- <ion-input type="text" placeholder="Nom d'utilisateur" (input)="viewUsersByName($event.target.value)"></ion-input> -->
+    </button>
+    <button ion-item (click)="goToSearchByPhone()">
+      <ion-icon name="call"></ion-icon>
+      N° de téléphone
+    </button>
+    <button ion-item  (click)="goToSearchByMail()">
+      <ion-icon name="mail"></ion-icon>
+        Adresse e-mail
+    </button>
 
   </ion-list>
+  <div text-center>
+    <button ion-button>
+        Inviter des amis
+    </button>
+  </div>
 
 </ion-content>

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { SearchUsernamePage } from '../search-username/search-username';
+import { SearchPhonePage } from '../search-phone/search-phone';
+import { SearchMailPage } from '../search-mail/search-mail';
 
 /**
  * Generated class for the AddFriendPage page.
@@ -17,8 +20,16 @@ export class AddFriendPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
-  viewUsersByName(val) {
-    console.log(val);
+  goToSearchByUsername() {
+    this.navCtrl.push(SearchUsernamePage);
+  }
+
+  goToSearchByPhone() {
+    this.navCtrl.push(SearchPhonePage);
+  }
+
+  goToSearchByMail() {
+    this.navCtrl.push(SearchMailPage);
   }
 
   ionViewDidLoad() {
