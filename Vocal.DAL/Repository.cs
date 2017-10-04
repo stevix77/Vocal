@@ -182,6 +182,20 @@ namespace Vocal.DAL
                 friends.RemoveAll(x => user.Friends.Select(y => y.Id).Contains(x.Id));
                 friends.ForEach(x => x.DateAdded = DateTime.Now);
                 user.Friends.AddRange(friends);
+                Parallel.ForEach(users, (u) =>
+                {
+                    var friend = db.Find(x => x.Id == u.Id).SingleOrDefault();
+                    if(friend != null)
+                    {
+                        var f = friend.Friends.Find(x => x.Id == userId);
+                        if (f != null)
+                        {
+                            f.IsFriend = true;
+                            user.Friends.SingleOrDefault(x => x.Id == u.Id).IsFriend = true;
+                            db.ReplaceOne(x => x.Id == u.Id, friend);
+                        }
+                    }
+                });
                 db.ReplaceOne(x => x.Id == userId, user);
                 success = true;
             }
@@ -212,8 +226,8 @@ namespace Vocal.DAL
             if (currentUser != null)
             {
                 var list = pageSize == 0 || pageNumber == 0
-                    ? currentUser.Friends
-                    : currentUser.Friends.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                    ? currentUser.Friends.Where(x => x.IsFriend)
+                    : currentUser.Friends.Where(x => x.IsFriend).Skip((pageNumber - 1) * pageSize).Take(pageSize);
                 return list.ToList();
             }
             return null;

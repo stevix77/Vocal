@@ -42,7 +42,6 @@ export class InscriptionFindFriendsPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad InscriptionFindFriendsPage');
-    this.searchFriends(['s.valentin77@gmail.com', 'tik@tik.fr']);
   }
   
   searchFriends(emails: Array<string>) {
