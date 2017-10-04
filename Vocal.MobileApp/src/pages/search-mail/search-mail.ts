@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { SearchFriendsRequest } from '../../models/request/searchFriendsRequest';
 import { params } from '../../services/params';
 import { url } from '../../services/url';
 import { Response } from '../../models/response';
@@ -29,17 +28,16 @@ export class SearchMailPage {
   }
 
   viewUsersByMail(val) {
-    let emails = [val];
-    this.searchFriends(emails);
+    this.searchFriends(val);
   }
 
-  searchFriends(emails: Array<string>) {
-    let obj = new SearchFriendsRequest();
-    obj.Lang = params.Lang;
-    obj.Emails = emails;
-    let urlSearch = url.SearchFriends();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
-    this.httpService.Post<SearchFriendsRequest>(urlSearch, obj, cookie).subscribe(
+  searchFriends(val) {
+    let obj = {
+      Lang: params.Lang,
+      Keyword: val
+    };
+    let urlSearch = url.SearchPeople();
+    this.httpService.Post<any>(urlSearch, obj).subscribe(
       resp => { 
         let response = resp.json() as Response<Array<UserResponse>>;
         console.log(response);
