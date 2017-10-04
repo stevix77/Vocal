@@ -17,8 +17,8 @@
     <ion-list-header>
       Conversation
     </ion-list-header>
-    <ion-item-sliding>
-      <ion-item *ngFor="let mess of Messages">
+    <ion-item-sliding *ngFor="let mess of Messages">
+      <ion-item>
         <p *ngIf="mess.ContentType == 2">{{mess.Content}}</p>
         <p *ngIf="mess.ContentType == 1">
           <audio controls [src]="domSanitizer.bypassSecurityTrustUrl(mess.Content)">
