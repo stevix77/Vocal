@@ -37,7 +37,8 @@ export class SearchMailPage {
       Keyword: val
     };
     let urlSearch = url.SearchPeople();
-    this.httpService.Post<any>(urlSearch, obj).subscribe(
+    let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
+    this.httpService.Post<any>(urlSearch, obj, cookie).subscribe(
       resp => { 
         let response = resp.json() as Response<Array<UserResponse>>;
         console.log(response);
