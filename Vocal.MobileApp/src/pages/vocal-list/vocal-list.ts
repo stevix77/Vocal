@@ -116,6 +116,14 @@ export class VocalListPage {
     })
   }
 
+  deleteMessage(id){
+    console.log('delete : ' + id);
+  }
+
+  archiveMessage(id){
+    console.log('archive : ' + id);
+  }
+
   goToMessage(id) {
     this.navCtrl.push(MessagePage, {TalkId: id}, {'direction':'back'});
   }
