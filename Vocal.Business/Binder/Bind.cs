@@ -64,6 +64,41 @@ namespace Vocal.Business.Binder
             return users;
         }
 
+        internal static List<SearchPeopleResponse> Bind_SearchPeople(User user, List<User> listSearch)
+        {
+            var list = new List<SearchPeopleResponse>();
+            foreach(var item in listSearch)
+            {
+                var friend = user.Friends.Find(x => x.Id == item.Id);
+                if (friend == null) // il n'existe pas dans ma liste d'amis
+                {
+                    list.Add(new SearchPeopleResponse
+                    {
+                        Email = item.Email,
+                        IsFriend = false,
+                        Firstname = item.Firstname,
+                        Id = item.Id,
+                        Lastname = item.Lastname,
+                        Picture = item.Picture,
+                        Username = item.Username
+                    });
+                }
+                else if(!friend.IsFriend) // s'il est dans ma liste d'amis mais qu'il n'a pas encore accepté ma demande
+                    list.Add(new SearchPeopleResponse
+                    {
+                        Email = item.Email,
+                        IsFriend = true,
+                        Firstname = item.Firstname,
+                        Id = item.Id,
+                        Lastname = item.Lastname,
+                        Picture = item.Picture,
+                        Username = item.Username
+                    });
+                // sinon c'est qu'il est dans ma liste d'amis et qu'il a accepté ma demande donc ne pas afficher dans le résultat de la recherche
+            }
+            return list;
+        }
+
         internal static List<TalkResponse> Bind_Talks(List<Talk> list, string userId)
         {
             var response = new List<TalkResponse>();

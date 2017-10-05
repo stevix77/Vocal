@@ -54,23 +54,6 @@ export class VocalApp {
               private talkService: TalkService,
               private toastCtrl: ToastController,
               private exceptionService: ExceptionService ) {
-    
-    this.storeService.Get("user").then(
-      user => {
-        if(user != null) {
-          params.User = user;
-          this.SubscribeHub();
-          this.initPushNotification();
-          this.init();
-          this.rootPage = VocalListPage;
-        }
-        else
-          this.rootPage = HomePage;
-      }
-    ).catch(error => {
-      console.log(error);
-      this.rootPage = HomePage;
-    });
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -118,7 +101,7 @@ export class VocalApp {
       let cookie = this.cookieService.GetAuthorizeCookie(urlNotifRegister, params.User)
       this.httpService.Post<NotificationRegisterRequest>(urlNotifRegister, request, cookie).subscribe(
         resp => {
-          
+          params.RegistrationId = registrationId;
         }
       );
   }
@@ -132,7 +115,8 @@ export class VocalApp {
     const pushObject: PushObject = this.push.init(pushOptions);
     pushObject.on('registration').subscribe((data: any) => {
       console.log('device token -> ' + data.registrationId);
-      this.RegisterToNH(data.registrationId);
+      if(params.RegistrationId != data.registrationId)
+        this.RegisterToNH(data.registrationId);
     });
     
     pushObject.on('notification').subscribe((data: any) => {
@@ -219,6 +203,22 @@ export class VocalApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.storeService.Get("user").then(
+      user => {
+        if(user != null) {
+          params.User = user;
+          this.SubscribeHub();
+          this.initPushNotification();
+          this.init();
+          this.rootPage = VocalListPage;
+        }
+        else
+          this.rootPage = HomePage;
+        }
+      ).catch(error => {
+        console.log(error);
+        this.rootPage = HomePage;
+      });
       this.GetAllResources();
       this.SetLanguage();
       this.SetPlatform();
@@ -313,7 +313,9 @@ export class VocalApp {
   }
 
   SubscribeHub() {
-    this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
+    this.talkService.LoadList().then(() => {
+      this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
+    })
 
     this.hubService.hubProxy.on(HubMethod[HubMethod.Receive], (obj) => {
       console.log(obj);

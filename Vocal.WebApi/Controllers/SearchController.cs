@@ -18,9 +18,17 @@ namespace Vocal.WebApi.Controllers
     public class SearchController : ApiController
     {
         [HttpPost, Route("people")]
-        public Response<List<UserResponse>> SearchPeople(SearchRequest request)
+        public Response<List<SearchPeopleResponse>> SearchPeople(SearchRequest request)
         {
-            return Business.Tools.Monitoring.Execute(SearchBusiness.SearchPeople, request.Keyword, request.Lang);
+            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
+            return Business.Tools.Monitoring.Execute(SearchBusiness.SearchPeople, obj.UserId, request.Keyword, request.Lang);
+        }
+
+        [HttpPost, Route("people/mail")]
+        public Response<List<SearchPeopleResponse>> SearchPeopleByEmail(SearchRequest request)
+        {
+            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
+            return Business.Tools.Monitoring.Execute(SearchBusiness.SearchPeopleByEmail, obj.UserId, request.Keyword, request.Lang);
         }
     }
 }
