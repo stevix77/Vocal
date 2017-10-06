@@ -38,31 +38,23 @@ export class SearchUsernamePage {
   }
 
   addFriends(ids: Array<string>) {
-    //console.log(document.querySelector('[id="' + ids[0] + '"]').parentElement);
-    // document.querySelector('[id="' + ids[0] + '"]').parentElement.innerHTML = `
-    // <button default ion-button icon-start disabled outline>
-    //   <ion-icon name="time"></ion-icon>
-    //   Envoyé
-    // </button>
-    // `;
-    this.model.display = true;
-    // let obj = new ManageFriendsRequest();
-    // obj.Lang = params.Lang;
-    // obj.Ids = ids;
-    // obj.UserId = params.User.Id;
-    // let urlAddFriends = url.AddFriends();
-    // let cookie = this.cookieService.GetAuthorizeCookie(urlAddFriends, params.User)
-    // this.httpService.Post<ManageFriendsRequest>(urlAddFriends, obj, cookie).subscribe(
-    //   resp => {
-    //     let response = resp.json() as Response<boolean>;
-    //     console.log(response);
-    //     if(!response.HasError) {
+    let obj = new ManageFriendsRequest();
+    obj.Lang = params.Lang;
+    obj.Ids = ids;
+    obj.UserId = params.User.Id;
+    let urlAddFriends = url.AddFriends();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlAddFriends, params.User)
+    this.httpService.Post<ManageFriendsRequest>(urlAddFriends, obj, cookie).subscribe(
+      resp => {
+        let response = resp.json() as Response<boolean>;
+        console.log(response);
+        if(!response.HasError) {
           
-    //     } else {
-    //       this.model.ErrorFriends = response.ErrorMessage;
-    //     }
-    //   }
-    // );
+        } else {
+          this.model.ErrorFriends = response.ErrorMessage;
+        }
+      }
+    );
   }
 
   ionViewDidLoad() {
