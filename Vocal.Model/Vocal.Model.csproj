@@ -79,6 +79,7 @@
     <Compile Include="Response\SettingsResponse.cs" />
     <Compile Include="Response\TalkResponse.cs" />
     <Compile Include="Response\UserListenResponse.cs" />
+    <Compile Include="Response\SearchPeopleResponse.cs" />
     <Compile Include="Response\UserResponse.cs" />
   </ItemGroup>
   <ItemGroup>

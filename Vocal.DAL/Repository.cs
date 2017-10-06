@@ -139,6 +139,40 @@ namespace Vocal.DAL
             return users;
         }
 
+        public bool BlockUsers(string userId, List<string> userIds)
+        {
+            bool success = false;
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var user = db.Find(x => x.Id == userId).SingleOrDefault();
+            if(user != null)
+            {
+                var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, userIds);
+                var users = db.Find(filter).ToList();
+                if(users.Count > 0)
+                {
+                    var list = Bind_UsersToFriends(users);
+                    user.Settings.Blocked.AddRange(list);
+                    var result = db.ReplaceOne(x => x.Id == userId, user);
+                    success = result.ModifiedCount > 0;
+                }
+            }
+            return success;
+        }
+
+        public bool UnblockUsers(string userId, List<string> userIds)
+        {
+            bool success = false;
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var user = db.Find(x => x.Id == userId).SingleOrDefault();
+            if (user != null)
+            {
+                user.Settings.Blocked.RemoveAll(x => userIds.Contains(x.Id));
+                var result = db.ReplaceOne(x => x.Id == userId, user);
+                success = result.ModifiedCount > 0;
+            }
+            return success;
+        }
+
         public List<User> GetAllUsers()
         {
             List<User> users = new List<User>();
@@ -226,8 +260,8 @@ namespace Vocal.DAL
             if (currentUser != null)
             {
                 var list = pageSize == 0 || pageNumber == 0
-                    ? currentUser.Friends.Where(x => x.IsFriend)
-                    : currentUser.Friends.Where(x => x.IsFriend).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                    ? currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x) && x.IsFriend)
+                    : currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x) && x.IsFriend).Skip((pageNumber - 1) * pageSize).Take(pageSize);
                 return list.ToList();
             }
             return null;
@@ -482,6 +516,15 @@ namespace Vocal.DAL
             list = collection.Find(x => x.Username.ToLower().Contains(keyword) || 
                                         x.Firstname.ToLower().Contains(keyword) || 
                                         x.Lastname.ToLower().Contains(keyword))
+                                        .ToList();
+            return list;
+        }
+
+        public List<User> SearchPeopleByEmail(string keyword)
+        {
+            var list = new List<User>();
+            var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            list = collection.Find(x => x.Email.ToLower().Contains(keyword))
                                         .ToList();
             return list;
         }

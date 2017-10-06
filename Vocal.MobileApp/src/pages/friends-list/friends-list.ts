@@ -103,7 +103,7 @@ export class FriendsListPage {
         let response = resp.json() as Response<Array<UserResponse>>;
         if(!response.HasError) {
           this.Friends = response.Data;
-          this.storeService.Set(KeyStore.Friends.toString(), this.Friends)
+          this.storeService.Set(KeyStore.Friends.toString(), response.Data)
         } else {
           
         }
