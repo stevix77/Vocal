@@ -37,6 +37,7 @@ import { AddFriendPage } from '../pages/add-friend/add-friend';
 import { SearchUsernamePage } from '../pages/search-username/search-username';
 import { SearchPhonePage } from '../pages/search-phone/search-phone';
 import { SearchMailPage } from '../pages/search-mail/search-mail';
+import { PopoverFriendsAddedMePage } from '../pages/popover-friends-added-me/popover-friends-added-me';
 
 import { StoreService } from '../services/storeService';
 
@@ -73,7 +74,8 @@ let components = [
   AddFriendPage,
   SearchUsernamePage,
   SearchPhonePage,
-  SearchMailPage
+  SearchMailPage,
+  PopoverFriendsAddedMePage
 ];
 
 @NgModule({
