@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { NavController } from 'ionic-angular';
+import { NavController, AlertController } from 'ionic-angular';
 import { params } from "../../services/params";
 import { url } from "../../services/url";
 import { HttpService } from "../../services/httpService";
@@ -23,7 +23,11 @@ export class SettingsPage implements OnInit {
     Settings: {} as SettingsResponse,
     ErrorSettings: ""
   }
-  constructor(public navCtrl: NavController, private httpService: HttpService, private cookieService: CookieService, private storeService: StoreService) { 
+  constructor(public navCtrl: NavController, 
+    public alertCtrl: AlertController, 
+    private httpService: HttpService, 
+    private cookieService: CookieService, 
+    private storeService: StoreService) { 
 
   }
 
@@ -40,6 +44,26 @@ export class SettingsPage implements OnInit {
           this.LoadSettings();
       }
     )
+  }
+
+  showConfirmLogout() {
+    let confirm = this.alertCtrl.create({
+      title: 'Êtes-vous sûr de vouloir déconnecter ?',
+      buttons: [
+        {
+          text: 'Annuler',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Déconnexion',
+          handler: () => {
+            //Call webservice logout
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
 
   LoadSettings () {
