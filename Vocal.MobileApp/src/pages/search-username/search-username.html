@@ -20,6 +20,10 @@
     <ion-item *ngFor="let friend of model.Friends">
       <h3 item-start>{{ friend.Username }}</h3>
       <div item-end>
+        <button *ngIf="model.display" default ion-button icon-start disabled outline>
+          <ion-icon name="time"></ion-icon>
+          Envoyé
+        </button>
         <button data-id="{{friend.Id}}" default ion-button icon-start (click)="addFriend(friend.Id)">
           <ion-icon name="add-circle"></ion-icon>
           Ajouter
