@@ -48,6 +48,9 @@
         },
         "com-badrit-base64": {
             "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "VocalDev2"
         }
     },
     "dependent_plugins": {

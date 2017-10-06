@@ -137,8 +137,9 @@ namespace Vocal.Business.Business
             {
                 LogManager.LogDebug(userId, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var user = Repository.Instance.GetUserById(userId);
                 var list = Repository.Instance.GetFriendsAddedMe(userId);
-                response.Data = Binder.Bind.Bind_Users(list);
+                response.Data = Binder.Bind.Bind_Users(user, list);
             }
             catch (TimeoutException tex)
             {

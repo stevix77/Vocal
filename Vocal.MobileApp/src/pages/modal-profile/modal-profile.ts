@@ -6,6 +6,7 @@ import { AppUser } from '../../models/appUser';
 import { params } from "../../services/params";
 import { StoreService } from '../../services/storeService';
 import { KeyStore } from "../../models/enums";
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
 /**
  * Generated class for the ModalProfilePage page.
@@ -25,7 +26,8 @@ export class ModalProfilePage {
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
     public viewCtrl: ViewController,
-    private storeService: StoreService
+    private storeService: StoreService,
+    private camera: Camera
     ) {
     this.User = params.User;
   }
@@ -42,6 +44,21 @@ export class ModalProfilePage {
 
   goToProfilePic() {
     console.log('go to profile pic');
+    const options: CameraOptions = {
+      quality: 100,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE,
+      saveToPhotoAlbum: true
+    }
+    this.camera.getPicture(options).then((imageData) => {
+    // imageData is either a base64 encoded string or a file URI
+    // If it's base64:
+    let base64Image = 'data:image/jpeg;base64,' + imageData;
+    console.log(base64Image);
+    }, (err) => {
+    console.log(err);
+    });
   }
 
   goToFriendsList() {

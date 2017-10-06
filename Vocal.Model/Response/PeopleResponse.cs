@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Vocal.Model.Response
 {
-    public class SearchPeopleResponse : UserResponse
+    public class PeopleResponse : UserResponse
     {
         public bool IsFriend { get; set; }
     }

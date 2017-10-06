@@ -52,6 +52,9 @@
         },
         "com-badrit-base64": {
             "PACKAGE_NAME": "Vocal"
+        },
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "Vocal"
         }
     },
     "dependent_plugins": {

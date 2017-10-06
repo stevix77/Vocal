@@ -30,11 +30,13 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Media } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
+import { Camera } from '@ionic-native/camera';
 
 import { AudioFiltersPage } from '../pages/audio-filters/audio-filters';
 import { FriendsListPage } from '../pages/friends-list/friends-list';
 
 import { StoreService } from '../services/storeService';
+
 
 let components = [
   VocalApp,
@@ -84,6 +86,7 @@ let components = [
     SplashScreen,
     Media,
     File,
+    Camera,
     StoreService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
