@@ -101,7 +101,7 @@ export class VocalApp {
       let cookie = this.cookieService.GetAuthorizeCookie(urlNotifRegister, params.User)
       this.httpService.Post<NotificationRegisterRequest>(urlNotifRegister, request, cookie).subscribe(
         resp => {
-          params.RegistrationId = registrationId;
+          this.storeService.Set("registration", registrationId);
         }
       );
   }
@@ -115,8 +115,11 @@ export class VocalApp {
     const pushObject: PushObject = this.push.init(pushOptions);
     pushObject.on('registration').subscribe((data: any) => {
       console.log('device token -> ' + data.registrationId);
-      if(params.RegistrationId != data.registrationId)
-        this.RegisterToNH(data.registrationId);
+      this.storeService.Get("registration").then((r) => {
+        if(r == null || r != data.registrationId)
+          this.RegisterToNH(data.registrationId);
+      })
+      
     });
     
     pushObject.on('notification').subscribe((data: any) => {
