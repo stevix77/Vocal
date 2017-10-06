@@ -13,9 +13,10 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'popover-friends-added-me.html',
 })
 export class PopoverFriendsAddedMePage {
-
+  public friends: Array<Object>;
   constructor(public navCtrl: NavController, 
     public navParams: NavParams) {
+    this.friends = navParams.data.friends;
   }
 
   ionViewDidLoad() {
