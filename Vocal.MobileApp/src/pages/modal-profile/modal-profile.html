@@ -17,7 +17,7 @@
 <ion-content padding>
 <div text-center>
   <div class="profile-pic">
-    <img src="http://lorempixel.com/400/200/" width="400" height="200">
+    <img [src]="User.Picture" width="400" height="200">
     <div class="wrapper-button" padding (click)="goToProfilePic()">
       <ion-icon icon-only name="settings" color="light"></ion-icon>
       Modifier sa photo
