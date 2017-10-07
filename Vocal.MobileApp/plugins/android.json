@@ -51,12 +51,12 @@
         },
         "cordova-plugin-camera": {
             "PACKAGE_NAME": "VocalDev2"
+        },
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "io.ionic.starter"
         }
     },
     "dependent_plugins": {
-        "cordova-plugin-compat": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
         "cordova-sqlite-storage": {
             "PACKAGE_NAME": "io.ionic.starter"
         },

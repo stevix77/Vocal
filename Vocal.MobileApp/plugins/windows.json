@@ -7,7 +7,10 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-console": {
+        "com-badrit-base64": {
+            "PACKAGE_NAME": "Vocal"
+        },
+        "cordova-plugin-compat": {
             "PACKAGE_NAME": "Vocal"
         },
         "cordova-plugin-contacts": {
@@ -50,21 +53,18 @@
             "SENDER_ID": "1054724390279",
             "PACKAGE_NAME": "Vocal"
         },
-        "com-badrit-base64": {
-            "PACKAGE_NAME": "Vocal"
-        },
         "cordova-plugin-camera": {
             "PACKAGE_NAME": "Vocal"
         }
     },
     "dependent_plugins": {
-        "cordova-plugin-compat": {
-            "PACKAGE_NAME": "Vocal"
-        },
         "cordova-sqlite-storage": {
             "PACKAGE_NAME": "Vocal"
         },
         "cordova-plugin-nativeaudio": {
+            "PACKAGE_NAME": "Vocal"
+        },
+        "msopentech.azure.NotificationHub": {
             "PACKAGE_NAME": "Vocal"
         }
     }

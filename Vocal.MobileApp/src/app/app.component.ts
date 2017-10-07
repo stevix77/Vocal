@@ -206,7 +206,7 @@ export class VocalApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.storeService.Get("user").then(
+      this.storeService.Get(KeyStore[KeyStore.User]).then(
       user => {
         if(user != null) {
           params.User = user;

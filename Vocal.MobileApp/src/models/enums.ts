@@ -5,7 +5,8 @@ export enum UpdateType {
     Contact = 3,
     Notification = 4,
     BirthdayDate = 5,
-    Blocked = 6
+    Blocked = 6,
+    Picture = 7
 }
 
 export enum KeyStore {

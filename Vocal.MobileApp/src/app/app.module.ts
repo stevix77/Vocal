@@ -36,6 +36,9 @@ import { AudioFiltersPage } from '../pages/audio-filters/audio-filters';
 import { FriendsListPage } from '../pages/friends-list/friends-list';
 
 import { StoreService } from '../services/storeService';
+import { HttpService } from "../services/httpService";
+import { CookieService } from "../services/cookieService";
+import { ExceptionService } from "../services/exceptionService";
 
 
 let components = [
@@ -88,6 +91,9 @@ let components = [
     File,
     Camera,
     StoreService,
+    CookieService,
+    HttpService,
+    ExceptionService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

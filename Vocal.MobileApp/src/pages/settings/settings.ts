@@ -11,11 +11,11 @@ import { Response } from '../../models/response';
 import { Request } from "../../models/request/Request";
 import { SettingsChoices } from './settingsChoices/SettingsChoices';
 import { SettingsMail } from './settingsMail/SettingsMail';
+import { HomePage } from "../home/home";
 
 @Component({
   selector: "app-settings",
   templateUrl: "./settings.html",
-  providers: [HttpService, CookieService, StoreService]
 })
 
 export class SettingsPage implements OnInit {
@@ -58,7 +58,9 @@ export class SettingsPage implements OnInit {
         {
           text: 'Déconnexion',
           handler: () => {
-            //Call webservice logout
+            this.storeService.Remove(KeyStore[KeyStore.User]);
+            params.User = null;
+            this.navCtrl.setRoot(HomePage);
           }
         }
       ]

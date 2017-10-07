@@ -98,7 +98,8 @@
                 "MICROPHONE_USAGE_DESCRIPTION": " "
             },
             "com-badrit-base64": {},
-            "cordova-plugin-camera": {}
+            "cordova-plugin-camera": {},
+            "cordova-plugin-compat": {}
         },
         "platforms": [
             "browser",
