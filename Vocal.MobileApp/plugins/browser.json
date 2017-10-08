@@ -58,6 +58,12 @@
         },
         "cordova-plugin-compat": {
             "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "ionic-plugin-deeplinks": {
+            "URL_SCHEME": "vocal",
+            "DEEPLINK_SCHEME": "https",
+            "DEEPLINK_HOST": "vocal.com",
+            "PACKAGE_NAME": "7904ValentinSteve.VocalDev2"
         }
     },
     "dependent_plugins": {
