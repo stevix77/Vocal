@@ -36,7 +36,7 @@ export class SearchMailPage {
       Lang: params.Lang,
       Keyword: val
     };
-    let urlSearch = url.SearchPeople();
+    let urlSearch = url.SearchPeopleByMail();
     let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
     this.httpService.Post<any>(urlSearch, obj, cookie).subscribe(
       resp => { 

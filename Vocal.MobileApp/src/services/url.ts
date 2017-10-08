@@ -49,6 +49,9 @@ var url = {
     SearchPeople() : string {
         return this.BaseUri + "/api/search/people";
     },
+    SearchPeopleByMail() : string {
+        return this.BaseUri + "/api/search/people/mail";
+    },
     GetMessages(talkId) : string {
         return this.BaseUri + "/api/talk/messages/" + talkId;
     },
