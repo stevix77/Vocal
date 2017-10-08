@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Driver;
-using MongoDB;
-using Vocal.DAL.Properties;
-using Vocal.Model;
 using Vocal.Model.DB;
 
 namespace Vocal.DAL
 {
-    public sealed class Repository
+    public sealed partial class  Repository
     {
         private Repository()
         {
