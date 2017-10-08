@@ -132,5 +132,18 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "ionic-plugin-deeplinks": {
+        "source": {
+            "type": "registry",
+            "id": "ionic-plugin-deeplinks"
+        },
+        "is_top_level": true,
+        "variables": {
+            "URL_SCHEME": "vocal",
+            "DEEPLINK_SCHEME": "https",
+            "DEEPLINK_HOST": "vocal.com",
+            "ANDROID_PATH_PREFIX": "/"
+        }
     }
 }

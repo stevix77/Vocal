@@ -25,12 +25,14 @@ import { InitResponse } from '../models/response/InitResponse';
 import { Request } from "../models/request/Request";
 import { ExceptionService } from "../services/exceptionService";
 import { MessagePage } from "../pages/message/message";
+import { Deeplinks } from '@ionic-native/deeplinks';
+import { Inscription } from "../pages/inscription/inscription";
 
 declare var WindowsAzure: any;
 
 @Component({
   templateUrl: 'app.html',
-  providers: [StoreService, HttpService, Globalization, Device, CookieService, Push, HubService, TalkService, ExceptionService]
+  providers: [Globalization, Device, Push]
 })
 export class VocalApp {
   @ViewChild(Nav) nav: Nav;
@@ -53,7 +55,8 @@ export class VocalApp {
               private events: Events,
               private talkService: TalkService,
               private toastCtrl: ToastController,
-              private exceptionService: ExceptionService ) {
+              private exceptionService: ExceptionService,
+              private deeplinks: Deeplinks ) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -222,6 +225,13 @@ export class VocalApp {
         console.log(error);
         this.rootPage = HomePage;
       });
+      this.deeplinks.routeWithNavController(this.nav, {
+        '/test': Inscription
+      }).subscribe(match => {
+        console.log(match);
+      }, (err) => {
+        console.log(err);
+      })
       this.GetAllResources();
       this.SetLanguage();
       this.SetPlatform();
