@@ -41,6 +41,33 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Response.cs" />
+    <Compile Include="DataBaseObject\Device.cs" />
+    <Compile Include="DataBaseObject\Enums.cs" />
+    <Compile Include="DataBaseObject\Group.cs" />
+    <Compile Include="DataBaseObject\IRecipient.cs" />
+    <Compile Include="DataBaseObject\Message.cs" />
+    <Compile Include="DataBaseObject\Monitoring.cs" />
+    <Compile Include="DataBaseObject\People.cs" />
+    <Compile Include="DataBaseObject\ResetPassword.cs" />
+    <Compile Include="DataBaseObject\Search.cs" />
+    <Compile Include="DataBaseObject\Settings.cs" />
+    <Compile Include="DataBaseObject\Sign.cs" />
+    <Compile Include="DataBaseObject\Talk.cs" />
+    <Compile Include="DataBaseObject\User.cs" />
+    <Compile Include="DataBaseObject\UserListen.cs" />
+    <Compile Include="DBO\Device.cs" />
+    <Compile Include="DBO\Enums.cs" />
+    <Compile Include="DBO\Message.cs" />
+    <Compile Include="DBO\MessageType.cs" />
+    <Compile Include="DBO\Monitoring.cs" />
+    <Compile Include="DBO\People.cs" />
+    <Compile Include="DBO\ResetPassword.cs" />
+    <Compile Include="DBO\Search.cs" />
+    <Compile Include="DBO\Settings.cs" />
+    <Compile Include="DBO\Sign.cs" />
+    <Compile Include="DBO\Talk.cs" />
+    <Compile Include="DBO\User.cs" />
+    <Compile Include="DBO\UserListen.cs" />
     <Compile Include="DB\Device.cs" />
     <Compile Include="DB\Enums.cs" />
     <Compile Include="DB\Message.cs" />
