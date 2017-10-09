@@ -41,6 +41,7 @@ import { CookieService } from "../services/cookieService";
 import { ExceptionService } from "../services/exceptionService";
 import { TalkService } from "../services/talkService";
 import { HubService } from "../services/hubService";
+import { Camera } from "@ionic-native/camera";
 
 let components = [
   VocalApp,
@@ -90,6 +91,7 @@ let components = [
     SplashScreen,
     Media,
     File,
+    Camera,
     Deeplinks,
     StoreService,
     CookieService,
