@@ -30,6 +30,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Media } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
+import { Deeplinks } from '@ionic-native/deeplinks';
 
 import { AudioFiltersPage } from '../pages/audio-filters/audio-filters';
 import { FriendsListPage } from '../pages/friends-list/friends-list';
@@ -40,6 +41,12 @@ import { SearchMailPage } from '../pages/search-mail/search-mail';
 import { PopoverFriendsAddedMePage } from '../pages/popover-friends-added-me/popover-friends-added-me';
 
 import { StoreService } from '../services/storeService';
+import { HttpService } from "../services/httpService";
+import { CookieService } from "../services/cookieService";
+import { ExceptionService } from "../services/exceptionService";
+import { TalkService } from "../services/talkService";
+import { HubService } from "../services/hubService";
+import { Camera } from "@ionic-native/camera";
 
 let components = [
   VocalApp,
@@ -94,7 +101,14 @@ let components = [
     SplashScreen,
     Media,
     File,
+    Camera,
+    Deeplinks,
     StoreService,
+    CookieService,
+    HttpService,
+    TalkService,
+    HubService,
+    ExceptionService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

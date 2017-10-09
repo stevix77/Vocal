@@ -21,9 +21,11 @@
         "@angular/platform-browser": "4.1.0",
         "@angular/platform-browser-dynamic": "4.1.0",
         "@ionic-native/base64": "^4.2.1",
+        "@ionic-native/camera": "^4.3.1",
         "@ionic-native/contacts": "^3.12.1",
         "@ionic-native/core": "^3.12.1",
         "@ionic-native/date-picker": "^3.12.1",
+        "@ionic-native/deeplinks": "^4.3.1",
         "@ionic-native/device": "^4.1.0",
         "@ionic-native/file": "^4.1.0",
         "@ionic-native/globalization": "^3.12.1",
@@ -37,7 +39,8 @@
         "cordova-android": "^6.2.3",
         "cordova-browser": "^4.1.0",
         "cordova-ios": "^4.5.0",
-        "cordova-plugin-compat": "^1.1.0",
+        "cordova-plugin-camera": "^2.4.1",
+        "cordova-plugin-compat": "1.2.0",
         "cordova-plugin-contacts": "^2.3.1",
         "cordova-plugin-datepicker": "^0.9.3",
         "cordova-plugin-device": "^1.1.4",
@@ -55,6 +58,7 @@
         "datepicker": "0.0.0",
         "ionic-angular": "3.2.1",
         "ionic-native": "^2.9.0",
+        "ionic-plugin-deeplinks": "^1.0.15",
         "ionic-plugin-keyboard": "^2.2.1",
         "ionicons": "3.0.0",
         "node-latest-version": "^1.0.16",
@@ -95,7 +99,27 @@
             "cordova-plugin-media": {
                 "MICROPHONE_USAGE_DESCRIPTION": " "
             },
-            "com-badrit-base64": {}
+            "com-badrit-base64": {},
+            "cordova-plugin-camera": {},
+            "cordova-plugin-compat": {},
+            "ionic-plugin-deeplinks": {
+                "URL_SCHEME": "vocal",
+                "DEEPLINK_SCHEME": "https",
+                "DEEPLINK_HOST": "vocal.com",
+                "ANDROID_PATH_PREFIX": "/",
+                "ANDROID_2_PATH_PREFIX": "/",
+                "ANDROID_3_PATH_PREFIX": "/",
+                "ANDROID_4_PATH_PREFIX": "/",
+                "ANDROID_5_PATH_PREFIX": "/",
+                "DEEPLINK_2_SCHEME": " ",
+                "DEEPLINK_2_HOST": " ",
+                "DEEPLINK_3_SCHEME": " ",
+                "DEEPLINK_3_HOST": " ",
+                "DEEPLINK_4_SCHEME": " ",
+                "DEEPLINK_4_HOST": " ",
+                "DEEPLINK_5_SCHEME": " ",
+                "DEEPLINK_5_HOST": " "
+            }
         },
         "platforms": [
             "browser",

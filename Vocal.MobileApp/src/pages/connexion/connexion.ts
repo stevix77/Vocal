@@ -13,6 +13,7 @@ import {HttpService} from '../../services/httpService';
 import { VocalListPage } from '../vocal-list/vocal-list';
 import { PasswordForgotPage } from '../passwordForgot/passwordForgot';
 import { ExceptionService } from "../../services/exceptionService";
+import { KeyStore } from "../../models/enums";
 
 @Component({
   selector: 'page-connexion',
@@ -51,8 +52,9 @@ export class Connexion {
             appUser.Firstname = response.Data.Firstname;
             appUser.Lastname = response.Data.Lastname;
             appUser.Username = response.Data.Username;
+            appUser.Picture = response.Data.Picture;
             appUser.Token = functions.GenerateToken(response.Data.Username, this.model.Password);
-            this.storeService.Set("user", appUser);
+            this.storeService.Set(KeyStore[KeyStore.User], appUser);
             params.User = appUser;
             this.navCtrl.push(VocalListPage);
           }

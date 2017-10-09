@@ -130,15 +130,16 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<List<UserResponse>> GetFriendsAddedMe(string userId, string lang)
+        public static Response<List<PeopleResponse>> GetFriendsAddedMe(string userId, string lang)
         {
-            var response = new Response<List<UserResponse>>();
+            var response = new Response<List<PeopleResponse>>();
             try
             {
                 LogManager.LogDebug(userId, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var user = Repository.Instance.GetUserById(userId);
                 var list = Repository.Instance.GetFriendsAddedMe(userId);
-                response.Data = Binder.Bind.Bind_Users(list);
+                response.Data = Binder.Bind.Bind_People(user, list);
             }
             catch (TimeoutException tex)
             {

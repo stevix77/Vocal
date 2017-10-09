@@ -210,6 +210,7 @@
     <Content Include="Configs\connectionStrings.prod.config" />
     <Content Include="Configs\Vocal.DAL.Properties.Settings.prod.config" />
     <Content Include="Configs\Vocal.Business.Properties.Settings.prod.config" />
+    <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Properties\PublishProfiles\wsvocal - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\wsvocal - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\wsvocal - Web Deploy %282%29.pubxml" />

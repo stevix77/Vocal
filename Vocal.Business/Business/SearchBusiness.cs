@@ -14,9 +14,9 @@ namespace Vocal.Business.Business
 {
     public static class SearchBusiness
     {
-        public static Response<List<SearchPeopleResponse>> SearchPeople(string userId, string keyword, string lang)
+        public static Response<List<PeopleResponse>> SearchPeople(string userId, string keyword, string lang)
         {
-            var response = new Response<List<SearchPeopleResponse>>();
+            var response = new Response<List<PeopleResponse>>();
             try
             {
                 LogManager.LogDebug(userId, keyword, lang);
@@ -66,9 +66,9 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<List<SearchPeopleResponse>> SearchPeopleByEmail(string userId, string keyword, string lang)
+        public static Response<List<PeopleResponse>> SearchPeopleByEmail(string userId, string keyword, string lang)
         {
-            var response = new Response<List<SearchPeopleResponse>>();
+            var response = new Response<List<PeopleResponse>>();
             try
             {
                 LogManager.LogDebug(userId, keyword, lang);
