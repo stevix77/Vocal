@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, ActionSheetController } from 'ionic-angular';
 import { SettingsPage } from '../../pages/settings/settings';
 import { FriendsListPage } from '../../pages/friends-list/friends-list';
 import { AppUser } from '../../models/appUser';
@@ -25,6 +25,7 @@ export class ModalProfilePage {
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
     public viewCtrl: ViewController,
+    public actionsSheetCtrl: ActionSheetController,
     private storeService: StoreService
     ) {
     this.User = params.User;
@@ -38,6 +39,10 @@ export class ModalProfilePage {
           this.CountFriendsAddedMe = friends.length;
       }
     )
+  }
+
+  dismiss() {
+    this.viewCtrl.dismiss();
   }
 
   goToProfilePic() {
@@ -56,8 +61,31 @@ export class ModalProfilePage {
     this.navCtrl.push(SettingsPage);
   }
 
-  dismiss() {
-    this.viewCtrl.dismiss();
+  presentActionSheet() {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Modify your album',
+      buttons: [
+        {
+          text: 'Destructive',
+          role: 'destructive',
+          handler: () => {
+            console.log('Destructive clicked');
+          }
+        },{
+          text: 'Archive',
+          handler: () => {
+            console.log('Archive clicked');
+          }
+        },{
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    actionSheet.present();
   }
 
 }
