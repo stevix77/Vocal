@@ -10,6 +10,9 @@
         "com-badrit-base64": {
             "PACKAGE_NAME": "7904ValentinSteve.VocalDev2"
         },
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "7904ValentinSteve.VocalDev2"
+        },
         "cordova-plugin-contacts": {
             "CONTACTS_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "7904ValentinSteve.VocalDev2"
@@ -45,6 +48,12 @@
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "7904ValentinSteve.VocalDev2"
         },
+        "ionic-plugin-deeplinks": {
+            "URL_SCHEME": "vocal",
+            "DEEPLINK_SCHEME": "https",
+            "DEEPLINK_HOST": "vocal.com",
+            "PACKAGE_NAME": "7904ValentinSteve.VocalDev2"
+        },
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "7904ValentinSteve.VocalDev2"
         },
@@ -53,7 +62,9 @@
         }
     },
     "dependent_plugins": {
-        "cordova-plugin-compat": {
+        "cordova-plugin-camera": {
+            "CAMERA_USAGE_DESCRIPTION": " ",
+            "PHOTOLIBRARY_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "7904ValentinSteve.VocalDev2"
         },
         "cordova-sqlite-storage": {

@@ -34,7 +34,6 @@ export class ModalProfilePage {
     destinationType: this.camera.DestinationType.DATA_URL,
     encodingType: this.camera.EncodingType.JPEG,
     mediaType: this.camera.MediaType.PICTURE,
-    sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
   }
 
   constructor(public navCtrl: NavController, 
@@ -65,7 +64,8 @@ export class ModalProfilePage {
     this.viewCtrl.dismiss();
   }
 
-  goToProfilePic() {
+  takePic(srcType) {
+    this.options.sourceType = ('camera' == srcType) ? this.camera.PictureSourceType.CAMERA : this.camera.PictureSourceType.PHOTOLIBRARY;
     try
     {
       console.log('go to profile pic');
@@ -73,7 +73,6 @@ export class ModalProfilePage {
       // imageData is either a base64 encoded string or a file URI
       // If it's base64:
         let base64Image = 'data:image/jpeg;base64,' + imageData;
-        console.log(base64Image);
         this.UpdateUser(base64Image);
       }, (err) => {
         console.log(err);
@@ -128,18 +127,17 @@ export class ModalProfilePage {
         {
           text: 'Prendre une photo',
           handler: () => {
-            console.log('Camera');
+            this.takePic('camera');
           }
         },{
           text: 'Importer une photo',
           handler: () => {
-            console.log('Parcourir ses dossiers');
+            this.takePic('library');
           }
         },{
           text: 'Annuler',
           role: 'cancel',
           handler: () => {
-            console.log('Cancel clicked');
           }
         }
       ]
