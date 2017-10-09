@@ -25,7 +25,7 @@ export class ModalProfilePage {
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
     public viewCtrl: ViewController,
-    public actionsSheetCtrl: ActionSheetController,
+    public actionSheetCtrl: ActionSheetController,
     private storeService: StoreService
     ) {
     this.User = params.User;
@@ -61,23 +61,22 @@ export class ModalProfilePage {
     this.navCtrl.push(SettingsPage);
   }
 
-  presentActionSheet() {
+  presentActionSheetProfile() {
     let actionSheet = this.actionSheetCtrl.create({
-      title: 'Modify your album',
+      title: 'Modifier sa photo',
       buttons: [
         {
-          text: 'Destructive',
-          role: 'destructive',
+          text: 'Prendre une photo',
           handler: () => {
-            console.log('Destructive clicked');
+            console.log('Camera');
           }
         },{
-          text: 'Archive',
+          text: 'Importer une photo',
           handler: () => {
-            console.log('Archive clicked');
+            console.log('Parcourir ses dossiers');
           }
         },{
-          text: 'Cancel',
+          text: 'Annuler',
           role: 'cancel',
           handler: () => {
             console.log('Cancel clicked');
