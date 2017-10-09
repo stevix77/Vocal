@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, ToastController, ActionSheetController } from 'ionic-angular';
 import { SettingsPage } from '../../pages/settings/settings';
 import { FriendsListPage } from '../../pages/friends-list/friends-list';
 import { AppUser } from '../../models/appUser';
@@ -45,7 +45,8 @@ export class ModalProfilePage {
     private cookieService: CookieService,
     private toastCtrl: ToastController,
     private exceptionService: ExceptionService,
-    private camera: Camera
+    private camera: Camera,
+    public actionSheetCtrl: ActionSheetController,
     ) {
     this.User = params.User;
   }
@@ -58,6 +59,10 @@ export class ModalProfilePage {
           this.CountFriendsAddedMe = friends.length;
       }
     )
+  }
+
+  dismiss() {
+    this.viewCtrl.dismiss();
   }
 
   goToProfilePic() {
@@ -116,8 +121,30 @@ export class ModalProfilePage {
     this.navCtrl.push(SettingsPage);
   }
 
-  dismiss() {
-    this.viewCtrl.dismiss();
+  presentActionSheetProfile() {
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Modifier sa photo',
+      buttons: [
+        {
+          text: 'Prendre une photo',
+          handler: () => {
+            console.log('Camera');
+          }
+        },{
+          text: 'Importer une photo',
+          handler: () => {
+            console.log('Parcourir ses dossiers');
+          }
+        },{
+          text: 'Annuler',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    actionSheet.present();
   }
 
   showToast(message: string) :any {
