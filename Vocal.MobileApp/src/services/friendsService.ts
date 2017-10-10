@@ -38,4 +38,14 @@ export class FriendsService {
     let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
     return this.httpService.Post<any>(urlSearch, obj, cookie);
   }
+
+  searchByMail(val) {
+    let obj = {
+      Lang: params.Lang,
+      Keyword: val
+    };
+    let urlSearch = url.SearchPeopleByMail();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
+    return this.httpService.Post<any>(urlSearch, obj, cookie);
+  }
 }

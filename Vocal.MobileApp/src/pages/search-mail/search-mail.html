@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>searchMail</ion-title>
+    <ion-title>Ajouter par mail</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -15,5 +15,21 @@
 
 <ion-content padding>
   <ion-input type="text" placeholder="Adresse e-mail" (input)="viewUsersByMail($event.target.value)"></ion-input>
+
+  <ion-list>
+    <ion-item *ngFor="let friend of model.Friends; let i = index">
+      <h3 item-start>{{ friend.Username }}</h3>
+      <div item-end>
+        <button *ngIf="friend.IsFriend" default ion-button icon-start disabled outline>
+          <ion-icon name="time"></ion-icon>
+          Envoyé
+        </button>
+        <button *ngIf="!friend.IsFriend" data-id="{{friend.Id}}" default ion-button icon-start (click)="addFriend(friend.Id, i)">
+          <ion-icon name="add-circle"></ion-icon>
+          Ajouter
+        </button>
+      </div>
+    </ion-item>
+  </ion-list>
 
 </ion-content>

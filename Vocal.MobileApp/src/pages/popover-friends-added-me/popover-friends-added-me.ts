@@ -25,7 +25,6 @@ export class PopoverFriendsAddedMePage {
     public friendsService: FriendsService
     ) {
     this.friends = navParams.data.friends;
-    console.log(this.friends);
   }
 
   ionViewDidLoad() {

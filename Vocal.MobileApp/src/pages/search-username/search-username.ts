@@ -25,7 +25,7 @@ export class SearchUsernamePage {
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
-    public friendsService: FriendsService
+    private friendsService: FriendsService
     ) {
   }
 

@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { params } from '../../services/params';
-import { url } from '../../services/url';
 import { Response } from '../../models/response';
-import { HttpService } from '../../services/httpService';
-import { CookieService } from '../../services/cookieService';
 import { UserResponse } from '../../models/response/userResponse';
+import { FriendsService } from '../../services/friendsService';
 
 /**
  * Generated class for the SearchMailPage page.
@@ -17,36 +14,31 @@ import { UserResponse } from '../../models/response/userResponse';
 @Component({
   selector: 'page-search-mail',
   templateUrl: 'search-mail.html',
-  providers: [HttpService, CookieService]
+  providers: [FriendsService]
 })
 export class SearchMailPage {
 
+  public model = {
+    Friends: [],
+    ErrorFriends: ""
+  }
+
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
-    private cookieService: CookieService, 
-    private httpService: HttpService) {
+    private friendsService: FriendsService, 
+    ) {
   }
 
-  viewUsersByMail(val) {
-    this.searchFriends(val);
-  }
-
-  searchFriends(val) {
-    let obj = {
-      Lang: params.Lang,
-      Keyword: val
-    };
-    let urlSearch = url.SearchPeopleByMail();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
-    this.httpService.Post<any>(urlSearch, obj, cookie).subscribe(
+  viewUsersByMail(mail) {
+    this.friendsService.searchByMail(mail).subscribe(
       resp => { 
         let response = resp.json() as Response<Array<UserResponse>>;
         console.log(response);
-        // if(!response.HasError) {
-        //   this.model.Friends = response.Data;
-        // } else {
-        //   this.model.ErrorFriends = response.ErrorMessage;
-        // }
+        if(!response.HasError) {
+          this.model.Friends = response.Data;
+        } else {
+          this.model.ErrorFriends = response.ErrorMessage;
+        }
       }
     );
   }
