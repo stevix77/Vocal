@@ -38,8 +38,6 @@ export class InscriptionFindFriendsPage {
     private storeService: StoreService,
     private friendsService: FriendsService
     ) {
-    //this.searchFriends(['s.valentin77@gmail.com', 'tik@tik.fr']);
-    //this.addFriends(["000000-f1e6-4c976-9a55-7525496145s", "599fc814-8733-4284-a606-de34c9845348"]);
   }
 
   getAccess(){
