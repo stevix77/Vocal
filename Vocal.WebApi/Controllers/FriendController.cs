@@ -13,12 +13,6 @@ namespace Vocal.WebApi.Controllers
     [RoutePrefix("api/friend")]
     public class FriendController : ApiController
     {
-        [HttpPost, CustomAuthorize, Route("search")]
-        public Response<List<UserResponse>> SearchFriends(SearchFriendsRequest request)
-        {
-            return Business.Tools.Monitoring.Execute(FriendBusiness.SearchFriends, request.Emails, request.Lang);
-        }
-
         [HttpPost, CustomAuthorize, Route("getFriends")]
         public Response<List<UserResponse>> GetFriends(GetFriendsRequest request)
         {

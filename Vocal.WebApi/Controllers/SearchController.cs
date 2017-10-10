@@ -30,5 +30,12 @@ namespace Vocal.WebApi.Controllers
             var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
             return Business.Tools.Monitoring.Execute(SearchBusiness.SearchPeopleByEmail, obj.UserId, request.Keyword, request.Lang);
         }
+        
+        [HttpPost, Route("contact")]
+        public Response<List<UserResponse>> SearchContacts(SearchFriendsRequest request)
+        {
+            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
+            return Business.Tools.Monitoring.Execute(SearchBusiness.SearchContacts, obj.UserId, request.Emails, request.Lang);
+        }
     }
 }

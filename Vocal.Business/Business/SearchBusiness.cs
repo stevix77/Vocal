@@ -117,5 +117,35 @@ namespace Vocal.Business.Business
             }
             return response;
         }
+
+        public static Response<List<UserResponse>> SearchContacts(string userId, List<string> emails, string lang)
+        {
+            var response = new Response<List<UserResponse>>();
+            try
+            {
+                LogManager.LogDebug(userId, emails, lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var user = Repository.Instance.GetUserById(userId);
+                var list = Repository.Instance.SearchFriendsByEmails(emails);
+                list.RemoveAll(x => user.Friends.Any(y => y.Id == x.Id));
+                response.Data = Binder.Bind.Bind_Users(list);
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
     }
 }
