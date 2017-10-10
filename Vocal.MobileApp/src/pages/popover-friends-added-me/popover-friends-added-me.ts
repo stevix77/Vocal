@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FriendsService } from '../../services/friendsService';
+import { Response } from '../../models/response';
+import { UserResponse } from '../../models/response/userResponse';
 
 /**
  * Generated class for the PopoverFriendsAddedMePage page.
@@ -16,7 +18,7 @@ import { FriendsService } from '../../services/friendsService';
 })
 export class PopoverFriendsAddedMePage {
 
-  public friends: Array<Object>;
+  public friends: Array<any>;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
@@ -30,9 +32,20 @@ export class PopoverFriendsAddedMePage {
     console.log('ionViewDidLoad PopoverFriendsAddedMePage');
   }
 
-  addFriend(id){
+  addFriend(id, index){
     let friends = [id];
-    this.friendsService.add(friends);
+    let indexItem = index;
+    this.friendsService.add(friends).subscribe(
+      resp => {
+        let response = resp.json() as Response<boolean>;
+        console.log(response);
+        if(!response.HasError) {
+          this.friends[indexItem].IsFriend = true;
+        } else {
+          //this.model.ErrorFriends = response.ErrorMessage;
+        }
+      }
+    );
   }
 
 }
