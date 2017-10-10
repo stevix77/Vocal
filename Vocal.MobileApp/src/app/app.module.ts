@@ -47,6 +47,7 @@ import { ExceptionService } from "../services/exceptionService";
 import { TalkService } from "../services/talkService";
 import { HubService } from "../services/hubService";
 import { Camera } from "@ionic-native/camera";
+import { FriendsService } from "../services/friendsService";
 
 let components = [
   VocalApp,
@@ -109,6 +110,7 @@ let components = [
     TalkService,
     HubService,
     ExceptionService,
+    FriendsService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { params } from '../../services/params';
-import { url } from '../../services/url';
+import { FriendsService } from '../../services/friendsService';
 import { Response } from '../../models/response';
-import { HttpService } from '../../services/httpService';
-import { CookieService } from '../../services/cookieService';
 import { UserResponse } from '../../models/response/userResponse';
-import { ManageFriendsRequest } from "../../models/request/manageFriendsRequest";
 
 /**
  * Generated class for the SearchUsernamePage page.
@@ -18,57 +14,33 @@ import { ManageFriendsRequest } from "../../models/request/manageFriendsRequest"
 @Component({
   selector: 'page-search-username',
   templateUrl: 'search-username.html',
-  providers: [HttpService, CookieService]
+  providers: [FriendsService]
 })
 export class SearchUsernamePage {
+
   public model = {
     Friends: [],
-    ErrorFriends: "",
-    display: false
+    ErrorFriends: ""
   }
+
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
-    private cookieService: CookieService, 
-    private httpService: HttpService) {
+    public friendsService: FriendsService
+    ) {
   }
 
   addFriend(id){
     let friends = [id];
-    this.addFriends(friends);
-  }
-
-  addFriends(ids: Array<string>) {
-    let obj = new ManageFriendsRequest();
-    obj.Lang = params.Lang;
-    obj.Ids = ids;
-    obj.UserId = params.User.Id;
-    let urlAddFriends = url.AddFriends();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlAddFriends, params.User)
-    this.httpService.Post<ManageFriendsRequest>(urlAddFriends, obj, cookie).subscribe(
-      resp => {
-        let response = resp.json() as Response<boolean>;
-        console.log(response);
-        if(!response.HasError) {
-          
-        } else {
-          this.model.ErrorFriends = response.ErrorMessage;
-        }
-      }
-    );
+    this.friendsService.add(friends);
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SearchUsernamePage');
   }
 
-  searchFriends(val) {
-    let obj = {
-      Lang: params.Lang,
-      Keyword: val
-    };
-    let urlSearch = url.SearchPeople();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
-    this.httpService.Post<any>(urlSearch, obj, cookie).subscribe(
+
+  viewUsersByName(val) {
+    if(val.length > 2) this.friendsService.search(val).subscribe(
       resp => { 
         let response = resp.json() as Response<Array<UserResponse>>;
         if(!response.HasError) {
@@ -79,10 +51,6 @@ export class SearchUsernamePage {
         }
       }
     );
-  }
-
-  viewUsersByName(val) {
-    if(val.length > 2) this.searchFriends(val);
   }
 
 }

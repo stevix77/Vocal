@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { FriendsService } from '../../services/friendsService';
 
 /**
  * Generated class for the PopoverFriendsAddedMePage page.
@@ -11,16 +12,26 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 @Component({
   selector: 'page-popover-friends-added-me',
   templateUrl: 'popover-friends-added-me.html',
+  providers: [FriendsService]
 })
 export class PopoverFriendsAddedMePage {
+
   public friends: Array<Object>;
+
   constructor(public navCtrl: NavController, 
-    public navParams: NavParams) {
+    public navParams: NavParams,
+    public friendsService: FriendsService
+    ) {
     this.friends = navParams.data.friends;
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad PopoverFriendsAddedMePage');
+  }
+
+  addFriend(id){
+    let friends = [id];
+    this.friendsService.add(friends);
   }
 
 }

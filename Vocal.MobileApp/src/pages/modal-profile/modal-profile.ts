@@ -124,7 +124,6 @@ export class ModalProfilePage {
   }
 
   showFriendsAddedMeList(evt) {
-    console.log(this.friendsAddedMe);
     let popover = this.popoverCtrl.create(PopoverFriendsAddedMePage, {friends:this.friendsAddedMe}, {cssClass: 'friends-added-me'});
     popover.present({
       ev: evt
