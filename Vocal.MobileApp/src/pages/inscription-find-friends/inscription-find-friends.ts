@@ -7,10 +7,10 @@ import { params } from '../../services/params';
 import { SearchFriendsRequest } from '../../models/request/searchFriendsRequest';
 import { UserResponse } from '../../models/response/userResponse';
 import { Response } from '../../models/response';
-import {ManageFriendsRequest} from '../../models/request/manageFriendsRequest';
-import {url} from '../../services/url';
-import {CookieService} from '../../services/cookieService';
-import {StoreService} from '../../services/storeService'
+import { url } from '../../services/url';
+import { CookieService } from '../../services/cookieService';
+import { StoreService } from '../../services/storeService';
+import { FriendsService } from '../../services/friendsService';
 
 /**
  * Generated class for the InscriptionFindFriendsPage page.
@@ -22,7 +22,7 @@ import {StoreService} from '../../services/storeService'
 @Component({
   selector: 'page-inscription-find-friends',
   templateUrl: 'inscription-find-friends.html',
-  providers: [Contacts, HttpService, CookieService]
+  providers: [Contacts, HttpService, CookieService, FriendsService]
 })
 export class InscriptionFindFriendsPage {
 
@@ -30,7 +30,14 @@ export class InscriptionFindFriendsPage {
     Friends: [],
     ErrorFriends: ""
   }
-  constructor(public navCtrl: NavController, public navParams: NavParams, private contacts: Contacts, private httpService: HttpService, private cookieService: CookieService, private storeService: StoreService) {
+  constructor(public navCtrl: NavController, 
+    public navParams: NavParams, 
+    private contacts: Contacts, 
+    private httpService: HttpService, 
+    private cookieService: CookieService, 
+    private storeService: StoreService,
+    private friendsService: FriendsService
+    ) {
     //this.searchFriends(['s.valentin77@gmail.com', 'tik@tik.fr']);
     //this.addFriends(["000000-f1e6-4c976-9a55-7525496145s", "599fc814-8733-4284-a606-de34c9845348"]);
   }
@@ -63,22 +70,7 @@ export class InscriptionFindFriendsPage {
   }
 
   addFriends(ids: Array<string>) {
-    let obj = new ManageFriendsRequest();
-    obj.Lang = params.Lang;
-    obj.Ids = ids;
-    obj.UserId = params.User.Id;
-    let urlAddFriends = url.AddFriends();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlAddFriends, params.User)
-    this.httpService.Post<ManageFriendsRequest>(urlAddFriends, obj, cookie).subscribe(
-      resp => {
-        let response = resp.json() as Response<boolean>;
-        if(!response.HasError) {
-          
-        } else {
-          this.model.ErrorFriends = response.ErrorMessage;
-        }
-      }
-    );
+    this.friendsService.add(ids);
   }
 
   getFriends() {
