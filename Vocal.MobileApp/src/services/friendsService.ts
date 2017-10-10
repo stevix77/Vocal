@@ -26,17 +26,7 @@ export class FriendsService {
     obj.UserId = params.User.Id;
     let urlAddFriends = url.AddFriends();
     let cookie = this.cookieService.GetAuthorizeCookie(urlAddFriends, params.User)
-    this.httpService.Post<ManageFriendsRequest>(urlAddFriends, obj, cookie).subscribe(
-      resp => {
-        let response = resp.json() as Response<boolean>;
-        console.log(response);
-        if(!response.HasError) {
-          
-        } else {
-          this.model.ErrorFriends = response.ErrorMessage;
-        }
-      }
-    );
+    return this.httpService.Post<ManageFriendsRequest>(urlAddFriends, obj, cookie);
   }
 
   search(val) {

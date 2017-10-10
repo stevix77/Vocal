@@ -29,9 +29,20 @@ export class SearchUsernamePage {
     ) {
   }
 
-  addFriend(id){
+  addFriend(id, index){
     let friends = [id];
-    this.friendsService.add(friends);
+    let indexItem = index;
+    this.friendsService.add(friends).subscribe(
+      resp => {
+        let response = resp.json() as Response<boolean>;
+        console.log(response);
+        if(!response.HasError) {
+          this.model.Friends[indexItem].IsFriend = true;
+        } else {
+          this.model.ErrorFriends = response.ErrorMessage;
+        }
+      }
+    );
   }
 
   ionViewDidLoad() {
