@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { SearchUsernamePage } from '../search-username/search-username';
-import { SearchPhonePage } from '../search-phone/search-phone';
+import { ScanContactsPage } from '../scan-contacts/scan-contacts';
 import { SearchMailPage } from '../search-mail/search-mail';
 
 /**
@@ -24,8 +24,8 @@ export class AddFriendPage {
     this.navCtrl.push(SearchUsernamePage);
   }
 
-  goToSearchByPhone() {
-    this.navCtrl.push(SearchPhonePage);
+  goToScanContacts() {
+    this.navCtrl.push(ScanContactsPage);
   }
 
   goToSearchByMail() {

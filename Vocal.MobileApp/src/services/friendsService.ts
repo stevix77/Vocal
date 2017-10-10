@@ -1,11 +1,10 @@
 import { Injectable } from "@angular/core";
 import { params } from './params';
 import { url } from './url';
-import { Response } from '../models/response';
 import { HttpService } from './httpService';
 import { CookieService } from './cookieService';
-import { UserResponse } from '../models/response/userResponse';
 import { ManageFriendsRequest } from "../models/request/manageFriendsRequest";
+import { SearchFriendsRequest } from '../models/request/searchFriendsRequest';
 
 @Injectable()
 export class FriendsService {
@@ -39,13 +38,22 @@ export class FriendsService {
     return this.httpService.Post<any>(urlSearch, obj, cookie);
   }
 
-  searchByMail(val) {
-    let obj = {
-      Lang: params.Lang,
-      Keyword: val
-    };
-    let urlSearch = url.SearchPeopleByMail();
+  searchByMail(emails: Array<string>) {
+    let obj = new SearchFriendsRequest();
+    obj.Lang = params.Lang;
+    obj.Emails = emails;
+    let urlSearch = url.SearchFriends();
     let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
-    return this.httpService.Post<any>(urlSearch, obj, cookie);
+    return this.httpService.Post<SearchFriendsRequest>(urlSearch, obj, cookie);
   }
+
+  // searchByMail(val) {
+  //   let obj = {
+  //     Lang: params.Lang,
+  //     Keyword: val
+  //   };
+  //   let urlSearch = url.SearchPeopleByMail();
+  //   let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
+  //   return this.httpService.Post<any>(urlSearch, obj, cookie);
+  // }
 }

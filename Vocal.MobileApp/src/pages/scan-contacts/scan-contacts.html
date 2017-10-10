@@ -1,5 +1,5 @@
 <!--
-  Generated template for the SearchPhonePage page.
+  Generated template for the ScanContactsPage page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
@@ -7,12 +7,18 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>searchPhone</ion-title>
+    <ion-title>scanContacts</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+
+<ion-list>
+  <ion-item *ngFor="let friend of model.Friends;">
+    {{friend.Username}}
+  </ion-item>
+</ion-list>
 
 </ion-content>

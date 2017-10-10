@@ -36,7 +36,6 @@ import { AudioFiltersPage } from '../pages/audio-filters/audio-filters';
 import { FriendsListPage } from '../pages/friends-list/friends-list';
 import { AddFriendPage } from '../pages/add-friend/add-friend';
 import { SearchUsernamePage } from '../pages/search-username/search-username';
-import { SearchPhonePage } from '../pages/search-phone/search-phone';
 import { SearchMailPage } from '../pages/search-mail/search-mail';
 import { PopoverFriendsAddedMePage } from '../pages/popover-friends-added-me/popover-friends-added-me';
 
@@ -48,6 +47,7 @@ import { TalkService } from "../services/talkService";
 import { HubService } from "../services/hubService";
 import { Camera } from "@ionic-native/camera";
 import { FriendsService } from "../services/friendsService";
+import { ScanContactsPage } from "../pages/scan-contacts/scan-contacts";
 
 let components = [
   VocalApp,
@@ -81,9 +81,9 @@ let components = [
   FriendsListPage,
   AddFriendPage,
   SearchUsernamePage,
-  SearchPhonePage,
   SearchMailPage,
-  PopoverFriendsAddedMePage
+  PopoverFriendsAddedMePage,
+  ScanContactsPage
 ];
 
 @NgModule({
@@ -111,6 +111,7 @@ let components = [
     HubService,
     ExceptionService,
     FriendsService,
+    ScanContactsPage,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
