@@ -58,7 +58,7 @@ export class SettingsPage implements OnInit {
         {
           text: 'Déconnexion',
           handler: () => {
-            this.storeService.Remove(KeyStore[KeyStore.User]);
+            this.storeService.Clear();
             params.User = null;
             this.navCtrl.setRoot(HomePage);
           }
