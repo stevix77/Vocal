@@ -32,7 +32,7 @@ namespace Vocal.WebApi.Controllers
         }
         
         [HttpPost, Route("contact")]
-        public Response<List<UserResponse>> SearchContacts(SearchFriendsRequest request)
+        public Response<List<PeopleResponse>> SearchContacts(SearchFriendsRequest request)
         {
             var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
             return Business.Tools.Monitoring.Execute(SearchBusiness.SearchContacts, obj.UserId, request.Emails, request.Lang);
