@@ -76,9 +76,11 @@ export class InscriptionFindFriendsPage {
       if(c.length > 0) {
         let listEmails: Array<string> = [];
         c.forEach(item => {
-          item.emails.forEach(elt => {
-            listEmails.push(elt.value);
-          })
+          if(item.emails !== null) {
+            item.emails.forEach(elt => {
+              listEmails.push(elt.value);
+            })
+          }
         });
         this.searchFriends(listEmails);
       }
