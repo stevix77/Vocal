@@ -53,7 +53,7 @@ export class InscriptionFindFriendsPage {
     let obj = new SearchFriendsRequest();
     obj.Lang = params.Lang;
     obj.Emails = emails;
-    let urlSearch = url.SearchFriends();
+    let urlSearch = url.SearchContact();
     let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
     this.httpService.Post<SearchFriendsRequest>(urlSearch, obj, cookie).subscribe(
       resp => { 

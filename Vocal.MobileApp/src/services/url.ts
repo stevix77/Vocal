@@ -23,8 +23,8 @@ var url = {
     IsExistsEmail() : string {
         return this.BaseUri + "/api/user/IsExistsEmail";
     },
-    SearchFriends() : string {
-        return this.BaseUri + "/api/friend/search";
+    SearchContact() : string {
+        return this.BaseUri + "/api/search/contact";
     },
     AddFriends() : string {
         return this.BaseUri + "/api/friend/add";
@@ -67,5 +67,11 @@ var url = {
     },
     GetAllUsers() : string {
         return this.BaseUri + "/api/user/list";
+    },
+    BlockPeople() : string {
+        return this.BaseUri + "/api/user/block";
+    },
+    UnblockPeople() : string {
+        return this.BaseUri + "/api/user/unblock";
     }
 }
