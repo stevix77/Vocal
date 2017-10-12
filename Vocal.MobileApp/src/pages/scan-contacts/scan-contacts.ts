@@ -44,9 +44,11 @@ export class ScanContactsPage {
         let listEmails: Array<string> = [];
         c.forEach(item => {
           if(item.emails !== null) {
-            item.emails.forEach(elt => {
-              listEmails.push(elt.value);
-            });
+            if(!this.friendsService.model.Friends.some(x => item.emails.find(y => y.value == x.Email) != null)) {
+              item.emails.forEach(elt => {
+                listEmails.push(elt.value);
+              });
+            }
           }
         });
         

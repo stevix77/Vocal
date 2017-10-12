@@ -5,17 +5,21 @@ import { HttpService } from './httpService';
 import { CookieService } from './cookieService';
 import { ManageFriendsRequest } from "../models/request/manageFriendsRequest";
 import { SearchFriendsRequest } from '../models/request/searchFriendsRequest';
+import { StoreService } from "./storeService";
+import { KeyStore } from "../models/enums";
+import { UserResponse } from "../models/response/userResponse";
 
 @Injectable()
 export class FriendsService {
   public model = {
-    Friends: [],
+    Friends: [] as Array<UserResponse>,
     ErrorFriends: ""
   }
   constructor(private httpService: HttpService, 
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private storeService: StoreService
     ){
-
+      this.getList();
   }
 
   add(ids: Array<string>) {
@@ -45,6 +49,13 @@ export class FriendsService {
     let urlSearch = url.SearchFriends();
     let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
     return this.httpService.Post<SearchFriendsRequest>(urlSearch, obj, cookie);
+  }
+
+  getList() {
+    this.storeService.Get(KeyStore[KeyStore.Friends]).then(f => {
+      if(f!= null &&  f.length > 0)
+        this.model.Friends = f;
+    })
   }
 
   // searchByMail(val) {
