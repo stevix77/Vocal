@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>scanContacts</ion-title>
+    <ion-title>Ajouter parmi ses contacts</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -17,7 +17,19 @@
 
 <ion-list>
   <ion-item *ngFor="let friend of model.Friends;">
-    {{friend.Username}}
+    <h3 item-start>{{ friend.Username }}</h3>
+    <div item-end *ngIf="!friend.IsFriend">
+      <button default ion-button icon-start (click)="addFriend(friend.Id, i)">
+        <ion-icon name="add-circle"></ion-icon>
+        Ajouter
+      </button>
+    </div>
+    <div item-end *ngIf="friend.IsFriend">
+      <button disabled outline default ion-button icon-start>
+        <ion-icon name="checkmark-circle"></ion-icon>
+        Ajouté
+      </button>
+    </div>
   </ion-item>
 </ion-list>
 
