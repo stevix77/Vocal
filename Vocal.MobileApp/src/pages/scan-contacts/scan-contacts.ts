@@ -36,11 +36,25 @@ export class ScanContactsPage {
     console.log('ionViewDidLoad ScanContactsPage');
   }
 
+
+  addFriend(id, index){
+    let friends = [id];
+    let indexItem = index;
+    this.friendsService.add(friends).subscribe(
+      resp => {
+        let response = resp.json() as Response<boolean>;
+        if(!response.HasError) {
+          this.model.Friends[indexItem].IsFriend = true;
+        } else {
+          //this.model.ErrorFriends = response.ErrorMessage;
+        }
+      }
+    );
+  }
+
   getFriends() {
     this.contacts.find(["*"]).then(c => {
-      console.log(c);
       if(c.length > 0) {
-        console.log('loop');
         let listEmails: Array<string> = [];
         c.forEach(item => {
           if(item.emails !== null) {
@@ -49,12 +63,13 @@ export class ScanContactsPage {
             });
           }
         });
-        
+
         this.friendsService.searchByMail(listEmails).subscribe(
           resp => { 
             let response = resp.json() as Response<Array<UserResponse>>;
             if(!response.HasError) {
               this.model.Friends = response.Data;
+
             } else {
               this.model.ErrorFriends = response.ErrorMessage;
             }
