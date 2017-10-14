@@ -25,7 +25,7 @@ namespace Vocal.Business.Business
                 var listEnd = new List<User>();
                 var listContains = new List<User>();
                 var user = Repository.Instance.GetUserById(userId);
-                var list = Repository.Instance.SearchPeople(keyword);
+                var list = Repository.Instance.SearchPeople(userId, keyword);
                 foreach(var item in list)
                 {
                     if (item.Username.ToLower().StartsWith(keyword) || item.Firstname.ToLower().StartsWith(keyword) || item.Lastname.ToLower().StartsWith(keyword))
