@@ -57,7 +57,7 @@ export class ModalProfilePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ModalProfilePage');
-    this.storeService.Get(KeyStore.FriendsAddedMe.toString()).then(
+    this.storeService.Get(KeyStore[KeyStore.FriendsAddedMe]).then(
       friends => {
         if(friends != null) {
           this.friendsAddedMe = friends;

@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FriendsService } from '../../services/friendsService';
 import { Response } from '../../models/response';
-import { UserResponse } from '../../models/response/userResponse';
+import { PeopleResponse } from "../../models/response/peopleResponse";
+import { StoreService } from "../../services/storeService";
+import { KeyStore } from "../../models/enums";
 
 /**
  * Generated class for the PopoverFriendsAddedMePage page.
@@ -18,11 +20,12 @@ import { UserResponse } from '../../models/response/userResponse';
 })
 export class PopoverFriendsAddedMePage {
 
-  public friends: Array<any>;
+  public friends: Array<PeopleResponse>;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
-    public friendsService: FriendsService
+    public friendsService: FriendsService,
+    public storeService: StoreService
     ) {
     this.friends = navParams.data.friends;
   }
@@ -45,6 +48,10 @@ export class PopoverFriendsAddedMePage {
         }
       }
     );
+  }
+
+  ionViewWillLeave() {
+    this.storeService.Set(KeyStore[KeyStore.FriendsAddedMe], this.friends);
   }
 
 }

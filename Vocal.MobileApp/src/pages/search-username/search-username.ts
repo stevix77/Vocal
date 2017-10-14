@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FriendsService } from '../../services/friendsService';
 import { Response } from '../../models/response';
-import { UserResponse } from '../../models/response/userResponse';
+import { PeopleResponse } from "../../models/response/peopleResponse";
 
 /**
  * Generated class for the SearchUsernamePage page.
@@ -19,7 +19,7 @@ import { UserResponse } from '../../models/response/userResponse';
 export class SearchUsernamePage {
 
   public model = {
-    Friends: [],
+    Friends: [] as Array<PeopleResponse>,
     ErrorFriends: ""
   }
 
@@ -53,7 +53,7 @@ export class SearchUsernamePage {
   viewUsersByName(val) {
     if(val.length > 2) this.friendsService.search(val).subscribe(
       resp => { 
-        let response = resp.json() as Response<Array<UserResponse>>;
+        let response = resp.json() as Response<Array<PeopleResponse>>;
         if(!response.HasError) {
           this.model.Friends = response.Data;
           console.log(this.model.Friends);

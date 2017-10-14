@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Contacts } from '@ionic-native/contacts';
 import { FriendsService } from '../../services/friendsService';
 import { Response } from '../../models/response';
-import { UserResponse } from '../../models/response/userResponse';
+import { PeopleResponse } from "../../models/response/peopleResponse";
 
 /**
  * Generated class for the ScanContactsPage page.
@@ -68,10 +68,9 @@ export class ScanContactsPage {
 
         this.friendsService.searchByMail(listEmails).subscribe(
           resp => { 
-            let response = resp.json() as Response<Array<UserResponse>>;
+            let response = resp.json() as Response<Array<PeopleResponse>>;
             if(!response.HasError) {
               this.model.Friends = response.Data;
-
             } else {
               this.model.ErrorFriends = response.ErrorMessage;
             }

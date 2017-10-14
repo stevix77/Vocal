@@ -21,11 +21,11 @@ export class TalkService {
   }
 
   SaveList() {
-    this.storeService.Set(KeyStore.Talks.toString(), this.Talks);
+    this.storeService.Set(KeyStore[KeyStore.Talks], this.Talks);
   }
 
   LoadList() {
-    return this.storeService.Get(KeyStore.Talks.toString()).then(
+    return this.storeService.Get(KeyStore[KeyStore.Talks]).then(
       talks => {
         if(talks != null)
           this.Talks = talks;
@@ -56,7 +56,7 @@ export class TalkService {
   }
 
   GetMessages(talkId) {
-    return this.storeService.Get(KeyStore.Messages.toString()).then(
+    return this.storeService.Get(KeyStore[KeyStore.Messages]).then(
       obj => {
         if(obj != null) {
           this.Messages = obj;
@@ -78,6 +78,6 @@ export class TalkService {
       mess.Value = messages;
       this.Messages.push(mess);
     }
-    this.storeService.Set(KeyStore.Messages.toString(), this.Messages)
+    this.storeService.Set(KeyStore[KeyStore.Messages], this.Messages)
   }
 }
