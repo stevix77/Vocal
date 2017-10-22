@@ -11,7 +11,7 @@ using Vocal.Business.Tools;
 using Vocal.DAL;
 using Vocal.Model;
 using Vocal.Model.Business;
-using Vocal.Model.DB;
+using Vocal.Model.DBO;
 using Vocal.Model.Response;
 
 namespace Vocal.Business

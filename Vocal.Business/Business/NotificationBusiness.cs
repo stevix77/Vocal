@@ -28,7 +28,7 @@ namespace Vocal.Business.Business
                     {
                         var registrationId = await NotificationHub.Instance.GetRegistrationId(channel);
                         var tag = $"{Properties.Settings.Default.TagUser}:{userId}";
-                        user.Devices.Add(new Device
+                        user.Devices.Add(new Vocal.Model.DBO.Device
                         {
                             RegistrationId = registrationId,
                             Platform = platform,

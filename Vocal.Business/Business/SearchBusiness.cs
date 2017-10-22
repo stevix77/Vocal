@@ -21,9 +21,9 @@ namespace Vocal.Business.Business
             {
                 LogManager.LogDebug(userId, keyword, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-                var listStart = new List<User>();
-                var listEnd = new List<User>();
-                var listContains = new List<User>();
+                var listStart = new List<Vocal.Model.DBO.User>();
+                var listEnd = new List<Vocal.Model.DBO.User>();
+                var listContains = new List<Vocal.Model.DBO.User>();
                 var user = Repository.Instance.GetUserById(userId);
                 var list = Repository.Instance.SearchPeople(keyword);
                 foreach(var item in list)
@@ -73,9 +73,9 @@ namespace Vocal.Business.Business
             {
                 LogManager.LogDebug(userId, keyword, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-                var listStart = new List<User>();
-                var listEnd = new List<User>();
-                var listContains = new List<User>();
+                var listStart = new List<Vocal.Model.DBO.User>();
+                var listEnd = new List<Vocal.Model.DBO.User>();
+                var listContains = new List<Vocal.Model.DBO.User>();
                 var user = Repository.Instance.GetUserById(userId);
                 var list = Repository.Instance.SearchPeopleByEmail(keyword);
                 foreach (var item in list)
