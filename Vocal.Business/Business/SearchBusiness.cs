@@ -25,7 +25,7 @@ namespace Vocal.Business.Business
                 var listEnd = new List<User>();
                 var listContains = new List<User>();
                 var user = Repository.Instance.GetUserById(userId);
-                var list = Repository.Instance.SearchPeople(keyword);
+                var list = Repository.Instance.SearchPeople(userId, keyword);
                 foreach(var item in list)
                 {
                     if (item.Username.ToLower().StartsWith(keyword) || item.Firstname.ToLower().StartsWith(keyword) || item.Lastname.ToLower().StartsWith(keyword))
@@ -99,6 +99,36 @@ namespace Vocal.Business.Business
                     };
                     Repository.Instance.AddSearch(search);
                 });
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
+        public static Response<List<PeopleResponse>> SearchContacts(string userId, List<string> emails, string lang)
+        {
+            var response = new Response<List<PeopleResponse>>();
+            try
+            {
+                LogManager.LogDebug(userId, emails, lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var user = Repository.Instance.GetUserById(userId);
+                var list = Repository.Instance.SearchFriendsByEmails(emails);
+                list.RemoveAll(x => user.Friends.Any(y => y.Id == x.Id) || x.Id == user.Id);
+                response.Data = Binder.Bind.Bind_SearchPeople(user, list);
             }
             catch (TimeoutException tex)
             {
