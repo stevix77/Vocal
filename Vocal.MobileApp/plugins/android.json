@@ -46,14 +46,36 @@
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
-        "msopentech.azure.NotificationHub": {
+        "com-badrit-base64": {
             "PACKAGE_NAME": "io.ionic.starter"
-        }
-    },
-    "dependent_plugins": {
+        },
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "VocalDev2"
+        },
         "cordova-plugin-compat": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
+        "ionic-plugin-deeplinks": {
+            "URL_SCHEME": "vocal",
+            "DEEPLINK_SCHEME": "https",
+            "DEEPLINK_HOST": "vocal.com",
+            "ANDROID_PATH_PREFIX": "/",
+            "ANDROID_2_PATH_PREFIX": "/",
+            "ANDROID_3_PATH_PREFIX": "/",
+            "ANDROID_4_PATH_PREFIX": "/",
+            "ANDROID_5_PATH_PREFIX": "/",
+            "DEEPLINK_2_SCHEME": " ",
+            "DEEPLINK_2_HOST": " ",
+            "DEEPLINK_3_SCHEME": " ",
+            "DEEPLINK_3_HOST": " ",
+            "DEEPLINK_4_SCHEME": " ",
+            "DEEPLINK_4_HOST": " ",
+            "DEEPLINK_5_SCHEME": " ",
+            "DEEPLINK_5_HOST": " ",
+            "PACKAGE_NAME": "VocalDev2"
+        }
+    },
+    "dependent_plugins": {
         "cordova-sqlite-storage": {
             "PACKAGE_NAME": "io.ionic.starter"
         },

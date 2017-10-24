@@ -3,8 +3,8 @@ constructor(){}
 
 	Id: string;
 	Email: string;
-	FirstName: string;
-	LastName: string;
+	Firstname: string;
+	Lastname: string;
 	Username: string;
     Token : string;
     Picture: string;

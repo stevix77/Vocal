@@ -5,7 +5,6 @@ import { params } from './params';
 import { Store } from '../models/enums';
 import { Media, MediaObject } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
-import { Base64 } from '@ionic-native/base64';
 
 
 @Injectable()
@@ -21,21 +20,29 @@ export class AudioRecorder {
     public config:Config,
     public alertCtrl: AlertController,
     private media: Media, 
-    private file: File,
-    private base64: Base64) {
+    private file: File) {
     this.filename = 'recording.' + this.getExtension();
     this.isApp = this.config.get('isApp');
-    this.initEffects();
+    //this.initEffects();
   }
 
   applyEffect(filter) {
     let contexteAudio = this.contexteAudio;
-    this.file.readAsArrayBuffer(this.file.dataDirectory, 'recording.m4a').then((compressedBuffer) => {
+    var that = this;
+    this.file.readAsArrayBuffer(this.file.dataDirectory, this.filename).then((compressedBuffer) => {
       contexteAudio.decodeAudioData(compressedBuffer, function(buffer){
         var source = contexteAudio.createBufferSource();
         source.buffer = buffer;
 
-        var effect = this.getEffectFromFilter(filter);
+        //var effect = that.getEffectFromFilter(filter);
+        var effect = new that.tuna.Phaser({
+            rate: 1.2,                     //0.01 to 8 is a decent range, but higher values are possible
+            depth: 0.3,                    //0 to 1
+            feedback: 0.2,                 //0 to 1+
+            stereoPhase: 30,               //0 to 180
+            baseModulationFrequency: 700,  //500 to 1500
+            bypass: 0
+        });
 
         var output = contexteAudio.createGain();
         source.connect(effect);
@@ -43,7 +50,7 @@ export class AudioRecorder {
 
         output.connect(contexteAudio.destination);
         source.start();
-      }).bind(this);
+      }).catch(err => console.log(err));
     }).catch(err => console.log(err));
   }
 
@@ -72,21 +79,12 @@ export class AudioRecorder {
   }
 
   getFile() : Promise<string>{
-    //return this.file.readAsDataURL(this.file.tempDirectory, this.filename);
-    //return this.file.readAsDataURL('../Library/NoCloud/', 'recording.m4a');
-    return this.file.readAsDataURL(this.file.dataDirectory, 'recording.m4a');
+    return this.file.readAsDataURL(this.file.dataDirectory, this.filename);
   }
 
   getMedia() {
     if(this.mediaObject == null) {
-      //this.file.createFile(this.file.dataDirectory.replace(/^file:\/\//, ''), 'recording.m4a');
-      //this.mediaObject = this.media.create(this.file.tempDirectory.replace(/^file:\/\//, '') + this.filename)
-      // this.file.createFile('../Library/NoCloud/', 'recording.m4a', true).then(() => {
-        this.mediaObject = this.media.create(this.file.dataDirectory.replace(/^file:\/\//, '') + 'recording.m4a');
-        console.log(this.mediaObject);
-      // }, (err) => {
-      //   console.log(err);
-      // });
+      this.mediaObject = this.media.create(this.file.dataDirectory.replace(/^file:\/\//, '') + this.filename);
     }
     return this.mediaObject;
   }

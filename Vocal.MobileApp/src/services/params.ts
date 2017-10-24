@@ -6,5 +6,6 @@ var params = {
     Lang: "fr",
     User: null as AppUser,
     Resources: [] as Array<KeyValueResponse<string, string>>,
-    Platform: null
+    Platform: null,
+    RegistrationId: ""
 }

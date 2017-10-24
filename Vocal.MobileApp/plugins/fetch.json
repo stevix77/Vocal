@@ -1,12 +1,4 @@
 {
-    "cordova-plugin-console": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-console@^1.0.5"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-device": {
         "source": {
             "type": "registry",
@@ -76,9 +68,9 @@
     "cordova-plugin-compat": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-compat@^1.0.0"
+            "id": "cordova-plugin-compat@1.2.0"
         },
-        "is_top_level": false,
+        "is_top_level": true,
         "variables": {}
     },
     "cordova-plugin-file": {
@@ -115,15 +107,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "msopentech.azure.NotificationHub": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/PhonegapProjects/cordova-plugin-azure-notificationhub/",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-sqlite-storage": {
         "source": {
             "type": "registry",
@@ -149,5 +132,18 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "ionic-plugin-deeplinks": {
+        "source": {
+            "type": "registry",
+            "id": "ionic-plugin-deeplinks"
+        },
+        "is_top_level": true,
+        "variables": {
+            "URL_SCHEME": "vocal",
+            "DEEPLINK_SCHEME": "https",
+            "DEEPLINK_HOST": "vocal.com",
+            "ANDROID_PATH_PREFIX": "/"
+        }
     }
 }

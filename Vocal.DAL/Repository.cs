@@ -139,6 +139,48 @@ namespace Vocal.DAL
             return users;
         }
 
+        public bool BlockUsers(string userId, List<string> userIds)
+        {
+            bool success = false;
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var user = db.Find(x => x.Id == userId).SingleOrDefault();
+            if(user != null)
+            {
+                var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, userIds);
+                var users = db.Find(filter).ToList();
+                if(users.Count > 0)
+                {
+                    var list = Bind_UsersToFriends(users);
+                    user.Settings.Blocked.AddRange(list);
+                    var result = db.ReplaceOne(x => x.Id == userId, user);
+                    success = result.ModifiedCount > 0;
+                }
+            }
+            return success;
+        }
+
+        public bool UnblockUsers(string userId, List<string> userIds)
+        {
+            bool success = false;
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var user = db.Find(x => x.Id == userId).SingleOrDefault();
+            if (user != null)
+            {
+                user.Settings.Blocked.RemoveAll(x => userIds.Contains(x.Id));
+                var result = db.ReplaceOne(x => x.Id == userId, user);
+                success = result.ModifiedCount > 0;
+            }
+            return success;
+        }
+
+        public List<User> GetAllUsers()
+        {
+            List<User> users = new List<User>();
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            users = db.AsQueryable().ToList();
+            return users;
+        }
+
         #endregion
 
         #region Friends
@@ -172,7 +214,22 @@ namespace Vocal.DAL
             {
                 List<People> friends = Bind_UsersToFriends(users);
                 friends.RemoveAll(x => user.Friends.Select(y => y.Id).Contains(x.Id));
+                friends.ForEach(x => x.DateAdded = DateTime.Now);
                 user.Friends.AddRange(friends);
+                Parallel.ForEach(users, (u) =>
+                {
+                    var friend = db.Find(x => x.Id == u.Id).SingleOrDefault();
+                    if(friend != null)
+                    {
+                        var f = friend.Friends.Find(x => x.Id == userId);
+                        if (f != null)
+                        {
+                            f.IsFriend = true;
+                            user.Friends.SingleOrDefault(x => x.Id == u.Id).IsFriend = true;
+                            db.ReplaceOne(x => x.Id == u.Id, friend);
+                        }
+                    }
+                });
                 db.ReplaceOne(x => x.Id == userId, user);
                 success = true;
             }
@@ -203,12 +260,20 @@ namespace Vocal.DAL
             if (currentUser != null)
             {
                 var list = pageSize == 0 || pageNumber == 0
-                    ? currentUser.Friends
-                    : currentUser.Friends.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                    ? currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x) && x.IsFriend)
+                    : currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x) && x.IsFriend).Skip((pageNumber - 1) * pageSize).Take(pageSize);
                 return list.ToList();
             }
             return null;
         }
+
+        public List<User> GetFriendsAddedMe(string userId)
+        {
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var list = db.Find(x => x.Friends.Any(y => y.Id == userId && y.DateAdded > DateTime.Now.AddDays(-7))).ToList();
+            return list;
+        }
+        
 
         #endregion
 
@@ -256,13 +321,14 @@ namespace Vocal.DAL
                 List<People> people = Bind_UsersToFriends(users);
                 people.RemoveAll(x => user.Friends.Select(y => y.Id).Contains(x.Id));
                 user.Following.AddRange(people);
-                Task.Run(() =>
-                {
-                    foreach (var p in people)
-                    {
-                        AddInFollowers(p.Id, user.Id);
-                    }
-                });
+                //Task.Run(() =>
+                //{
+                //    foreach (var p in people)
+                //    {
+                //        AddInFollowers(p.Id, user.Id);
+                //    }
+                //});
+                Parallel.ForEach(people, (p) => AddInFollowers(p.Id, user.Id));
                 db.ReplaceOne(x => x.Id == userId, user);
                 success = true;
             }
@@ -443,13 +509,23 @@ namespace Vocal.DAL
 
         #region Search
 
-        public List<User> SearchPeople(string keyword)
+        public List<User> SearchPeople(string userId, string keyword)
         {
             var list = new List<User>();
             var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
-            list = collection.Find(x => x.Username.ToLower().Contains(keyword) || 
+            list = collection.Find(x => (x.Username.ToLower().Contains(keyword) || 
                                         x.Firstname.ToLower().Contains(keyword) || 
-                                        x.Lastname.ToLower().Contains(keyword))
+                                        x.Lastname.ToLower().Contains(keyword)) &&
+                                        x.Id != userId)
+                                        .ToList();
+            return list;
+        }
+
+        public List<User> SearchPeopleByEmail(string keyword)
+        {
+            var list = new List<User>();
+            var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            list = collection.Find(x => x.Email.ToLower().Contains(keyword))
                                         .ToList();
             return list;
         }

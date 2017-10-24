@@ -1,7 +1,8 @@
 export
 var url = {
 
-    //BaseUri: "http://192.168.1.14:8017",
+    // BaseUri: "http://192.168.1.14:8017",
+    // BaseUri: "http://vocal.westeurope.cloudapp.azure.com",
     BaseUri: "http://wsvocal.azurewebsites.net",
     //BaseUri: "http://localhost/Vocal.WebApi/api/",
     Login() : string {
@@ -27,6 +28,9 @@ var url = {
     },
     AddFriends() : string {
         return this.BaseUri + "/api/friend/add";
+    },
+    RemoveFriends() : string {
+        return this.BaseUri + "/api/friend/remove";
     },
     NotificationRegister() : string {
         return this.BaseUri + "/api/notification/register"
@@ -57,5 +61,8 @@ var url = {
     },
     GetFriends() : string {
         return this.BaseUri + "/api/friend/getFriends";
+    },
+    GetAllUsers() : string {
+        return this.BaseUri + "/api/user/list";
     }
 }

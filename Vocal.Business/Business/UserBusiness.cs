@@ -86,11 +86,98 @@ namespace Vocal.Business.Business
                     case Update.Blocked:
                         BlockedUser(user, value.ToString());
                         break;
+                    case Update.Picture:
+                        user.Picture = value.ToString();
+                        break;
                     default:
                         break;
                 }
                 Repository.Instance.UpdateUser(user);
                 response.Data = true;
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
+        public static Response<bool> BlockUsers(string userId, List<string> ids, string lang)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                LogManager.LogDebug(userId, ids, lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var success = Repository.Instance.BlockUsers(userId, ids);
+                response.Data = success;
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
+        public static Response<bool> UnblockUsers(string userId, List<string> ids, string lang)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                LogManager.LogDebug(userId, ids, lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var success = Repository.Instance.UnblockUsers(userId, ids);
+                response.Data = success;
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
+        public static Response<List<UserResponse>> GetListUsers(string lang)
+        {
+            var response = new Response<List<UserResponse>>();
+            try
+            {
+                LogManager.LogDebug(lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var list = Repository.Instance.GetAllUsers();
+                response.Data = Binder.Bind.Bind_Users(list);
             }
             catch (TimeoutException tex)
             {
