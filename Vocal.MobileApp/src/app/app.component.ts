@@ -24,6 +24,7 @@ import {HubMethod} from '../models/enums';
 import { InitResponse } from '../models/response/InitResponse';
 import { Request } from "../models/request/Request";
 import { ExceptionService } from "../services/exceptionService";
+import { MessagePage } from "../pages/message/message";
 
 declare var WindowsAzure: any;
 
@@ -136,6 +137,19 @@ export class VocalApp {
     
     pushObject.on('notification').subscribe((data: any) => {
       console.log('data -> ' + data);
+      switch(params.Platform) {
+        case "gcm":
+          this.androidNotification(data);
+          break;
+        case "apns":
+          this.iosNotification(data);
+          break;
+        case "wns":
+          this.windowsNotification(data);
+          break;
+        default:
+          break;
+      }
       //if user using app and push notification comes
       // if (data.additionalData.foreground) {
       //   // if application open, show popup
@@ -165,6 +179,38 @@ export class VocalApp {
     pushObject.on('error').subscribe(error => {
       console.log('Error with Push plugin' + error);
     });
+  }
+
+  windowsNotification(notification) {
+      let args = notification.additionalData.pushNotificationReceivedEventArgs.toastNotification.content.getElementsByTagName('toast')[0].getAttribute('launch') as string;
+      let value = args.split('=')[1];
+    if(notification.additionalData.coldstart) {
+      this.nav.push(MessagePage, {TalkId: value})
+    } else {
+      let confirmAlert = this.alertCtrl.create({
+        title: notification.title,
+        message: notification.message,
+        buttons: [{
+          text: 'Ignore',
+          role: 'cancel'
+        }, {
+          text: 'View',
+          handler: () => {
+            //TODO: Your logic here
+            this.nav.push(MessagePage, {TalkId: value});
+          }
+        }]
+      });
+      confirmAlert.present();
+    }
+  }
+
+  iosNotification(notification) {
+    
+  }
+
+  androidNotification(notification) {
+    
   }
 
   initializeApp() {

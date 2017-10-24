@@ -65,7 +65,7 @@ namespace Vocal.DAL
         public User Login(string login, string password)
         {
             var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
-            var user = collection.Find(x => x.Password == password && (x.Email == login || x.Username == login)).SingleOrDefault();
+            var user = collection.Find(x => x.Password == password && (x.Email.ToLower() == login || x.Username.ToLower() == login)).SingleOrDefault();
             return user;
         }
 
@@ -106,14 +106,14 @@ namespace Vocal.DAL
         public User GetUserByEmail(string email)
         {
             var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
-            var user = db.Find(x => x.Email == email).SingleOrDefault();
+            var user = db.Find(x => x.Email.ToLower() == email).SingleOrDefault();
             return user;
         }
 
         public User GetUserByUsername(string username)
         {
             var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
-            var user = db.Find(x => x.Username == username).SingleOrDefault();
+            var user = db.Find(x => x.Username.ToLower() == username).SingleOrDefault();
             return user;
         }
 

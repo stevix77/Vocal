@@ -17,8 +17,9 @@ namespace Vocal.Business.Tools
 
         public static void LogDebug(params object[] obj)
         {
-            var currentMethod = System.Reflection.MethodBase.GetCurrentMethod();
             var caller = new System.Diagnostics.StackTrace().GetFrame(1).GetMethod();
+            if(caller.Name.ToLower() == "movenext")
+                caller = new System.Diagnostics.StackTrace().GetFrame(3).GetMethod();
             var parameters = caller.GetParameters().ToList();
             string message = caller.Name;
             int i = 0;

@@ -21,6 +21,7 @@ namespace Vocal.Business.Signalr
                 Connection = new HubConnection(Properties.Settings.Default.HostHub);
                 Proxy = Connection.CreateHubProxy(Properties.Settings.Default.Hubname);
                 await Connection.Start();
+                Connection.StateChanged += async (e) => { if (e.NewState == ConnectionState.Disconnected) await Connection.Start(); };
             })
             { IsBackground = true };
 

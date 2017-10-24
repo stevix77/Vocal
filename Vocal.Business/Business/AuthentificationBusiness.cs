@@ -25,6 +25,7 @@ namespace Vocal.Business
             {
                 LogManager.LogDebug(login, pwd, lang);
                 string password = Hash.getHash(pwd);
+                login = login.ToLower();
                 var user = Repository.Instance.Login(login, password);
                 if (user != null)
                     response.Data = Bind.Bind_User(user);
