@@ -51,16 +51,16 @@ export class VocalListPage {
     events.subscribe(HubMethod[HubMethod.Receive], () => this.initialize())
 
     this.isApp = this.config.get('isApp');
+    
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad VocalListPage');
-
+    document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
+    if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
   }
 
   ionViewDidEnter() {
-    document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
-    if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
     this.initialize();
   }
 

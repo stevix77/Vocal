@@ -1,7 +1,7 @@
 import { HubMethod } from '../../models/enums';
 import { MessageResponse } from './../../models/response/messageResponse';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, Events } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, Events, Config } from 'ionic-angular';
 import { params } from '../../services/params';
 import { Response } from '../../models/Response';
 import { SendMessageRequest } from '../../models/request/sendMessageRequest';
@@ -13,6 +13,7 @@ import { VocalListPage } from '../../pages/vocal-list/vocal-list';
 import { TalkService } from "../../services/talkService";
 import { HubService } from "../../services/hubService";
 import {DomSanitizer} from '@angular/platform-browser';
+import { AudioRecorderComponent } from '../../components/audio-recorder/audio-recorder';
 
 /**
  * Generated class for the MessagePage page.
@@ -24,15 +25,19 @@ import {DomSanitizer} from '@angular/platform-browser';
 @Component({
   selector: 'page-message',
   templateUrl: 'message.html',
-  providers: [HttpService, CookieService, TalkService]
+  providers: [HttpService, CookieService, TalkService],
+  entryComponents: [AudioRecorderComponent]
 })
 export class MessagePage {
   
   model = { Message: "", talkId: null }
   VocalName: string = "";
   Messages: Array<MessageResponse> = new Array<MessageResponse>();
+  isApp: boolean;
+
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
+              public config: Config,
               private httpService: HttpService, 
               private toastCtrl: ToastController, 
               private cookieService: CookieService,
@@ -41,14 +46,21 @@ export class MessagePage {
               private hubService: HubService,
               private domSanitizer: DomSanitizer) {
 
-    // this.events.subscribe()
     this.model.talkId = this.navParams.get("TalkId");
     this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj.Message))
+
+    this.isApp = this.config.get('isApp');
   }
 
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MessagePage');
+  }
+
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter MessagePage');
+    // document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
+    // if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
   }
 
   ionViewWillEnter() {

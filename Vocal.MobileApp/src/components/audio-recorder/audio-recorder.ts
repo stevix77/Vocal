@@ -38,6 +38,7 @@ export class AudioRecorderComponent {
   }
 
   startRecording() {
+    console.log('start recording');
     let template = `
     <div class="wrapper-record">
       <div class="timer" data-timer><span>0:00</span></div>
