@@ -11,7 +11,7 @@ namespace Vocal.Business.Binder
 {
     public class Bind
     {
-        internal static UserResponse Bind_User(Vocal.Model.DBO.User user)
+        internal static UserResponse Bind_User(User user)
         {
             if (user == null)
                 return null;
@@ -26,7 +26,7 @@ namespace Vocal.Business.Binder
             };
         }
 
-        internal static List<UserResponse> Bind_Users(List<Vocal.Model.DBO.User> list)
+        internal static List<UserResponse> Bind_Users(List<User> list)
         {
             var users = new List<UserResponse>();
             foreach(var item in list)
@@ -44,7 +44,7 @@ namespace Vocal.Business.Binder
             return users;
         }
 
-        internal static List<UserResponse> Bind_People(List<Vocal.Model.DBO.People> list)
+        internal static List<UserResponse> Bind_People(List<People> list)
         {
             var users = new List<UserResponse>();
             foreach (var item in list)
@@ -62,7 +62,7 @@ namespace Vocal.Business.Binder
             return users;
         }
 
-        internal static UserResponse Bind_People(Vocal.Model.DBO.People people)
+        internal static UserResponse Bind_People(People people)
         {
             return new UserResponse
             {
@@ -94,7 +94,7 @@ namespace Vocal.Business.Binder
             return users;
         }
 
-        internal static List<PeopleResponse> Bind_SearchPeople(Vocal.Model.DBO.User user, List<Vocal.Model.DBO.User> listSearch)
+        internal static List<PeopleResponse> Bind_SearchPeople(User user, List<User> listSearch)
         {
             var list = new List<PeopleResponse>();
             foreach(var item in listSearch)
@@ -129,7 +129,7 @@ namespace Vocal.Business.Binder
             return list;
         }
 
-        internal static List<PeopleResponse> Bind_People(Vocal.Model.DBO.User user, List<Vocal.Model.DBO.User> lst)
+        internal static List<PeopleResponse> Bind_People(User user, List<User> lst)
         {
             var list = new List<PeopleResponse>();
             foreach (var item in lst)
@@ -163,7 +163,7 @@ namespace Vocal.Business.Binder
             return list;
         }
 
-        internal static List<TalkResponse> Bind_Talks(List<Vocal.Model.DBO.Talk> list, string userId)
+        internal static List<TalkResponse> Bind_Talks(List<Talk> list, string userId)
         {
             var response = new List<TalkResponse>();
             if(list.Count > 0)
@@ -185,7 +185,7 @@ namespace Vocal.Business.Binder
             }
             return response;
         }
-        internal static TalkResponse Bind_Talk(Vocal.Model.DBO.Talk talk, string userId)
+        internal static TalkResponse Bind_Talk(Vocal.Model.DB.Talk talk, string userId)
         {
             var message = talk.Messages.LastOrDefault();
             var users = talk.Recipients.Where(x => x.Id != userId);
@@ -200,7 +200,7 @@ namespace Vocal.Business.Binder
         }
 
 
-        internal static List<MessageResponse> Bind_Messages(List<Vocal.Model.DBO.Message> list)
+        internal static List<MessageResponse> Bind_Messages(List<Vocal.Model.DB.Message> list)
         {
             var response = new List<MessageResponse>();
             foreach(var item in list)
@@ -219,7 +219,7 @@ namespace Vocal.Business.Binder
             return response;
         }
 
-        internal static SettingsResponse Bind_UserSettings(Vocal.Model.DBO.User user)
+        internal static SettingsResponse Bind_UserSettings(User user)
         {
             var settings = new SettingsResponse();
             settings.BirthdayDate = user.BirthdayDate;
@@ -244,7 +244,7 @@ namespace Vocal.Business.Binder
             return choices;
         }
 
-        internal static TalkResponse Bind_Talks(Vocal.Model.DBO.Talk talk, string userId)
+        internal static TalkResponse Bind_Talks(Talk talk, string userId)
         {
             var response = new TalkResponse();
             var message = talk.Messages.LastOrDefault();
@@ -256,7 +256,7 @@ namespace Vocal.Business.Binder
             return response;
         }
 
-        internal static MessageResponse Bind_Message(Vocal.Model.DBO.Message m)
+        internal static MessageResponse Bind_Message(Vocal.Model.DB.Message m)
         {
             var message = new MessageResponse();
             message.ArrivedTime = m.ArrivedTime;
@@ -269,7 +269,7 @@ namespace Vocal.Business.Binder
             return message;
         }
 
-        private static List<UserListenResponse> Bind_UsersListen(List<Vocal.Model.DBO.UserListen> users)
+        private static List<UserListenResponse> Bind_UsersListen(List<UserListen> users)
         {
             var response = new List<UserListenResponse>();
             foreach(var item in users)

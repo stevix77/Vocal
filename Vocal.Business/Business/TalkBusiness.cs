@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Vocal.Business.Binder;
 using Vocal.Business.Properties;
+using Vocal.Business.Signalr;
 using Vocal.Business.Tools;
 using Vocal.DAL;
 using Vocal.Model.Business;
-using Vocal.Model.DBO;
+using Vocal.Model.DB;
 using Vocal.Model.Helpers;
 using Vocal.Model.Request;
 using Vocal.Model.Response;
@@ -77,7 +78,7 @@ namespace Vocal.Business.Business
         public static void UpdateListenUser(string userId, string talkId, List<Message> messages)
         {
             Repository.Instance.SetIsRead(userId, talkId, messages);
-            //HubService.Instance.UpdateTalk(talkId, Bind.Bind_Messages(list));
+            HubService.Instance.UpdateTalk(talkId, Bind.Bind_Messages(messages));
         }
 
         public static Response<SendMessageResponse> SendMessage(SendMessageRequest request)

@@ -13,8 +13,13 @@ namespace Vocal.Model.DB
         public MessageType ContentType { get; set; }
         public DateTime SentTime { get; set; }
         public DateTime ArrivedTime { get; set; }
-        public User User { get; set; }
+        public People Sender { get; set; }
         public List<UserListen> Users { get; set; }
+
+
+        public Message Parent { get; set; }
+        public bool IsDeleted { get; set; }
+        public bool IsReceivedMessage { get; set; }
 
         /////some variable in readiness for stats
         /////time
