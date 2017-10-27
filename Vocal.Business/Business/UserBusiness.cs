@@ -57,10 +57,10 @@ namespace Vocal.Business.Business
                 switch(type)
                 {
                     case Update.Gender:
-                        user.Settings.Gender = (Vocal.Model.DBO.Gender)Enum.ToObject(typeof(Vocal.Model.DBO.Gender), int.Parse(value.ToString()));
+                        user.Settings.Gender = (Vocal.Model.DB.Gender)Enum.ToObject(typeof(Vocal.Model.DB.Gender), int.Parse(value.ToString()));
                         break;
                     case Update.Contact:
-                        user.Settings.Contact = (Vocal.Model.DBO.Contacted)Enum.ToObject(typeof(Vocal.Model.DBO.Contacted), int.Parse(value.ToString()));
+                        user.Settings.Contact = (Vocal.Model.DB.Contacted)Enum.ToObject(typeof(Vocal.Model.DB.Contacted), int.Parse(value.ToString()));
                         break;
                     case Update.Notification:
                         user.Settings.IsNotifiable = Convert.ToBoolean(value);
@@ -194,7 +194,7 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        private static void BlockedUser(Vocal.Model.DBO.User user, string userId)
+        private static void BlockedUser(Vocal.Model.DB.User user, string userId)
         {
             var index = user.Settings.Blocked.FindIndex(x => x.Id == userId);
             if (index >= 0)
@@ -203,7 +203,7 @@ namespace Vocal.Business.Business
             {
                 var userToBlock = Repository.Instance.GetUserById(userId);
                 if (userToBlock != null)
-                    user.Settings.Blocked.Add(new Vocal.Model.DBO.People
+                    user.Settings.Blocked.Add(new Vocal.Model.DB.People
                     {
                         Email = userToBlock.Email,
                         Firstname = userToBlock.Firstname,

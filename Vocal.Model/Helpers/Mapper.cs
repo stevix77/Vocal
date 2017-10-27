@@ -1,4 +1,4 @@
-﻿using Vocal.Model.DBO;
+﻿using Vocal.Model.DB;
 
 namespace Vocal.Model.Helpers
 {
