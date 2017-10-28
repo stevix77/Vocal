@@ -70,10 +70,10 @@ namespace Vocal.Business.Business
                 {
                     var u = Repository.Instance.GetUserById(id);
                     var tag = $"{Properties.Settings.Default.TagUser}:{id}";
-                    foreach (var ptf in u.Devices.Select(x => x.Platform).Distinct())
+                    foreach (var d in u.Devices.Select(x => new { Platform = x.Platform, Lang = x.Lang }).Distinct())
                     {
-                        var payload = string.Format(GetTemplate(type, ptf, param));
-                        await NotificationHub.Instance.SendNotification(ptf, tag, payload);
+                        var payload = string.Format(GetTemplate(type, d.Platform, d.Lang, param));
+                        await NotificationHub.Instance.SendNotification(d.Platform, tag, payload);
                     }
                 }
                 response.Data = true;
@@ -116,19 +116,20 @@ namespace Vocal.Business.Business
             return payload;
         }
 
-        private static string GetPayloadAddFriends(string platform)
+        private static string GetPayloadAddFriends(string platform, string lang)
         {
             string payload = string.Empty;
+            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             switch (platform)
             {
                 case "gcm":
-                    payload = PayloadSettings.Default.AddFriendsAndroid;
+                    payload = string.Format(PayloadSettings.Default.AddFriendsAndroid, Resources_Language.TextNotifAddFriend);
                     break;
                 case "apns":
-                    payload = PayloadSettings.Default.AddFriendsiOs;
+                    payload = string.Format(PayloadSettings.Default.AddFriendsiOs, Resources_Language.TextNotifAddFriend);
                     break;
                 case "wns":
-                    payload = PayloadSettings.Default.AddFriendsWindows;
+                    payload = string.Format(PayloadSettings.Default.AddFriendsWindows, Resources_Language.TextNotifAddFriend);
                     break;
                 default:
                     break;
@@ -156,13 +157,13 @@ namespace Vocal.Business.Business
             return payload;
         }
 
-        private static string GetTemplate(NotifType type, string platform, params string[] param)
+        private static string GetTemplate(NotifType type, string platform, string lang, params string[] param)
         {
             string template = string.Empty;
             switch (type)
             {
                 case NotifType.AddFriend:
-                    template = string.Format(GetPayloadAddFriends(platform), param.GetValue(0));
+                    template = string.Format(GetPayloadAddFriends(platform, lang), param.GetValue(0));
                     break;
                 case NotifType.Talk:
                     template = string.Format(GetPayloadTalk(platform), param.GetValue(0), param.GetValue(1), param.GetValue(2));

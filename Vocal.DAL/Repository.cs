@@ -552,13 +552,14 @@ namespace Vocal.DAL
 
         #region Search
 
-        public List<Vocal.Model.DB.User> SearchPeople(string keyword)
+        public List<User> SearchPeople(string userId, string keyword)
         {
-            var list = new List<Vocal.Model.DB.User>();
-            var collection = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
-            list = collection.Find(x => x.Username.ToLower().Contains(keyword) || 
+            var list = new List<User>();
+            var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            list = collection.Find(x => (x.Username.ToLower().Contains(keyword) || 
                                         x.Firstname.ToLower().Contains(keyword) || 
-                                        x.Lastname.ToLower().Contains(keyword))
+                                        x.Lastname.ToLower().Contains(keyword)) &&
+                                        x.Id != userId)
                                         .ToList();
             return list;
         }
