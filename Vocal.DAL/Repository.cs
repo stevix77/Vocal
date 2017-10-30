@@ -259,9 +259,9 @@ namespace Vocal.DAL
             return null;
         }
 
-        public List<User> GetFriendsAddedMe(string userId)
+        public List<Vocal.Model.DB.User> GetFriendsAddedMe(string userId)
         {
-            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
             var list = db.Find(x => x.Friends.Any(y => y.Id == userId && y.DateAdded > DateTime.Now.AddDays(-7))).ToList();
             return list;
         }
@@ -436,7 +436,7 @@ namespace Vocal.DAL
         //}
 
 
-        public Talk GetTalk(string idTalk, string userId)
+        public Vocal.Model.DB.Talk GetTalk(string idTalk, string userId)
         {
             var user = GetUserById(userId);
             if (user != null)
@@ -447,7 +447,7 @@ namespace Vocal.DAL
             throw new Exception("User not found");
         }
 
-        public List<Talk> GetListTalk(string userId)
+        public List<Vocal.Model.DB.Talk> GetListTalk(string userId)
         {
             var user = GetUserById(userId);
             if (user != null)
