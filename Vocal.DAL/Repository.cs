@@ -223,20 +223,6 @@ namespace Vocal.DAL
                 friends.RemoveAll(x => user.Friends.Select(y => y.Id).Contains(x.Id));
                 friends.ForEach(x => x.DateAdded = DateTime.Now);
                 user.Friends.AddRange(friends);
-                Parallel.ForEach(users, (u) =>
-                {
-                    var friend = db.Find(x => x.Id == u.Id).SingleOrDefault();
-                    if(friend != null)
-                    {
-                        var f = friend.Friends.Find(x => x.Id == userId);
-                        if (f != null)
-                        {
-                            f.IsFriend = true;
-                            user.Friends.SingleOrDefault(x => x.Id == u.Id).IsFriend = true;
-                            db.ReplaceOne(x => x.Id == u.Id, friend);
-                        }
-                    }
-                });
                 db.ReplaceOne(x => x.Id == userId, user);
                 success = true;
             }
@@ -252,7 +238,6 @@ namespace Vocal.DAL
             var user = db.Find(x => x.Id == userId).SingleOrDefault();
             if (user != null)
             {
-                var friends = Bind_UsersToFriends(users); // traitement pas utile je pense ?
                 user.Friends.RemoveAll(x => users.Select(y => y.Id).Contains(x.Id));
                 var replace = db.ReplaceOne(x => x.Id == userId, user);
                 success = replace.ModifiedCount > 0;
@@ -267,16 +252,16 @@ namespace Vocal.DAL
             if (currentUser != null)
             {
                 var list = pageSize == 0 || pageNumber == 0
-                    ? currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x) && x.IsFriend)
-                    : currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x) && x.IsFriend).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                    ? currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x))
+                    : currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x)).Skip((pageNumber - 1) * pageSize).Take(pageSize);
                 return list.ToList();
             }
             return null;
         }
 
-        public List<Vocal.Model.DB.User> GetFriendsAddedMe(string userId)
+        public List<User> GetFriendsAddedMe(string userId)
         {
-            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var list = db.Find(x => x.Friends.Any(y => y.Id == userId && y.DateAdded > DateTime.Now.AddDays(-7))).ToList();
             return list;
         }
@@ -451,7 +436,7 @@ namespace Vocal.DAL
         //}
 
 
-        public Vocal.Model.DB.Talk GetTalk(string idTalk, string userId)
+        public Talk GetTalk(string idTalk, string userId)
         {
             var user = GetUserById(userId);
             if (user != null)
@@ -462,18 +447,17 @@ namespace Vocal.DAL
             throw new Exception("User not found");
         }
 
-        public List<Vocal.Model.DB.Talk> GetListTalk(string userId)
+        public List<Talk> GetListTalk(string userId)
         {
             var user = GetUserById(userId);
             if (user != null)
             {
                 return user.Talks.Where(x => !x.IsArchived && !x.IsDeleted).ToList();
             }
-            //must create a proper exception to catch correctly the error 
-            throw new Exception("User not found");
+            return null;
         }
 
-        public bool AddTalk(Vocal.Model.DB.Talk talk, List<string> usersId)
+        public bool AddTalk(Talk talk, List<string> usersId)
         {
             var users = GetUsersById(usersId);
             foreach(var u in users)
@@ -484,7 +468,7 @@ namespace Vocal.DAL
             return true;
         }
 
-        public Vocal.Model.DB.Talk AddMessageToTalk(string talkId, List<string> usersId, Vocal.Model.DB.Message message)
+        public Talk AddMessageToTalk(string talkId, List<string> usersId, Vocal.Model.DB.Message message)
         {
             Vocal.Model.DB.Talk talk = GetTalk(talkId, message.Sender.Id);
             var users = GetUsersById(usersId);
@@ -493,7 +477,7 @@ namespace Vocal.DAL
                 var t = u.Talks.SingleOrDefault(x => x.Id == talkId && !x.IsDeleted);
                 if (t == null)
                 {
-                    t = new Vocal.Model.DB.Talk { Id = talk.Id, Recipients = talk.Recipients, Name = talk.Name };
+                    t = new Talk { Id = talk.Id, Recipients = talk.Recipients, Name = talk.Name };
                     u.Talks.Add(t);
                 }
                 t.Messages.Add(message);
