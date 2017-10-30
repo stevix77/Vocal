@@ -92,7 +92,7 @@ namespace Vocal.Business.Business
                 if (request != null)
                 {
                     LogManager.LogDebug(request);
-                    if (/*Repository.Instance.CheckIfAllUsersExist(request.IdsRecipient)*/ true)
+                    if (Repository.Instance.CheckIfAllUsersExist(request.IdsRecipient))
                     {
                         if((MessageType)request.MessageType == MessageType.Vocal)
                         {
