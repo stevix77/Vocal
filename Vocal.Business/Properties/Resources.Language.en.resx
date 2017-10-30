@@ -177,4 +177,7 @@
   <data name="TextNotifFollowYou" xml:space="preserve">
     <value>follow you</value>
   </data>
+  <data name="UserNotExisting" xml:space="preserve">
+    <value />
+  </data>
 </root>

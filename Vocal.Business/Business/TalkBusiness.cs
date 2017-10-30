@@ -25,6 +25,8 @@ namespace Vocal.Business.Business
             try
             {
                 var list = Repository.Instance.GetListTalk(userId);
+                if (list == null)
+                    throw new CustomException(Resources_Language.UserNotExisting);
                 response.Data = Bind.Bind_Talks(list, userId);
             }
             catch (TimeoutException tex)

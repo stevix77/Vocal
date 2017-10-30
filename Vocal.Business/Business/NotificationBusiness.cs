@@ -63,9 +63,9 @@ namespace Vocal.Business.Business
         public static async Task<Response<bool>> SendNotification(List<string> ids, NotifType type, params string[] param)
         {
             var response = new Response<bool>();
-            LogManager.LogDebug(ids, type, param);
             try
             {
+                LogManager.LogDebug(ids, type, param);
                 foreach (var id in ids)
                 {
                     var u = Repository.Instance.GetUserById(id);
@@ -116,20 +116,20 @@ namespace Vocal.Business.Business
             return payload;
         }
 
-        private static string GetPayloadAddFriends(string platform, string lang)
+        private static string GetPayloadAddFriends(string platform, string lang, string username)
         {
             string payload = string.Empty;
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             switch (platform)
             {
                 case "gcm":
-                    payload = string.Format(PayloadSettings.Default.AddFriendsAndroid, Resources_Language.TextNotifAddFriend);
+                    payload = string.Format(PayloadSettings.Default.AddFriendsAndroid, Resources_Language.TextNotifAddFriend, username);
                     break;
                 case "apns":
-                    payload = string.Format(PayloadSettings.Default.AddFriendsiOs, Resources_Language.TextNotifAddFriend);
+                    payload = string.Format(PayloadSettings.Default.AddFriendsiOs, Resources_Language.TextNotifAddFriend, username);
                     break;
                 case "wns":
-                    payload = string.Format(PayloadSettings.Default.AddFriendsWindows, Resources_Language.TextNotifAddFriend);
+                    payload = string.Format(PayloadSettings.Default.AddFriendsWindows, Resources_Language.TextNotifAddFriend, username);
                     break;
                 default:
                     break;
@@ -163,7 +163,7 @@ namespace Vocal.Business.Business
             switch (type)
             {
                 case NotifType.AddFriend:
-                    template = string.Format(GetPayloadAddFriends(platform, lang), param.GetValue(0));
+                    template = GetPayloadAddFriends(platform, lang, param.ElementAt(0));
                     break;
                 case NotifType.Talk:
                     template = string.Format(GetPayloadTalk(platform), param.GetValue(0), param.GetValue(1), param.GetValue(2));
