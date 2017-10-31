@@ -34,6 +34,10 @@ import { Deeplinks } from '@ionic-native/deeplinks';
 
 import { AudioFiltersPage } from '../pages/audio-filters/audio-filters';
 import { FriendsListPage } from '../pages/friends-list/friends-list';
+import { AddFriendPage } from '../pages/add-friend/add-friend';
+import { SearchUsernamePage } from '../pages/search-username/search-username';
+import { SearchMailPage } from '../pages/search-mail/search-mail';
+import { PopoverFriendsAddedMePage } from '../pages/popover-friends-added-me/popover-friends-added-me';
 
 import { StoreService } from '../services/storeService';
 import { HttpService } from "../services/httpService";
@@ -42,6 +46,9 @@ import { ExceptionService } from "../services/exceptionService";
 import { TalkService } from "../services/talkService";
 import { HubService } from "../services/hubService";
 import { Camera } from "@ionic-native/camera";
+import { FriendsService } from "../services/friendsService";
+import { ScanContactsPage } from "../pages/scan-contacts/scan-contacts";
+import { AudioRecorder } from "../services/audiorecorder";
 
 let components = [
   VocalApp,
@@ -72,7 +79,12 @@ let components = [
 
   MessagePage,
   AudioFiltersPage,
-  FriendsListPage
+  FriendsListPage,
+  AddFriendPage,
+  SearchUsernamePage,
+  SearchMailPage,
+  PopoverFriendsAddedMePage,
+  ScanContactsPage
 ];
 
 @NgModule({
@@ -99,6 +111,8 @@ let components = [
     TalkService,
     HubService,
     ExceptionService,
+    FriendsService,
+    AudioRecorder,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

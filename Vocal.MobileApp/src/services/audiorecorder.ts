@@ -78,13 +78,17 @@ export class AudioRecorder {
     }
   }
 
+  // Used in send-vocal.ts
   getFile() : Promise<string>{
-    return this.file.readAsDataURL(this.file.dataDirectory, this.filename);
+    //return this.file.readAsDataURL(this.file.dataDirectory, this.filename);
+    return this.file.readAsDataURL('../Library/NoCloud/', this.filename);
   }
 
   getMedia() {
     if(this.mediaObject == null) {
-      this.mediaObject = this.media.create(this.file.dataDirectory.replace(/^file:\/\//, '') + this.filename);
+      //this.mediaObject = this.media.create(this.file.dataDirectory + this.filename);
+      this.mediaObject = this.media.create('../Library/NoCloud/' + this.filename);
+    } else {
     }
     return this.mediaObject;
   }
@@ -124,6 +128,7 @@ export class AudioRecorder {
     this.timer = new Timer();
     this.timer.startTimer();
     if(this.isApp) {
+      console.log('start recording');
       this.getMedia().startRecord();
     }
   }

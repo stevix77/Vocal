@@ -13,8 +13,7 @@ import { AudioFiltersPage } from '../../pages/audio-filters/audio-filters';
 @IonicPage()
 @Component({
   selector: 'page-modal-edit-vocal',
-  templateUrl: 'modal-edit-vocal.html',
-  providers: [AudioRecorder]
+  templateUrl: 'modal-edit-vocal.html'
 })
 export class ModalEditVocalPage {
 

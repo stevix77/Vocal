@@ -302,7 +302,7 @@ export class VocalApp {
 
   SaveData(data: any, error: KeyValueResponse<string, string>, key: KeyStore) {
     if(error == null)
-      this.storeService.Set(key.toString(), data);
+      this.storeService.Set(KeyStore[key], data);
     else
       this.showAlert(error.Value);
   }
