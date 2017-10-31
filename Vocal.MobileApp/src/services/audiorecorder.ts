@@ -83,8 +83,14 @@ export class AudioRecorder {
   }
 
   getMedia() {
+    console.log(this.file.dataDirectory);
     if(this.mediaObject == null) {
       this.mediaObject = this.media.create(this.file.dataDirectory.replace(/^file:\/\//, '') + this.filename);
+      console.log('if null');
+      console.log(this.mediaObject);
+    } else {
+      console.log('else');
+      console.log(this.mediaObject);
     }
     return this.mediaObject;
   }
@@ -124,6 +130,7 @@ export class AudioRecorder {
     this.timer = new Timer();
     this.timer.startTimer();
     if(this.isApp) {
+      console.log('start recording');
       this.getMedia().startRecord();
     }
   }

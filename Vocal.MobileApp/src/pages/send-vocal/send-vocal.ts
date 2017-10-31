@@ -6,7 +6,6 @@ import { SelectFriendsComponent } from '../../components/select-friends/select-f
 import { VocalListPage } from '../../pages/vocal-list/vocal-list';
 import { StoreService } from "../../services/storeService";
 import { KeyStore } from '../../models/enums';
-import { AudioRecorder } from '../../services/audiorecorder';
 import { MessageType } from '../../models/enums';
 import { SendMessageRequest } from '../../models/request/sendMessageRequest';
 import { GetFriendsRequest } from '../../models/request/getFriendsRequest';
@@ -17,6 +16,7 @@ import { CookieService } from "../../services/cookieService";
 import { Response } from '../../models/response';
 import { TalkResponse } from '../../models/response/talkResponse';
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
+import { AudioRecorder } from '../../services/audiorecorder';
 
 /**
  * Generated class for the SendVocalPage page.
@@ -29,7 +29,7 @@ import { SendMessageResponse } from '../../models/response/sendMessageResponse';
   selector: 'page-send-vocal',
   templateUrl: 'send-vocal.html',
   entryComponents: [SelectFriendsComponent],
-  providers: [StoreService, AudioRecorder, CookieService, HttpService, TalkService]
+  providers: [StoreService, CookieService, HttpService, TalkService]
 })
 export class SendVocalPage {
 
