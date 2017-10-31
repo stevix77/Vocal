@@ -86,7 +86,7 @@ export class SendVocalPage {
       }
     )
     }).catch(err => {
-      
+      console.log(err);
     });
   }
 
@@ -100,7 +100,6 @@ export class SendVocalPage {
       }
     ).catch(error => {
       console.log(error);
-      
     });
   }
 

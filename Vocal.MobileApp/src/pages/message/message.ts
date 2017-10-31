@@ -13,7 +13,6 @@ import { VocalListPage } from '../../pages/vocal-list/vocal-list';
 import { TalkService } from "../../services/talkService";
 import { HubService } from "../../services/hubService";
 import {DomSanitizer} from '@angular/platform-browser';
-import { AudioRecorderComponent } from '../../components/audio-recorder/audio-recorder';
 
 /**
  * Generated class for the MessagePage page.
@@ -25,8 +24,7 @@ import { AudioRecorderComponent } from '../../components/audio-recorder/audio-re
 @Component({
   selector: 'page-message',
   templateUrl: 'message.html',
-  providers: [HttpService, CookieService, TalkService],
-  entryComponents: [AudioRecorderComponent]
+  providers: [HttpService, CookieService, TalkService]
 })
 export class MessagePage {
   
@@ -51,7 +49,6 @@ export class MessagePage {
 
     this.isApp = this.config.get('isApp');
   }
-
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MessagePage');
@@ -113,7 +110,7 @@ export class MessagePage {
         }
       }
     }).catch((err) => {
-      
+      console.log(err);
     })
   }
 
