@@ -23,13 +23,14 @@ export class AudioRecorder {
     private file: File) {
     this.filename = 'recording.' + this.getExtension();
     this.isApp = this.config.get('isApp');
-    //this.initEffects();
+    this.initEffects();
   }
 
   applyEffect(filter) {
     let contexteAudio = this.contexteAudio;
     var that = this;
-    this.file.readAsArrayBuffer(this.file.dataDirectory, this.filename).then((compressedBuffer) => {
+    //this.file.readAsArrayBuffer(this.file.dataDirectory, this.filename).then((compressedBuffer) => {
+    this.file.readAsArrayBuffer('../Library/NoCloud/', this.filename).then((compressedBuffer) => {
       contexteAudio.decodeAudioData(compressedBuffer, function(buffer){
         var source = contexteAudio.createBufferSource();
         source.buffer = buffer;

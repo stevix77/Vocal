@@ -51,8 +51,10 @@ export class SendVocalPage {
   }
 
   goToVocalList() {
+    console.log('goToVocalList');
     let users = [];
-    this.audioRecorder.getFile().then(value => {
+    this.audioRecorder.getFile().then(value => {  
+      console.log('get file');
       this.FileValue = value;
       this.Friends.forEach(elt => {
         if(elt.Checked)
@@ -86,7 +88,7 @@ export class SendVocalPage {
       }
     )
     }).catch(err => {
-      
+      console.log(err);
     });
   }
 
