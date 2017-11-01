@@ -56,6 +56,7 @@
         "cordova-windows": "^5.0.0",
         "crypto-js": "^3.1.9-1",
         "datepicker": "0.0.0",
+        "info.protonet.imageresizer": "^0.1.1",
         "ionic-angular": "3.2.1",
         "ionic-native": "^2.9.0",
         "ionic-plugin-deeplinks": "^1.0.15",
@@ -119,7 +120,8 @@
                 "DEEPLINK_4_HOST": " ",
                 "DEEPLINK_5_SCHEME": " ",
                 "DEEPLINK_5_HOST": " "
-            }
+            },
+            "info.protonet.imageresizer": {}
         },
         "platforms": [
             "browser",
