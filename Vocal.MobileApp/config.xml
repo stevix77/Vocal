@@ -125,4 +125,5 @@
     <plugin name="phonegap-plugin-push" spec="^2.0.0">
         <variable name="SENDER_ID" value="1054724390279" />
     </plugin>
+    <plugin name="info.protonet.imageresizer" spec="^0.1.1" />
 </widget>
