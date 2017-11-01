@@ -163,6 +163,7 @@ namespace Vocal.Business.Business
             var talk = new Talk() { Id = Guid.NewGuid().ToString() };
             talk.Messages.Add(m);
             talk.DateLastMessage = m.ArrivedTime;
+            talk.Recipients = allUsers.Select(x => x.ToPeople()).ToList();
 
             Repository.Instance.AddTalk(talk, allUsers.Select(x => x.Id).ToList());
 
