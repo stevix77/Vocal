@@ -24,7 +24,7 @@ import {url} from '../../services/url';
 @Component({
   selector: 'page-vocal-list',
   templateUrl: 'vocal-list.html',
-  providers: [HttpService, CookieService, StoreService, TalkService]
+  providers: [HttpService, CookieService, StoreService]
 })
 export class VocalListPage {
   notificationHub : any;
@@ -97,6 +97,7 @@ export class VocalListPage {
         else {
           if(response.Data.length > 0) {
             this.vocalList = this.talkService.Talks = response.Data;
+            this.formatDateMessage(this.vocalList);
             this.talkService.SaveList();
           }
         }
@@ -104,11 +105,42 @@ export class VocalListPage {
     );
   }
 
+  formatDateMessage(items){
+    items.forEach(item => {
+      if(item.DateLastMessage) {
+        item.DateLastMessage = this.getFormattedDateLastMessage(item.DateLastMessage);
+      }
+    });
+  }
+
+  getFormattedDateLastMessage(msgTime) {
+    let msgDate = new Date(msgTime);
+    let now = new Date();
+    let isToday = false;
+    let isYesterday = false;
+    let isWeek = false;
+
+    // If today, we display HH:ss
+    if(msgDate.getDate() == now.getDate()) {
+      isToday = true;
+    }
+    // If yesterday, we display "Yesterday"
+    if(msgDate.getDate() != now.getDate() && msgDate < now) {
+      var tmp = msgDate;
+      tmp.setDate(tmp.getDate() + 1);
+      if(tmp.getDate() == now.getDate()) {
+        isYesterday = true;
+      }
+    }
+
+    return {isToday: isToday, isYesterday: isYesterday, isWeek: isWeek, date:msgTime};
+  }
+
   initialize() {
     this.talkService.LoadList().then(() => {
       if(this.talkService.Talks != null) {
         this.vocalList = this.talkService.Talks;
-        console.log(this.vocalList);
+        if(this.vocalList.length > 0) this.formatDateMessage(this.vocalList);
       }
       else {  
         this.getVocalList();
