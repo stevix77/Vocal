@@ -81,7 +81,6 @@ export class AudioRecorder {
   // Used in send-vocal.ts
   getFile() : Promise<string>{
     return this.file.readAsDataURL(this.file.dataDirectory, this.filename);
-    return this.file.readAsDataURL('../Library/NoCloud/', this.filename);
   }
 
   getMedia() {
