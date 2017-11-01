@@ -29,7 +29,7 @@
           <img alt="picture" src="https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-1/p24x24/16602600_10154441388394576_4490155536874187938_n.jpg?oh=21c11ffc32c0b439c7ee5b32629d6b97&oe=5A1910E7">
         </ion-avatar>
         <h3>{{ item.Name }}</h3>
-        <p>{{ item.DateLastMessage }}</p>
+        <p>{{ item.DateLastMessage | date: 'HH:ss' }}</p>
       </ion-item>
       <ion-item-options side="right">
         <button ion-button icon-only color="danger" (click)="deleteMessage(item.Id)">

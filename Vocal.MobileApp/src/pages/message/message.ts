@@ -52,12 +52,12 @@ export class MessagePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MessagePage');
+    //document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
+    //if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
   }
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter MessagePage');
-    // document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
-    // if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
   }
 
   ionViewWillEnter() {

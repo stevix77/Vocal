@@ -23,13 +23,18 @@ export class AudioRecorderComponent {
     public modalCtrl: ModalController,
     public config: Config
     ) {
-    console.log('Hello AudioRecorderComponent Component');
 
     events.subscribe('record:start', () => this.startRecording());
     events.subscribe('record:stop', () => this.stopRecording());
     this.isApp = this.config.get('isApp');
   }
 
+  ngOnInit() {
+    console.log('ngOnInit AudioRecorderComponent');
+    //document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
+    //document.querySelector('[data-record]').addEventListener('touchstart', oEvt => console.log('click'));
+    if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
+  }
 
   presentEditVocalModal() {
     let editVocalModal = this.modalCtrl.create(ModalEditVocalPage);

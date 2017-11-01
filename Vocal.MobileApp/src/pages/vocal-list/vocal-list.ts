@@ -23,8 +23,7 @@ import {url} from '../../services/url';
 @IonicPage()
 @Component({
   selector: 'page-vocal-list',
-  templateUrl: 'vocal-list.html',
-  providers: [HttpService, CookieService, StoreService, TalkService]
+  templateUrl: 'vocal-list.html'
 })
 export class VocalListPage {
   notificationHub : any;
@@ -54,8 +53,8 @@ export class VocalListPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad VocalListPage');
-    document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
-    if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
+    //document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
+    //if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
   }
 
   ionViewDidEnter() {
@@ -108,7 +107,6 @@ export class VocalListPage {
     this.talkService.LoadList().then(() => {
       if(this.talkService.Talks != null) {
         this.vocalList = this.talkService.Talks;
-        console.log(this.vocalList);
       }
       else {  
         this.getVocalList();
