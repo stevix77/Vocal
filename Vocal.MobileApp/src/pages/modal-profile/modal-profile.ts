@@ -30,7 +30,7 @@ export class ModalProfilePage {
   private User: AppUser;
   private CountFriendsAddedMe: number = 0;
   private options: CameraOptions = {
-    quality: 50,
+    quality: 100,
     destinationType: this.camera.DestinationType.DATA_URL,
     encodingType: this.camera.EncodingType.JPEG,
     mediaType: this.camera.MediaType.PICTURE,
