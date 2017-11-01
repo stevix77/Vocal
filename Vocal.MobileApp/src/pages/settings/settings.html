@@ -26,7 +26,7 @@
     </a>
     <ion-item>
       <ion-label>BirthdayDate</ion-label>
-      <ion-label pull-right>{{ model.Settings.BirthdayDate }}</ion-label>
+      <ion-label pull-right>{{ model.Settings.BirthdayDate | date : 'dd/MM/yyyy' }}</ion-label>
     </ion-item>
     <a ion-item (click)="SettingsChoices(3, model.Settings.Contacts)">
       Contact me
