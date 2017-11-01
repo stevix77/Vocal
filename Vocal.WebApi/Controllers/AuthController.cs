@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Vocal.Model.Business;
-using Vocal.Model.DB;
-using Vocal.Business;
-using Vocal.Model.Request;
-using System.Web.Http;
-using Vocal.Model.Response;
-using Vocal.WebApi.Attribute;
+﻿using System.Web.Http;
 using System.Web.Http.Cors;
+using Vocal.Business;
+using Vocal.Model.Business;
+using Vocal.Model.Request;
+using Vocal.Model.Response;
 
-// For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Vocal.WebApi.Controllers
 {

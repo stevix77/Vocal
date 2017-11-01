@@ -92,8 +92,9 @@ namespace Vocal.WebApi.Signalr
         public void UpdateListenUser(string talkId)
         {
             var user = _users.SingleOrDefault(x => x.Value.Any(y => y == Context.ConnectionId));
+            //TODO
             if(!string.IsNullOrEmpty(user.Key))
-                Business.Business.TalkBusiness.UpdateListenUser(null, user.Key, talkId);
+                Business.Business.TalkBusiness.UpdateListenUser(user.Key, talkId, null);
         }
     }
 }

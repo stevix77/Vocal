@@ -17,4 +17,14 @@ export class StoreService {
     Remove(key: string) {
         this.storage.remove(key);
     }
+
+    RemoveAll() {
+        this.storage.keys().then(keys => {
+            keys.forEach(k => this.Remove(k));
+        })
+    }
+
+    Clear() {
+        this.storage.clear();
+    }
 }

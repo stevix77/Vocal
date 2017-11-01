@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, ToastController, ActionSheetController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, ToastController, ActionSheetController, PopoverController } from 'ionic-angular';
 import { SettingsPage } from '../../pages/settings/settings';
 import { FriendsListPage } from '../../pages/friends-list/friends-list';
+import { AddFriendPage } from '../../pages/add-friend/add-friend';
+import { PopoverFriendsAddedMePage } from '../../pages/popover-friends-added-me/popover-friends-added-me';
 import { AppUser } from '../../models/appUser';
 import { params } from "../../services/params";
 import { StoreService } from '../../services/storeService';
@@ -29,6 +31,7 @@ export class ModalProfilePage {
 
   private User: AppUser;
   private CountFriendsAddedMe: number = 0;
+  private friendsAddedMe: Array<Object>;
   private options: CameraOptions = {
     quality: 50,
     destinationType: this.camera.DestinationType.DATA_URL,
@@ -42,6 +45,7 @@ export class ModalProfilePage {
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
     public viewCtrl: ViewController,
+    public popoverCtrl: PopoverController,
     private storeService: StoreService,
     private httpService: HttpService,
     private cookieService: CookieService,
@@ -55,10 +59,12 @@ export class ModalProfilePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ModalProfilePage');
-    this.storeService.Get(KeyStore.FriendsAddedMe.toString()).then(
+    this.storeService.Get(KeyStore[KeyStore.FriendsAddedMe]).then(
       friends => {
-        if(friends != null)
+        if(friends != null) {
+          this.friendsAddedMe = friends;
           this.CountFriendsAddedMe = friends.length;
+        }
       }
     )
   }
@@ -111,12 +117,19 @@ export class ModalProfilePage {
     )
   }
 
+  goToAddFriend() {
+    this.navCtrl.push(AddFriendPage);
+  }
+
   goToFriendsList() {
     this.navCtrl.push(FriendsListPage);
   }
 
-  goToFriendsAddedMeList() {
-
+  showFriendsAddedMeList(evt) {
+    let popover = this.popoverCtrl.create(PopoverFriendsAddedMePage, {friends:this.friendsAddedMe}, {cssClass: 'friends-added-me'});
+    popover.present({
+      ev: evt
+    });
   }
 
   goToSettings() {

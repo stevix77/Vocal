@@ -17,7 +17,7 @@
 <ion-content padding>
 <div text-center>
   <div class="profile-pic">
-    <img [src]="User.Picture" width="400" height="200">
+    <img [src]="User.Picture">
     <div class="wrapper-button" padding (click)="presentActionSheetProfile()">
       <ion-icon icon-only name="settings" color="light"></ion-icon>
       Modifier sa photo
@@ -28,11 +28,11 @@
 </div>
 
 <ion-list inset>
-  <ion-item (click)="goToFriendsAddedMeList()">
+  <ion-item (click)="showFriendsAddedMeList($event)">
     <ion-badge>{{CountFriendsAddedMe}}</ion-badge>
     Ils m'ont ajouté
   </ion-item>
-  <ion-item>
+  <ion-item (click)="goToAddFriend()">
     <ion-icon name="add-circle"></ion-icon>
     Ajouter un ami
   </ion-item>

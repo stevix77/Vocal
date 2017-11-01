@@ -7,7 +7,6 @@ import { StoreService } from "../../services/storeService";
 import { TalkResponse } from '../../models/response/talkResponse';
 import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
 import {HubMethod} from '../../models/enums';
-import { AudioRecorderComponent } from '../../components/audio-recorder/audio-recorder';
 import { MessagePage } from '../message/message';
 import {params} from '../../services/params';
 import { Response } from '../../models/Response';
@@ -25,8 +24,7 @@ import {url} from '../../services/url';
 @Component({
   selector: 'page-vocal-list',
   templateUrl: 'vocal-list.html',
-  providers: [HttpService, CookieService, StoreService, TalkService],
-  entryComponents: [AudioRecorderComponent]
+  providers: [HttpService, CookieService, StoreService, TalkService]
 })
 export class VocalListPage {
   notificationHub : any;
@@ -108,8 +106,10 @@ export class VocalListPage {
 
   initialize() {
     this.talkService.LoadList().then(() => {
-      if(this.talkService.Talks != null)
+      if(this.talkService.Talks != null) {
         this.vocalList = this.talkService.Talks;
+        console.log(this.vocalList);
+      }
       else {  
         this.getVocalList();
       }

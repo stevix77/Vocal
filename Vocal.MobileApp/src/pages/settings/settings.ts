@@ -36,7 +36,7 @@ export class SettingsPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.storeService.Get(KeyStore.Settings.toString()).then(
+    this.storeService.Get(KeyStore[KeyStore.Settings]).then(
       store => {
         if(store != null)
           this.model.Settings = store;
@@ -58,7 +58,7 @@ export class SettingsPage implements OnInit {
         {
           text: 'Déconnexion',
           handler: () => {
-            this.storeService.Remove(KeyStore[KeyStore.User]);
+            this.storeService.Clear();
             params.User = null;
             this.navCtrl.setRoot(HomePage);
           }
@@ -78,7 +78,7 @@ export class SettingsPage implements OnInit {
         let response = resp.json() as Response<SettingsResponse>;
         if(!response.HasError) {
           this.model.Settings = response.Data;
-          this.storeService.Set(KeyStore.Settings.toString(), this.model.Settings)
+          this.storeService.Set(KeyStore[KeyStore.Settings], this.model.Settings)
         } else {
           
         }

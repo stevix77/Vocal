@@ -10,6 +10,7 @@ import { params } from "../../services/params";
 import { url } from "../../services/url";
 import { Response } from '../../models/response';
 import { ManageFriendsRequest } from "../../models/request/manageFriendsRequest";
+import { PeopleResponse } from "../../models/response/peopleResponse";
 
 /**
  * Generated class for the FriendsListPage page.
@@ -20,8 +21,7 @@ import { ManageFriendsRequest } from "../../models/request/manageFriendsRequest"
 @IonicPage()
 @Component({
   selector: 'page-friends-list',
-  templateUrl: 'friends-list.html',
-  providers: [HttpService, CookieService, StoreService]
+  templateUrl: 'friends-list.html'
 })
 export class FriendsListPage {
   Friends: Array<UserResponse>;
@@ -69,7 +69,7 @@ export class FriendsListPage {
         if(!response.HasError) {
           let index = this.Friends.findIndex(x => x.Id == userId);
           this.Friends.splice(index, 1);
-          this.storeService.Set(KeyStore.Friends.toString(), this.Friends)
+          this.storeService.Set(KeyStore[KeyStore.Friends], this.Friends)
         } else {
           console.log("error ->" + response.ErrorMessage);
         }
@@ -78,12 +78,14 @@ export class FriendsListPage {
   }
 
   ionViewWillEnter() {
-    this.storeService.Get(KeyStore.Friends.toString()).then(
+    this.storeService.Get(KeyStore[KeyStore.Friends]).then(
       store => {
-        if(store != null)
-          this.Friends = store
-        else
+        if(store != null){
+          this.Friends = store;
+          console.log(this.Friends);
+        } else {
           this.LoadFriends();
+        }
       }
     )
   }
@@ -100,12 +102,12 @@ export class FriendsListPage {
     let cookie = this.cookieService.GetAuthorizeCookie(urlFriends, params.User)
     this.httpService.Post<GetFriendsRequest>(urlFriends, obj, cookie).subscribe(
       resp => { 
-        let response = resp.json() as Response<Array<UserResponse>>;
+        let response = resp.json() as Response<Array<PeopleResponse>>;
         if(!response.HasError) {
           this.Friends = response.Data;
-          this.storeService.Set(KeyStore.Friends.toString(), response.Data)
+          this.storeService.Set(KeyStore[KeyStore.Friends], response.Data);
         } else {
-          
+          console.log(response);
         }
       }
     );
