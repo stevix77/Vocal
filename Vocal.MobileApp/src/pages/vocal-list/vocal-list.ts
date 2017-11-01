@@ -7,7 +7,6 @@ import { StoreService } from "../../services/storeService";
 import { TalkResponse } from '../../models/response/talkResponse';
 import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
 import {HubMethod} from '../../models/enums';
-import { AudioRecorderComponent } from '../../components/audio-recorder/audio-recorder';
 import { MessagePage } from '../message/message';
 import {params} from '../../services/params';
 import { Response } from '../../models/Response';
@@ -25,8 +24,7 @@ import {url} from '../../services/url';
 @Component({
   selector: 'page-vocal-list',
   templateUrl: 'vocal-list.html',
-  providers: [HttpService, CookieService, StoreService, TalkService],
-  entryComponents: [AudioRecorderComponent]
+  providers: [HttpService, CookieService, StoreService, TalkService]
 })
 export class VocalListPage {
   notificationHub : any;
@@ -51,16 +49,16 @@ export class VocalListPage {
     events.subscribe(HubMethod[HubMethod.Receive], () => this.initialize())
 
     this.isApp = this.config.get('isApp');
+    
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad VocalListPage');
-
+    document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
+    if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
   }
 
   ionViewDidEnter() {
-    document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
-    if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
     this.initialize();
   }
 
@@ -114,6 +112,14 @@ export class VocalListPage {
         this.getVocalList();
       }
     })
+  }
+
+  deleteMessage(id){
+    console.log('delete : ' + id);
+  }
+
+  archiveMessage(id){
+    console.log('archive : ' + id);
   }
 
   goToMessage(id) {

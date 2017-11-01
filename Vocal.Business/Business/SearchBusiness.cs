@@ -14,17 +14,18 @@ namespace Vocal.Business.Business
 {
     public static class SearchBusiness
     {
-        public static Response<List<UserResponse>> SearchPeople(string keyword, string lang)
+        public static Response<List<PeopleResponse>> SearchPeople(string userId, string keyword, string lang)
         {
-            var response = new Response<List<UserResponse>>();
-            LogManager.LogDebug(keyword, lang);
-            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+            var response = new Response<List<PeopleResponse>>();
             try
             {
-                var listStart = new List<User>();
-                var listEnd = new List<User>();
-                var listContains = new List<User>();
-                var list = Repository.Instance.SearchPeople(keyword);
+                LogManager.LogDebug(userId, keyword, lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var listStart = new List<Vocal.Model.DB.User>();
+                var listEnd = new List<Vocal.Model.DB.User>();
+                var listContains = new List<Vocal.Model.DB.User>();
+                var user = Repository.Instance.GetUserById(userId);
+                var list = Repository.Instance.SearchPeople(userId, keyword);
                 foreach(var item in list)
                 {
                     if (item.Username.ToLower().StartsWith(keyword) || item.Firstname.ToLower().StartsWith(keyword) || item.Lastname.ToLower().StartsWith(keyword))
@@ -36,7 +37,7 @@ namespace Vocal.Business.Business
                 }
                 listStart.AddRange(listContains);
                 listStart.AddRange(listEnd);
-                response.Data = Binder.Bind.Bind_Users(listStart);
+                response.Data = Binder.Bind.Bind_SearchPeople(user, listStart);
                 Task.Run(() =>
                 {
                     var search = new Search
@@ -46,6 +47,88 @@ namespace Vocal.Business.Business
                     };
                     Repository.Instance.AddSearch(search);
                 });
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
+        public static Response<List<PeopleResponse>> SearchPeopleByEmail(string userId, string keyword, string lang)
+        {
+            var response = new Response<List<PeopleResponse>>();
+            try
+            {
+                LogManager.LogDebug(userId, keyword, lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var listStart = new List<Vocal.Model.DB.User>();
+                var listEnd = new List<Vocal.Model.DB.User>();
+                var listContains = new List<Vocal.Model.DB.User>();
+                var user = Repository.Instance.GetUserById(userId);
+                var list = Repository.Instance.SearchPeopleByEmail(keyword);
+                foreach (var item in list)
+                {
+                    if (item.Username.ToLower().StartsWith(keyword) || item.Firstname.ToLower().StartsWith(keyword) || item.Lastname.ToLower().StartsWith(keyword))
+                        listStart.Add(item);
+                    else if ((item.Username.ToLower().EndsWith(keyword) || item.Firstname.ToLower().EndsWith(keyword) || item.Lastname.ToLower().EndsWith(keyword)) && !listStart.Contains(item))
+                        listEnd.Add(item);
+                    else if (!listStart.Contains(item) && !listEnd.Contains(item))
+                        listContains.Add(item);
+                }
+                listStart.AddRange(listContains);
+                listStart.AddRange(listEnd);
+                response.Data = Binder.Bind.Bind_SearchPeople(user, listStart);
+                Task.Run(() =>
+                {
+                    var search = new Search
+                    {
+                        Keyword = keyword,
+                        SearchDate = DateTime.Now
+                    };
+                    Repository.Instance.AddSearch(search);
+                });
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
+        public static Response<List<PeopleResponse>> SearchContacts(string userId, List<string> emails, string lang)
+        {
+            var response = new Response<List<PeopleResponse>>();
+            try
+            {
+                LogManager.LogDebug(userId, emails, lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var user = Repository.Instance.GetUserById(userId);
+                var list = Repository.Instance.SearchFriendsByEmails(emails);
+                list.RemoveAll(x => user.Friends.Any(y => y.Id == x.Id) || x.Id == user.Id);
+                response.Data = Binder.Bind.Bind_SearchPeople(user, list);
             }
             catch (TimeoutException tex)
             {

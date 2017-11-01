@@ -25,12 +25,14 @@ import { InitResponse } from '../models/response/InitResponse';
 import { Request } from "../models/request/Request";
 import { ExceptionService } from "../services/exceptionService";
 import { MessagePage } from "../pages/message/message";
+import { Deeplinks } from '@ionic-native/deeplinks';
+import { Inscription } from "../pages/inscription/inscription";
 
 declare var WindowsAzure: any;
 
 @Component({
   templateUrl: 'app.html',
-  providers: [StoreService, HttpService, Globalization, Device, CookieService, Push, HubService, TalkService, ExceptionService]
+  providers: [Globalization, Device, Push]
 })
 export class VocalApp {
   @ViewChild(Nav) nav: Nav;
@@ -53,24 +55,8 @@ export class VocalApp {
               private events: Events,
               private talkService: TalkService,
               private toastCtrl: ToastController,
-              private exceptionService: ExceptionService ) {
-    
-    this.storeService.Get("user").then(
-      user => {
-        if(user != null) {
-          params.User = user;
-          this.SubscribeHub();
-          this.initPushNotification();
-          this.init();
-          this.rootPage = VocalListPage;
-        }
-        else
-          this.rootPage = HomePage;
-      }
-    ).catch(error => {
-      console.log(error);
-      this.rootPage = HomePage;
-    });
+              private exceptionService: ExceptionService,
+              private deeplinks: Deeplinks ) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
@@ -118,7 +104,7 @@ export class VocalApp {
       let cookie = this.cookieService.GetAuthorizeCookie(urlNotifRegister, params.User)
       this.httpService.Post<NotificationRegisterRequest>(urlNotifRegister, request, cookie).subscribe(
         resp => {
-          
+          this.storeService.Set("registration", registrationId);
         }
       );
   }
@@ -132,7 +118,11 @@ export class VocalApp {
     const pushObject: PushObject = this.push.init(pushOptions);
     pushObject.on('registration').subscribe((data: any) => {
       console.log('device token -> ' + data.registrationId);
-      this.RegisterToNH(data.registrationId);
+      this.storeService.Get("registration").then((r) => {
+        if(r == null || r != data.registrationId)
+          this.RegisterToNH(data.registrationId);
+      })
+      
     });
     
     pushObject.on('notification').subscribe((data: any) => {
@@ -219,6 +209,29 @@ export class VocalApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.storeService.Get(KeyStore[KeyStore.User]).then(
+      user => {
+        if(user != null) {
+          params.User = user;
+          this.SubscribeHub();
+          this.initPushNotification();
+          this.init();
+          this.rootPage = VocalListPage;
+        }
+        else
+          this.rootPage = HomePage;
+        }
+      ).catch(error => {
+        console.log(error);
+        this.rootPage = HomePage;
+      });
+      this.deeplinks.routeWithNavController(this.nav, {
+        '/test': Inscription
+      }).subscribe(match => {
+        console.log(match);
+      }, (err) => {
+        console.log(err);
+      })
       this.GetAllResources();
       this.SetLanguage();
       this.SetPlatform();
@@ -269,9 +282,11 @@ export class VocalApp {
             let errorSettings = response.Data.Errors.find(x => x.Key == KeyStore.Settings.toString());
             let errorFriends = response.Data.Errors.find(x => x.Key == KeyStore.Friends.toString());
             let errorTalks = response.Data.Errors.find(x => x.Key == KeyStore.Talks.toString());
+            let errors = response.Data.Errors.find(x => x.Key == KeyStore.FriendsAddedMe.toString());
             this.SaveData(response.Data.Friends, errorFriends, KeyStore.Friends);
             this.SaveData(response.Data.Talks, errorTalks, KeyStore.Talks);
             this.SaveData(response.Data.Settings, errorSettings, KeyStore.Settings);
+            this.SaveData(response.Data.FriendsAddedMe, errors, KeyStore.FriendsAddedMe);
           }
         },
         error => {
@@ -287,7 +302,7 @@ export class VocalApp {
 
   SaveData(data: any, error: KeyValueResponse<string, string>, key: KeyStore) {
     if(error == null)
-      this.storeService.Set(key.toString(), data);
+      this.storeService.Set(KeyStore[key], data);
     else
       this.showAlert(error.Value);
   }
@@ -311,7 +326,9 @@ export class VocalApp {
   }
 
   SubscribeHub() {
-    this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
+    this.talkService.LoadList().then(() => {
+      this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
+    })
 
     this.hubService.hubProxy.on(HubMethod[HubMethod.Receive], (obj) => {
       console.log(obj);

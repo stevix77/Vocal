@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Vocal.Model.DB
 {
@@ -14,5 +10,9 @@ namespace Vocal.Model.DB
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Picture { get; set; }
+        public DateTime DateAdded { get; set; }
+        public bool IsFriend { get; set; }
     }
+
+    
 }

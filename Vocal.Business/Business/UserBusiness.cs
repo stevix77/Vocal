@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Vocal.Business.Properties;
 using Vocal.Business.Security;
 using Vocal.Business.Tools;
@@ -60,10 +57,10 @@ namespace Vocal.Business.Business
                 switch(type)
                 {
                     case Update.Gender:
-                        user.Settings.Gender = (Gender)Enum.ToObject(typeof(Gender), int.Parse(value.ToString()));
+                        user.Settings.Gender = (Vocal.Model.DB.Gender)Enum.ToObject(typeof(Vocal.Model.DB.Gender), int.Parse(value.ToString()));
                         break;
                     case Update.Contact:
-                        user.Settings.Contact = (Contacted)Enum.ToObject(typeof(Contacted), int.Parse(value.ToString()));
+                        user.Settings.Contact = (Vocal.Model.DB.Contacted)Enum.ToObject(typeof(Vocal.Model.DB.Contacted), int.Parse(value.ToString()));
                         break;
                     case Update.Notification:
                         user.Settings.IsNotifiable = Convert.ToBoolean(value);
@@ -85,6 +82,9 @@ namespace Vocal.Business.Business
                         break;
                     case Update.Blocked:
                         BlockedUser(user, value.ToString());
+                        break;
+                    case Update.Picture:
+                        user.Picture = value.ToString();
                         break;
                     default:
                         break;
@@ -110,7 +110,91 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        private static void BlockedUser(User user, string userId)
+        public static Response<bool> BlockUsers(string userId, List<string> ids, string lang)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                LogManager.LogDebug(userId, ids, lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var success = Repository.Instance.BlockUsers(userId, ids);
+                response.Data = success;
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
+        public static Response<bool> UnblockUsers(string userId, List<string> ids, string lang)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                LogManager.LogDebug(userId, ids, lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var success = Repository.Instance.UnblockUsers(userId, ids);
+                response.Data = success;
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
+        public static Response<List<UserResponse>> GetListUsers(string lang)
+        {
+            var response = new Response<List<UserResponse>>();
+            try
+            {
+                LogManager.LogDebug(lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var list = Repository.Instance.GetAllUsers();
+                response.Data = Binder.Bind.Bind_Users(list);
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
+        private static void BlockedUser(Vocal.Model.DB.User user, string userId)
         {
             var index = user.Settings.Blocked.FindIndex(x => x.Id == userId);
             if (index >= 0)
@@ -119,7 +203,7 @@ namespace Vocal.Business.Business
             {
                 var userToBlock = Repository.Instance.GetUserById(userId);
                 if (userToBlock != null)
-                    user.Settings.Blocked.Add(new People
+                    user.Settings.Blocked.Add(new Vocal.Model.DB.People
                     {
                         Email = userToBlock.Email,
                         Firstname = userToBlock.Firstname,

@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { NavController } from 'ionic-angular';
+import { NavController, AlertController } from 'ionic-angular';
 import { params } from "../../services/params";
 import { url } from "../../services/url";
 import { HttpService } from "../../services/httpService";
@@ -11,11 +11,11 @@ import { Response } from '../../models/response';
 import { Request } from "../../models/request/Request";
 import { SettingsChoices } from './settingsChoices/SettingsChoices';
 import { SettingsMail } from './settingsMail/SettingsMail';
+import { HomePage } from "../home/home";
 
 @Component({
   selector: "app-settings",
   templateUrl: "./settings.html",
-  providers: [HttpService, CookieService, StoreService]
 })
 
 export class SettingsPage implements OnInit {
@@ -23,7 +23,11 @@ export class SettingsPage implements OnInit {
     Settings: {} as SettingsResponse,
     ErrorSettings: ""
   }
-  constructor(public navCtrl: NavController, private httpService: HttpService, private cookieService: CookieService, private storeService: StoreService) { 
+  constructor(public navCtrl: NavController, 
+    public alertCtrl: AlertController, 
+    private httpService: HttpService, 
+    private cookieService: CookieService, 
+    private storeService: StoreService) { 
 
   }
 
@@ -32,7 +36,7 @@ export class SettingsPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.storeService.Get(KeyStore.Settings.toString()).then(
+    this.storeService.Get(KeyStore[KeyStore.Settings]).then(
       store => {
         if(store != null)
           this.model.Settings = store;
@@ -40,6 +44,28 @@ export class SettingsPage implements OnInit {
           this.LoadSettings();
       }
     )
+  }
+
+  showConfirmLogout() {
+    let confirm = this.alertCtrl.create({
+      title: 'Êtes-vous sûr de vouloir déconnecter ?',
+      buttons: [
+        {
+          text: 'Annuler',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Déconnexion',
+          handler: () => {
+            this.storeService.Clear();
+            params.User = null;
+            this.navCtrl.setRoot(HomePage);
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
 
   LoadSettings () {
@@ -52,7 +78,7 @@ export class SettingsPage implements OnInit {
         let response = resp.json() as Response<SettingsResponse>;
         if(!response.HasError) {
           this.model.Settings = response.Data;
-          this.storeService.Set(KeyStore.Settings.toString(), this.model.Settings)
+          this.storeService.Set(KeyStore[KeyStore.Settings], this.model.Settings)
         } else {
           
         }

@@ -43,5 +43,25 @@ namespace Vocal.WebApi.Controllers
             var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
             return Business.Tools.Monitoring.Execute(UserBusiness.UpdateUser, obj.UserId, request.Value, request.UpdateType, request.Lang);
         }
+
+        [HttpPost, Route("list"), CustomAuthorize]
+        public Response<List<UserResponse>> GetListUsers(Request request)
+        {
+            return Business.Tools.Monitoring.Execute(UserBusiness.GetListUsers, request.Lang);
+        }
+
+        [HttpPost, Route("block"), CustomAuthorize]
+        public Response<bool> BlockUsers(ManageFriendsRequest request)
+        {
+            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
+            return Business.Tools.Monitoring.Execute(UserBusiness.BlockUsers, obj.UserId, request.Ids, request.Lang);
+        }
+
+        [HttpPost, Route("unblock"), CustomAuthorize]
+        public Response<bool> UnblockUsers(ManageFriendsRequest request)
+        {
+            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
+            return Business.Tools.Monitoring.Execute(UserBusiness.UnblockUsers, obj.UserId, request.Ids, request.Lang);
+        }
     }
 }

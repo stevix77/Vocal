@@ -1,12 +1,4 @@
 {
-    "cordova-plugin-console": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-console@^1.0.5"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "cordova-plugin-device": {
         "source": {
             "type": "registry",
@@ -69,14 +61,16 @@
             "id": "cordova-plugin-contacts@^2.3.1"
         },
         "is_top_level": true,
-        "variables": {}
+        "variables": {
+            "CONTACTS_USAGE_DESCRIPTION": " "
+        }
     },
     "cordova-plugin-compat": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-compat@^1.0.0"
+            "id": "cordova-plugin-compat@1.2.0"
         },
-        "is_top_level": false,
+        "is_top_level": true,
         "variables": {}
     },
     "cordova-plugin-file": {
@@ -90,7 +84,7 @@
     "phonegap-plugin-push": {
         "source": {
             "type": "registry",
-            "id": "phonegap-plugin-push@^2.0.0-rc5"
+            "id": "phonegap-plugin-push@^2.0.0"
         },
         "is_top_level": true,
         "variables": {
@@ -108,16 +102,7 @@
     "cordova-plugin-inappbrowser": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-inappbrowser@^1.5.0"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "msopentech.azure.NotificationHub": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/PhonegapProjects/cordova-plugin-azure-notificationhub/",
-            "subdir": "."
+            "id": "cordova-plugin-inappbrowser@^1.7.1"
         },
         "is_top_level": true,
         "variables": {}
@@ -136,6 +121,29 @@
             "id": "cordova-plugin-media@^3.0.1"
         },
         "is_top_level": true,
+        "variables": {
+            "MICROPHONE_USAGE_DESCRIPTION": " "
+        }
+    },
+    "com-badrit-base64": {
+        "source": {
+            "type": "registry",
+            "id": "com-badrit-base64@^0.2.0"
+        },
+        "is_top_level": true,
         "variables": {}
+    },
+    "ionic-plugin-deeplinks": {
+        "source": {
+            "type": "registry",
+            "id": "ionic-plugin-deeplinks"
+        },
+        "is_top_level": true,
+        "variables": {
+            "URL_SCHEME": "vocal",
+            "DEEPLINK_SCHEME": "https",
+            "DEEPLINK_HOST": "vocal.com",
+            "ANDROID_PATH_PREFIX": "/"
+        }
     }
 }

@@ -11,8 +11,7 @@ import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-voca
  */
 @Component({
   selector: 'audio-recorder',
-  templateUrl: 'audio-recorder.html',
-  providers: [AudioRecorder]
+  templateUrl: 'audio-recorder.html'
 })
 export class AudioRecorderComponent {
 
@@ -38,6 +37,7 @@ export class AudioRecorderComponent {
   }
 
   startRecording() {
+    console.log('start recording');
     let template = `
     <div class="wrapper-record">
       <div class="timer" data-timer><span>0:00</span></div>

@@ -1,3 +1,16 @@
 page-modal-profile {
-
+  .profile-pic{
+    position: relative;
+    .wrapper-button{
+      position:absolute;
+      bottom:2%;
+      left:0;
+      z-index: 10;
+      background: rgba(0,0,0,0.5);
+      color: white;
+    }
+  }
+}
+ion-popover.friends-added-me .popover-content{
+  width: 270px;
 }

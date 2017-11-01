@@ -1,3 +1,4 @@
+import { UserResponse } from '../../models/response/userResponse';
 import { TalkService } from './../../services/talkService';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
@@ -5,9 +6,9 @@ import { SelectFriendsComponent } from '../../components/select-friends/select-f
 import { VocalListPage } from '../../pages/vocal-list/vocal-list';
 import { StoreService } from "../../services/storeService";
 import { KeyStore } from '../../models/enums';
-import { AudioRecorder } from '../../services/audiorecorder';
 import { MessageType } from '../../models/enums';
 import { SendMessageRequest } from '../../models/request/sendMessageRequest';
+import { GetFriendsRequest } from '../../models/request/getFriendsRequest';
 import { params } from "../../services/params";
 import { url } from "../../services/url";
 import { HttpService } from "../../services/httpService";
@@ -15,8 +16,7 @@ import { CookieService } from "../../services/cookieService";
 import { Response } from '../../models/response';
 import { TalkResponse } from '../../models/response/talkResponse';
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
-import { GetFriendsRequest } from '../../models/request/getFriendsRequest';
-import { UserResponse } from '../../models/response/userResponse';
+import { AudioRecorder } from '../../services/audiorecorder';
 
 /**
  * Generated class for the SendVocalPage page.
@@ -29,7 +29,7 @@ import { UserResponse } from '../../models/response/userResponse';
   selector: 'page-send-vocal',
   templateUrl: 'send-vocal.html',
   entryComponents: [SelectFriendsComponent],
-  providers: [StoreService, AudioRecorder, CookieService, HttpService, TalkService]
+  providers: [StoreService, CookieService, HttpService, TalkService]
 })
 export class SendVocalPage {
 
@@ -86,7 +86,7 @@ export class SendVocalPage {
       }
     )
     }).catch(err => {
-      
+      console.log(err);
     });
   }
 
@@ -100,7 +100,6 @@ export class SendVocalPage {
       }
     ).catch(error => {
       console.log(error);
-      
     });
   }
 

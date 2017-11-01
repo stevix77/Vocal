@@ -16,20 +16,27 @@
 
 <ion-content padding>
 <div text-center>
-  <h2>John Doe</h2>
+  <div class="profile-pic">
+    <img [src]="User.Picture" width="400" height="200">
+    <div class="wrapper-button" padding (click)="presentActionSheetProfile()">
+      <ion-icon icon-only name="settings" color="light"></ion-icon>
+      Modifier sa photo
+    </div>
+  </div>
+  <h2>{{User.Firstname}} {{User.Lastname}}</h2>
   <span class="vocal-total">35h de vocal à votre actif</span>
 </div>
 
 <ion-list inset>
-  <ion-item>
-    <ion-badge>1</ion-badge>
+  <ion-item (click)="showFriendsAddedMeList($event)">
+    <ion-badge>{{CountFriendsAddedMe}}</ion-badge>
     Ils m'ont ajouté
   </ion-item>
-  <ion-item>
+  <ion-item (click)="goToAddFriend()">
     <ion-icon name="add-circle"></ion-icon>
     Ajouter un ami
   </ion-item>
-  <ion-item>
+  <ion-item (click)="goToFriendsList()">
     <ion-icon name="list"></ion-icon>
     Mes amis
   </ion-item>

@@ -13,41 +13,13 @@ namespace Vocal.Business.Business
 {
     public static class FriendBusiness
     {
-        public static Response<List<UserResponse>> SearchFriends(List<string> emails, string lang)
-        {
-            var response = new Response<List<UserResponse>>();
-            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-            LogManager.LogDebug(emails, lang);
-            try
-            {
-                var list = Repository.Instance.SearchFriendsByEmails(emails);
-                response.Data = Binder.Bind.Bind_Users(list);
-            }
-            catch (TimeoutException tex)
-            {
-                LogManager.LogError(tex);
-                response.ErrorMessage = Resources_Language.TimeoutError;
-            }
-            catch (CustomException cex)
-            {
-                LogManager.LogError(cex);
-                response.ErrorMessage = cex.Message;
-            }
-            catch (Exception ex)
-            {
-                LogManager.LogError(ex);
-                response.ErrorMessage = Resources_Language.TechnicalError;
-            }
-            return response;
-        }
-
         public static Response<List<UserResponse>> GetFriends(string userId, int pageNumber, int pageSize, string lang)
         {
             var response = new Response<List<UserResponse>>();
-            LogManager.LogDebug(userId, pageNumber, pageSize, lang);
-            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {
+                LogManager.LogDebug(userId, pageNumber, pageSize, lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
                 var list = Repository.Instance.GetFriends(userId, pageSize, pageNumber);
                 response.Data = Binder.Bind.Bind_Users(list);
             }
@@ -72,10 +44,10 @@ namespace Vocal.Business.Business
         public static Response<bool> AddFriends(string userId, List<string> ids, string lang)
         {
             var response = new Response<bool>();
-            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-            LogManager.LogDebug(userId, ids, lang);
             try
             {
+                LogManager.LogDebug(userId, ids, lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
                 response.Data = Repository.Instance.AddFriends(userId, ids);
                 if (response.Data)
                     Task.Run(async () =>
@@ -111,6 +83,35 @@ namespace Vocal.Business.Business
             try
             {
                 response.Data = Repository.Instance.RemoveFriends(userId, ids);
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
+        public static Response<List<PeopleResponse>> GetFriendsAddedMe(string userId, string lang)
+        {
+            var response = new Response<List<PeopleResponse>>();
+            try
+            {
+                LogManager.LogDebug(userId, lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var user = Repository.Instance.GetUserById(userId);
+                var list = Repository.Instance.GetFriendsAddedMe(userId);
+                response.Data = Binder.Bind.Bind_People(user, list);
             }
             catch (TimeoutException tex)
             {

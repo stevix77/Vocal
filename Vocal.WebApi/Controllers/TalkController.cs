@@ -20,17 +20,17 @@ namespace Vocal.WebApi.Controllers
             return Monitoring.Execute(TalkBusiness.GetTalks, request.UserId, request.Lang);
         }
 
-        [Route("SendMessage"), HttpPost]
-        public Response<SendMessageResponse> SendMessage(SendMessageRequest request)
-        {
-            return Monitoring.Execute(TalkBusiness.SendMessage, request);
-        }
-
         [Route("messages/{talkId}"), HttpPost]
         public Response<List<MessageResponse>> GetMessages(string talkId, Request request)
         {
             var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
             return Monitoring.Execute(TalkBusiness.GetMessages, talkId, obj.UserId, request.Lang);
+        }
+
+        [Route("SendMessage"), HttpPost]
+        public Response<SendMessageResponse> SendMessage(SendMessageRequest request)
+        {
+            return Monitoring.Execute(TalkBusiness.SendMessage, request);
         }
     }
 }

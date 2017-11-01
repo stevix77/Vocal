@@ -1,0 +1,35 @@
+<!--
+  Generated template for the AddFriendPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Ajouter un ami</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <button ion-item (click)="goToSearchByUsername()">
+      <ion-icon name="search"></ion-icon>
+      Nom d'utilisateur
+      <!-- <ion-input type="text" placeholder="Nom d'utilisateur" (input)="viewUsersByName($event.target.value)"></ion-input> -->
+    </button>
+    <button ion-item (click)="goToScanContacts()">
+      <ion-icon name="call"></ion-icon>
+      Contacts
+    </button>
+
+  </ion-list>
+  <div text-center>
+    <button ion-button>
+        Inviter des amis
+    </button>
+  </div>
+
+</ion-content>

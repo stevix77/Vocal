@@ -11,7 +11,8 @@ namespace Vocal.Business.Tools
     {
         Friends = 0,
         Talks = 1,
-        Settings = 2
+        Settings = 2,
+        FriendsAddedMe = 3
     }
 
     public enum HubMethod

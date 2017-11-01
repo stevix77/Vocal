@@ -7,9 +7,6 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-azure-notification-hubs": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
         "cordova-plugin-console": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
@@ -22,19 +19,7 @@
         "cordova-plugin-device": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
-        "cordova-plugin-file": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
         "cordova-plugin-globalization": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-media": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-ms-azure-mobile-apps": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
         "cordova-plugin-splashscreen": {
@@ -50,13 +35,38 @@
             "PACKAGE_NAME": "io.ionic.starter"
         },
         "phonegap-plugin-push": {
+            "SENDER_ID": "85075801930",
             "PACKAGE_NAME": "io.ionic.starter"
-        }
-    },
-    "dependent_plugins": {
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-ms-azure-mobile-apps": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-media": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "com-badrit-base64": {
+            "PACKAGE_NAME": "io.ionic.starter"
+        },
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "VocalDev2"
+        },
         "cordova-plugin-compat": {
             "PACKAGE_NAME": "io.ionic.starter"
         },
+        "ionic-plugin-deeplinks": {
+            "URL_SCHEME": "vocal",
+            "DEEPLINK_SCHEME": "https",
+            "DEEPLINK_HOST": "vocal.com",
+            "PACKAGE_NAME": "7904ValentinSteve.VocalDev2"
+        }
+    },
+    "dependent_plugins": {
         "cordova-sqlite-storage": {
             "PACKAGE_NAME": "io.ionic.starter"
         }

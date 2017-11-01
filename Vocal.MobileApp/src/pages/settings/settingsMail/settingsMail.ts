@@ -30,7 +30,7 @@ export class SettingsMail implements OnInit {
 
   ionViewDidEnter() {
     this.Email = this.navParams.get('Email');
-    this.storeService.Get(KeyStore.Settings.toString()).then(
+    this.storeService.Get(KeyStore[KeyStore.Settings]).then(
       store => {
         this.settingsStore = store;
       }
@@ -50,7 +50,7 @@ export class SettingsMail implements OnInit {
         let response = resp.json() as Response<Boolean>;
         if(!response.HasError) {
           this.settingsStore.Email = this.Email;
-          this.storeService.Set(KeyStore.Settings.toString(), this.settingsStore)
+          this.storeService.Set(KeyStore[KeyStore.Settings], this.settingsStore)
           this.navCtrl.pop();
         } else {
           
