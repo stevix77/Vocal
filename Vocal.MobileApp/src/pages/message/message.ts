@@ -23,12 +23,11 @@ import {DomSanitizer} from '@angular/platform-browser';
 @IonicPage()
 @Component({
   selector: 'page-message',
-  templateUrl: 'message.html',
-  providers: [HttpService, CookieService, TalkService]
+  templateUrl: 'message.html'
 })
 export class MessagePage {
   
-  model = { Message: "", talkId: null }
+  model = { Message: "", talkId: null, userId: null }
   VocalName: string = "";
   Messages: Array<MessageResponse> = new Array<MessageResponse>();
   isApp: boolean;
@@ -45,6 +44,7 @@ export class MessagePage {
               private domSanitizer: DomSanitizer) {
 
     this.model.talkId = this.navParams.get("TalkId");
+    this.model.userId = this.navParams.get("UserId");
     this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj.Message))
 
     this.isApp = this.config.get('isApp');
@@ -61,9 +61,12 @@ export class MessagePage {
   }
 
   ionViewWillEnter() {
-    this.loadMessages().then(() => {
-      this.getMessages();
-    });
+    if(this.model.talkId != null) {
+      this.loadMessages();
+    } else {
+      this.loadMessagesByUser(this.model.userId);
+    }
+    this.getMessages();
   }
 
   ionViewWillLeave() {
@@ -98,20 +101,19 @@ export class MessagePage {
   }
 
   loadMessages() {
-   return this.talkService.GetMessages(this.model.talkId).then(() => {
-      if(this.talkService.Messages != null) {
-        let mess = this.talkService.Messages.find(x => x.Key == this.model.talkId)
-        this.talkService.Talks.find(x => x.Id == this.model.talkId).Users.forEach(x => {
-          if(x.Id != params.User.Id)
-            this.VocalName += x.Username + ",";
-        })
-        if(mess != null) {
-          this.Messages = mess.Value;
-        }
-      }
-    }).catch((err) => {
-      console.log(err);
+    this.Messages = this.talkService.GetMessages(this.model.talkId)
+    this.talkService.Talks.find(x => x.Id == this.model.talkId).Users.forEach(x => {
+      if(x.Id != params.User.Id)
+        this.VocalName += x.Username + " ";
     })
+  }
+
+  loadMessagesByUser(userId) {
+    let talk = this.talkService.Talks.find(talk => talk.Users.some(x => x.Id == userId) && talk.Users.length == 2);
+    if(talk != null) {
+      this.Messages = talk.Messages != null ? talk.Messages : new Array<MessageResponse>()
+      this.model.talkId = talk.Id;
+    }
   }
 
   getMessages() {
@@ -132,12 +134,12 @@ export class MessagePage {
             this.talkService.SaveMessages(this.model.talkId, this.Messages);
           } else {
             this.showToast(response.ErrorMessage);
-            this.loadMessages();
+            // this.loadMessages();
           }
         }
       )
     } catch(err) {
-      this.loadMessages();
+      // this.loadMessages();
     }
   }
 

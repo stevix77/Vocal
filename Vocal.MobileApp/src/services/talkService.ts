@@ -55,29 +55,17 @@ export class TalkService {
     return lst;
   }
 
-  GetMessages(talkId) {
-    return this.storeService.Get(KeyStore[KeyStore.Messages]).then(
-      obj => {
-        if(obj != null) {
-          this.Messages = obj;
-        }
-      }
-    ).catch(error => {
-      console.log(error);
-      
-    });
+  GetMessages(talkId: string) {
+    return this.Talks.find(x => x.Id == talkId).Messages;
   }
 
   SaveMessages(talkId: string, messages: Array<MessageResponse>) {
-    let talkMessage = this.Messages.find(x => x.Key == talkId);
-    if(talkMessage != null)
-      talkMessage.Value = messages;
-    else {
-      let mess = new KeyValueResponse<string, Array<MessageResponse>>();
-      mess.Key = talkId;
-      mess.Value = messages;
-      this.Messages.push(mess);
-    }
-    this.storeService.Set(KeyStore[KeyStore.Messages], this.Messages)
+    let talk = this.Talks.findIndex(x => x.Id == talkId);
+    if(talk != -1)
+    {
+      this.Talks[talk].Messages = messages;
+      this.storeService.Set(KeyStore[KeyStore.Talks], this.Talks)
+    }  
+    
   }
 }

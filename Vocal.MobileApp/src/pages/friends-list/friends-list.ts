@@ -11,6 +11,7 @@ import { url } from "../../services/url";
 import { Response } from '../../models/response';
 import { ManageFriendsRequest } from "../../models/request/manageFriendsRequest";
 import { PeopleResponse } from "../../models/response/peopleResponse";
+import { MessagePage } from "../message/message";
 
 /**
  * Generated class for the FriendsListPage page.
@@ -91,8 +92,7 @@ export class FriendsListPage {
   }
 
   sendMessage(userId) {
-    console.log(userId);
-    // open discussion one-to-one
+    this.navCtrl.push(MessagePage, {TalkId: null, UserId: userId})
   }
 
   showConfirm(userId) {
