@@ -114,6 +114,11 @@ namespace Vocal.DAL
             return user;
         }
 
+        public Talk GetTalkFromUsers(List<string> idsRecipient)
+        {
+            throw new NotImplementedException();
+        }
+
         public void UpdateUser(Vocal.Model.DB.User user)
         {
             var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);

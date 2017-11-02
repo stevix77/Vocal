@@ -158,9 +158,11 @@ namespace Vocal.Business.Business
                 Content = request.Content,
                 ContentType = (MessageType)request.MessageType,
                 Sender = sender.ToPeople(),
-                Users = allUsers.Select(x => new UserListen() { Recipient = x.ToPeople()/*, ListenDate = x == user.Id ? DateTime.Now : new DateTime?()*/ }).ToList()
+                Users = allUsers.Select(x => new UserListen() { Recipient = x.ToPeople()/*, ListenDate = x == user.Id ? DateTime.Now : new DateTime?()*/ }).ToList(),
+                Duration = request.Duration
             };
             var talk = new Talk() { Id = Guid.NewGuid().ToString() };
+            talk.TotalDuration += request.Duration.HasValue ? request.Duration.Value : 0;
             talk.Messages.Add(m);
             talk.DateLastMessage = m.ArrivedTime;
             talk.Recipients = allUsers.Select(x => x.ToPeople()).ToList();
@@ -185,7 +187,8 @@ namespace Vocal.Business.Business
                 Content = request.Content,
                 ContentType = (MessageType)request.MessageType,
                 Sender = sender.ToPeople(),
-               Users = allUsers.Select(x => new UserListen() { Recipient = x.ToPeople()/*, ListenDate = x == user.Id ? DateTime.Now : new DateTime?()*/ }).ToList()
+                Users = allUsers.Select(x => new UserListen() { Recipient = x.ToPeople()/*, ListenDate = x == user.Id ? DateTime.Now : new DateTime?()*/ }).ToList(),
+                Duration = request.Duration
             };
 
             var talk = Repository.Instance.AddMessageToTalk(request.IdTalk, allUsers.Select(x => x.Id).ToList(), m);

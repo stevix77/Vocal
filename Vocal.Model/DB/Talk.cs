@@ -16,6 +16,6 @@ namespace Vocal.Model.DB
         public bool IsArchived { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsReceivedMessage { get; set; }
-
+        public int TotalDuration { get; set; }
     }
 }
