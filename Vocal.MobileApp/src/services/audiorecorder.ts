@@ -84,6 +84,10 @@ export class AudioRecorder {
     return this.file.readAsDataURL(this.file.dataDirectory, this.filename);
   }
 
+  getMediaDuration() : number {
+    return this.mediaObject.getDuration();
+  }
+
   getMedia() {
     console.log(this.file.dataDirectory);
     if(this.mediaObject == null) {
