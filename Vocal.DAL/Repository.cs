@@ -114,9 +114,9 @@ namespace Vocal.DAL
             return user;
         }
 
-        public void UpdateUser(Vocal.Model.DB.User user)
+        public void UpdateUser(User user)
         {
-            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             db.ReplaceOne(x => x.Id == user.Id, user);
         }
 
@@ -165,7 +165,7 @@ namespace Vocal.DAL
             }
             return success;
         }
-
+        
         public bool UnblockUsers(string userId, List<string> userIds)
         {
             bool success = false;
@@ -473,9 +473,8 @@ namespace Vocal.DAL
             throw new Exception("User not found");
         }
 
-        public bool AddTalk(Vocal.Model.DB.Talk talk, List<string> usersId)
+        public bool AddTalk(Talk talk, List<User> users)
         {
-            var users = GetUsersById(usersId);
             foreach(var u in users)
             {
                 u.Talks.Add(talk);
@@ -484,18 +483,18 @@ namespace Vocal.DAL
             return true;
         }
 
-        public Vocal.Model.DB.Talk AddMessageToTalk(string talkId, List<string> usersId, Vocal.Model.DB.Message message)
+        public Talk AddMessageToTalk(string talkId, List<User> users, Message message)
         {
-            Vocal.Model.DB.Talk talk = GetTalk(talkId, message.Sender.Id);
-            var users = GetUsersById(usersId);
+            Talk talk = GetTalk(talkId, message.Sender.Id);
             foreach (var u in users)
             {
                 var t = u.Talks.SingleOrDefault(x => x.Id == talkId && !x.IsDeleted);
                 if (t == null)
                 {
-                    t = new Vocal.Model.DB.Talk { Id = talk.Id, Recipients = talk.Recipients, Name = talk.Name };
+                    t = new Talk { Id = talk.Id, Recipients = talk.Recipients, Name = talk.Name };
                     u.Talks.Add(t);
                 }
+                t.TotalDuration = message.Duration.HasValue ? message.Duration.Value : 0;
                 t.Messages.Add(message);
                 t.DateLastMessage = message.SentTime;
                 UpdateUser(u);
