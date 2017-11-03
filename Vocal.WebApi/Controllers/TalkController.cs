@@ -11,7 +11,7 @@ using Vocal.WebApi.Attribute;
 namespace Vocal.WebApi.Controllers
 {
     [EnableCors("*", "*", "*")]
-    [RoutePrefix("api/talk"), CustomAuthorize]
+    [RoutePrefix("api/talk")]
     public class TalkController : ApiController
     {
         [Route("list"), HttpPost]

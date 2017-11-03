@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Vocal.DAL;
+using Vocal.Model.DB;
 
 namespace Vocal.Console
 {
@@ -22,7 +23,7 @@ namespace Vocal.Console
             {
                 foreach(var item in users)
                 {
-                    item.Talks = new List<Model.DBO.Talk>();
+                    item.Talks = new List<Talk>();
                     Repository.Instance.UpdateUser(item);
                 }
                 success = true;

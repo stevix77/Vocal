@@ -185,7 +185,7 @@ namespace Vocal.Business.Binder
             }
             return response;
         }
-        internal static TalkResponse Bind_Talk(Vocal.Model.DB.Talk talk, string userId)
+        internal static TalkResponse Bind_Talk(Talk talk, string userId)
         {
             var message = talk.Messages.LastOrDefault();
             var users = talk.Recipients.Where(x => x.Id != userId);
