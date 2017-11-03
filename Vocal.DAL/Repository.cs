@@ -39,15 +39,15 @@ namespace Vocal.DAL
             settings.Server = new MongoServerAddress(Properties.Settings.Default.Host, Properties.Settings.Default.Port);
             MongoIdentity identity = new MongoInternalIdentity(Properties.Settings.Default.DocumentDBName, Properties.Settings.Default.DocumentDBUser);
             MongoIdentityEvidence evidence = new PasswordEvidence(Properties.Settings.Default.DocumentDBPwd);
-#if !DEBUG
-                //settings.UseSsl = true;
-                //settings.SslSettings = new SslSettings();
-                //settings.SslSettings.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
-                settings.Credentials = new List<MongoCredential>()
-                {
-                    new MongoCredential("SCRAM-SHA-1", identity, evidence)
-                };
-#endif
+//#if !DEBUG
+//                //settings.UseSsl = true;
+//                //settings.SslSettings = new SslSettings();
+//                //settings.SslSettings.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+//                settings.Credentials = new List<MongoCredential>()
+//                {
+//                    new MongoCredential("SCRAM-SHA-1", identity, evidence)
+//                };
+//#endif
             //settings.Credentials = new List<MongoCredential>()
             //{
             //    new MongoCredential("SCRAM-SHA-1", identity, evidence)
