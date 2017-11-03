@@ -178,7 +178,8 @@ namespace Vocal.Business.Binder
                         Name = item.Name ?? string.Join(", ", users.Select(x => x.Username)),
                         Users = Bind_People(item.Recipients),
                         DateLastMessage = message.SentTime,
-                        HasNewMessage = message.Sender.Id != userId && message.Users.SingleOrDefault(x => x.Recipient.Id == userId && x.ListenDate.HasValue) == null
+                        HasNewMessage = message.Sender.Id != userId && message.Users.SingleOrDefault(x => x.Recipient.Id == userId && x.ListenDate.HasValue) == null,
+                        Duration = item.TotalDuration
                     });
                 }
                 response = response.OrderByDescending(x => x.DateLastMessage).ToList();
@@ -195,7 +196,8 @@ namespace Vocal.Business.Binder
                 Name = talk.Name ?? string.Join(", ", users.Select(x => x.Username)),
                 Users = Bind_People(talk.Recipients),
                 DateLastMessage = message.SentTime,
-                HasNewMessage = message.Sender.Id != userId && message.Users.SingleOrDefault(x => x.Recipient.Id == userId && x.ListenDate.HasValue) == null
+                HasNewMessage = message.Sender.Id != userId && message.Users.SingleOrDefault(x => x.Recipient.Id == userId && x.ListenDate.HasValue) == null,
+                Duration = talk.TotalDuration
             };
         }
 
