@@ -179,7 +179,7 @@ namespace Vocal.Business.Business
                     }
                     else // envoi du message à partir d'une conversation existante
                     {
-                        var talk = Repository.Instance.GetTalk(request.IdTalk, request.IdSender);
+                        var talk = user.Talks.SingleOrDefault(x => x.Id == request.IdTalk);
                         AddMessageToTalk(request, response, talk, user);
                     }
                 }
