@@ -17,6 +17,7 @@ namespace Vocal.Model.DB
         public List<UserListen> Users { get; set; }
         public int? Duration { get; set; }
 
+
         public Message Parent { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsReceivedMessage { get; set; }

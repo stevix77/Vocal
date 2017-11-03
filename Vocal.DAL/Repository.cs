@@ -114,14 +114,9 @@ namespace Vocal.DAL
             return user;
         }
 
-        public Talk GetTalkFromUsers(List<string> idsRecipient)
+        public void UpdateUser(User user)
         {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateUser(Vocal.Model.DB.User user)
-        {
-            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             db.ReplaceOne(x => x.Id == user.Id, user);
         }
 
@@ -170,7 +165,7 @@ namespace Vocal.DAL
             }
             return success;
         }
-
+        
         public bool UnblockUsers(string userId, List<string> userIds)
         {
             bool success = false;
@@ -228,6 +223,20 @@ namespace Vocal.DAL
                 friends.RemoveAll(x => user.Friends.Select(y => y.Id).Contains(x.Id));
                 friends.ForEach(x => x.DateAdded = DateTime.Now);
                 user.Friends.AddRange(friends);
+                Parallel.ForEach(users, (u) =>
+                {
+                    var friend = db.Find(x => x.Id == u.Id).SingleOrDefault();
+                    if(friend != null)
+                    {
+                        var f = friend.Friends.Find(x => x.Id == userId);
+                        if (f != null)
+                        {
+                            f.IsFriend = true;
+                            user.Friends.SingleOrDefault(x => x.Id == u.Id).IsFriend = true;
+                            db.ReplaceOne(x => x.Id == u.Id, friend);
+                        }
+                    }
+                });
                 db.ReplaceOne(x => x.Id == userId, user);
                 success = true;
             }
@@ -243,6 +252,7 @@ namespace Vocal.DAL
             var user = db.Find(x => x.Id == userId).SingleOrDefault();
             if (user != null)
             {
+                var friends = Bind_UsersToFriends(users); // traitement pas utile je pense ?
                 user.Friends.RemoveAll(x => users.Select(y => y.Id).Contains(x.Id));
                 var replace = db.ReplaceOne(x => x.Id == userId, user);
                 success = replace.ModifiedCount > 0;
@@ -257,8 +267,8 @@ namespace Vocal.DAL
             if (currentUser != null)
             {
                 var list = pageSize == 0 || pageNumber == 0
-                    ? currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x))
-                    : currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x)).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                    ? currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x) && x.IsFriend)
+                    : currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x) && x.IsFriend).Skip((pageNumber - 1) * pageSize).Take(pageSize);
                 return list.ToList();
             }
             return null;
@@ -459,12 +469,12 @@ namespace Vocal.DAL
             {
                 return user.Talks.Where(x => !x.IsArchived && !x.IsDeleted).ToList();
             }
-            return null;
+            //must create a proper exception to catch correctly the error 
+            throw new Exception("User not found");
         }
 
-        public bool AddTalk(Talk talk, List<string> usersId)
+        public bool AddTalk(Talk talk, List<User> users)
         {
-            var users = GetUsersById(usersId);
             foreach(var u in users)
             {
                 u.Talks.Add(talk);
@@ -473,10 +483,9 @@ namespace Vocal.DAL
             return true;
         }
 
-        public Talk AddMessageToTalk(string talkId, List<string> usersId, Vocal.Model.DB.Message message)
+        public Talk AddMessageToTalk(string talkId, List<User> users, Message message)
         {
-            Vocal.Model.DB.Talk talk = GetTalk(talkId, message.Sender.Id);
-            var users = GetUsersById(usersId);
+            Talk talk = GetTalk(talkId, message.Sender.Id);
             foreach (var u in users)
             {
                 var t = u.Talks.SingleOrDefault(x => x.Id == talkId && !x.IsDeleted);
@@ -485,6 +494,7 @@ namespace Vocal.DAL
                     t = new Talk { Id = talk.Id, Recipients = talk.Recipients, Name = talk.Name };
                     u.Talks.Add(t);
                 }
+                t.TotalDuration = message.Duration.HasValue ? message.Duration.Value : 0;
                 t.Messages.Add(message);
                 t.DateLastMessage = message.SentTime;
                 UpdateUser(u);
