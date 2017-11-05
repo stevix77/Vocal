@@ -57,10 +57,10 @@ namespace Vocal.Business.Business
                 switch(type)
                 {
                     case Update.Gender:
-                        user.Settings.Gender = (Vocal.Model.DB.Gender)Enum.ToObject(typeof(Vocal.Model.DB.Gender), int.Parse(value.ToString()));
+                        user.Settings.Gender = (Gender)Enum.ToObject(typeof(Gender), int.Parse(value.ToString()));
                         break;
                     case Update.Contact:
-                        user.Settings.Contact = (Vocal.Model.DB.Contacted)Enum.ToObject(typeof(Vocal.Model.DB.Contacted), int.Parse(value.ToString()));
+                        user.Settings.Contact = (Contacted)Enum.ToObject(typeof(Contacted), int.Parse(value.ToString()));
                         break;
                     case Update.Notification:
                         user.Settings.IsNotifiable = Convert.ToBoolean(value);
@@ -84,7 +84,10 @@ namespace Vocal.Business.Business
                         BlockedUser(user, value.ToString());
                         break;
                     case Update.Picture:
-                        user.Picture = value.ToString();
+                        var image = Converter.ConvertToImage(value.ToString());
+                        var filename = $"{Properties.Settings.Default.PicturePath}/{user.Id}.jpeg";
+                        image.Save(filename, System.Drawing.Imaging.ImageFormat.Jpeg);
+                        user.Picture = $"{Properties.Settings.Default.Url}/{filename}";
                         break;
                     default:
                         break;
