@@ -32,5 +32,12 @@ namespace Vocal.WebApi.Controllers
         {
             return Monitoring.Execute(TalkBusiness.SendMessage, request);
         }
+
+        [Route("message"), HttpPost]
+        public Response<string> GetMessageById(MessageRequest request)
+        {
+            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
+            return Monitoring.Execute(TalkBusiness.GetMessageById, request.MessageId, request.TalkId, obj.UserId, request.Lang);
+        }
     }
 }

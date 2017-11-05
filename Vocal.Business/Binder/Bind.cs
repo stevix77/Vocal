@@ -202,7 +202,7 @@ namespace Vocal.Business.Binder
         }
 
 
-        internal static List<MessageResponse> Bind_Messages(List<Vocal.Model.DB.Message> list)
+        internal static List<MessageResponse> Bind_Messages(List<Message> list)
         {
             var response = new List<MessageResponse>();
             foreach(var item in list)
@@ -210,7 +210,7 @@ namespace Vocal.Business.Binder
                 response.Add(new MessageResponse
                 {
                     ArrivedTime = item.ArrivedTime,
-                    Content = item.Content,
+                    Content = item.ContentType == MessageType.Text ? item.Content : string.Empty,
                     ContentType = (int)item.ContentType,
                     Id = item.Id.ToString(),
                     SentTime = item.SentTime,
