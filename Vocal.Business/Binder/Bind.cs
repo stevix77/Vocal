@@ -210,7 +210,7 @@ namespace Vocal.Business.Binder
                 response.Add(new MessageResponse
                 {
                     ArrivedTime = item.ArrivedTime,
-                    Content = item.ContentType == MessageType.Text ? item.Content : string.Empty,
+                    Content = item.ContentType == MessageType.Text ? item.Content : null,
                     ContentType = (int)item.ContentType,
                     Id = item.Id.ToString(),
                     SentTime = item.SentTime,
