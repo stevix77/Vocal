@@ -21,7 +21,8 @@
       <ion-item>
         <p *ngIf="mess.ContentType == 2">{{mess.Content}}</p>
         <p *ngIf="mess.ContentType == 1">
-          <audio controls [src]="domSanitizer.bypassSecurityTrustUrl(mess.Content)">
+          <button ion-button icon-only *ngIf="mess.Content == null" (click)="getMessage(mess.Id)"><ion-icon name="download"></ion-icon></button>
+          <audio controls [src]="domSanitizer.bypassSecurityTrustUrl(mess.Content)" *ngIf="mess.Content != null">
           </audio>
         </p>
       </ion-item>

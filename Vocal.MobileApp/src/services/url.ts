@@ -73,5 +73,8 @@ var url = {
     },
     UnblockPeople() : string {
         return this.BaseUri + "/api/user/unblock";
+    },
+    GetMessageById() : string {
+        return this.BaseUri + "/api/talk/message";
     }
 }

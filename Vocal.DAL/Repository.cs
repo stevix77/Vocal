@@ -55,8 +55,8 @@ namespace Vocal.DAL
             MongoClient client = new MongoClient(settings);
             return client;
         }
-
         
+
         #region Authentification
 
         public Vocal.Model.DB.User Login(string login, string password)
@@ -95,7 +95,7 @@ namespace Vocal.DAL
 
         public Vocal.Model.DB.User GetUserById(string id)
         {
-            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var user = db.Find(x => x.Id == id).SingleOrDefault();
             return user;
         }
@@ -451,7 +451,7 @@ namespace Vocal.DAL
         //}
 
 
-        public Vocal.Model.DB.Talk GetTalk(string idTalk, string userId)
+        public Talk GetTalk(string idTalk, string userId)
         {
             var user = GetUserById(userId);
             if (user != null)
@@ -462,7 +462,7 @@ namespace Vocal.DAL
             throw new Exception("User not found");
         }
 
-        public List<Vocal.Model.DB.Talk> GetListTalk(string userId)
+        public List<Talk> GetListTalk(string userId)
         {
             var user = GetUserById(userId);
             if (user != null)
