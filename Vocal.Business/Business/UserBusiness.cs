@@ -48,7 +48,8 @@ namespace Vocal.Business.Business
         public static Response<bool> UpdateUser(string userId, object value, int updateType, string lang)
         {
             var response = new Response<bool>();
-            LogManager.LogDebug(userId, value, updateType, lang);
+            if(updateType != (int)Update.Picture)
+                LogManager.LogDebug(userId, value, updateType, lang);
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {
@@ -84,10 +85,11 @@ namespace Vocal.Business.Business
                         BlockedUser(user, value.ToString());
                         break;
                     case Update.Picture:
-                        var image = Converter.ConvertToImage(value.ToString());
-                        var filename = $"{Properties.Settings.Default.PicturePath}/{user.Id}.jpeg";
-                        image.Save(filename, System.Drawing.Imaging.ImageFormat.Jpeg);
-                        user.Picture = $"{Properties.Settings.Default.Url}/{filename}";
+                        var filename = $"{user.Id}.jpeg";
+                        var filepath = $"{Properties.Settings.Default.PicturePath}\\{filename}";
+                        var bs64 = value.ToString().Split(',').GetValue(1).ToString();
+                        Converter.ConvertToImageAndSave(bs64, filepath);
+                        user.Picture = $"{Properties.Settings.Default.PictureUrl}/{filename}";
                         break;
                     default:
                         break;

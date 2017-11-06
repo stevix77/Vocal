@@ -58,7 +58,7 @@ namespace Vocal.Business.Business
                 var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
                 if (talk == null)
                     throw new CustomException(Resources_Language.Unauthorize);
-                var mess = talk.Messages.SingleOrDefault(x => x.Id.ToString() == messageId);
+                var mess = talk.Messages.SingleOrDefault(x => x.Id == new Guid(messageId));
                 if (mess == null)
                     throw new CustomException(Resources_Language.Unauthorize);
                 response.Data = mess.Content;
