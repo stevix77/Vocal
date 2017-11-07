@@ -10,5 +10,6 @@ namespace Vocal.Model.Response
         public List<UserResponse> Users { get; set; } = new List<UserResponse>();
         public DateTime DateLastMessage { get; set; }
         public bool HasNewMessage { get; set; }
+        public int Duration { get; set; }
     }
 }

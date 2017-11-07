@@ -80,10 +80,12 @@ export class FriendsListPage {
   ionViewWillEnter() {
     this.storeService.Get(KeyStore[KeyStore.Friends]).then(
       store => {
-        if(store != null)
-          this.Friends = store
-        else
+        if(store != null){
+          this.Friends = store;
+          console.log(this.Friends);
+        } else {
           this.LoadFriends();
+        }
       }
     )
   }
@@ -103,9 +105,9 @@ export class FriendsListPage {
         let response = resp.json() as Response<Array<PeopleResponse>>;
         if(!response.HasError) {
           this.Friends = response.Data;
-          this.storeService.Set(KeyStore[KeyStore.Friends], response.Data)
+          this.storeService.Set(KeyStore[KeyStore.Friends], response.Data);
         } else {
-          
+          console.log(response);
         }
       }
     );

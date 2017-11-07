@@ -23,13 +23,14 @@ export class AudioRecorder {
     private file: File) {
     this.filename = 'recording.' + this.getExtension();
     this.isApp = this.config.get('isApp');
-    //this.initEffects();
+    this.initEffects();
   }
 
   applyEffect(filter) {
     let contexteAudio = this.contexteAudio;
     var that = this;
-    this.file.readAsArrayBuffer(this.file.dataDirectory, this.filename).then((compressedBuffer) => {
+    //this.file.readAsArrayBuffer(this.file.dataDirectory, this.filename).then((compressedBuffer) => {
+    this.file.readAsArrayBuffer('../Library/NoCloud/', this.filename).then((compressedBuffer) => {
       contexteAudio.decodeAudioData(compressedBuffer, function(buffer){
         var source = contexteAudio.createBufferSource();
         source.buffer = buffer;
@@ -78,13 +79,21 @@ export class AudioRecorder {
     }
   }
 
+  // Used in send-vocal.ts
   getFile() : Promise<string>{
     return this.file.readAsDataURL(this.file.dataDirectory, this.filename);
   }
 
+  getMediaDuration() : number {
+    return this.mediaObject.getDuration();
+  }
+
   getMedia() {
+    console.log(this.file.dataDirectory);
     if(this.mediaObject == null) {
-      this.mediaObject = this.media.create(this.file.dataDirectory.replace(/^file:\/\//, '') + this.filename);
+      //this.mediaObject = this.media.create(this.file.dataDirectory + this.filename);
+      this.mediaObject = this.media.create('../Library/NoCloud/' + this.filename);
+    } else {
     }
     return this.mediaObject;
   }
@@ -124,6 +133,7 @@ export class AudioRecorder {
     this.timer = new Timer();
     this.timer.startTimer();
     if(this.isApp) {
+      console.log('start recording');
       this.getMedia().startRecord();
     }
   }

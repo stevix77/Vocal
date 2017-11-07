@@ -39,15 +39,15 @@ namespace Vocal.DAL
             settings.Server = new MongoServerAddress(Properties.Settings.Default.Host, Properties.Settings.Default.Port);
             MongoIdentity identity = new MongoInternalIdentity(Properties.Settings.Default.DocumentDBName, Properties.Settings.Default.DocumentDBUser);
             MongoIdentityEvidence evidence = new PasswordEvidence(Properties.Settings.Default.DocumentDBPwd);
-#if !DEBUG
-                //settings.UseSsl = true;
-                //settings.SslSettings = new SslSettings();
-                //settings.SslSettings.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
-                settings.Credentials = new List<MongoCredential>()
-                {
-                    new MongoCredential("SCRAM-SHA-1", identity, evidence)
-                };
-#endif
+//#if !DEBUG
+//                //settings.UseSsl = true;
+//                //settings.SslSettings = new SslSettings();
+//                //settings.SslSettings.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+//                settings.Credentials = new List<MongoCredential>()
+//                {
+//                    new MongoCredential("SCRAM-SHA-1", identity, evidence)
+//                };
+//#endif
             //settings.Credentials = new List<MongoCredential>()
             //{
             //    new MongoCredential("SCRAM-SHA-1", identity, evidence)
@@ -55,8 +55,8 @@ namespace Vocal.DAL
             MongoClient client = new MongoClient(settings);
             return client;
         }
-
         
+
         #region Authentification
 
         public Vocal.Model.DB.User Login(string login, string password)
@@ -95,7 +95,7 @@ namespace Vocal.DAL
 
         public Vocal.Model.DB.User GetUserById(string id)
         {
-            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var user = db.Find(x => x.Id == id).SingleOrDefault();
             return user;
         }
@@ -114,9 +114,9 @@ namespace Vocal.DAL
             return user;
         }
 
-        public void UpdateUser(Vocal.Model.DB.User user)
+        public void UpdateUser(User user)
         {
-            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             db.ReplaceOne(x => x.Id == user.Id, user);
         }
 
@@ -165,7 +165,7 @@ namespace Vocal.DAL
             }
             return success;
         }
-
+        
         public bool UnblockUsers(string userId, List<string> userIds)
         {
             bool success = false;
@@ -223,6 +223,20 @@ namespace Vocal.DAL
                 friends.RemoveAll(x => user.Friends.Select(y => y.Id).Contains(x.Id));
                 friends.ForEach(x => x.DateAdded = DateTime.Now);
                 user.Friends.AddRange(friends);
+                Parallel.ForEach(users, (u) =>
+                {
+                    var friend = db.Find(x => x.Id == u.Id).SingleOrDefault();
+                    if(friend != null)
+                    {
+                        var f = friend.Friends.Find(x => x.Id == userId);
+                        if (f != null)
+                        {
+                            f.IsFriend = true;
+                            user.Friends.SingleOrDefault(x => x.Id == u.Id).IsFriend = true;
+                            db.ReplaceOne(x => x.Id == u.Id, friend);
+                        }
+                    }
+                });
                 db.ReplaceOne(x => x.Id == userId, user);
                 success = true;
             }
@@ -238,6 +252,7 @@ namespace Vocal.DAL
             var user = db.Find(x => x.Id == userId).SingleOrDefault();
             if (user != null)
             {
+                var friends = Bind_UsersToFriends(users); // traitement pas utile je pense ?
                 user.Friends.RemoveAll(x => users.Select(y => y.Id).Contains(x.Id));
                 var replace = db.ReplaceOne(x => x.Id == userId, user);
                 success = replace.ModifiedCount > 0;
@@ -252,16 +267,16 @@ namespace Vocal.DAL
             if (currentUser != null)
             {
                 var list = pageSize == 0 || pageNumber == 0
-                    ? currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x))
-                    : currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x)).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                    ? currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x) && x.IsFriend)
+                    : currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x) && x.IsFriend).Skip((pageNumber - 1) * pageSize).Take(pageSize);
                 return list.ToList();
             }
             return null;
         }
 
-        public List<User> GetFriendsAddedMe(string userId)
+        public List<Vocal.Model.DB.User> GetFriendsAddedMe(string userId)
         {
-            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
             var list = db.Find(x => x.Friends.Any(y => y.Id == userId && y.DateAdded > DateTime.Now.AddDays(-7))).ToList();
             return list;
         }
@@ -454,12 +469,12 @@ namespace Vocal.DAL
             {
                 return user.Talks.Where(x => !x.IsArchived && !x.IsDeleted).ToList();
             }
-            return null;
+            //must create a proper exception to catch correctly the error 
+            throw new Exception("User not found");
         }
 
-        public bool AddTalk(Talk talk, List<string> usersId)
+        public bool AddTalk(Talk talk, List<User> users)
         {
-            var users = GetUsersById(usersId);
             foreach(var u in users)
             {
                 u.Talks.Add(talk);
@@ -468,10 +483,9 @@ namespace Vocal.DAL
             return true;
         }
 
-        public Talk AddMessageToTalk(string talkId, List<string> usersId, Vocal.Model.DB.Message message)
+        public Talk AddMessageToTalk(string talkId, List<User> users, Message message)
         {
-            Vocal.Model.DB.Talk talk = GetTalk(talkId, message.Sender.Id);
-            var users = GetUsersById(usersId);
+            Talk talk = GetTalk(talkId, message.Sender.Id);
             foreach (var u in users)
             {
                 var t = u.Talks.SingleOrDefault(x => x.Id == talkId && !x.IsDeleted);
@@ -480,6 +494,7 @@ namespace Vocal.DAL
                     t = new Talk { Id = talk.Id, Recipients = talk.Recipients, Name = talk.Name };
                     u.Talks.Add(t);
                 }
+                t.TotalDuration = message.Duration.HasValue ? message.Duration.Value : 0;
                 t.Messages.Add(message);
                 t.DateLastMessage = message.SentTime;
                 UpdateUser(u);

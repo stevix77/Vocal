@@ -48,7 +48,8 @@ namespace Vocal.Business.Business
         public static Response<bool> UpdateUser(string userId, object value, int updateType, string lang)
         {
             var response = new Response<bool>();
-            LogManager.LogDebug(userId, value, updateType, lang);
+            if(updateType != (int)Update.Picture)
+                LogManager.LogDebug(userId, value, updateType, lang);
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {
@@ -57,10 +58,10 @@ namespace Vocal.Business.Business
                 switch(type)
                 {
                     case Update.Gender:
-                        user.Settings.Gender = (Vocal.Model.DB.Gender)Enum.ToObject(typeof(Vocal.Model.DB.Gender), int.Parse(value.ToString()));
+                        user.Settings.Gender = (Gender)Enum.ToObject(typeof(Gender), int.Parse(value.ToString()));
                         break;
                     case Update.Contact:
-                        user.Settings.Contact = (Vocal.Model.DB.Contacted)Enum.ToObject(typeof(Vocal.Model.DB.Contacted), int.Parse(value.ToString()));
+                        user.Settings.Contact = (Contacted)Enum.ToObject(typeof(Contacted), int.Parse(value.ToString()));
                         break;
                     case Update.Notification:
                         user.Settings.IsNotifiable = Convert.ToBoolean(value);
@@ -84,7 +85,11 @@ namespace Vocal.Business.Business
                         BlockedUser(user, value.ToString());
                         break;
                     case Update.Picture:
-                        user.Picture = value.ToString();
+                        var filename = $"{user.Id}.jpeg";
+                        var filepath = $"{Properties.Settings.Default.PicturePath}\\{filename}";
+                        var bs64 = value.ToString().Split(',').GetValue(1).ToString();
+                        Converter.ConvertToImageAndSave(bs64, filepath);
+                        user.Picture = $"{Properties.Settings.Default.PictureUrl}/{filename}";
                         break;
                     default:
                         break;

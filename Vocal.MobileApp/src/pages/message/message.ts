@@ -1,3 +1,4 @@
+import { MessageRequest } from './../../models/request/messageRequest';
 import { HubMethod } from '../../models/enums';
 import { MessageResponse } from './../../models/response/messageResponse';
 import { Component } from '@angular/core';
@@ -145,6 +146,24 @@ export class MessagePage {
   updateRoom(message) {
     this.Messages.push(message);
     this.hubService.Invoke(HubMethod[HubMethod.UpdateListenUser], this.model.talkId)
+  }
+
+  getMessage(messId: string) {
+    let urlMessage = url.GetMessageById();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlMessage, params.User);
+    let request = new MessageRequest(this.model.talkId, messId, params.Lang);
+    this.httpService.Post<MessageRequest>(urlMessage, request, cookie).subscribe(
+      resp => {
+        let response = resp.json() as Response<string>;
+        if(response.HasError)
+          this.showToast(response.ErrorMessage);
+        else {
+          this.Messages.find(x => x.Id == messId).Content = response.Data;
+          this.talkService.SaveMessages(this.model.talkId, this.Messages);          
+        }
+      }
+    )
+    // this.Messages.find(x => x.Id == messId).Content = mess;
   }
 
   showToast(message: string) :any {

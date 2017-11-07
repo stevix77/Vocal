@@ -25,9 +25,43 @@ namespace Vocal.Business.Business
             try
             {
                 var list = Repository.Instance.GetListTalk(userId);
-                if (list == null)
-                    throw new CustomException(Resources_Language.UserNotExisting);
                 response.Data = Bind.Bind_Talks(list, userId);
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
+        public static Response<string> GetMessageById(string talkId, string messageId, string userId, string lang)
+        {
+            var response = new Response<string>();
+            try
+            {
+                LogManager.LogDebug(talkId, messageId, userId, lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var user = Repository.Instance.GetUserById(userId);
+                if (user == null)
+                    throw new CustomException(Resources_Language.UserNotExisting);
+                var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
+                if (talk == null)
+                    throw new CustomException(Resources_Language.Unauthorize);
+                var mess = talk.Messages.SingleOrDefault(x => x.Id == new Guid(messageId));
+                if (mess == null)
+                    throw new CustomException(Resources_Language.Unauthorize);
+                response.Data = mess.Content;
             }
             catch (TimeoutException tex)
             {
@@ -83,48 +117,110 @@ namespace Vocal.Business.Business
             HubService.Instance.UpdateTalk(talkId, Bind.Bind_Messages(messages));
         }
 
+        //public static Response<SendMessageResponse> SendMessage(SendMessageRequest request)
+        //{
+        //    var response = new Response<SendMessageResponse> { Data = new SendMessageResponse { IsSent = false } };
+        //    try
+        //    {
+        //        Resources_Language.Culture = new System.Globalization.CultureInfo(request.Lang);
+        //        if (request != null)
+        //        {
+        //            LogManager.LogDebug(request);
+        //            if (/*Repository.Instance.CheckIfAllUsersExist(request.IdsRecipient)*/ true)
+        //            {
+        //                if((MessageType)request.MessageType == MessageType.Vocal)
+        //                {
+        //                    var bs64 = request.Content.Split(',').LastOrDefault();
+        //                    var file = Converter.ConvertToWav(bs64);
+        //                    if (file == null)
+        //                        throw new Exception();
+        //                    request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
+        //                }
+
+        //                if (string.IsNullOrEmpty(request.IdTalk))
+        //                {
+        //                    //create an talk for each user and add the new message into
+        //                    CreateNewTalk(request, response);
+        //                }
+        //                else
+        //                {
+        //                    //retrieve all talks of the users in add the new message into
+        //                    AddMessageToTalk(request, response);
+        //                }
+        //            }
+        //            else
+        //            {
+        //                LogManager.LogError(new Exception("Weird. Some friend of this dude don't exist "));
+        //                response.ErrorMessage = Resources_Language.TechnicalError;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            LogManager.LogError(new Exception("No Data"));
+        //            response.ErrorMessage = Resources_Language.NoDataMessage;
+        //        }
+        //    }
+        //    catch (TimeoutException tex)
+        //    {
+        //        LogManager.LogError(tex);
+        //        response.ErrorMessage = Resources_Language.TimeoutError;
+        //    }
+        //    catch (CustomException cex)
+        //    {
+        //        LogManager.LogError(cex);
+        //        response.ErrorMessage = cex.Message;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        LogManager.LogError(ex);
+        //        response.ErrorMessage = Resources_Language.TechnicalError;
+        //    }
+        //    return response;
+        //}
+
+
         public static Response<SendMessageResponse> SendMessage(SendMessageRequest request)
         {
             var response = new Response<SendMessageResponse> { Data = new SendMessageResponse { IsSent = false } };
             try
             {
+                LogManager.LogDebug(request);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(request.Lang);
-                if (request != null)
+                var user = Repository.Instance.GetUserById(request.IdSender);
+                if (user != null)
                 {
-                    LogManager.LogDebug(request);
-                    if (/*Repository.Instance.CheckIfAllUsersExist(request.IdsRecipient)*/ true)
+                    if ((MessageType)request.MessageType == MessageType.Vocal)  // si mess vocal alors convertir
                     {
-                        if((MessageType)request.MessageType == MessageType.Vocal)
+                        var bs64 = request.Content.Split(',').LastOrDefault();
+                        var file = Converter.ConvertToWav(bs64);
+                        if (file == null)
+                            throw new Exception();
+                        request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
+                    }
+                    if (string.IsNullOrEmpty(request.IdTalk)) // IdTalk null si envoi message par SendVocal ou par Message mais aucun message dans la page
+                    {
+                        var talk = user.Talks.SingleOrDefault(x => x.Recipients.Where(y => y.Id != request.IdSender).Select(y => y.Id).OrderBy(y => y).ToList().SequenceEqual(request.IdsRecipient.OrderBy(y => y))); // vérifier si une convers existe (-1 car request.IdsRecipient ne contient pas le current user 
+                        if (talk == null) // la conversation n'existe pas
                         {
-                            var bs64 = request.Content.Split(',').LastOrDefault();
-                            var file = Converter.ConvertToWav(bs64);
-                            if (file == null)
-                                throw new Exception();
-                            request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
+                            if (Repository.Instance.CheckIfAllUsersExist(request.IdsRecipient)) // vérifier si les ids existent en base
+                                CreateNewTalk(request, response, user);
+                            else
+                                throw new Exception("AllUsers not exist");
                         }
-                     
-                        if (string.IsNullOrEmpty(request.IdTalk))
+                        else // conversation existe, ajouter message à la convers
                         {
-                            //create an talk for each user and add the new message into
-                            CreateNewTalk(request, response);
-                        }
-                        else
-                        {
-                            //retrieve all talks of the users in add the new message into
-                            AddMessageToTalk(request, response);
+                            request.IdTalk = talk.Id;
+                            AddMessageToTalk(request, response, talk, user);
                         }
                     }
-                    else
+                    else // envoi du message à partir d'une conversation existante
                     {
-                        LogManager.LogError(new Exception("Weird. Some friend of this dude don't exist "));
-                        response.ErrorMessage = Resources_Language.TechnicalError;
+                        var talk = user.Talks.SingleOrDefault(x => x.Id == request.IdTalk);
+                        AddMessageToTalk(request, response, talk, user);
                     }
                 }
                 else
-                {
-                    LogManager.LogError(new Exception("No Data"));
-                    response.ErrorMessage = Resources_Language.NoDataMessage;
-                }
+                    throw new Exception($"User {request.IdSender} doesn't exist");
             }
             catch (TimeoutException tex)
             {
@@ -144,10 +240,8 @@ namespace Vocal.Business.Business
             return response;
         }
 
-
-        private static void CreateNewTalk(SendMessageRequest request, Response<SendMessageResponse> response)
+        private static void CreateNewTalk(SendMessageRequest request, Response<SendMessageResponse> response, User sender)
         {
-            var sender = Repository.Instance.GetUserById(request.IdSender);
             var allUsers = Repository.Instance.GetUsersById(request.IdsRecipient);
             allUsers.Add(sender);
             var m = new Message
@@ -158,24 +252,22 @@ namespace Vocal.Business.Business
                 Content = request.Content,
                 ContentType = (MessageType)request.MessageType,
                 Sender = sender.ToPeople(),
-                Users = allUsers.Select(x => new UserListen() { Recipient = x.ToPeople()/*, ListenDate = x == user.Id ? DateTime.Now : new DateTime?()*/ }).ToList()
+                Users = allUsers.Where(x => x.Id != sender.Id).Select(x => new UserListen() { Recipient = x.ToPeople()/*, ListenDate = x == user.Id ? DateTime.Now : new DateTime?()*/ }).ToList(),
+                Duration = request.Duration
             };
-            var talk = new Talk() { Id = Guid.NewGuid().ToString() };
+            var talk = new Talk() { Id = Guid.NewGuid().ToString(), Recipients = allUsers.Select(x => x.ToPeople()).ToList(), TotalDuration = request.Duration.HasValue ? request.Duration.Value : 0 };
             talk.Messages.Add(m);
             talk.DateLastMessage = m.ArrivedTime;
 
-            Repository.Instance.AddTalk(talk, allUsers.Select(x => x.Id).ToList());
+            Repository.Instance.AddTalk(talk, allUsers);
 
             response.Data.Talk = Bind.Bind_Talk(talk, request.IdSender);
             response.Data.Message = Bind.Bind_Message(m);
             response.Data.IsSent = true;
         }
 
-        private static void AddMessageToTalk(SendMessageRequest request, Response<SendMessageResponse> response)
+        private static void AddMessageToTalk(SendMessageRequest request, Response<SendMessageResponse> response, Talk talk, User sender)
         {
-            var sender = Repository.Instance.GetUserById(request.IdSender);
-            var allUsers = Repository.Instance.GetUsersById(request.IdsRecipient);
-            allUsers.Add(sender);
             var m = new Message
             {
                 Id = Guid.NewGuid(),
@@ -184,10 +276,22 @@ namespace Vocal.Business.Business
                 Content = request.Content,
                 ContentType = (MessageType)request.MessageType,
                 Sender = sender.ToPeople(),
-               Users = allUsers.Select(x => new UserListen() { Recipient = x.ToPeople()/*, ListenDate = x == user.Id ? DateTime.Now : new DateTime?()*/ }).ToList()
+                Users = talk.Recipients.Where(x => x.Id != request.IdSender).Select(x => new UserListen { Recipient = x }).ToList(),
+                Duration = request.Duration
             };
-
-            var talk = Repository.Instance.AddMessageToTalk(request.IdTalk, allUsers.Select(x => x.Id).ToList(), m);
+            talk.Messages.Add(m);
+            var recipients = Repository.Instance.GetUsersById(talk.Recipients.Select(x => x.Id).ToList());
+            foreach (var item in recipients)
+            {
+                var t = item.Talks.SingleOrDefault(x => x.Id == talk.Id);
+                if(t != null)
+                {
+                    t.TotalDuration = m.Duration.HasValue ? m.Duration.Value : 0;
+                    t.Messages.Add(m);
+                    t.DateLastMessage = m.SentTime;
+                    Repository.Instance.UpdateUser(item);
+                }
+            }
             response.Data.Talk = Bind.Bind_Talk(talk, request.IdSender);
             response.Data.Message = Bind.Bind_Message(m);
             response.Data.IsSent = true;

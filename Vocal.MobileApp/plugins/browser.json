@@ -64,6 +64,9 @@
             "DEEPLINK_SCHEME": "https",
             "DEEPLINK_HOST": "vocal.com",
             "PACKAGE_NAME": "7904ValentinSteve.VocalDev2"
+        },
+        "info.protonet.imageresizer": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
         }
     },
     "dependent_plugins": {
