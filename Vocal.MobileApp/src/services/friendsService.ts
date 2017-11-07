@@ -58,6 +58,10 @@ export class FriendsService {
     })
   }
 
+  saveList() {
+    this.storeService.Set(KeyStore[KeyStore.Friends], this.model.Friends);
+  }
+
   // searchByMail(val) {
   //   let obj = {
   //     Lang: params.Lang,
