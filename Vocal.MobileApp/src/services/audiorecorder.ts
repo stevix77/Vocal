@@ -139,7 +139,7 @@ export class AudioRecorder {
   }
 
   stopRecording() {
-    //this.timer.stopTimer();
+    
     if(this.isApp) this.getMedia().stopRecord();
   }
 

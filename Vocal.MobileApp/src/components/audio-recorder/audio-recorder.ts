@@ -29,14 +29,7 @@ export class AudioRecorderComponent {
 
   ngOnInit() {
     console.log('ngOnInit AudioRecorderComponent');
-    console.log(this.viewCtrl.contentRef());
     this.isApp = this.config.get('isApp');
-
-    //this.events.subscribe('record:start', () => this.startRecording());
-    //this.events.subscribe('record:stop', () => this.stopRecording());
-
-    //document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
-    //if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
   }
 
   presentEditVocalModal() {

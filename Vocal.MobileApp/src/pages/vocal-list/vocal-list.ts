@@ -83,6 +83,12 @@ export class VocalListPage {
     this.events.subscribe('update:timer', timeFromTimer => {
       this.time = timeFromTimer;
     });
+    this.events.subscribe('record:stop', () => this.stopTimer());
+  }
+
+  stopTimer() {
+    this.timer.stopTimer();
+    this.time = '0:00';
   }
 
   showProfile() {
