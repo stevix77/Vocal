@@ -1,11 +1,14 @@
+import { Events } from 'ionic-angular';
+
 export class Timer{
   private minutes: number;
   private secondes: number;
   private interval: number;
   
-  constructor(){
+  constructor(public events:Events){
     this.minutes = 0;
     this.secondes = 0;
+    this.startTimer();
   }
 
   private pad(d) {
@@ -18,7 +21,7 @@ export class Timer{
       this.minutes++;
       this.secondes = 0;
     }
-    return `<span>${this.minutes}:${this.pad(this.secondes)}</span>`;
+    return `${this.minutes}:${this.pad(this.secondes)}`;
   }
 
   startTimer() {
@@ -30,6 +33,7 @@ export class Timer{
   }
 
   updateTimer() {
-    document.querySelector('[data-timer]').innerHTML = this.getTime();
+    this.events.publish('update:timer', this.getTime());
+    //document.querySelector('[data-timer]').innerHTML = this.getTime();
   }
 }

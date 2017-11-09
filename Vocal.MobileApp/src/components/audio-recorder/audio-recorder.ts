@@ -29,14 +29,14 @@ export class AudioRecorderComponent {
 
   ngOnInit() {
     console.log('ngOnInit AudioRecorderComponent');
-    console.log(this.viewCtrl.getContent());
+    console.log(this.viewCtrl.contentRef());
     this.isApp = this.config.get('isApp');
 
-    this.events.subscribe('record:start', () => this.startRecording());
-    this.events.subscribe('record:stop', () => this.stopRecording());
+    //this.events.subscribe('record:start', () => this.startRecording());
+    //this.events.subscribe('record:stop', () => this.stopRecording());
 
-    document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
-    if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
+    //document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
+    //if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
   }
 
   presentEditVocalModal() {
@@ -46,31 +46,29 @@ export class AudioRecorderComponent {
 
   startRecording() {
     console.log('start recording');
-    if(document.querySelector('.wrapper-record') === null) {
-      let template = `
-      <div class="wrapper-record">
-        <div class="timer" data-timer><span>0:00</span></div>
-        <span class="subtitle">Enregistrement du vocal en cours ...</span>
-      </div>`;
+    this.events.publish('record:start');
 
-      var nodes = document.querySelectorAll('.ion-page');
-      if(nodes.length > 0 && nodes.length > 1) {
-        nodes[nodes.length].querySelector('ion-content').insertAdjacentHTML('beforeend', template);
-      } else {
-        document.querySelector('.ion-page ion-content').insertAdjacentHTML('beforeend', template);
-      }
-      try {
-        this.audioRecorder.startRecording();
-      }
-      catch (e) {
-        this.showAlert('Could not start recording.');
-      }
+    let template = `
+    <div class="wrapper-record">
+      <div class="timer" data-timer><span>0:00</span></div>
+      <span class="subtitle">Enregistrement du vocal en cours ...</span>
+    </div>`;
+
+    //document.querySelector('.ion-page ion-content').insertAdjacentHTML('beforeend', template);
+    try {
+      this.audioRecorder.startRecording();
+    }
+    catch (e) {
+      this.showAlert('Could not start recording.');
     }
   }
 
   stopRecording() {
+    console.log('stop recording');
+
+    this.events.publish('record:stop');
     this.presentEditVocalModal();
-    document.querySelector('.ion-page ion-content .wrapper-record').remove();
+    //document.querySelector('.ion-page ion-content .wrapper-record').remove();
     try {
       this.audioRecorder.stopRecording();
     }
