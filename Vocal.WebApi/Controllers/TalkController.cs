@@ -11,7 +11,7 @@ using Vocal.WebApi.Attribute;
 namespace Vocal.WebApi.Controllers
 {
     [EnableCors("*", "*", "*")]
-    [RoutePrefix("api/talk"), CustomAuthorize]
+    [RoutePrefix("api/talk")]
     public class TalkController : ApiController
     {
         [Route("list"), HttpPost]
@@ -31,6 +31,13 @@ namespace Vocal.WebApi.Controllers
         public Response<SendMessageResponse> SendMessage(SendMessageRequest request)
         {
             return Monitoring.Execute(TalkBusiness.SendMessage, request);
+        }
+
+        [Route("message"), HttpPost]
+        public Response<string> GetMessageById(MessageRequest request)
+        {
+            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
+            return Monitoring.Execute(TalkBusiness.GetMessageById, request.TalkId, request.MessageId, obj.UserId, request.Lang);
         }
     }
 }

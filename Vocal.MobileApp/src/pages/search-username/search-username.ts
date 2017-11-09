@@ -38,6 +38,8 @@ export class SearchUsernamePage {
         console.log(response);
         if(!response.HasError) {
           this.model.Friends[indexItem].IsFriend = true;
+          this.friendsService.model.Friends.push(this.model.Friends[indexItem]);
+          this.friendsService.saveList();
         } else {
           this.model.ErrorFriends = response.ErrorMessage;
         }

@@ -61,6 +61,9 @@
             "DEEPLINK_SCHEME": "https",
             "DEEPLINK_HOST": "vocal.com",
             "PACKAGE_NAME": "Vocal"
+        },
+        "info.protonet.imageresizer": {
+            "PACKAGE_NAME": "Vocal"
         }
     },
     "dependent_plugins": {

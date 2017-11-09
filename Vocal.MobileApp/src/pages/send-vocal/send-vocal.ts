@@ -50,43 +50,43 @@ export class SendVocalPage {
     this.GetFriends();
   }
 
-  goToVocalList() {
-    console.log('goToVocalList');
+  sendVocal() {
+    console.log('send vocal');
     let users = [];
-    this.audioRecorder.getFile().then(value => {  
-      console.log('get file');
-      this.FileValue = value;
+    Promise.all([this.audioRecorder.getFile(), this.audioRecorder.getMediaDuration()]).then(values => {
+      this.FileValue = values[0];
       this.Friends.forEach(elt => {
-        if(elt.Checked)
-          users.push(elt.Id);
-        });
-    let date = new Date();
-    let request: SendMessageRequest = {
-      content: this.FileValue,
-      sentTime: date,
-      idsRecipient: users,
-      messageType: MessageType.Vocal,
-      Lang: params.Lang,
-      idSender: params.User.Id,
-      IdTalk: null
-    }
-    let urlSendVocal = url.SendMessage();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
-    this.httpService.Post(urlSendVocal, request, cookie).subscribe(
-      resp => {
-        let response = resp.json() as Response<SendMessageResponse>;
-        if(!response.HasError && response.Data.IsSent) {
-          this.talkService.LoadList().then(() => {
-            this.talkService.UpdateList(response.Data.Talk);
-            this.talkService.SaveList();
-            this.navCtrl.push(VocalListPage);
-          })
-        }
-        else 
-          //TODO : Alert Message d'erreur  response.ErrorMessage
-        this.navCtrl.push(VocalListPage);
+      if(elt.Checked)
+        users.push(elt.Id);
+      });
+      let date = new Date();
+      let request: SendMessageRequest = {
+        content: this.FileValue,
+        duration: values[1],
+        sentTime: date,
+        idsRecipient: users,
+        messageType: MessageType.Vocal,
+        Lang: params.Lang,
+        idSender: params.User.Id,
+        IdTalk: null
       }
-    )
+      let urlSendVocal = url.SendMessage();
+      let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
+      this.httpService.Post(urlSendVocal, request, cookie).subscribe(
+        resp => {
+          let response = resp.json() as Response<SendMessageResponse>;
+          if(!response.HasError && response.Data.IsSent) {
+            this.talkService.LoadList().then(() => {
+              this.talkService.UpdateList(response.Data.Talk);
+              this.talkService.SaveList();
+              this.navCtrl.push(VocalListPage);
+            })
+          }
+          else 
+            //TODO : Alert Message d'erreur  response.ErrorMessage
+          this.navCtrl.push(VocalListPage);
+        }
+      )
     }).catch(err => {
       console.log(err);
     });

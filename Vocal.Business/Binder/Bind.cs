@@ -178,14 +178,15 @@ namespace Vocal.Business.Binder
                         Name = item.Name ?? string.Join(", ", users.Select(x => x.Username)),
                         Users = Bind_People(item.Recipients),
                         DateLastMessage = message.SentTime,
-                        HasNewMessage = message.Sender.Id != userId && message.Users.SingleOrDefault(x => x.Recipient.Id == userId && x.ListenDate.HasValue) == null
+                        HasNewMessage = message.Sender.Id != userId && message.Users.SingleOrDefault(x => x.Recipient.Id == userId && x.ListenDate.HasValue) == null,
+                        Duration = item.TotalDuration
                     });
                 }
                 response = response.OrderByDescending(x => x.DateLastMessage).ToList();
             }
             return response;
         }
-        internal static TalkResponse Bind_Talk(Vocal.Model.DB.Talk talk, string userId)
+        internal static TalkResponse Bind_Talk(Talk talk, string userId)
         {
             var message = talk.Messages.LastOrDefault();
             var users = talk.Recipients.Where(x => x.Id != userId);
@@ -195,12 +196,13 @@ namespace Vocal.Business.Binder
                 Name = talk.Name ?? string.Join(", ", users.Select(x => x.Username)),
                 Users = Bind_People(talk.Recipients),
                 DateLastMessage = message.SentTime,
-                HasNewMessage = message.Sender.Id != userId && message.Users.SingleOrDefault(x => x.Recipient.Id == userId && x.ListenDate.HasValue) == null
+                HasNewMessage = message.Sender.Id != userId && message.Users.SingleOrDefault(x => x.Recipient.Id == userId && x.ListenDate.HasValue) == null,
+                Duration = talk.TotalDuration
             };
         }
 
 
-        internal static List<MessageResponse> Bind_Messages(List<Vocal.Model.DB.Message> list)
+        internal static List<MessageResponse> Bind_Messages(List<Message> list)
         {
             var response = new List<MessageResponse>();
             foreach(var item in list)
@@ -208,7 +210,7 @@ namespace Vocal.Business.Binder
                 response.Add(new MessageResponse
                 {
                     ArrivedTime = item.ArrivedTime,
-                    Content = item.Content,
+                    Content = item.ContentType == MessageType.Text ? item.Content : null,
                     ContentType = (int)item.ContentType,
                     Id = item.Id.ToString(),
                     SentTime = item.SentTime,
@@ -224,11 +226,9 @@ namespace Vocal.Business.Binder
             var settings = new SettingsResponse();
             settings.BirthdayDate = user.BirthdayDate;
             settings.Blocked = Bind_People(user.Settings.Blocked);
-            //TODO 
-            //settings.Contacts = GetChoices(user.Settings.Contact);
+            settings.Contacts = GetChoices(user.Settings.Contact);
             settings.Email = user.Email;
-            //TODO
-            //settings.Genders = GetChoices(user.Settings.Gender);
+            settings.Genders = GetChoices(user.Settings.Gender);
             settings.Notifs = GetChoices(user.Settings.IsNotifiable);
             settings.Name = $"{user.Firstname} {user.Lastname} @{user.Username}";
             return settings;

@@ -19,7 +19,7 @@ namespace Vocal.Business.Tools
             watch.Stop();
             Task.Run(() =>
             {
-                var duration = watch.Elapsed.Milliseconds;
+                var duration = (int)watch.Elapsed.TotalMilliseconds;
                 var lstParams = new List<object> { aParameter};
                 var obj = new Model.DB.Monitoring { MethodName = myFunction.Method.Name, Duration = duration, Params = lstParams };
                 Repository.Instance.AddMonitoring(obj);
@@ -35,7 +35,7 @@ namespace Vocal.Business.Tools
             watch.Stop();
             Task.Run(() =>
             {
-                var duration = watch.Elapsed.Milliseconds;
+                var duration = (int)watch.Elapsed.TotalMilliseconds;
                 var lstParams = new List<object> { aParameter, bParameter };
                 var obj = new Model.DB.Monitoring { MethodName = myFunction.Method.Name, Duration = duration, Params = lstParams };
                 Repository.Instance.AddMonitoring(obj);
@@ -51,7 +51,7 @@ namespace Vocal.Business.Tools
             watch.Stop();
             Task.Run(() =>
             {
-                var duration = watch.Elapsed.Milliseconds;
+                var duration = (int)watch.Elapsed.TotalMilliseconds;
                 var lstParams = new List<object> { aParameter, bParameter, cParameter };
                 var obj = new Model.DB.Monitoring { MethodName = myFunction.Method.Name, Duration = duration, Params = lstParams };
                 Repository.Instance.AddMonitoring(obj);
@@ -67,7 +67,7 @@ namespace Vocal.Business.Tools
             watch.Stop();
             Task.Run(() =>
             {
-                var duration = watch.Elapsed.Milliseconds;
+                var duration = (int)watch.Elapsed.TotalMilliseconds;
                 var lstParams = new List<object> { aParameter, bParameter, cParameter, dParameter };
                 var obj = new Model.DB.Monitoring { MethodName = myFunction.Method.Name, Duration = duration, Params = lstParams };
                 Repository.Instance.AddMonitoring(obj);
@@ -83,7 +83,7 @@ namespace Vocal.Business.Tools
             watch.Stop();
             Task.Run(() =>
             {
-                var duration = watch.Elapsed.Milliseconds;
+                var duration = (int)watch.Elapsed.TotalMilliseconds;
                 var lstParams = new List<object> { aParameter, bParameter, cParameter, dParameter, eParameter };
                 var obj = new Model.DB.Monitoring { MethodName = myFunction.Method.Name, Duration = duration, Params = lstParams };
                 Repository.Instance.AddMonitoring(obj);
@@ -99,7 +99,7 @@ namespace Vocal.Business.Tools
             watch.Stop();
             Task.Run(() =>
             {
-                var duration = watch.Elapsed.Milliseconds;
+                var duration = (int)watch.Elapsed.TotalMilliseconds;
                 var lstParams = new List<object> { aParameter, bParameter, cParameter, dParameter, eParameter, fParameter };
                 var obj = new Model.DB.Monitoring { MethodName = myFunction.Method.Name, Duration = duration, Params = lstParams };
                 Repository.Instance.AddMonitoring(obj);
@@ -115,7 +115,7 @@ namespace Vocal.Business.Tools
             watch.Stop();
             Task.Run(() =>
             {
-                var duration = watch.Elapsed.Milliseconds;
+                var duration = (int)watch.Elapsed.TotalMilliseconds;
                 var lstParams = new List<object> { aParameter, bParameter, cParameter, dParameter, eParameter, fParameter, gParameter };
                 var obj = new Model.DB.Monitoring { MethodName = myFunction.Method.Name, Duration = duration, Params = lstParams };
                 Repository.Instance.AddMonitoring(obj);

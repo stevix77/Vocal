@@ -1,6 +1,8 @@
 ﻿using NAudio.Wave;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,6 +26,21 @@ namespace Vocal.Business.Tools
                 }
             }
             return stream;
+        }
+
+        public static void ConvertToImageAndSave(string base64File, string filename)
+        {
+            //LogManager.LogDebug(base64File, filename);
+            // Convert base 64 string to byte[]
+            byte[] imageBytes = Convert.FromBase64String(base64File);
+            // Convert byte[] to Image
+            using (var ms = new MemoryStream(imageBytes))
+            {
+                using (var image = Image.FromStream(ms, true))
+                {
+                    image.Save(filename, ImageFormat.Jpeg);
+                }
+            }
         }
     }
 }
