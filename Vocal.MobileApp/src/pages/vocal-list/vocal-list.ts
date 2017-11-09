@@ -43,8 +43,6 @@ export class VocalListPage {
     private storeService: StoreService,
     private talkService: TalkService) {
 
-    events.subscribe('record:start', () => this.toggleContent());
-    events.subscribe('edit-vocal:close', () => this.toggleContent());
     events.subscribe(HubMethod[HubMethod.Receive], () => this.initialize())
 
     this.isApp = this.config.get('isApp');
@@ -53,6 +51,10 @@ export class VocalListPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad VocalListPage');
+
+    this.events.subscribe('record:start', () => this.toggleContent());
+    this.events.subscribe('edit-vocal:close', () => this.toggleContent());
+
     //document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
     //if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
   }

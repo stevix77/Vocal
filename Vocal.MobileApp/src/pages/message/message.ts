@@ -125,7 +125,7 @@ export class MessagePage {
       this.httpService.Post(urlMessages, request, cookie).subscribe(
         resp => {
           let response = resp.json() as Response<Array<MessageResponse>>;
-          if(!response.HasError) {
+          if(!response.HasError && this.Messages !== undefined) {
             //this.sortMessages(response.Data);
             response.Data.forEach(item => {
               let mess = this.Messages.find(x => x.Id == item.Id);
@@ -186,6 +186,6 @@ export class MessagePage {
   }
 
   goToVocalList() {
-    this.navCtrl.push(VocalListPage);
+    this.navCtrl.pop({'direction':'forward'});
   }
 }
