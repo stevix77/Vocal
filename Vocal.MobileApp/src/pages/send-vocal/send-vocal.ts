@@ -2,8 +2,6 @@ import { UserResponse } from '../../models/response/userResponse';
 import { TalkService } from './../../services/talkService';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { SelectFriendsComponent } from '../../components/select-friends/select-friends';
-import { VocalListPage } from '../../pages/vocal-list/vocal-list';
 import { StoreService } from "../../services/storeService";
 import { KeyStore } from '../../models/enums';
 import { MessageType } from '../../models/enums';
@@ -27,9 +25,7 @@ import { AudioRecorder } from '../../services/audiorecorder';
 @IonicPage()
 @Component({
   selector: 'page-send-vocal',
-  templateUrl: 'send-vocal.html',
-  entryComponents: [SelectFriendsComponent],
-  providers: [StoreService, CookieService, HttpService, TalkService]
+  templateUrl: 'send-vocal.html'
 })
 export class SendVocalPage {
 
@@ -79,12 +75,12 @@ export class SendVocalPage {
             this.talkService.LoadList().then(() => {
               this.talkService.UpdateList(response.Data.Talk);
               this.talkService.SaveList();
-              this.navCtrl.push(VocalListPage);
+              this.navCtrl.popToRoot();
             })
           }
           else 
             //TODO : Alert Message d'erreur  response.ErrorMessage
-          this.navCtrl.push(VocalListPage);
+          this.navCtrl.popToRoot();
         }
       )
     }).catch(err => {
