@@ -155,7 +155,7 @@ export class MessagePage {
       this.httpService.Post(urlMessages, request, cookie).subscribe(
         resp => {
           let response = resp.json() as Response<Array<MessageResponse>>;
-          if(!response.HasError && this.Messages !== undefined) {
+          if(!response.HasError) {
             //this.sortMessages(response.Data);
             response.Data.forEach(item => {
               let mess = this.Messages.find(x => x.Id == item.Id);
@@ -165,11 +165,12 @@ export class MessagePage {
             this.talkService.SaveMessages(this.model.talkId, this.Messages);
           } else {
             this.showToast(response.ErrorMessage);
-            // this.loadMessages();
+            //this.loadMessages();
           }
         }
       )
     } catch(err) {
+      console.log(err);
       // this.loadMessages();
     }
   }
