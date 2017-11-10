@@ -41,13 +41,6 @@ export class AudioRecorderComponent {
     console.log('start recording');
     this.events.publish('record:start');
 
-    let template = `
-    <div class="wrapper-record">
-      <div class="timer" data-timer><span>0:00</span></div>
-      <span class="subtitle">Enregistrement du vocal en cours ...</span>
-    </div>`;
-
-    //document.querySelector('.ion-page ion-content').insertAdjacentHTML('beforeend', template);
     try {
       this.audioRecorder.startRecording();
     }
@@ -58,7 +51,6 @@ export class AudioRecorderComponent {
 
   stopRecording() {
     console.log('stop recording');
-
     this.events.publish('record:stop');
     this.presentEditVocalModal();
     //document.querySelector('.ion-page ion-content .wrapper-record').remove();

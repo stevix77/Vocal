@@ -10,10 +10,10 @@ import { SendMessageResponse } from '../../models/response/sendMessageResponse';
 import { url } from '../../services/url';
 import { HttpService } from '../../services/httpService';
 import { CookieService } from '../../services/cookieService';
-import { VocalListPage } from '../../pages/vocal-list/vocal-list';
 import { TalkService } from "../../services/talkService";
 import { HubService } from "../../services/hubService";
 import {DomSanitizer} from '@angular/platform-browser';
+import { Timer } from '../../services/timer';
 
 /**
  * Generated class for the MessagePage page.
@@ -32,6 +32,10 @@ export class MessagePage {
   VocalName: string = "";
   Messages: Array<MessageResponse> = new Array<MessageResponse>();
   isApp: boolean;
+  isRecording: boolean = false;
+  isTiming: boolean = false;
+  timer: Timer;
+  time: String = '0:00';
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
@@ -53,8 +57,34 @@ export class MessagePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MessagePage');
-    //document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
-    //if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
+    this.events.subscribe('record:start', () => {
+      this.toggleRecording();
+      this.toggleTiming();
+    });
+    this.events.subscribe('edit-vocal:open', () => this.toggleTiming());
+    this.events.subscribe('edit-vocal:close', () => this.toggleRecording());
+  }
+
+  toggleRecording() {
+    this.isRecording = !this.isRecording;
+  }
+
+  toggleTiming() {
+    this.isTiming = !this.isTiming;
+    if(this.isTiming) this.startTimer();
+  }
+
+  startTimer() {
+    this.timer = new Timer(this.events);
+    this.events.subscribe('update:timer', timeFromTimer => {
+      this.time = timeFromTimer;
+    });
+    this.events.subscribe('record:stop', () => this.stopTimer());
+  }
+
+  stopTimer() {
+    this.timer.stopTimer();
+    this.time = '0:00';
   }
 
   ionViewDidEnter() {
