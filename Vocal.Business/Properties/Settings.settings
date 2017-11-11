@@ -56,8 +56,5 @@
     <Setting Name="PicturePath" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="PictureUrl" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
-    </Setting>
   </Settings>
 </SettingsFile>

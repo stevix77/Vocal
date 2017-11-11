@@ -4,10 +4,9 @@ export class MessageRequest extends Request {
     TalkId: string;
     MessageId: string
 
-    constructor(talkId: string, messageId : string, lang: string) {
+    constructor(talkId: string, messageId : string) {
         super();
         this.TalkId = talkId;
         this.MessageId = messageId;
-        this.Lang = lang;
     }
 }

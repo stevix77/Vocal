@@ -37,7 +37,7 @@ namespace Vocal.WebApi.Controllers
         public Response<string> GetMessageById(MessageRequest request)
         {
             var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
-            return Monitoring.Execute(TalkBusiness.GetMessageById, request.TalkId, request.MessageId, obj.UserId, request.Lang);
+            return Monitoring.Execute(TalkBusiness.GetMessageById, request.MessageId, request.TalkId, obj.UserId, request.Lang);
         }
     }
 }

@@ -151,7 +151,7 @@ export class MessagePage {
   getMessage(messId: string) {
     let urlMessage = url.GetMessageById();
     let cookie = this.cookieService.GetAuthorizeCookie(urlMessage, params.User);
-    let request = new MessageRequest(this.model.talkId, messId, params.Lang);
+    let request = new MessageRequest(this.model.talkId, messId);
     this.httpService.Post<MessageRequest>(urlMessage, request, cookie).subscribe(
       resp => {
         let response = resp.json() as Response<string>;
