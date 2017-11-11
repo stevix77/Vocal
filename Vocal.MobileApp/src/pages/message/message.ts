@@ -14,6 +14,7 @@ import { TalkService } from "../../services/talkService";
 import { HubService } from "../../services/hubService";
 import {DomSanitizer} from '@angular/platform-browser';
 import { Timer } from '../../services/timer';
+import { GetMessagesRequest } from "../../models/request/getMessagesRequest";
 
 /**
  * Generated class for the MessagePage page.
@@ -149,9 +150,10 @@ export class MessagePage {
 
   getMessages() {
     try {
-      let urlMessages = url.GetMessages(this.model.talkId);
+      let urlMessages = url.GetMessages();
       let cookie = this.cookieService.GetAuthorizeCookie(urlMessages, params.User);
-      let request = {Lang: params.Lang};
+      let dt = this.Messages.length > 0 ? this.Messages[this.Messages.length -1].ArrivedTime : null;
+      let request: GetMessagesRequest = {Lang: params.Lang, LastMessage: dt, TalkId: this.model.talkId};
       this.httpService.Post(urlMessages, request, cookie).subscribe(
         resp => {
           let response = resp.json() as Response<Array<MessageResponse>>;
