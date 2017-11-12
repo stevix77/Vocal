@@ -531,7 +531,8 @@ namespace Vocal.DAL
                 foreach(var m in msgs)
                 {
                     var user = m.Users.SingleOrDefault(x => x.Recipient.Id == userId);
-                    user.ListenDate = DateTime.Now;
+                    if(user != null)
+                        user.ListenDate = DateTime.Now;
                 }
                 UpdateUser(u);
             }
