@@ -57,6 +57,7 @@
     <Compile Include="Helpers\Mapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\GetFollowUserRequest.cs" />
+    <Compile Include="Request\GetMessagesRequest.cs" />
     <Compile Include="Request\ManageFollowUserRequest.cs" />
     <Compile Include="Request\ManageFriendsRequest.cs" />
     <Compile Include="Request\CookieRequest.cs" />

@@ -81,14 +81,16 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<List<MessageResponse>> GetMessages(string talkId, string userId, string lang)
+        public static Response<List<MessageResponse>> GetMessages(string talkId, DateTime? lastMessage, string userId, string lang)
         {
             var response = new Response<List<MessageResponse>>();
             try
             {
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-                LogManager.LogDebug(talkId, userId, lang);
-                var messages = Repository.Instance.GetMessages(talkId, userId);
+                LogManager.LogDebug(talkId, lastMessage, userId, lang);
+                var messages = Repository.Instance.GetMessages(talkId, lastMessage, userId);
+                if (messages == null)
+                    throw new CustomException(Resources_Language.TalkNotExisting);
                 response.Data = Bind.Bind_Messages(messages);
 
                 if(messages.Count > 0) Task.Run(() => UpdateListenUser(userId, talkId, messages));

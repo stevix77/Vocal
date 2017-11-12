@@ -507,13 +507,14 @@ namespace Vocal.DAL
         }
 
 
-        public List<Message> GetMessages(string talkId, string userId)
+        public List<Message> GetMessages(string talkId, DateTime? lastMessage, string userId)
         {
             var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var user = db.Find(x => x.Id == userId && x.Talks.Any(y => y.Id == talkId)).SingleOrDefault();
             var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
             if (talk != null)
-                return talk.Messages.Where(x => !x.IsDeleted).ToList();
+                return lastMessage.HasValue ? talk.Messages.Where(x => !x.IsDeleted && x.ArrivedTime >= lastMessage.Value).ToList() :
+                                              talk.Messages.Where(x => !x.IsDeleted).ToList();
             else
                 return null;
         }
@@ -530,7 +531,8 @@ namespace Vocal.DAL
                 foreach(var m in msgs)
                 {
                     var user = m.Users.SingleOrDefault(x => x.Recipient.Id == userId);
-                    user.ListenDate = DateTime.Now;
+                    if(user != null)
+                        user.ListenDate = DateTime.Now;
                 }
                 UpdateUser(u);
             }

@@ -55,8 +55,9 @@ export class TalkService {
     return lst;
   }
 
-  GetMessages(talkId: string) {
-    return this.Talks.find(x => x.Id == talkId).Messages;
+  GetMessages(talkId: string) : Array<MessageResponse> {
+    let talk = this.Talks.find(x => x.Id == talkId);
+    return talk != null && talk.Messages != null ? talk.Messages : new Array<MessageResponse>();
   }
 
   SaveMessages(talkId: string, messages: Array<MessageResponse>) {
