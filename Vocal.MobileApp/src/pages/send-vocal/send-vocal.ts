@@ -102,7 +102,6 @@ export class SendVocalPage {
       }
     ).catch(error => {
       console.log(error);
-      
     });
   }
 

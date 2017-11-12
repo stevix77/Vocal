@@ -11,6 +11,7 @@ import { url } from "../../services/url";
 import { Response } from '../../models/response';
 import { ManageFriendsRequest } from "../../models/request/manageFriendsRequest";
 import { PeopleResponse } from "../../models/response/peopleResponse";
+import { MessagePage } from "../message/message";
 
 /**
  * Generated class for the FriendsListPage page.
@@ -33,30 +34,7 @@ export class FriendsListPage {
     private cookieService: CookieService) {
   }
 
-  showConfirm(userId) {
-    let confirm = this.alertCtrl.create({
-      title: 'Supprimer un contact',
-      message: 'Êtes-vous sûr de vouloir supprimer ce contact ?',
-      buttons: [
-        {
-          text: 'Non',
-          handler: () => {
-            console.log('Disagree clicked');
-          }
-        },
-        {
-          text: 'Oui',
-          handler: () => {
-            this.deleteContact(userId);
-          }
-        }
-      ]
-    });
-    confirm.present();
-  }
-
   deleteContact(userId) {
-    console.log('delete');
     let obj = new ManageFriendsRequest();
     obj.Lang = params.Lang;
     obj.UserId = params.User.Id;
@@ -111,6 +89,32 @@ export class FriendsListPage {
         }
       }
     );
+  }
+
+  sendMessage(userId) {
+    this.navCtrl.push(MessagePage, {TalkId: null, UserId: userId})
+  }
+
+  showConfirm(userId) {
+    let confirm = this.alertCtrl.create({
+      title: 'Supprimer un contact',
+      message: 'Êtes-vous sûr de vouloir supprimer ce contact ?',
+      buttons: [
+        {
+          text: 'Non',
+          handler: () => {
+            console.log('Disagree clicked');
+          }
+        },
+        {
+          text: 'Oui',
+          handler: () => {
+            this.deleteContact(userId);
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
 
 }

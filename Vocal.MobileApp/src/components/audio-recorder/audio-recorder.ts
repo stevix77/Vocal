@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Events, AlertController, ModalController, Config } from 'ionic-angular';
+import { Events, AlertController, ModalController, Config, ViewController } from 'ionic-angular';
 import { AudioRecorder } from '../../services/audiorecorder';
 import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-vocal';
 
@@ -21,15 +21,16 @@ export class AudioRecorderComponent {
     public audioRecorder: AudioRecorder,
     public alertCtrl: AlertController,
     public modalCtrl: ModalController,
-    public config: Config
+    public config: Config,
+    public viewCtrl: ViewController
     ) {
-    console.log('Hello AudioRecorderComponent Component');
 
-    events.subscribe('record:start', () => this.startRecording());
-    events.subscribe('record:stop', () => this.stopRecording());
-    this.isApp = this.config.get('isApp');
   }
 
+  ngOnInit() {
+    console.log('ngOnInit AudioRecorderComponent');
+    this.isApp = this.config.get('isApp');
+  }
 
   presentEditVocalModal() {
     let editVocalModal = this.modalCtrl.create(ModalEditVocalPage);
@@ -37,13 +38,9 @@ export class AudioRecorderComponent {
   }
 
   startRecording() {
-    let template = `
-    <div class="wrapper-record">
-      <div class="timer" data-timer><span>0:00</span></div>
-      <span class="subtitle">Enregistrement du vocal en cours ...</span>
-    </div>`;
+    console.log('start recording');
+    this.events.publish('record:start');
 
-    document.querySelector('.ion-page ion-content').insertAdjacentHTML('beforeend', template);
     try {
       this.audioRecorder.startRecording();
     }
@@ -53,8 +50,10 @@ export class AudioRecorderComponent {
   }
 
   stopRecording() {
+    console.log('stop recording');
+    this.events.publish('record:stop');
     this.presentEditVocalModal();
-    document.querySelector('.ion-page ion-content .wrapper-record').remove();
+    //document.querySelector('.ion-page ion-content .wrapper-record').remove();
     try {
       this.audioRecorder.stopRecording();
     }

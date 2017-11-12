@@ -226,11 +226,9 @@ namespace Vocal.Business.Binder
             var settings = new SettingsResponse();
             settings.BirthdayDate = user.BirthdayDate;
             settings.Blocked = Bind_People(user.Settings.Blocked);
-            //TODO 
-            //settings.Contacts = GetChoices(user.Settings.Contact);
+            settings.Contacts = GetChoices(user.Settings.Contact);
             settings.Email = user.Email;
-            //TODO
-            //settings.Genders = GetChoices(user.Settings.Gender);
+            settings.Genders = GetChoices(user.Settings.Gender);
             settings.Notifs = GetChoices(user.Settings.IsNotifiable);
             settings.Name = $"{user.Firstname} {user.Lastname} @{user.Username}";
             return settings;

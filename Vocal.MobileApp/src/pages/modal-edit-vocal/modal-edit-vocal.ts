@@ -26,12 +26,12 @@ export class ModalEditVocalPage {
     public alertCtrl: AlertController,
     public events: Events
     ) {
-
     this.viewCtrl.onDidDismiss( () => this.events.publish('edit-vocal:close') );
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ModalEditVocalPage');
+    this.events.publish('edit-vocal:open');
   }
 
   editVocalWithFilter(filter) {

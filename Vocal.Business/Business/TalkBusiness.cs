@@ -264,6 +264,13 @@ namespace Vocal.Business.Business
             response.Data.Talk = Bind.Bind_Talk(talk, request.IdSender);
             response.Data.Message = Bind.Bind_Message(m);
             response.Data.IsSent = true;
+            Task.Run(async () => {
+                await HubService.Instance.SendMessage(response.Data, request.IdsRecipient); // envoi message via signalr
+                var users = allUsers.Where(x => x.Id != request.IdSender);
+                var titleNotif = GenerateTitleNotif(m, string.Join(",", users.Select(x => x.Username)));
+                var messNotif = GenerateMessageNotif(m);
+                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), NotifType.Talk, messNotif, titleNotif, talk.Id);
+            });
         }
 
         private static void AddMessageToTalk(SendMessageRequest request, Response<SendMessageResponse> response, Talk talk, User sender)
@@ -295,6 +302,13 @@ namespace Vocal.Business.Business
             response.Data.Talk = Bind.Bind_Talk(talk, request.IdSender);
             response.Data.Message = Bind.Bind_Message(m);
             response.Data.IsSent = true;
+            Task.Run(async () => {
+                await HubService.Instance.SendMessage(response.Data, request.IdsRecipient); // envoi message via signalr
+                var users = recipients.Where(x => x.Id != request.IdSender);
+                var titleNotif = GenerateTitleNotif(m, string.Join(",", users.Select(x => x.Username)));
+                var messNotif = GenerateMessageNotif(m);
+                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), NotifType.Talk, messNotif, titleNotif, talk.Id);
+            });
         }
 
         private static string GenerateTitleNotif(Message m, string vocalName)

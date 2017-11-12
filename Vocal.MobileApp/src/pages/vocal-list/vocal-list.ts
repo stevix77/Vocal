@@ -11,7 +11,7 @@ import { MessagePage } from '../message/message';
 import {params} from '../../services/params';
 import { Response } from '../../models/Response';
 import {url} from '../../services/url';
-
+import { Timer } from '../../services/timer';
 
 
 /**
@@ -23,14 +23,17 @@ import {url} from '../../services/url';
 @IonicPage()
 @Component({
   selector: 'page-vocal-list',
-  templateUrl: 'vocal-list.html',
-  providers: [HttpService, CookieService, StoreService]
+  templateUrl: 'vocal-list.html'
 })
 export class VocalListPage {
   notificationHub : any;
   messagePage = MessagePage;
   vocalList: Array<TalkResponse> = new Array<TalkResponse>();
   isApp: boolean;
+  isRecording: boolean = false;
+  isTiming: boolean = false;
+  timer: Timer;
+  time: String = '0:00';
   
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -44,31 +47,48 @@ export class VocalListPage {
     private storeService: StoreService,
     private talkService: TalkService) {
 
-    events.subscribe('record:start', () => this.toggleContent());
-    events.subscribe('edit-vocal:close', () => this.toggleContent());
     events.subscribe(HubMethod[HubMethod.Receive], () => this.initialize())
 
     this.isApp = this.config.get('isApp');
+    
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad VocalListPage');
 
+    this.events.subscribe('record:start', () => {
+      this.toggleRecording();
+      this.toggleTiming();
+    });
+    this.events.subscribe('edit-vocal:open', () => this.toggleTiming());
+    this.events.subscribe('edit-vocal:close', () => this.toggleRecording());
+
   }
 
   ionViewDidEnter() {
-    document.querySelector('[data-record]').addEventListener('touchstart', oEvt => this.events.publish('record:start'));
-    if(this.isApp) document.querySelector('[data-record]').addEventListener('touchend', oEvt => this.events.publish('record:stop'));
     this.initialize();
   }
 
-  toggleContent() {
-    document.querySelector('.ion-page ion-content .vocal-list').classList.toggle('hide'); 
-    this.toggleHeader();
+  toggleRecording() {
+    this.isRecording = !this.isRecording;
+  }
+  
+  toggleTiming() {
+    this.isTiming = !this.isTiming;
+    if(this.isTiming) this.startTimer();
   }
 
-  toggleHeader() {
-    document.querySelector('.ion-page ion-header').classList.toggle('anime-hide');
+  startTimer() {
+    this.timer = new Timer(this.events);
+    this.events.subscribe('update:timer', timeFromTimer => {
+      this.time = timeFromTimer;
+    });
+    this.events.subscribe('record:stop', () => this.stopTimer());
+  }
+
+  stopTimer() {
+    this.timer.stopTimer();
+    this.time = '0:00';
   }
 
   showProfile() {
