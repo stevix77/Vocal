@@ -39,5 +39,29 @@ namespace Vocal.WebApi.Controllers
             var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
             return Monitoring.Execute(TalkBusiness.GetMessageById, request.TalkId, request.MessageId, obj.UserId, request.Lang);
         }
+
+        [Route("ArchiveTalk"), HttpPost]
+        public Response<ActionResponse> ArchiveTalk(UpdateTalkRequest request)
+        {
+            return Monitoring.Execute(TalkBusiness.ArchiveTalk, request);
+        }
+
+        [Route("UnarchiveTalk"), HttpPost]
+        public Response<ActionResponse> UnarchiveTalk(UpdateTalkRequest request)
+        {
+            return Monitoring.Execute(TalkBusiness.UnarchiveTalk, request);
+        }
+
+        [Route("DeleteMessage"), HttpPost]
+        public Response<ActionResponse> DeleteMessage(DeleteMessageRequest request)
+        {
+            return Monitoring.Execute(TalkBusiness.DeleteMessage, request);
+        }
+
+        [Route("DeleteTalk"), HttpPost]
+        public Response<ActionResponse> DeleteTalk(UpdateTalkRequest request)
+        {
+            return Monitoring.Execute(TalkBusiness.DeleteTalk, request);
+        }
     }
 }

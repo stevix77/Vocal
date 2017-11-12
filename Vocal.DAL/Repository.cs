@@ -506,6 +506,58 @@ namespace Vocal.DAL
             return talk;
         }
 
+        public bool ArchiveTalk(string talkId, string userId)
+        {
+            var user = GetUserById(userId);
+            if (user != null)
+            {
+                var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
+                talk.IsArchived = true;
+                UpdateUser(user);
+            }
+            throw new Exception("User not found");
+        }
+
+        public bool UnArchiveTalk(string talkId, string userId)
+        {
+            var user = GetUserById(userId);
+            if (user != null)
+            {
+                var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
+                talk.IsArchived = false;
+                UpdateUser(user);
+            }
+            throw new Exception("User not found");
+        }
+
+        public bool DeleteTalk(string talkId, string userId)
+        {
+            var user = GetUserById(userId);
+            if (user != null)
+            {
+                var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
+                talk.IsDeleted = true;
+                UpdateUser(user);
+            }
+            throw new Exception("User not found");
+        }
+
+        public bool DeleteMessage(string talkId, List<string> messageIds, string userId)
+        {
+            var user = GetUserById(userId);
+            if (user != null)
+            {
+                var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
+                var messages = talk.Messages.Where(x => messageIds.Contains(x.Id.ToString()));
+                foreach(var m in messages)
+                {
+                    m.IsDeleted = true;
+                }
+                UpdateUser(user);
+            }
+            throw new Exception("User not found");
+        }
+
 
         public List<Message> GetMessages(string talkId, string userId)
         {
