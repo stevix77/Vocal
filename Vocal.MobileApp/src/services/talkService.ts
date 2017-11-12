@@ -12,7 +12,7 @@ import { MessageResponse } from "../models/response/messageResponse";
 @Injectable()
 export class TalkService {
 
-  public Talks: Array<TalkResponse> = null;
+  public Talks: Array<TalkResponse> = new Array<TalkResponse>();
   // public Messages: Array<MessageResponse>;
   public Messages: Array<KeyValueResponse<string, Array<MessageResponse>>> = new Array<KeyValueResponse<string, Array<MessageResponse>>>();
 
