@@ -20,7 +20,8 @@
 
 <ion-footer>
   <ion-toolbar (click)="sendVocal()">
-    <ion-title>Envoyer</ion-title>
+    <ion-title *ngIf="isSending == false">Envoyer</ion-title>
+    <ion-title *ngIf="isSending == true">Envoi en cours...</ion-title>
     <ion-buttons end>
       <ion-icon name="arrow-forward"></ion-icon>
     </ion-buttons>
