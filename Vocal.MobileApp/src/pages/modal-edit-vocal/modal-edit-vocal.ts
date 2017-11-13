@@ -32,6 +32,10 @@ export class ModalEditVocalPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad ModalEditVocalPage');
     this.events.publish('edit-vocal:open');
+
+  }
+
+  ionViewDidEnter() {
   }
 
   editVocalWithFilter(filter) {
@@ -52,7 +56,7 @@ export class ModalEditVocalPage {
   }
 
   goToSendVocal() {
-    this.navCtrl.push(SendVocalPage);
+    this.navCtrl.push(SendVocalPage)
   }
 
   showAlert(message) {

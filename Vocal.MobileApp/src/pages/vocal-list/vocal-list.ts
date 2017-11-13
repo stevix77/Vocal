@@ -6,11 +6,11 @@ import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
 import { TalkResponse } from '../../models/response/talkResponse';
 import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
-import {HubMethod} from '../../models/enums';
+import { HubMethod } from '../../models/enums';
 import { MessagePage } from '../message/message';
-import {params} from '../../services/params';
+import { params } from '../../services/params';
 import { Response } from '../../models/Response';
-import {url} from '../../services/url';
+import { url } from '../../services/url';
 import { Timer } from '../../services/timer';
 
 
@@ -71,6 +71,7 @@ export class VocalListPage {
 
   toggleRecording() {
     this.isRecording = !this.isRecording;
+    console.log('toggleRecording');
   }
   
   toggleTiming() {

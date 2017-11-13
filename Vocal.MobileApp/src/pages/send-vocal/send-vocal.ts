@@ -1,7 +1,7 @@
 import { UserResponse } from '../../models/response/userResponse';
 import { TalkService } from './../../services/talkService';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, Events } from 'ionic-angular';
 import { StoreService } from "../../services/storeService";
 import { KeyStore } from '../../models/enums';
 import { MessageType } from '../../models/enums';
@@ -34,6 +34,8 @@ export class SendVocalPage {
   Talks: Array<TalkResponse>;
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
+              public viewCtrl: ViewController,
+              public events: Events,
               private storeService: StoreService, 
               private audioRecorder: AudioRecorder, 
               private cookieService: CookieService, 
@@ -72,15 +74,16 @@ export class SendVocalPage {
         resp => {
           let response = resp.json() as Response<SendMessageResponse>;
           if(!response.HasError && response.Data.IsSent) {
+            console.log(response);
             this.talkService.LoadList().then(() => {
               this.talkService.UpdateList(response.Data.Talk);
               this.talkService.SaveList();
-              this.navCtrl.popToRoot();
+              this.navCtrl.remove(1, 1).then(() => this.navCtrl.pop());
             })
           }
           else 
             //TODO : Alert Message d'erreur  response.ErrorMessage
-          this.navCtrl.popToRoot();
+            this.navCtrl.pop();
         }
       )
     }).catch(err => {
