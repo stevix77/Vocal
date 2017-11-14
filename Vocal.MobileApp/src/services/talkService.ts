@@ -12,7 +12,7 @@ import { MessageResponse } from "../models/response/messageResponse";
 @Injectable()
 export class TalkService {
 
-  public Talks: Array<TalkResponse> = null;
+  public Talks: Array<TalkResponse> = new Array<TalkResponse>();
   // public Messages: Array<MessageResponse>;
   public Messages: Array<KeyValueResponse<string, Array<MessageResponse>>> = new Array<KeyValueResponse<string, Array<MessageResponse>>>();
 
@@ -55,29 +55,18 @@ export class TalkService {
     return lst;
   }
 
-  GetMessages(talkId) {
-    return this.storeService.Get(KeyStore[KeyStore.Messages]).then(
-      obj => {
-        if(obj != null) {
-          this.Messages = obj;
-        }
-      }
-    ).catch(error => {
-      console.log(error);
-      
-    });
+  GetMessages(talkId: string) : Array<MessageResponse> {
+    let talk = this.Talks.find(x => x.Id == talkId);
+    return talk != null && talk.Messages != null ? talk.Messages : new Array<MessageResponse>();
   }
 
   SaveMessages(talkId: string, messages: Array<MessageResponse>) {
-    let talkMessage = this.Messages.find(x => x.Key == talkId);
-    if(talkMessage != null)
-      talkMessage.Value = messages;
-    else {
-      let mess = new KeyValueResponse<string, Array<MessageResponse>>();
-      mess.Key = talkId;
-      mess.Value = messages;
-      this.Messages.push(mess);
-    }
-    this.storeService.Set(KeyStore[KeyStore.Messages], this.Messages)
+    let talk = this.Talks.findIndex(x => x.Id == talkId);
+    if(talk != -1)
+    {
+      this.Talks[talk].Messages = messages;
+      this.storeService.Set(KeyStore[KeyStore.Talks], this.Talks)
+    }  
+    
   }
 }

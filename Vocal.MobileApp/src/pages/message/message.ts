@@ -2,7 +2,7 @@ import { MessageRequest } from './../../models/request/messageRequest';
 import { HubMethod } from '../../models/enums';
 import { MessageResponse } from './../../models/response/messageResponse';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, Events } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, Events, Config } from 'ionic-angular';
 import { params } from '../../services/params';
 import { Response } from '../../models/Response';
 import { SendMessageRequest } from '../../models/request/sendMessageRequest';
@@ -10,10 +10,11 @@ import { SendMessageResponse } from '../../models/response/sendMessageResponse';
 import { url } from '../../services/url';
 import { HttpService } from '../../services/httpService';
 import { CookieService } from '../../services/cookieService';
-import { VocalListPage } from '../../pages/vocal-list/vocal-list';
 import { TalkService } from "../../services/talkService";
 import { HubService } from "../../services/hubService";
 import {DomSanitizer} from '@angular/platform-browser';
+import { Timer } from '../../services/timer';
+import { GetMessagesRequest } from "../../models/request/getMessagesRequest";
 
 /**
  * Generated class for the MessagePage page.
@@ -24,16 +25,22 @@ import {DomSanitizer} from '@angular/platform-browser';
 @IonicPage()
 @Component({
   selector: 'page-message',
-  templateUrl: 'message.html',
-  providers: [HttpService, CookieService, TalkService]
+  templateUrl: 'message.html'
 })
 export class MessagePage {
   
-  model = { Message: "", talkId: null }
+  model = { Message: "", talkId: null, userId: null }
   VocalName: string = "";
   Messages: Array<MessageResponse> = new Array<MessageResponse>();
+  isApp: boolean;
+  isRecording: boolean = false;
+  isTiming: boolean = false;
+  timer: Timer;
+  time: String = '0:00';
+
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
+              public config: Config,
               private httpService: HttpService, 
               private toastCtrl: ToastController, 
               private cookieService: CookieService,
@@ -42,20 +49,56 @@ export class MessagePage {
               private hubService: HubService,
               private domSanitizer: DomSanitizer) {
 
-    // this.events.subscribe()
     this.model.talkId = this.navParams.get("TalkId");
+    this.model.userId = this.navParams.get("UserId");
     this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj.Message))
-  }
 
+    this.isApp = this.config.get('isApp');
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MessagePage');
+    this.events.subscribe('record:start', () => {
+      this.toggleRecording();
+      this.toggleTiming();
+    });
+    this.events.subscribe('edit-vocal:open', () => this.toggleTiming());
+    this.events.subscribe('edit-vocal:close', () => this.toggleRecording());
+  }
+
+  toggleRecording() {
+    this.isRecording = !this.isRecording;
+  }
+
+  toggleTiming() {
+    this.isTiming = !this.isTiming;
+    if(this.isTiming) this.startTimer();
+  }
+
+  startTimer() {
+    this.timer = new Timer(this.events);
+    this.events.subscribe('update:timer', timeFromTimer => {
+      this.time = timeFromTimer;
+    });
+    this.events.subscribe('record:stop', () => this.stopTimer());
+  }
+
+  stopTimer() {
+    this.timer.stopTimer();
+    this.time = '0:00';
+  }
+
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter MessagePage');
   }
 
   ionViewWillEnter() {
-    this.loadMessages().then(() => {
-      this.getMessages();
-    });
+    if(this.model.talkId != null) {
+      this.loadMessages();
+    } else {
+      this.loadMessagesByUser(this.model.userId);
+    }
+    this.getMessages();
   }
 
   ionViewWillLeave() {
@@ -90,27 +133,27 @@ export class MessagePage {
   }
 
   loadMessages() {
-   return this.talkService.GetMessages(this.model.talkId).then(() => {
-      if(this.talkService.Messages != null) {
-        let mess = this.talkService.Messages.find(x => x.Key == this.model.talkId)
-        this.talkService.Talks.find(x => x.Id == this.model.talkId).Users.forEach(x => {
-          if(x.Id != params.User.Id)
-            this.VocalName += x.Username + ",";
-        })
-        if(mess != null) {
-          this.Messages = mess.Value;
-        }
-      }
-    }).catch((err) => {
-      
+    this.Messages = this.talkService.GetMessages(this.model.talkId)
+    this.talkService.Talks.find(x => x.Id == this.model.talkId).Users.forEach(x => {
+      if(x.Id != params.User.Id)
+        this.VocalName += x.Username + " ";
     })
+  }
+
+  loadMessagesByUser(userId) {
+    let talk = this.talkService.Talks.find(talk => talk.Users.some(x => x.Id == userId) && talk.Users.length == 2);
+    if(talk != null) {
+      this.Messages = talk.Messages != null ? talk.Messages : new Array<MessageResponse>()
+      this.model.talkId = talk.Id;
+    }
   }
 
   getMessages() {
     try {
-      let urlMessages = url.GetMessages(this.model.talkId);
+      let urlMessages = url.GetMessages();
       let cookie = this.cookieService.GetAuthorizeCookie(urlMessages, params.User);
-      let request = {Lang: params.Lang};
+      let dt = this.Messages.length > 0 ? this.Messages[this.Messages.length -1].ArrivedTime : null;
+      let request: GetMessagesRequest = {Lang: params.Lang, LastMessage: dt, TalkId: this.model.talkId};
       this.httpService.Post(urlMessages, request, cookie).subscribe(
         resp => {
           let response = resp.json() as Response<Array<MessageResponse>>;
@@ -124,12 +167,13 @@ export class MessagePage {
             this.talkService.SaveMessages(this.model.talkId, this.Messages);
           } else {
             this.showToast(response.ErrorMessage);
-            this.loadMessages();
+            //this.loadMessages();
           }
         }
       )
     } catch(err) {
-      this.loadMessages();
+      console.log(err);
+      // this.loadMessages();
     }
   }
 
@@ -175,6 +219,6 @@ export class MessagePage {
   }
 
   goToVocalList() {
-    this.navCtrl.push(VocalListPage);
+    this.navCtrl.pop({'direction':'forward'});
   }
 }

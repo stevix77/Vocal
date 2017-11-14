@@ -1,9 +1,7 @@
 import { UserResponse } from '../../models/response/userResponse';
 import { TalkService } from './../../services/talkService';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { SelectFriendsComponent } from '../../components/select-friends/select-friends';
-import { VocalListPage } from '../../pages/vocal-list/vocal-list';
+import { IonicPage, NavController, NavParams, ViewController, Events } from 'ionic-angular';
 import { StoreService } from "../../services/storeService";
 import { KeyStore } from '../../models/enums';
 import { MessageType } from '../../models/enums';
@@ -27,17 +25,19 @@ import { AudioRecorder } from '../../services/audiorecorder';
 @IonicPage()
 @Component({
   selector: 'page-send-vocal',
-  templateUrl: 'send-vocal.html',
-  entryComponents: [SelectFriendsComponent],
-  providers: [StoreService, CookieService, HttpService, TalkService]
+  templateUrl: 'send-vocal.html'
 })
 export class SendVocalPage {
 
   Friends: Array<any>;
   FileValue: string;
   Talks: Array<TalkResponse>;
+  isSending: Boolean = false;
+
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
+              public viewCtrl: ViewController,
+              public events: Events,
               private storeService: StoreService, 
               private audioRecorder: AudioRecorder, 
               private cookieService: CookieService, 
@@ -51,45 +51,48 @@ export class SendVocalPage {
   }
 
   sendVocal() {
-    console.log('send vocal');
-    let users = [];
-    Promise.all([this.audioRecorder.getFile(), this.audioRecorder.getMediaDuration()]).then(values => {
-      this.FileValue = values[0];
-      this.Friends.forEach(elt => {
-      if(elt.Checked)
-        users.push(elt.Id);
-      });
-      let date = new Date();
-      let request: SendMessageRequest = {
-        content: this.FileValue,
-        duration: values[1],
-        sentTime: date,
-        idsRecipient: users,
-        messageType: MessageType.Vocal,
-        Lang: params.Lang,
-        idSender: params.User.Id,
-        IdTalk: null
-      }
-      let urlSendVocal = url.SendMessage();
-      let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
-      this.httpService.Post(urlSendVocal, request, cookie).subscribe(
-        resp => {
-          let response = resp.json() as Response<SendMessageResponse>;
-          if(!response.HasError && response.Data.IsSent) {
-            this.talkService.LoadList().then(() => {
-              this.talkService.UpdateList(response.Data.Talk);
-              this.talkService.SaveList();
-              this.navCtrl.push(VocalListPage);
-            })
-          }
-          else 
-            //TODO : Alert Message d'erreur  response.ErrorMessage
-          this.navCtrl.push(VocalListPage);
+    if(!this.isSending) {
+      this.isSending = true;
+      let users = [];
+      Promise.all([this.audioRecorder.getFile(), this.audioRecorder.getMediaDuration()]).then(values => {
+        this.FileValue = values[0];
+        this.Friends.forEach(elt => {
+        if(elt.Checked)
+          users.push(elt.Id);
+        });
+        let date = new Date();
+        let request: SendMessageRequest = {
+          content: this.FileValue,
+          duration: values[1],
+          sentTime: date,
+          idsRecipient: users,
+          messageType: MessageType.Vocal,
+          Lang: params.Lang,
+          idSender: params.User.Id,
+          IdTalk: null
         }
-      )
-    }).catch(err => {
-      console.log(err);
-    });
+        let urlSendVocal = url.SendMessage();
+        let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
+        this.httpService.Post(urlSendVocal, request, cookie).subscribe(
+          resp => {
+            let response = resp.json() as Response<SendMessageResponse>;
+            if(!response.HasError && response.Data.IsSent) {
+              console.log(response);
+              this.talkService.LoadList().then(() => {
+                this.talkService.UpdateList(response.Data.Talk);
+                this.talkService.SaveList();
+                this.navCtrl.remove(0,1).then(() => this.navCtrl.pop());
+              })
+            }
+            else {
+              console.log(response);
+            }
+          }
+        )
+      }).catch(err => {
+        console.log(err);
+      });
+    }
   }
 
   GetFriends() {
@@ -102,7 +105,6 @@ export class SendVocalPage {
       }
     ).catch(error => {
       console.log(error);
-      
     });
   }
 

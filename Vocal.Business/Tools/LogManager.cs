@@ -15,6 +15,11 @@ namespace Vocal.Business.Tools
             ErrorSignal.FromCurrentContext().Raise(ex);
         }
 
+        public static void LogDebug(string log)
+        {
+            ErrorLog.GetDefault(System.Web.HttpContext.Current).Log(new Error { Message = log, Type = "DEBUG", Time = DateTime.Now, HostName = Environment.MachineName, User = Environment.UserName, ApplicationName = "Vocal" });
+        }
+
         public static void LogDebug(params object[] obj)
         {
             var caller = new System.Diagnostics.StackTrace().GetFrame(1).GetMethod();

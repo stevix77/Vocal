@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header [class]="isRecording ? 'anime-hide' : ''">
   <ion-navbar hideBackButton="true">
     <ion-avatar start>
       <img src="https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-1/p24x24/16602600_10154441388394576_4490155536874187938_n.jpg?oh=21c11ffc32c0b439c7ee5b32629d6b97&oe=5A1910E7">
@@ -13,7 +13,7 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list>
+  <ion-list [hidden]="isRecording">
     <ion-list-header>
       Conversation
     </ion-list-header>
@@ -43,7 +43,7 @@
   </div>
 
   <div>
-    <form #form="ngForm" (ngSubmit)="sendMessage(form)" >
+    <form #form="ngForm" (ngSubmit)="sendMessage(form)" [hidden]="isRecording">
       <ion-grid>
         <ion-row>
           <ion-col col-10>
@@ -63,3 +63,13 @@
   </div>
 
 </ion-content>
+
+
+<ion-footer>
+  <audio-recorder></audio-recorder>
+</ion-footer>
+
+<div class="wrapper-record" [hidden]="!isTiming">
+  <div class="timer" data-timer><span>{{time}}</span></div>
+  <span class="subtitle">Enregistrement du vocal en cours ...</span>
+</div>

@@ -1,25 +1,27 @@
 page-message {
-
-    .grid{
-        padding:0;
+  .grid{
+    padding:0;
+  }
+  .msg{
+    border-radius: 20px;
+    padding: 10px;
+    
+    &.msg-current-user{
+            background-color: green;
     }
 
-    .msg{
-
-        border-radius: 20px;
-        padding: 10px;
-        
-        &.msg-current-user{
-                background-color: green;
-        }
-
-        &.msg-current-user-not-sent{
-            background-color: lightgreen;
-        }
-
-        &.msg-other-user{
-            background-color: lightgray;
-        }
+    &.msg-current-user-not-sent{
+        background-color: lightgreen;
     }
-  
+
+    &.msg-other-user{
+        background-color: lightgray;
+    }
+  }
+  ion-header{
+    transition: transform 0.5s;
+    &.anime-hide{
+      transform: translateY(-100%);
+    }
+  }
 }

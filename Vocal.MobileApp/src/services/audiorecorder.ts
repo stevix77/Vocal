@@ -130,8 +130,8 @@ export class AudioRecorder {
   }
 
   startRecording() {
-    this.timer = new Timer();
-    this.timer.startTimer();
+    //this.timer = new Timer();
+    //this.timer.startTimer();
     if(this.isApp) {
       console.log('start recording');
       this.getMedia().startRecord();
@@ -139,7 +139,7 @@ export class AudioRecorder {
   }
 
   stopRecording() {
-    this.timer.stopTimer();
+    
     if(this.isApp) this.getMedia().stopRecord();
   }
 

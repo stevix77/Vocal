@@ -15,5 +15,6 @@ namespace Vocal.Model.Response
         public List<UserResponse> Blocked { get; set; }
         public List<ChoiceResponse> Notifs { get; set; }
         public List<ChoiceResponse> Contacts { get; set; }
+        public int TotalDuration { get; set; }
     }
 }
