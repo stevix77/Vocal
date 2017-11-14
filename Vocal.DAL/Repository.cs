@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Driver;
-using MongoDB;
-using Vocal.DAL.Properties;
-using Vocal.Model;
 using Vocal.Model.DB;
+using Vocal.Model.Helpers;
 
 namespace Vocal.DAL
 {
-    public sealed class Repository
+    public sealed partial class  Repository
     {
         private Repository()
         {
@@ -42,15 +39,15 @@ namespace Vocal.DAL
             settings.Server = new MongoServerAddress(Properties.Settings.Default.Host, Properties.Settings.Default.Port);
             MongoIdentity identity = new MongoInternalIdentity(Properties.Settings.Default.DocumentDBName, Properties.Settings.Default.DocumentDBUser);
             MongoIdentityEvidence evidence = new PasswordEvidence(Properties.Settings.Default.DocumentDBPwd);
-#if !DEBUG
-                //settings.UseSsl = true;
-                //settings.SslSettings = new SslSettings();
-                //settings.SslSettings.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
-                settings.Credentials = new List<MongoCredential>()
-                {
-                    new MongoCredential("SCRAM-SHA-1", identity, evidence)
-                };
-#endif
+//#if !DEBUG
+//                //settings.UseSsl = true;
+//                //settings.SslSettings = new SslSettings();
+//                //settings.SslSettings.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+//                settings.Credentials = new List<MongoCredential>()
+//                {
+//                    new MongoCredential("SCRAM-SHA-1", identity, evidence)
+//                };
+//#endif
             //settings.Credentials = new List<MongoCredential>()
             //{
             //    new MongoCredential("SCRAM-SHA-1", identity, evidence)
@@ -58,13 +55,13 @@ namespace Vocal.DAL
             MongoClient client = new MongoClient(settings);
             return client;
         }
-
         
+
         #region Authentification
 
-        public User Login(string login, string password)
+        public Vocal.Model.DB.User Login(string login, string password)
         {
-            var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var collection = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
             var user = collection.Find(x => x.Password == password && (x.Email.ToLower() == login || x.Username.ToLower() == login)).SingleOrDefault();
             return user;
         }
@@ -90,29 +87,29 @@ namespace Vocal.DAL
 
         #region User 
 
-        public void AddUser(User user)
+        public void AddUser(Vocal.Model.DB.User user)
         {
-            var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var collection = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
             collection.InsertOne(user);
         }
 
-        public User GetUserById(string id)
+        public Vocal.Model.DB.User GetUserById(string id)
         {
             var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var user = db.Find(x => x.Id == id).SingleOrDefault();
             return user;
         }
 
-        public User GetUserByEmail(string email)
+        public Vocal.Model.DB.User GetUserByEmail(string email)
         {
-            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
             var user = db.Find(x => x.Email.ToLower() == email).SingleOrDefault();
             return user;
         }
 
-        public User GetUserByUsername(string username)
+        public Vocal.Model.DB.User GetUserByUsername(string username)
         {
-            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
             var user = db.Find(x => x.Username.ToLower() == username).SingleOrDefault();
             return user;
         }
@@ -130,13 +127,23 @@ namespace Vocal.DAL
             return db.Count(filter) == userIds.Count;
         }
 
-        public List<User> GetUsersById(List<string> userIds)
+        public List<Vocal.Model.DB.User> GetUsersById(List<string> userIds)
         {
-            List<User> users = new List<User>();
-            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
-            var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, userIds);
+            List<Vocal.Model.DB.User> users = new List<Vocal.Model.DB.User>();
+            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
+            var filter = new FilterDefinitionBuilder<Vocal.Model.DB.User>().In(x => x.Id, userIds);
             users = db.Find(filter).ToList();
             return users;
+        }
+
+        public List<Vocal.Model.DB.People> GetUsersByIdInPeole(List<string> userIds)
+        {
+            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
+            var filter = new FilterDefinitionBuilder<Vocal.Model.DB.User>().In(x => x.Id, userIds);
+            return db.Find(filter)
+                     .ToList()
+                     .Select(Mapper.ToPeople)
+                     .ToList();
         }
 
         public bool BlockUsers(string userId, List<string> userIds)
@@ -158,7 +165,7 @@ namespace Vocal.DAL
             }
             return success;
         }
-
+        
         public bool UnblockUsers(string userId, List<string> userIds)
         {
             bool success = false;
@@ -173,10 +180,10 @@ namespace Vocal.DAL
             return success;
         }
 
-        public List<User> GetAllUsers()
+        public List<Vocal.Model.DB.User> GetAllUsers()
         {
-            List<User> users = new List<User>();
-            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var users = new List<Vocal.Model.DB.User>();
+            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
             users = db.AsQueryable().ToList();
             return users;
         }
@@ -185,11 +192,11 @@ namespace Vocal.DAL
 
         #region Friends
 
-        public List<User> SearchFriendsByEmails(List<string> emails)
+        public List<Vocal.Model.DB.User> SearchFriendsByEmails(List<string> emails)
         {
-            List<User> users = new List<User>();
-            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
-            var filter = new FilterDefinitionBuilder<User>().In(x => x.Email, emails);
+            var users = new List<Vocal.Model.DB.User>();
+            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
+            var filter = new FilterDefinitionBuilder<Vocal.Model.DB.User>().In(x => x.Email, emails);
             users = db.Find(filter).ToList();
             return users;
         }
@@ -267,9 +274,9 @@ namespace Vocal.DAL
             return null;
         }
 
-        public List<User> GetFriendsAddedMe(string userId)
+        public List<Vocal.Model.DB.User> GetFriendsAddedMe(string userId)
         {
-            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
             var list = db.Find(x => x.Friends.Any(y => y.Id == userId && y.DateAdded > DateTime.Now.AddDays(-7))).ToList();
             return list;
         }
@@ -446,53 +453,88 @@ namespace Vocal.DAL
 
         public Talk GetTalk(string idTalk, string userId)
         {
-            var fdb = new FilterDefinitionBuilder<Talk>();
-            return _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk)
-                .Find(fdb.Eq(x => x.Id, idTalk) & fdb.In("Users._id", new[] { userId }))
-                .SingleOrDefault();
+            var user = GetUserById(userId);
+            if (user != null)
+            {
+                return user.Talks.SingleOrDefault(x => x.Id == idTalk );
+            }
+            //must create a proper exception to catch correctly the error 
+            throw new Exception("User not found");
         }
 
         public List<Talk> GetListTalk(string userId)
         {
-            var db = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
-            var fdb = new FilterDefinitionBuilder<Talk>();
-            var list = db.Find(fdb.In("Users._id", new[] { userId }))
-                        .Project(x => new Talk { Id = x.Id, VocalName = x.VocalName, Users = x.Users, Messages = x.Messages.OrderByDescending(y => y.SentTime).Take(1).ToList() })
-                        .ToList();
-            return list;
+            var user = GetUserById(userId);
+            if (user != null)
+            {
+                return user.Talks.Where(x => !x.IsArchived && !x.IsDeleted).ToList();
+            }
+            //must create a proper exception to catch correctly the error 
+            throw new Exception("User not found");
         }
 
-        public Talk AddTalk(Talk talk)
+        public bool AddTalk(Talk talk, List<User> users)
         {
-            talk.Id = Guid.NewGuid().ToString();
-            var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
-            collection.InsertOne(talk);
+            foreach(var u in users)
+            {
+                u.Talks.Add(talk);
+                UpdateUser(u);
+            }
+            return true;
+        }
+
+        public Talk AddMessageToTalk(string talkId, List<User> users, Message message)
+        {
+            Talk talk = GetTalk(talkId, message.Sender.Id);
+            foreach (var u in users)
+            {
+                var t = u.Talks.SingleOrDefault(x => x.Id == talkId && !x.IsDeleted);
+                if (t == null)
+                {
+                    t = new Talk { Id = talk.Id, Recipients = talk.Recipients, Name = talk.Name };
+                    u.Talks.Add(t);
+                }
+                t.TotalDuration = message.Duration.HasValue ? message.Duration.Value : 0;
+                t.Messages.Add(message);
+                t.DateLastMessage = message.SentTime;
+                UpdateUser(u);
+                if (u.Id == message.Sender.Id)
+                {
+                    talk = t;
+                }
+            }
             return talk;
         }
 
-        public Talk UpdateTalk(Talk talk)
-        {
-            var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
-            collection.ReplaceOne(x => x.Id == talk.Id, talk);
-            return talk;
-        }
-
-
-        public Talk UptOrCreateTalk(Talk talk)
-        {
-            return string.IsNullOrEmpty(talk.Id)
-                ? this.AddTalk(talk)
-                : this.UpdateTalk(talk);
-        }
 
         public List<Message> GetMessages(string talkId, string userId)
         {
-            var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
-            var talk = collection.Find(x => x.Id == talkId).SingleOrDefault();
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var user = db.Find(x => x.Id == userId && x.Talks.Any(y => y.Id == talkId)).SingleOrDefault();
+            var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
             if (talk != null)
-                return talk.Messages;
+                return talk.Messages.Where(x => !x.IsDeleted).ToList();
             else
                 return null;
+        }
+
+        public bool SetIsRead(string userId, string talkId, List<Message> messsages)
+        {
+            var reader = GetUserById(userId);
+            var talk = reader.Talks.SingleOrDefault(x => x.Id == talkId);
+            var users = GetUsersById(talk.Recipients.Select(x => x.Id).ToList());
+            foreach(var u in users)
+            {
+                var t = u.Talks.SingleOrDefault(x => x.Id == talk.Id);
+                var msgs = t.Messages.Where(x => messsages.Any(y => y.Id == x.Id)).ToList();
+                foreach(var m in msgs)
+                {
+                    var user = m.Users.SingleOrDefault(x => x.Recipient.Id == userId);
+                    user.ListenDate = DateTime.Now;
+                }
+                UpdateUser(u);
+            }
+            return false;
         }
 
         #endregion
@@ -521,10 +563,10 @@ namespace Vocal.DAL
             return list;
         }
 
-        public List<User> SearchPeopleByEmail(string keyword)
+        public List<Vocal.Model.DB.User> SearchPeopleByEmail(string keyword)
         {
-            var list = new List<User>();
-            var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var list = new List<Vocal.Model.DB.User>();
+            var collection = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
             list = collection.Find(x => x.Email.ToLower().Contains(keyword))
                                         .ToList();
             return list;

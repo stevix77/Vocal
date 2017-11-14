@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{5A5F6EEC-108C-4A13-BE62-0D164CC3748A}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Vocal.Model</RootNamespace>
-    <AssemblyName>Vocal.Model</AssemblyName>
+    <RootNamespace>Vocal.Console</RootNamespace>
+    <AssemblyName>Vocal.Console</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -40,51 +43,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Business\Response.cs" />
-    <Compile Include="DB\Device.cs" />
-    <Compile Include="DB\Enums.cs" />
-    <Compile Include="DB\Message.cs" />
-    <Compile Include="DB\MessageType.cs" />
-    <Compile Include="DB\Monitoring.cs" />
-    <Compile Include="DB\People.cs" />
-    <Compile Include="DB\ResetPassword.cs" />
-    <Compile Include="DB\Search.cs" />
-    <Compile Include="DB\Settings.cs" />
-    <Compile Include="DB\Sign.cs" />
-    <Compile Include="DB\Talk.cs" />
-    <Compile Include="DB\User.cs" />
-    <Compile Include="DB\UserListen.cs" />
-    <Compile Include="Helpers\Mapper.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Request\GetFollowUserRequest.cs" />
-    <Compile Include="Request\ManageFollowUserRequest.cs" />
-    <Compile Include="Request\ManageFriendsRequest.cs" />
-    <Compile Include="Request\CookieRequest.cs" />
-    <Compile Include="Request\GetFriendsRequest.cs" />
-    <Compile Include="Request\LoginRequest.cs" />
-    <Compile Include="Request\MessageRequest.cs" />
-    <Compile Include="Request\NotificationRegisterRequest.cs" />
-    <Compile Include="Request\PasswordRequest.cs" />
-    <Compile Include="Request\RegisterRequest.cs" />
-    <Compile Include="Request\Request.cs" />
-    <Compile Include="Request\SearchFriendsRequest.cs" />
-    <Compile Include="Request\SendMessageRequest.cs" />
-    <Compile Include="Response\MessageResponse.cs" />
-    <Compile Include="Response\SendMessageResponse.cs" />
-    <Compile Include="Request\SearchRequest.cs" />
-    <Compile Include="Request\TalkRequest.cs" />
-    <Compile Include="Request\UpdateRequest.cs" />
-    <Compile Include="Request\UserExistsRequest.cs" />
-    <Compile Include="Response\ChoiceResponse.cs" />
-    <Compile Include="Response\KeyValueResponse.cs" />
-    <Compile Include="Response\InitResponse.cs" />
-    <Compile Include="Response\SettingsResponse.cs" />
-    <Compile Include="Response\TalkResponse.cs" />
-    <Compile Include="Response\UserListenResponse.cs" />
-    <Compile Include="Response\PeopleResponse.cs" />
-    <Compile Include="Response\UserResponse.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Vocal.DAL\Vocal.DAL.csproj">
+      <Project>{41fc38be-ae82-4f89-8e81-dc57f6b610b3}</Project>
+      <Name>Vocal.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Vocal.Model\Vocal.Model.csproj">
+      <Project>{b76d6ce5-b158-4eb9-8a35-54da7cee32ea}</Project>
+      <Name>Vocal.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Vocal.Tools\Vocal.Tools.csproj">
       <Project>{9198f034-6876-4e86-a84a-50624d6c7742}</Project>
       <Name>Vocal.Tools</Name>

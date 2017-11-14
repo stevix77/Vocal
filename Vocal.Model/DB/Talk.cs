@@ -7,8 +7,15 @@ namespace Vocal.Model.DB
     public class Talk
     {
         public string Id { get; set; }
-        public List<User> Users { get; set; } = new List<User>();
+        public List<People> Recipients { get; set; } = new List<People>();
         public List<Message> Messages { get; set; } = new List<Message>();
-        public string VocalName { get; set; }
+
+
+        public DateTime DateLastMessage { get; set; }
+        public string Name { get; set; } = null;
+        public bool IsArchived { get; set; }
+        public bool IsDeleted { get; set; }
+        public bool IsReceivedMessage { get; set; }
+        public int TotalDuration { get; set; }
     }
 }

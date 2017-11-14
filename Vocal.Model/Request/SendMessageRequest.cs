@@ -11,5 +11,7 @@ namespace Vocal.Model.Request
         public int MessageType { get; set; } 
         public string IdSender { get; set; }
         public List<string> IdsRecipient { get; set; }
+        public string IdMessageParent { get; set; }
+        public int? Duration { get; set; }
     }
 }

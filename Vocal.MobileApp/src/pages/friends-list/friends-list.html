@@ -25,7 +25,8 @@
   <ion-item-sliding *ngFor="let friend of Friends">
     <ion-item>
       <ion-avatar item-start>
-        <img alt="picture" src="https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-1/p24x24/16602600_10154441388394576_4490155536874187938_n.jpg?oh=21c11ffc32c0b439c7ee5b32629d6b97&oe=5A1910E7">
+        <img *ngIf="friend.Picture" alt="" src="{{friend.Picture}}">
+        <ion-icon *ngIf="friend.Picture === null" name="contact"></ion-icon>
       </ion-avatar>
       <h3>{{ friend.Username }}</h3>
     </ion-item>

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Vocal.Business.Properties;
 using Vocal.Business.Security;
 using Vocal.Business.Tools;
@@ -51,7 +48,8 @@ namespace Vocal.Business.Business
         public static Response<bool> UpdateUser(string userId, object value, int updateType, string lang)
         {
             var response = new Response<bool>();
-            LogManager.LogDebug(userId, value, updateType, lang);
+            if(updateType != (int)Update.Picture)
+                LogManager.LogDebug(userId, value, updateType, lang);
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {
@@ -87,7 +85,11 @@ namespace Vocal.Business.Business
                         BlockedUser(user, value.ToString());
                         break;
                     case Update.Picture:
-                        user.Picture = value.ToString();
+                        var filename = $"{user.Id}.jpeg";
+                        var filepath = $"{Properties.Settings.Default.PicturePath}\\{filename}";
+                        var bs64 = value.ToString().Split(',').GetValue(1).ToString();
+                        Converter.ConvertToImageAndSave(bs64, filepath);
+                        user.Picture = $"{Properties.Settings.Default.PictureUrl}/{filename}";
                         break;
                     default:
                         break;
@@ -197,7 +199,7 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        private static void BlockedUser(User user, string userId)
+        private static void BlockedUser(Vocal.Model.DB.User user, string userId)
         {
             var index = user.Settings.Blocked.FindIndex(x => x.Id == userId);
             if (index >= 0)
@@ -206,7 +208,7 @@ namespace Vocal.Business.Business
             {
                 var userToBlock = Repository.Instance.GetUserById(userId);
                 if (userToBlock != null)
-                    user.Settings.Blocked.Add(new People
+                    user.Settings.Blocked.Add(new Vocal.Model.DB.People
                     {
                         Email = userToBlock.Email,
                         Firstname = userToBlock.Firstname,

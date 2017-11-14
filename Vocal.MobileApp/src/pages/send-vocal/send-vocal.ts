@@ -6,7 +6,6 @@ import { SelectFriendsComponent } from '../../components/select-friends/select-f
 import { VocalListPage } from '../../pages/vocal-list/vocal-list';
 import { StoreService } from "../../services/storeService";
 import { KeyStore } from '../../models/enums';
-import { AudioRecorder } from '../../services/audiorecorder';
 import { MessageType } from '../../models/enums';
 import { SendMessageRequest } from '../../models/request/sendMessageRequest';
 import { GetFriendsRequest } from '../../models/request/getFriendsRequest';
@@ -17,6 +16,7 @@ import { CookieService } from "../../services/cookieService";
 import { Response } from '../../models/response';
 import { TalkResponse } from '../../models/response/talkResponse';
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
+import { AudioRecorder } from '../../services/audiorecorder';
 
 /**
  * Generated class for the SendVocalPage page.
@@ -29,7 +29,7 @@ import { SendMessageResponse } from '../../models/response/sendMessageResponse';
   selector: 'page-send-vocal',
   templateUrl: 'send-vocal.html',
   entryComponents: [SelectFriendsComponent],
-  providers: [StoreService, AudioRecorder, CookieService, HttpService, TalkService]
+  providers: [StoreService, CookieService, HttpService, TalkService]
 })
 export class SendVocalPage {
 
@@ -50,43 +50,45 @@ export class SendVocalPage {
     this.GetFriends();
   }
 
-  goToVocalList() {
+  sendVocal() {
+    console.log('send vocal');
     let users = [];
-    this.audioRecorder.getFile().then(value => {
-      this.FileValue = value;
+    Promise.all([this.audioRecorder.getFile(), this.audioRecorder.getMediaDuration()]).then(values => {
+      this.FileValue = values[0];
       this.Friends.forEach(elt => {
-        if(elt.Checked)
-          users.push(elt.Id);
-        });
-    let date = new Date();
-    let request: SendMessageRequest = {
-      content: this.FileValue,
-      sentTime: date,
-      idsRecipient: users,
-      messageType: MessageType.Vocal,
-      Lang: params.Lang,
-      idSender: params.User.Id,
-      IdTalk: null
-    }
-    let urlSendVocal = url.SendMessage();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
-    this.httpService.Post(urlSendVocal, request, cookie).subscribe(
-      resp => {
-        let response = resp.json() as Response<SendMessageResponse>;
-        if(!response.HasError && response.Data.IsSent) {
-          this.talkService.LoadList().then(() => {
-            this.talkService.UpdateList(response.Data.Talk);
-            this.talkService.SaveList();
-            this.navCtrl.push(VocalListPage);
-          })
-        }
-        else 
-          //TODO : Alert Message d'erreur  response.ErrorMessage
-        this.navCtrl.push(VocalListPage);
+      if(elt.Checked)
+        users.push(elt.Id);
+      });
+      let date = new Date();
+      let request: SendMessageRequest = {
+        content: this.FileValue,
+        duration: values[1],
+        sentTime: date,
+        idsRecipient: users,
+        messageType: MessageType.Vocal,
+        Lang: params.Lang,
+        idSender: params.User.Id,
+        IdTalk: null
       }
-    )
+      let urlSendVocal = url.SendMessage();
+      let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
+      this.httpService.Post(urlSendVocal, request, cookie).subscribe(
+        resp => {
+          let response = resp.json() as Response<SendMessageResponse>;
+          if(!response.HasError && response.Data.IsSent) {
+            this.talkService.LoadList().then(() => {
+              this.talkService.UpdateList(response.Data.Talk);
+              this.talkService.SaveList();
+              this.navCtrl.push(VocalListPage);
+            })
+          }
+          else 
+            //TODO : Alert Message d'erreur  response.ErrorMessage
+          this.navCtrl.push(VocalListPage);
+        }
+      )
     }).catch(err => {
-      
+      console.log(err);
     });
   }
 

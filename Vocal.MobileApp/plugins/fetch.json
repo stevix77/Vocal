@@ -145,5 +145,13 @@
             "DEEPLINK_HOST": "vocal.com",
             "ANDROID_PATH_PREFIX": "/"
         }
+    },
+    "info.protonet.imageresizer": {
+        "source": {
+            "type": "registry",
+            "id": "info.protonet.imageresizer@^0.1.1"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

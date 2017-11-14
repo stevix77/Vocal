@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Vocal.Model.Response
 {
@@ -13,5 +10,6 @@ namespace Vocal.Model.Response
         public List<UserResponse> Users { get; set; } = new List<UserResponse>();
         public DateTime DateLastMessage { get; set; }
         public bool HasNewMessage { get; set; }
+        public int Duration { get; set; }
     }
 }

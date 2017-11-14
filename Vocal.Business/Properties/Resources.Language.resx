@@ -192,4 +192,10 @@
   <data name="TextNotifFollowYou" xml:space="preserve">
     <value>vous suit</value>
   </data>
+  <data name="UserNotExisting" xml:space="preserve">
+    <value>Cet utilisateur n'existe pas</value>
+  </data>
+  <data name="TalkNotExisting" xml:space="preserve">
+    <value>Cet conversation n'existe pas</value>
+  </data>
 </root>
