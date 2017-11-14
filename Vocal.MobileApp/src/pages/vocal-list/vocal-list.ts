@@ -173,7 +173,12 @@ export class VocalListPage {
   deleteMessage(id, index){
     console.log(id, index);
     let itemIndex = index;
-    let request = new DeleteTalkRequest(id, params.User.Id);
+    let request: DeleteTalkRequest = {
+      Lang: params.Lang,
+      IdSender: params.User.Id,
+      IdTalk: id,
+      SentTime: new Date()
+    };
     let urlDelete = url.DeleteTalk();
     let cookie = this.cookieService.GetAuthorizeCookie(urlDelete, params.User);
     this.httpService.Post<DeleteTalkRequest>(urlDelete, request, cookie).subscribe(

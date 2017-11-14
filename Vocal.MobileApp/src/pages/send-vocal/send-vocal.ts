@@ -70,7 +70,7 @@ export class SendVocalPage {
           Lang: params.Lang,
           idSender: params.User.Id,
           IdTalk: null
-        }
+        };
         let urlSendVocal = url.SendMessage();
         let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
         this.httpService.Post(urlSendVocal, request, cookie).subscribe(
