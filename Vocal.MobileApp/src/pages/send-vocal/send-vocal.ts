@@ -51,8 +51,6 @@ export class SendVocalPage {
   }
 
   sendVocal() {
-    console.log(this.navCtrl.length());
-    console.log(this.navCtrl.getViews());
     if(!this.isSending) {
       this.isSending = true;
       let users = [];
