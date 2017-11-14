@@ -13,7 +13,7 @@ import { params } from '../../services/params';
 import { Response } from '../../models/Response';
 import { url } from '../../services/url';
 import { Timer } from '../../services/timer';
-
+import { DeleteTalkRequest } from '../../models/request/deleteTalkRequest';
 
 /**
  * Generated class for the VocalListPage page.
@@ -172,21 +172,21 @@ export class VocalListPage {
 
   deleteMessage(id, index){
     console.log(id, index);
-    // let itemIndex = index;
-    // let request = {IdTalk: id, IdSender: params.User.Id, SentTime: new Date()};
-    // let urlDelete = urlDelete.DeleteTalk();
-    // let cookie = this.cookieService.GetAuthorizeCookie(urlDelete, params.User);
-    // this.httpService.Post(urlDelete, request, cookie).subscribe(
-    //   resp => {
-    //     let response = resp.json() as Response<ActionResponse>;
-    //     if(!response.HasError && response.Data.IsDone){
-    //       this.vocalList.splice(itemIndex, 1);
-    //     }
-    //     else {
-    //       this.showAlert(response.ErrorMessage)
-    //     }
-    //   }
-    // );
+    let itemIndex = index;
+    let request = new DeleteTalkRequest(id, params.User.Id);
+    let urlDelete = url.DeleteTalk();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlDelete, params.User);
+    this.httpService.Post<DeleteTalkRequest>(urlDelete, request, cookie).subscribe(
+      resp => {
+        let response = resp.json() as Response<ActionResponse>;
+        if(!response.HasError && response.Data.IsDone){
+          this.vocalList.splice(itemIndex, 1);
+        }
+        else {
+          this.showAlert(response.ErrorMessage);
+        }
+      }
+    );
   }
 
   archiveMessage(id){
