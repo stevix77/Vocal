@@ -128,7 +128,7 @@ export class VocalListPage {
 
   formatDateMessage(items){
     items.forEach(item => {
-      if(item.DateLastMessage) {
+      if(item.DateLastMessage && typeof(item.DateLastMessage) != 'object') {
         item.DateLastMessage = this.getFormattedDateLastMessage(item.DateLastMessage);
       }
     });
