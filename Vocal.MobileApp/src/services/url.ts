@@ -53,8 +53,8 @@ var url = {
     SearchPeopleByMail() : string {
         return this.BaseUri + "/api/search/people/mail";
     },
-    GetMessages(talkId) : string {
-        return this.BaseUri + "/api/talk/messages/" + talkId;
+    GetMessages() : string {
+        return this.BaseUri + "/api/talk/messages";
     },
     AddException() : string {
         return this.BaseUri + "/api/error/add";

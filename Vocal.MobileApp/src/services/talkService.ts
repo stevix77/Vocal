@@ -12,7 +12,7 @@ import { MessageResponse } from "../models/response/messageResponse";
 @Injectable()
 export class TalkService {
 
-  public Talks: Array<TalkResponse> = null;
+  public Talks: Array<TalkResponse> = new Array<TalkResponse>();
   // public Messages: Array<MessageResponse>;
   public Messages: Array<KeyValueResponse<string, Array<MessageResponse>>> = new Array<KeyValueResponse<string, Array<MessageResponse>>>();
 
@@ -55,8 +55,9 @@ export class TalkService {
     return lst;
   }
 
-  GetMessages(talkId: string) {
-    return this.Talks.find(x => x.Id == talkId).Messages;
+  GetMessages(talkId: string) : Array<MessageResponse> {
+    let talk = this.Talks.find(x => x.Id == talkId);
+    return talk != null && talk.Messages != null ? talk.Messages : new Array<MessageResponse>();
   }
 
   SaveMessages(talkId: string, messages: Array<MessageResponse>) {

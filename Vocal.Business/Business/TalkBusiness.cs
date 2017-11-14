@@ -81,14 +81,16 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<List<MessageResponse>> GetMessages(string talkId, string userId, string lang)
+        public static Response<List<MessageResponse>> GetMessages(string talkId, DateTime? lastMessage, string userId, string lang)
         {
             var response = new Response<List<MessageResponse>>();
             try
             {
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-                LogManager.LogDebug(talkId, userId, lang);
-                var messages = Repository.Instance.GetMessages(talkId, userId);
+                LogManager.LogDebug(talkId, lastMessage, userId, lang);
+                var messages = Repository.Instance.GetMessages(talkId, lastMessage, userId);
+                if (messages == null)
+                    throw new CustomException(Resources_Language.TalkNotExisting);
                 response.Data = Bind.Bind_Messages(messages);
 
                 if(messages.Count > 0) Task.Run(() => UpdateListenUser(userId, talkId, messages));
@@ -310,6 +312,65 @@ namespace Vocal.Business.Business
                 await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), NotifType.Talk, messNotif, titleNotif, talk.Id);
             });
         }
+
+
+
+
+        public static Response<ActionResponse> ArchiveTalk(UpdateTalkRequest request)
+        {
+            return ActionOnTalk(request, () => Repository.Instance.ArchiveTalk(request.IdTalk, request.IdSender));
+        }
+
+        public static Response<ActionResponse> UnarchiveTalk(UpdateTalkRequest request)
+        {
+            return ActionOnTalk(request, () => Repository.Instance.UnArchiveTalk(request.IdTalk, request.IdSender));
+        }
+
+        public static Response<ActionResponse> DeleteTalk(UpdateTalkRequest request)
+        {
+            return ActionOnTalk(request, () => Repository.Instance.DeleteTalk(request.IdTalk, request.IdSender));
+        }
+
+        public static Response<ActionResponse> DeleteMessage(DeleteMessageRequest request)
+        {
+            return ActionOnTalk(request, () => Repository.Instance.DeleteMessage(request.IdTalk, request.IdMessages, request.IdSender));
+        }
+
+        private static Response<ActionResponse> ActionOnTalk(Request request, Func<bool> action)
+        {
+            var response = new Response<ActionResponse> { Data = new ActionResponse { IsDone = false } };
+            try
+            {
+                Resources_Language.Culture = new System.Globalization.CultureInfo(request.Lang);
+                if (request != null)
+                {
+                    LogManager.LogDebug(request);
+                    if (action())
+                    {
+                        response.Data.IsDone = true;
+                        return response;
+                    }
+                    else
+                    {
+                        LogManager.LogError(new Exception("The talk was null. May be, the id talk doesn't exist or the user doesn't have the right on it"));
+                        response.ErrorMessage = Resources_Language.TechnicalError;
+                    }
+
+                }
+                else
+                {
+                    LogManager.LogError(new Exception("No Data"));
+                    response.ErrorMessage = Resources_Language.NoDataMessage;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
 
         private static string GenerateTitleNotif(Message m, string vocalName)
         {

@@ -231,6 +231,7 @@ namespace Vocal.Business.Binder
             settings.Genders = GetChoices(user.Settings.Gender);
             settings.Notifs = GetChoices(user.Settings.IsNotifiable);
             settings.Name = $"{user.Firstname} {user.Lastname} @{user.Username}";
+            settings.TotalDuration = user.Talks.SelectMany(x => x.Messages).Where(x => x.Sender.Id == user.Id && x.ContentType == MessageType.Vocal).Sum(x => x.Duration.GetValueOrDefault(0));
             return settings;
         }
 

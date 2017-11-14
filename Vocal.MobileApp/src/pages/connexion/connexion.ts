@@ -17,8 +17,7 @@ import { KeyStore } from "../../models/enums";
 
 @Component({
   selector: 'page-connexion',
-  templateUrl: 'connexion.html',
-  providers: [HttpService, StoreService, ExceptionService]
+  templateUrl: 'connexion.html'
 })
 
 export class Connexion {

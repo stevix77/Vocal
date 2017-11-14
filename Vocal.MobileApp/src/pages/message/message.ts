@@ -14,6 +14,7 @@ import { TalkService } from "../../services/talkService";
 import { HubService } from "../../services/hubService";
 import {DomSanitizer} from '@angular/platform-browser';
 import { Timer } from '../../services/timer';
+import { GetMessagesRequest } from "../../models/request/getMessagesRequest";
 
 /**
  * Generated class for the MessagePage page.
@@ -149,13 +150,14 @@ export class MessagePage {
 
   getMessages() {
     try {
-      let urlMessages = url.GetMessages(this.model.talkId);
+      let urlMessages = url.GetMessages();
       let cookie = this.cookieService.GetAuthorizeCookie(urlMessages, params.User);
-      let request = {Lang: params.Lang};
+      let dt = this.Messages.length > 0 ? this.Messages[this.Messages.length -1].ArrivedTime : null;
+      let request: GetMessagesRequest = {Lang: params.Lang, LastMessage: dt, TalkId: this.model.talkId};
       this.httpService.Post(urlMessages, request, cookie).subscribe(
         resp => {
           let response = resp.json() as Response<Array<MessageResponse>>;
-          if(!response.HasError && this.Messages !== undefined) {
+          if(!response.HasError) {
             //this.sortMessages(response.Data);
             response.Data.forEach(item => {
               let mess = this.Messages.find(x => x.Id == item.Id);
@@ -165,11 +167,12 @@ export class MessagePage {
             this.talkService.SaveMessages(this.model.talkId, this.Messages);
           } else {
             this.showToast(response.ErrorMessage);
-            // this.loadMessages();
+            //this.loadMessages();
           }
         }
       )
     } catch(err) {
+      console.log(err);
       // this.loadMessages();
     }
   }
