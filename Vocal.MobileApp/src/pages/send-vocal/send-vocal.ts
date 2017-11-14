@@ -96,7 +96,7 @@ export class SendVocalPage {
   }
 
   GetFriends() {
-    this.storeService.Get(KeyStore.Friends.toString()).then(
+    this.storeService.Get(KeyStore[KeyStore.Friends]).then(
       friends => {
         if(friends != null)
           this.Friends = friends;
@@ -121,7 +121,7 @@ export class SendVocalPage {
         let response = resp.json() as Response<Array<UserResponse>>;
         if(!response.HasError) {
           this.Friends = response.Data;
-          this.storeService.Set(KeyStore.Friends.toString(), this.Friends)
+          this.storeService.Set(KeyStore[KeyStore.Friends], this.Friends)
         } else {
           
         }
@@ -130,7 +130,7 @@ export class SendVocalPage {
   }
 
   GetTalkList() {
-    return this.storeService.Get(KeyStore.Talks.toString()).then(
+    return this.storeService.Get(KeyStore[KeyStore.Talks]).then(
       talks => {
         this.Talks = talks;
       }
@@ -141,7 +141,7 @@ export class SendVocalPage {
   }
 
   SaveTalks() {
-    this.storeService.Set(KeyStore.Talks.toString(), this.Talks);
+    this.storeService.Set(KeyStore[KeyStore.Talks], this.Talks);
   }
 
 }
