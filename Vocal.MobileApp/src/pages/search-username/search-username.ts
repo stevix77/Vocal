@@ -35,9 +35,8 @@ export class SearchUsernamePage {
     this.friendsService.add(friends).subscribe(
       resp => {
         let response = resp.json() as Response<boolean>;
-        console.log(response);
         if(!response.HasError) {
-          this.model.Friends[indexItem].IsFriend = true;
+          this.model.Friends.splice(indexItem, 1);
           this.friendsService.model.Friends.push(this.model.Friends[indexItem]);
           this.friendsService.saveList();
         } else {
