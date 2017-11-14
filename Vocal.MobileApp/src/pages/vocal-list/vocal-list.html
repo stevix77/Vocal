@@ -23,7 +23,7 @@
     <ion-list-header>
       Mes vocals
     </ion-list-header>
-    <ion-item-sliding *ngFor="let item of vocalList">
+    <ion-item-sliding *ngFor="let item of vocalList;let i = index">
       <ion-item (click)="goToMessage(item.Id)">
         <ion-avatar item-start>
           <img alt="picture" src="https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-1/p24x24/16602600_10154441388394576_4490155536874187938_n.jpg?oh=21c11ffc32c0b439c7ee5b32629d6b97&oe=5A1910E7">
@@ -33,7 +33,7 @@
         <p *ngIf="item.DateLastMessage.isYesterday === true">Hier</p>
       </ion-item>
       <ion-item-options side="right">
-        <button ion-button icon-only color="danger" (click)="deleteMessage(item.Id)">
+        <button ion-button icon-only color="danger" (click)="deleteMessage(item.Id, i)">
           <ion-icon name="trash"></ion-icon>
         </button>
         <button ion-button icon-only (click)="archiveMessage(item.Id)">

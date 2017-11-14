@@ -76,5 +76,8 @@ var url = {
     },
     GetMessageById() : string {
         return this.BaseUri + "/api/talk/message";
+    },
+    DeleteTalk() : string {
+        return this.BaseUri + "/api/talk/deleteTalk";
     }
 }
