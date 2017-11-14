@@ -4,7 +4,7 @@
   <h2>Best friends</h2>
   <ion-list inset>
     <ion-item *ngFor="let item of Friends">
-      <ion-label>{{item.Firstname}} {{item.Lastname}}</ion-label>
+      <ion-label>{{item.Username}}</ion-label>
       <ion-checkbox item-end [(ngModel)]="item.Checked"></ion-checkbox>
     </ion-item>
   </ion-list>
