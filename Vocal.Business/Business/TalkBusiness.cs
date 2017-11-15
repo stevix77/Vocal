@@ -295,14 +295,14 @@ namespace Vocal.Business.Business
                 var t = item.Talks.SingleOrDefault(x => x.Id == talk.Id);
                 if (t != null)
                 {
-                    t.TotalDuration = m.Duration.HasValue ? m.Duration.Value : 0;
+                    t.TotalDuration += m.Duration.HasValue ? m.Duration.Value : 0;
                     t.Messages.Add(m);
                     t.DateLastMessage = m.SentTime;
-                    //var updatelist = new List<UpdateModel>();
-                    //updatelist.Add(new UpdateModel { Field = "", UpdateType = UpdateType.Field, Type = typeof(), Obj =  });
-                    //updatelist.Add(new UpdateModel { Field = "", UpdateType = UpdateType.Field, Type = typeof(), Obj =  });
-                    //updatelist.Add(new UpdateModel { Field = "", UpdateType = UpdateType.Field, Type = typeof(), Obj =  });
-                    Repository.Instance.UpdateUser(item);
+                    var updatelist = new List<UpdateModel>();
+                    updatelist.Add(new UpdateModel { Field = "Talks.$.TotalDuration", UpdateType = UpdateType.Field, Obj = t.TotalDuration });
+                    updatelist.Add(new UpdateModel { Field = "Talks.$.Messages", UpdateType = UpdateType.ArrayAdd, Obj = m });
+                    updatelist.Add(new UpdateModel { Field = "Talks.$.DateLastMessage", UpdateType = UpdateType.Field, Obj = m.SentTime });
+                    Repository.Instance.Update(item, updatelist, "Talks.Id", t.Id);
                 }
             });
             //foreach (var item in recipients)

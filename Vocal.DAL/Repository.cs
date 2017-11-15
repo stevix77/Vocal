@@ -131,17 +131,44 @@ namespace Vocal.DAL
                 switch (item.UpdateType)
                 {
                     case UpdateType.Field:
-                        updateList.Add(update.Set(item.Field, Convert.ChangeType(item.Obj, item.Type)));
+                        updateList.Add(update.Set(item.Field, item.Obj));
                         break;
                     case UpdateType.ArrayAdd:
-                        updateList.Add(update.Push(item.Field, Convert.ChangeType(item.Obj, item.Type)));
+                        updateList.Add(update.Push(item.Field, item.Obj));
                         break;
                     case UpdateType.ArrayRemove:
-                        updateList.Add(update.Pull(item.Field, Convert.ChangeType(item.Obj, item.Type)));
+                        updateList.Add(update.Pull(item.Field, item.Obj));
                         break;
                 }
             }
-            db.UpdateMany(filter, update.Combine(updateList));
+            var r = db.UpdateOne(filter, update.Combine(updateList));
+
+        }
+
+        public void Update(User user, List<UpdateModel> list, string field, object valueField)
+        {
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var filter = Builders<User>.Filter.And(Builders<User>.Filter.Eq(x => x.Id, user.Id), Builders<User>.Filter.Eq(field, valueField));
+            //var filter = Builders<User>.Filter.Eq(x => x.Id, user.Id);
+            var update = Builders<User>.Update;
+            var updateList = new List<UpdateDefinition<User>>();
+            foreach (var item in list)
+            {
+                switch (item.UpdateType)
+                {
+                    case UpdateType.Field:
+                        updateList.Add(update.Set(item.Field, item.Obj));
+                        break;
+                    case UpdateType.ArrayAdd:
+                        updateList.Add(update.Push(item.Field, item.Obj));
+                        break;
+                    case UpdateType.ArrayRemove:
+                        updateList.Add(update.Pull(item.Field, item.Obj));
+                        break;
+                }
+            }
+            var r = db.UpdateOne(filter, update.Combine(updateList));
+
         }
 
         public bool CheckIfAllUsersExist(List<string> userIds)
@@ -502,7 +529,8 @@ namespace Vocal.DAL
             foreach(var u in users)
             {
                 u.Talks.Add(talk);
-                UpdateUser(u);
+                Update(u, new List<UpdateModel> { new UpdateModel { Field = "Talks", Obj = talk, UpdateType = UpdateType.ArrayAdd } });
+                //UpdateUser(u);
             }
             return true;
         }
@@ -535,9 +563,7 @@ namespace Vocal.DAL
             var user = GetUserById(userId);
             if (user != null)
             {
-                var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
-                talk.IsArchived = true;
-                UpdateUser(user);
+                Update(user, new List<UpdateModel> { new UpdateModel { Field = "Talks.IsArchived", UpdateType = UpdateType.Field, Obj = true } }, "Talks.Id", talkId);
             }
             throw new Exception("User not found");
         }
@@ -547,9 +573,7 @@ namespace Vocal.DAL
             var user = GetUserById(userId);
             if (user != null)
             {
-                var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
-                talk.IsArchived = false;
-                UpdateUser(user);
+                Update(user, new List<UpdateModel> { new UpdateModel { Field = "Talks.IsArchived", UpdateType = UpdateType.Field, Obj = false } }, "Talks.Id", talkId);
             }
             throw new Exception("User not found");
         }
@@ -559,9 +583,7 @@ namespace Vocal.DAL
             var user = GetUserById(userId);
             if (user != null)
             {
-                var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
-                talk.IsDeleted = true;
-                UpdateUser(user);
+                Update(user, new List<UpdateModel> { new UpdateModel { Field = "Talks.IsDeleted", UpdateType = UpdateType.Field, Obj = true } }, "Talks.Id", talkId);
             }
             throw new Exception("User not found");
         }
@@ -575,9 +597,9 @@ namespace Vocal.DAL
                 var messages = talk.Messages.Where(x => messageIds.Contains(x.Id.ToString()));
                 foreach(var m in messages)
                 {
-                    m.IsDeleted = true;
+                    Update(user, new List<UpdateModel> { new UpdateModel { Field = "Talks.Messages.IsDeleted", UpdateType = UpdateType.Field, Obj = true } }, "Talks.Messages.Id", m.Id);
                 }
-                UpdateUser(user);
+                
             }
             throw new Exception("User not found");
         }
@@ -609,8 +631,9 @@ namespace Vocal.DAL
                     var user = m.Users.SingleOrDefault(x => x.Recipient.Id == userId);
                     if(user != null)
                         user.ListenDate = DateTime.Now;
+                    Update(u, new List<UpdateModel> { new UpdateModel { Field = "Talks.Messages.Users.ListenDate", Obj = DateTime.Now, UpdateType = UpdateType.Field } }, "Talks.Messages.Users.Recipient.Id", userId);
                 }
-                UpdateUser(u);
+                
             }
             return false;
         }
