@@ -28,15 +28,18 @@ namespace Vocal.Business.Business
                     {
                         var registrationId = await NotificationHub.Instance.GetRegistrationId(channel);
                         var tag = $"{Properties.Settings.Default.TagUser}:{userId}";
-                        user.Devices.Add(new Vocal.Model.DB.Device
+                        //user.Devices.Add();
+                        var device = new Device
                         {
                             RegistrationId = registrationId,
                             Platform = platform,
                             Channel = channel,
                             Tags = new List<string>() { tag },
                             Lang = lang
-                        });
-                        Repository.Instance.UpdateUser(user);
+                        };
+                        var updateList = new List<UpdateModel>();
+                        updateList.Add(new UpdateModel { Field = "Device", Obj = device, Type = typeof(Device), UpdateType = UpdateType.ArrayAdd });
+                        Repository.Instance.Update(user, updateList);
                         await NotificationHub.Instance.RegistrationUser(registrationId, channel, platform, tag);
                         response.Data = registrationId;
                     }

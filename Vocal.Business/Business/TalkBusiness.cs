@@ -290,17 +290,32 @@ namespace Vocal.Business.Business
             };
             talk.Messages.Add(m);
             var recipients = Repository.Instance.GetUsersById(talk.Recipients.Select(x => x.Id).ToList());
-            foreach (var item in recipients)
+            Parallel.ForEach(recipients, (item) =>
             {
                 var t = item.Talks.SingleOrDefault(x => x.Id == talk.Id);
-                if(t != null)
+                if (t != null)
                 {
                     t.TotalDuration = m.Duration.HasValue ? m.Duration.Value : 0;
                     t.Messages.Add(m);
                     t.DateLastMessage = m.SentTime;
+                    //var updatelist = new List<UpdateModel>();
+                    //updatelist.Add(new UpdateModel { Field = "", UpdateType = UpdateType.Field, Type = typeof(), Obj =  });
+                    //updatelist.Add(new UpdateModel { Field = "", UpdateType = UpdateType.Field, Type = typeof(), Obj =  });
+                    //updatelist.Add(new UpdateModel { Field = "", UpdateType = UpdateType.Field, Type = typeof(), Obj =  });
                     Repository.Instance.UpdateUser(item);
                 }
-            }
+            });
+            //foreach (var item in recipients)
+            //{
+            //    var t = item.Talks.SingleOrDefault(x => x.Id == talk.Id);
+            //    if(t != null)
+            //    {
+            //        t.TotalDuration = m.Duration.HasValue ? m.Duration.Value : 0;
+            //        t.Messages.Add(m);
+            //        t.DateLastMessage = m.SentTime;
+            //        Repository.Instance.UpdateUser(item);
+            //    }
+            //}
             response.Data.Talk = Bind.Bind_Talk(talk, request.IdSender);
             response.Data.Message = Bind.Bind_Message(m);
             response.Data.IsSent = true;

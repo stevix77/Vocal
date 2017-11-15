@@ -120,6 +120,30 @@ namespace Vocal.DAL
             db.ReplaceOne(x => x.Id == user.Id, user);
         }
 
+        public void Update(User user, List<UpdateModel> list)
+        {
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var filter = Builders<User>.Filter.Eq(x => x.Id, user.Id);
+            var update = Builders<User>.Update;
+            var updateList = new List<UpdateDefinition<User>>();
+            foreach (var item in list)
+            {
+                switch (item.UpdateType)
+                {
+                    case UpdateType.Field:
+                        updateList.Add(update.Set(item.Field, Convert.ChangeType(item.Obj, item.Type)));
+                        break;
+                    case UpdateType.ArrayAdd:
+                        updateList.Add(update.Push(item.Field, Convert.ChangeType(item.Obj, item.Type)));
+                        break;
+                    case UpdateType.ArrayRemove:
+                        updateList.Add(update.Pull(item.Field, Convert.ChangeType(item.Obj, item.Type)));
+                        break;
+                }
+            }
+            db.UpdateMany(filter, update.Combine(updateList));
+        }
+
         public bool CheckIfAllUsersExist(List<string> userIds)
         {
             var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);

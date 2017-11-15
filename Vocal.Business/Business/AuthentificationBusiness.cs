@@ -63,9 +63,11 @@ namespace Vocal.Business
                     var pwd = Hash.getHash(password);
                     var newToken = Hash.getHash(string.Format(Properties.Settings.Default.FormatToken, username, password, Properties.Settings.Default.Salt));
                     var user = Repository.Instance.GetUserByUsername(username);
-                    user.Token = newToken;
-                    user.Password = pwd;
-                    Repository.Instance.UpdateUser(user);
+                    var listupdate = new List<UpdateModel>();
+                    listupdate.Add(new UpdateModel { Obj = newToken, UpdateType = UpdateType.Field, Type = typeof(string), Field = "Token" });
+                    listupdate.Add(new UpdateModel { Obj = pwd, UpdateType = UpdateType.Field, Type = typeof(string), Field = "Password" });
+                    Repository.Instance.Update(user, listupdate);
+                    //Repository.Instance.UpdateUser(user);
                     response.Data = true;
                 }
                 else
@@ -157,8 +159,11 @@ namespace Vocal.Business
                     response.Data = true;
                     Task.Run(() =>
                     {
-                        user.Reset = new ResetPassword { Token = token, ValidityDate = DateTime.Now.AddMinutes(Properties.Settings.Default.ValidityToken) };
-                        Repository.Instance.UpdateUser(user);
+                        var updatelist = new List<UpdateModel>()
+                        {
+                            new UpdateModel { UpdateType = UpdateType.Field, Type = typeof(ResetPassword), Field = "Reset", Obj = new ResetPassword { Token = token, ValidityDate = DateTime.Now.AddMinutes(Properties.Settings.Default.ValidityToken) } }
+                        };
+                        Repository.Instance.Update(user, updatelist);
                     });
                 }
             }

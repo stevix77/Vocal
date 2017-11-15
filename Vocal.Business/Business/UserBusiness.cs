@@ -55,46 +55,47 @@ namespace Vocal.Business.Business
             {
                 var user = Repository.Instance.GetUserById(userId);
                 var type = (Update)Enum.ToObject(typeof(Update), updateType);
+                var updatelist = new List<UpdateModel>();
                 switch(type)
                 {
                     case Update.Gender:
-                        user.Settings.Gender = (Gender)Enum.ToObject(typeof(Gender), int.Parse(value.ToString()));
+                        updatelist.Add(new UpdateModel { UpdateType = UpdateType.Field, Field = "Settings.Gender", Obj = (Gender)Enum.ToObject(typeof(Gender), int.Parse(value.ToString())), Type = typeof(Gender) });
                         break;
-                    case Update.Contact:
-                        user.Settings.Contact = (Contacted)Enum.ToObject(typeof(Contacted), int.Parse(value.ToString()));
+                    case Update.Contact:;
+                        updatelist.Add(new UpdateModel { UpdateType = UpdateType.Field, Field = "Settings.Contact", Obj = (Contacted)Enum.ToObject(typeof(Contacted), int.Parse(value.ToString())), Type = typeof(Contacted) });
                         break;
                     case Update.Notification:
-                        user.Settings.IsNotifiable = Convert.ToBoolean(value);
+                        updatelist.Add(new UpdateModel { UpdateType = UpdateType.Field, Field = "Settings.IsNotifiable", Obj = Convert.ToBoolean(value), Type = typeof(bool) });
                         break;
                     case Update.Email:
-                        user.Email = value.ToString();
+                        updatelist.Add(new UpdateModel { UpdateType = UpdateType.Field, Field = "Email", Obj = value.ToString(), Type = typeof(string) });
                         break;
                     case Update.Password:
                         var password = value.ToString();
                         var pwd = Hash.getHash(password);
                         var newToken = Hash.getHash(string.Format(Properties.Settings.Default.FormatToken, user.Username, password, Properties.Settings.Default.Salt));
-                        user.Token = newToken;
-                        user.Password = pwd;
+                        updatelist.Add(new UpdateModel { UpdateType = UpdateType.Field, Field = "Token", Obj = newToken, Type = typeof(string) });
+                        updatelist.Add(new UpdateModel { UpdateType = UpdateType.Field, Field = "Password", Obj = pwd, Type = typeof(string) });
                         break;
                     case Update.BirthdayDate:
                         DateTime dt;
                         if (DateTime.TryParse(value.ToString(), out dt))
-                            user.BirthdayDate = dt;
+                            updatelist.Add(new UpdateModel { UpdateType = UpdateType.Field, Field = "BirthdayDate", Obj = dt, Type = typeof(DateTime) });
                         break;
                     case Update.Blocked:
-                        BlockedUser(user, value.ToString());
+                        BlockedUser(user, value.ToString(), updatelist);
                         break;
                     case Update.Picture:
                         var filename = $"{user.Id}.jpeg";
                         var filepath = $"{Properties.Settings.Default.PicturePath}\\{filename}";
                         var bs64 = value.ToString().Split(',').GetValue(1).ToString();
                         Converter.ConvertToImageAndSave(bs64, filepath);
-                        user.Picture = $"{Properties.Settings.Default.PictureUrl}/{filename}";
+                        updatelist.Add(new UpdateModel { UpdateType = UpdateType.Field, Field = "Picture", Obj = $"{Properties.Settings.Default.PictureUrl}/{filename}", Type = typeof(string) });
                         break;
                     default:
                         break;
                 }
-                Repository.Instance.UpdateUser(user);
+                Repository.Instance.Update(user, updatelist);
                 response.Data = true;
             }
             catch (TimeoutException tex)
@@ -199,16 +200,17 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        private static void BlockedUser(Vocal.Model.DB.User user, string userId)
+        private static void BlockedUser(Vocal.Model.DB.User user, string userId, List<UpdateModel> updatelist)
         {
             var index = user.Settings.Blocked.FindIndex(x => x.Id == userId);
             if (index >= 0)
-                user.Settings.Blocked.RemoveAt(index);
+                updatelist.Add(new UpdateModel { UpdateType = UpdateType.ArrayRemove, Field = "Settings.Blocked", Obj = user.Settings.Blocked[index], Type = typeof(People) });
             else
             {
                 var userToBlock = Repository.Instance.GetUserById(userId);
                 if (userToBlock != null)
-                    user.Settings.Blocked.Add(new Vocal.Model.DB.People
+                {
+                    var people = new People
                     {
                         Email = userToBlock.Email,
                         Firstname = userToBlock.Firstname,
@@ -216,7 +218,9 @@ namespace Vocal.Business.Business
                         Lastname = userToBlock.Lastname,
                         Picture = userToBlock.Picture,
                         Username = userToBlock.Username
-                    });
+                    };
+                    updatelist.Add(new UpdateModel { UpdateType = UpdateType.ArrayAdd, Field = "Settings.Blocked", Obj = people, Type = typeof(People) });
+                }
             }
 
         }
