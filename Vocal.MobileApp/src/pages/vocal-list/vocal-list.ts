@@ -147,10 +147,20 @@ export class VocalListPage {
     }
     // If yesterday, we display "Yesterday"
     if(msgDate.getDate() != now.getDate() && msgDate < now) {
-      var tmp = msgDate;
+      let tmp = new Date(msgDate);
       tmp.setDate(tmp.getDate() + 1);
       if(tmp.getDate() == now.getDate()) {
         isYesterday = true;
+      }
+    }
+    // If less than a week, we display the day, like "Monday"
+    if(msgDate.getDate() != now.getDate() && msgDate < now) {
+      for(let i = 2; i < 7; i++) {
+        let tmp = new Date(msgDate);
+        tmp.setDate(tmp.getDate() + i);
+        if(tmp.getDate() == now.getDate()) {
+          isWeek = true;
+        }
       }
     }
 
