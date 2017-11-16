@@ -131,6 +131,11 @@ export class VocalListPage {
       if(item.DateLastMessage && typeof(item.DateLastMessage) != 'object') {
         item.DateLastMessage = this.getFormattedDateLastMessage(item.DateLastMessage);
       }
+      if(item.Users.length == 2) {
+        item.Users.forEach(user => {
+          if(user.Id != params.User.Id) item.Picture = user.Picture;
+        });
+      }
     });
   }
 
@@ -171,12 +176,15 @@ export class VocalListPage {
     this.talkService.LoadList().then(() => {
       if(this.talkService.Talks != null) {
         this.vocalList = this.talkService.Talks;
-        if(this.vocalList.length > 0) this.formatDateMessage(this.vocalList);
+        if(this.vocalList.length > 0) {
+          this.formatDateMessage(this.vocalList);
+        }
       }
       else {  
         this.getVocalList();
       }
-    })
+      console.log(this.vocalList);
+    });
   }
 
   deleteMessage(id){
