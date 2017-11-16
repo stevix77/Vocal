@@ -31,6 +31,7 @@ export class MessagePage {
   
   model = { Message: "", talkId: null, userId: null }
   VocalName: string = "";
+  Picture: string = "";
   Messages: Array<MessageResponse> = new Array<MessageResponse>();
   isApp: boolean;
   isRecording: boolean = false;
@@ -135,9 +136,11 @@ export class MessagePage {
   loadMessages() {
     this.Messages = this.talkService.GetMessages(this.model.talkId)
     this.talkService.Talks.find(x => x.Id == this.model.talkId).Users.forEach(x => {
-      if(x.Id != params.User.Id)
+      if(x.Id != params.User.Id){
         this.VocalName += x.Username + " ";
-    })
+        this.Picture = x.Picture;
+      }
+    });
   }
 
   loadMessagesByUser(userId) {

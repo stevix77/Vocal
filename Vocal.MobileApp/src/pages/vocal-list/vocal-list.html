@@ -26,8 +26,10 @@
     <ion-item-sliding *ngFor="let item of vocalList">
       <ion-item (click)="goToMessage(item.Id)">
         <ion-avatar item-start>
-          <img alt="picture" src="https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-1/p24x24/16602600_10154441388394576_4490155536874187938_n.jpg?oh=21c11ffc32c0b439c7ee5b32629d6b97&oe=5A1910E7">
+          <img *ngIf="item.Picture; else defaultBlock" alt="" [src]="item.Picture">
         </ion-avatar>
+        <ng-template #defaultBlock><ion-icon name="contact"></ion-icon></ng-template>
+        
         <h3>{{ item.Name }}</h3>
         <p *ngIf="item.DateLastMessage.isToday === true">{{ item.DateLastMessage.date | date: 'HH:ss' }}</p>
         <p *ngIf="item.DateLastMessage.isYesterday === true">Hier</p>
