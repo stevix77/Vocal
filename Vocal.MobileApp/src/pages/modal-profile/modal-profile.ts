@@ -32,6 +32,7 @@ export class ModalProfilePage {
   private User: AppUser;
   private CountFriendsAddedMe: number = 0;
   private friendsAddedMe: Array<Object>;
+  private totalDuration: number;
   private options: CameraOptions = {
     quality: 50,
     destinationType: this.camera.DestinationType.DATA_URL,
@@ -59,6 +60,7 @@ export class ModalProfilePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ModalProfilePage');
+
     this.storeService.Get(KeyStore[KeyStore.FriendsAddedMe]).then(
       friends => {
         if(friends != null) {
@@ -66,7 +68,10 @@ export class ModalProfilePage {
           this.CountFriendsAddedMe = friends.length;
         }
       }
-    )
+    );
+    this.storeService.Get(KeyStore[KeyStore.Settings]).then(settings => {
+        this.totalDuration = settings.TotalDuration;
+    });
   }
 
   dismiss() {
