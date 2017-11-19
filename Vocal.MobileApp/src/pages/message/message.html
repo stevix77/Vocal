@@ -19,13 +19,14 @@
     <ion-list-header>
       Conversation
     </ion-list-header>
-    <ion-item-sliding *ngFor="let mess of Messages">
+    <ion-item-sliding *ngFor="let mess of Messages; let i = index">
       <ion-item>
         <p *ngIf="mess.ContentType == 2">{{mess.Content}}</p>
         <p *ngIf="mess.ContentType == 1">
-          <button ion-button icon-only *ngIf="mess.Content == null" (click)="getMessage(mess.Id)"><ion-icon name="download"></ion-icon></button>
-          <audio controls [src]="domSanitizer.bypassSecurityTrustUrl(mess.Content)" *ngIf="mess.Content != null">
-          </audio>
+          <button ion-button round large icon-only *ngIf="mess.Content == null" (click)="getMessage(mess.Id)"><ion-icon name="play"></ion-icon></button>
+          <button ion-button round large icon-only *ngIf="mess.Content != null" (click)="playVocal(mess.Id, i)"><ion-icon name="play"></ion-icon></button>
+          <!-- <audio controls [src]="domSanitizer.bypassSecurityTrustUrl(mess.Content)" *ngIf="mess.Content != null">
+          </audio> -->
         </p>
       </ion-item>
       <ion-item-options side="right">
@@ -45,30 +46,32 @@
   </div>
 
   <div>
-    <form #form="ngForm" (ngSubmit)="sendMessage(form)" [hidden]="isRecording">
-      <ion-grid>
-        <ion-row>
-          <ion-col col-10>
-            <ion-item>
-              <input type="hidden" ng-model="model.talkId" value="{{model.talkId}}" ng-init="model.talkId=model.talkId"/>
-              <ion-input type="text" name="Message" [(ngModel)]="model.Message" placeholder="Say something..." required></ion-input>
-            </ion-item>
-          </ion-col>
-          <ion-col col-2>
-            <button ion-button icon-only round color="secondary" type="submit" [disabled]="!form.valid">
-                <ion-icon name="arrow-round-up"></ion-icon>
-            </button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </form>
   </div>
 
 </ion-content>
 
 
 <ion-footer>
-  <audio-recorder></audio-recorder>
+  <ion-toolbar text-center>
+    <form #form="ngForm" (ngSubmit)="sendMessage(form)" [hidden]="isRecording">
+      <!-- <ion-grid>
+        <ion-row>
+          <ion-col col-10> -->
+            <ion-item>
+              <input type="hidden" ng-model="model.talkId" value="{{model.talkId}}" ng-init="model.talkId=model.talkId"/>
+              <ion-input type="text" name="Message" [(ngModel)]="model.Message" placeholder="Say something..." required></ion-input>
+            </ion-item>
+          <!-- </ion-col> -->
+          <!-- <ion-col col-2>
+            <button ion-button icon-only round color="secondary" type="submit" [disabled]="!form.valid">
+                <ion-icon name="arrow-round-up"></ion-icon>
+            </button>
+          </ion-col> -->
+        <!-- </ion-row>
+      </ion-grid> -->
+    </form>
+    <audio-recorder></audio-recorder>
+  </ion-toolbar>
 </ion-footer>
 
 <div class="wrapper-record" [hidden]="!isTiming">

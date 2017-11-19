@@ -34,6 +34,7 @@
         "@ionic-native/splash-screen": "3.7.0",
         "@ionic-native/status-bar": "3.7.0",
         "@ionic/storage": "2.0.1",
+        "base64js": "^1.0.1",
         "com-badrit-base64": "^0.2.0",
         "cookie-storage": "^3.0.0",
         "cordova-android": "^6.3.0",
@@ -67,6 +68,7 @@
         "rxjs": "5.1.1",
         "signalr-no-jquery": "^0.1.8",
         "sw-toolbox": "3.6.0",
+        "text-encoder-lite": "^1.0.1",
         "tunajs": "^1.0.0",
         "zone.js": "0.8.10"
     },

@@ -160,6 +160,7 @@ export class MessagePage {
       this.httpService.Post(urlMessages, request, cookie).subscribe(
         resp => {
           let response = resp.json() as Response<Array<MessageResponse>>;
+          console.log(response);
           if(!response.HasError) {
             //this.sortMessages(response.Data);
             response.Data.forEach(item => {
@@ -202,8 +203,10 @@ export class MessagePage {
     this.httpService.Post<MessageRequest>(urlMessage, request, cookie).subscribe(
       resp => {
         let response = resp.json() as Response<string>;
-        if(response.HasError)
+        console.log(response);
+        if(response.HasError){
           this.showToast(response.ErrorMessage);
+        }
         else {
           this.Messages.find(x => x.Id == messId).Content = response.Data;
           this.talkService.SaveMessages(this.model.talkId, this.Messages);          
@@ -211,6 +214,27 @@ export class MessagePage {
       }
     )
     // this.Messages.find(x => x.Id == messId).Content = mess;
+  }
+
+  base64EncodingUTF8(str) {
+      var encoded = new TextEncoderLite('utf-8').encode(str);        
+      var b64Encoded = base64js.fromByteArray(encoded);
+      return b64Encoded;
+  }
+
+  playVocal(messId: string, index: number) {
+    let message = this.Messages[index];
+    console.log(message.Content);
+    let b64 = message.Content.replace('data:audio/wav;base64,', '');
+
+    let audioCtx = new (window["AudioContext"] || window["webkitAudioContext"])();
+    let source = audioCtx.createBufferSource();
+
+    audioCtx.decodeAudioData(this.base64EncodingUTF8(b64), buffer => {
+      source.buffer = buffer;
+      source.connect(audioCtx.destination);
+      source.start(0);
+    });
   }
 
   showToast(message: string) :any {
