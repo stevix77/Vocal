@@ -69,4 +69,9 @@ export class TalkService {
     }  
     
   }
+
+  Clear(){
+    this.Talks = null;
+    this.Messages = null;
+  }
 }

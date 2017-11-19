@@ -89,7 +89,6 @@ export class AudioRecorder {
   }
 
   getMedia() {
-    console.log(this.file.dataDirectory);
     if(this.mediaObject == null) {
       //this.mediaObject = this.media.create(this.file.dataDirectory + this.filename);
       this.mediaObject = this.media.create('../Library/NoCloud/' + this.filename);
@@ -129,11 +128,21 @@ export class AudioRecorder {
     });
   }
 
+  release() {
+    this.mediaObject.release();
+  }
+
   startRecording() {
     //this.timer = new Timer();
     //this.timer.startTimer();
     if(this.isApp) {
       console.log('start recording');
+      
+      if(this.mediaObject != null) {
+        this.mediaObject.release();
+        this.mediaObject = null;
+      }
+      console.log(this.mediaObject);
       this.getMedia().startRecord();
     }
   }

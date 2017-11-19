@@ -70,7 +70,7 @@ export class ModalProfilePage {
       }
     );
     this.storeService.Get(KeyStore[KeyStore.Settings]).then(settings => {
-        this.totalDuration = settings.TotalDuration;
+        if(settings.TotalDuration) this.totalDuration = settings.TotalDuration;
     });
   }
 

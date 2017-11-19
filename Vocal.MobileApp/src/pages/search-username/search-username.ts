@@ -13,8 +13,7 @@ import { PeopleResponse } from "../../models/response/peopleResponse";
 @IonicPage()
 @Component({
   selector: 'page-search-username',
-  templateUrl: 'search-username.html',
-  providers: [FriendsService]
+  templateUrl: 'search-username.html'
 })
 export class SearchUsernamePage {
 

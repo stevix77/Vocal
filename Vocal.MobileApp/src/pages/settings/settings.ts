@@ -5,6 +5,7 @@ import { url } from "../../services/url";
 import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
+import { TalkService } from "../../services/talkService";
 import { SettingsResponse } from '../../models/response/settingsResponse';
 import { KeyStore } from '../../models/enums';
 import { Response } from '../../models/response';
@@ -29,7 +30,8 @@ export class SettingsPage implements OnInit {
     private httpService: HttpService, 
     private cookieService: CookieService, 
     private storeService: StoreService,
-    private friendsService: FriendsService) { 
+    private friendsService: FriendsService,
+    private talkService: TalkService) { 
 
   }
 
@@ -60,7 +62,8 @@ export class SettingsPage implements OnInit {
         {
           text: 'Déconnexion',
           handler: () => {
-            this.storeService.RemoveAll();
+            this.storeService.Clear();
+            this.talkService.Clear();
             params.User = null;
             this.friendsService.clear();
             this.navCtrl.setRoot(HomePage);
