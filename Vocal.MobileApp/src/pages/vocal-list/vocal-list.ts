@@ -175,6 +175,7 @@ export class VocalListPage {
   }
 
   initialize() {
+    debugger;
     this.talkService.LoadList().then(() => {
       if(this.talkService.Talks != null) {
         this.vocalList = this.talkService.Talks;
