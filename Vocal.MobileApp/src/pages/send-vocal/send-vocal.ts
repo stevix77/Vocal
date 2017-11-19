@@ -54,8 +54,8 @@ export class SendVocalPage {
     if(!this.isSending) {
       this.isSending = true;
       let users = [];
-      Promise.all([this.audioRecorder.getFile(), this.audioRecorder.getMediaDuration()]).then(values => {
-        this.FileValue = values[0];
+      this.audioRecorder.getFile().then(fileValue => {
+        this.FileValue = fileValue;
         this.Friends.forEach(elt => {
         if(elt.Checked)
           users.push(elt.Id);
@@ -63,7 +63,7 @@ export class SendVocalPage {
         let date = new Date();
         let request: SendMessageRequest = {
           content: this.FileValue,
-          duration: values[1],
+          duration: this.navParams.get('duration'),
           sentTime: date,
           idsRecipient: users,
           messageType: MessageType.Vocal,
@@ -79,7 +79,6 @@ export class SendVocalPage {
             if(!response.HasError && response.Data.IsSent) {
               console.log(response);
               this.talkService.LoadList().then(() => {
-                debugger;
                 this.talkService.UpdateList(response.Data.Talk);
                 this.talkService.SaveList();
                 this.navCtrl.remove(0,1).then(() => this.navCtrl.pop());
@@ -89,7 +88,7 @@ export class SendVocalPage {
               console.log(response);
             }
           }
-        )
+        );
       }).catch(err => {
         console.log(err);
       });

@@ -26,6 +26,7 @@ export class ModalEditVocalPage {
     public alertCtrl: AlertController,
     public events: Events
     ) {
+    console.log('duration', navParams.get('duration'));
     this.viewCtrl.onDidDismiss( () => this.events.publish('edit-vocal:close') );
   }
 
@@ -45,6 +46,7 @@ export class ModalEditVocalPage {
   startPlayback() {
     try {
       this.audioRecorder.startPlayback();
+      console.log(this.audioRecorder.getMediaDuration());
     }
     catch (e) {
       this.showAlert('Could not play recording.');
@@ -52,11 +54,17 @@ export class ModalEditVocalPage {
   }
 
   dismiss(){
+    try {
+      this.audioRecorder.release();
+    }
+    catch (e) {
+      this.showAlert('Could not release audio.');
+    }
     this.viewCtrl.dismiss();
   }
 
   goToSendVocal() {
-    this.navCtrl.push(SendVocalPage)
+    this.navCtrl.push(SendVocalPage, {duration:this.navParams.get('duration')});
   }
 
   showAlert(message) {

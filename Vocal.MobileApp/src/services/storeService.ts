@@ -19,7 +19,6 @@ export class StoreService {
     }
 
     RemoveAll() {
-        debugger;
         this.storage.keys().then(keys => {
             keys.forEach(k => this.Remove(k));
         })

@@ -33,7 +33,7 @@ export class VocalListPage {
   isRecording: boolean = false;
   isTiming: boolean = false;
   timer: Timer;
-  time: String = '0:00';
+  time: String = '';
   
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -82,6 +82,7 @@ export class VocalListPage {
   }
 
   startTimer() {
+    this.time = '0:00';
     this.timer = new Timer(this.events);
     this.events.subscribe('update:timer', timeFromTimer => {
       this.time = timeFromTimer;
@@ -91,7 +92,6 @@ export class VocalListPage {
 
   stopTimer() {
     this.timer.stopTimer();
-    this.time = '0:00';
   }
 
   showProfile() {
@@ -175,7 +175,6 @@ export class VocalListPage {
   }
 
   initialize() {
-    debugger;
     this.talkService.LoadList().then(() => {
       if(this.talkService.Talks != null) {
         this.vocalList = this.talkService.Talks;
