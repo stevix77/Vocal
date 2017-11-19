@@ -14,6 +14,7 @@ import { VocalListPage } from '../vocal-list/vocal-list';
 import { PasswordForgotPage } from '../passwordForgot/passwordForgot';
 import { ExceptionService } from "../../services/exceptionService";
 import { KeyStore } from "../../models/enums";
+import { InitService } from "../../services/initService";
 
 @Component({
   selector: 'page-connexion',
@@ -29,7 +30,12 @@ export class Connexion {
     ErrorPassword: ""
   };
 
-  constructor(public navCtrl: NavController, private httpService: HttpService, private storeService: StoreService, private toastCtrl: ToastController, private exceptionService: ExceptionService) {
+  constructor(public navCtrl: NavController, 
+              private httpService: HttpService, 
+              private storeService: StoreService,
+              private initService: InitService,
+              private toastCtrl: ToastController, 
+              private exceptionService: ExceptionService) {
     
   }
 
@@ -55,6 +61,7 @@ export class Connexion {
             appUser.Token = functions.GenerateToken(response.Data.Username, this.model.Password);
             this.storeService.Set(KeyStore[KeyStore.User], appUser);
             params.User = appUser;
+            this.initService.init();
             this.navCtrl.push(VocalListPage);
           }
         },

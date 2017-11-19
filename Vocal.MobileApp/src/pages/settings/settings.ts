@@ -12,6 +12,7 @@ import { Request } from "../../models/request/Request";
 import { SettingsChoices } from './settingsChoices/SettingsChoices';
 import { SettingsMail } from './settingsMail/SettingsMail';
 import { HomePage } from "../home/home";
+import { FriendsService } from "../../services/friendsService";
 
 @Component({
   selector: "app-settings",
@@ -27,7 +28,8 @@ export class SettingsPage implements OnInit {
     public alertCtrl: AlertController, 
     private httpService: HttpService, 
     private cookieService: CookieService, 
-    private storeService: StoreService) { 
+    private storeService: StoreService,
+    private friendsService: FriendsService) { 
 
   }
 
@@ -58,8 +60,9 @@ export class SettingsPage implements OnInit {
         {
           text: 'Déconnexion',
           handler: () => {
-            this.storeService.Clear();
+            this.storeService.RemoveAll();
             params.User = null;
+            this.friendsService.clear();
             this.navCtrl.setRoot(HomePage);
           }
         }

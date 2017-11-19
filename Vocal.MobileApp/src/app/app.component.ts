@@ -27,6 +27,7 @@ import { ExceptionService } from "../services/exceptionService";
 import { MessagePage } from "../pages/message/message";
 import { Deeplinks } from '@ionic-native/deeplinks';
 import { Inscription } from "../pages/inscription/inscription";
+import { InitService } from "../services/initService";
 
 declare var WindowsAzure: any;
 
@@ -56,9 +57,10 @@ export class VocalApp {
               private talkService: TalkService,
               private toastCtrl: ToastController,
               private exceptionService: ExceptionService,
-              private deeplinks: Deeplinks ) {
+              private deeplinks: Deeplinks,
+              private initService: InitService, ) {
     this.initializeApp();
-
+    events.subscribe("ErrorInit", (error) => this.showToast(error));
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Home', component: HomePage }
@@ -268,43 +270,7 @@ export class VocalApp {
   }
 
   init() {
-    try {
-      let request = new Request();
-      request.Lang = params.Lang;
-      let urlInit = url.Init();
-      let cookie = this.cookieService.GetAuthorizeCookie(urlInit, params.User)
-      this.httpService.Post(urlInit, request, cookie).subscribe(
-        resp => {
-          let response = resp.json() as Response<InitResponse>;
-          if(response.HasError)
-            this.showAlert(response.ErrorMessage)
-          else {
-            let errorSettings = response.Data.Errors.find(x => x.Key == KeyStore.Settings.toString());
-            let errorFriends = response.Data.Errors.find(x => x.Key == KeyStore.Friends.toString());
-            let errorTalks = response.Data.Errors.find(x => x.Key == KeyStore.Talks.toString());
-            let errors = response.Data.Errors.find(x => x.Key == KeyStore.FriendsAddedMe.toString());
-            this.SaveData(response.Data.Friends, errorFriends, KeyStore.Friends);
-            this.SaveData(response.Data.Talks, errorTalks, KeyStore.Talks);
-            this.SaveData(response.Data.Settings, errorSettings, KeyStore.Settings);
-            this.SaveData(response.Data.FriendsAddedMe, errors, KeyStore.FriendsAddedMe);
-          }
-        },
-        error => {
-          this.showAlert(error)
-          this.exceptionService.Add(error);
-        }
-      )
-    } catch (error) {
-      this.showAlert(error);
-      this.exceptionService.Add(error);
-    }
-  }
-
-  SaveData(data: any, error: KeyValueResponse<string, string>, key: KeyStore) {
-    if(error == null)
-      this.storeService.Set(KeyStore[key], data);
-    else
-      this.showAlert(error.Value);
+    this.initService.init();
   }
 
   showAlert(message) {

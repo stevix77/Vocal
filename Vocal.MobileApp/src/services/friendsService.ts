@@ -62,6 +62,11 @@ export class FriendsService {
     this.storeService.Set(KeyStore[KeyStore.Friends], this.model.Friends);
   }
 
+  clear() {
+    this.model.Friends = new Array();
+    this.model.ErrorFriends = "";
+  }
+
   // searchByMail(val) {
   //   let obj = {
   //     Lang: params.Lang,

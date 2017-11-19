@@ -47,6 +47,7 @@ import { TalkService } from "../services/talkService";
 import { HubService } from "../services/hubService";
 import { Camera } from "@ionic-native/camera";
 import { FriendsService } from "../services/friendsService";
+import { InitService } from "../services/initService";
 import { ScanContactsPage } from "../pages/scan-contacts/scan-contacts";
 import { AudioRecorder } from "../services/audiorecorder";
 
@@ -112,6 +113,7 @@ let components = [
     HubService,
     ExceptionService,
     FriendsService,
+    InitService,
     AudioRecorder,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
