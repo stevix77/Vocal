@@ -66,11 +66,13 @@ export class VocalListPage {
   }
 
   ionViewDidEnter() {
+    console.log('ionViewDidEnter VocalListPage');
     this.initialize();
   }
 
   toggleRecording() {
     this.isRecording = !this.isRecording;
+    if(!this.isRecording) this.initialize();
     console.log('toggleRecording');
   }
   

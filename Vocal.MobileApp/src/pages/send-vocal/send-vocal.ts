@@ -79,6 +79,7 @@ export class SendVocalPage {
             if(!response.HasError && response.Data.IsSent) {
               console.log(response);
               this.talkService.LoadList().then(() => {
+                debugger;
                 this.talkService.UpdateList(response.Data.Talk);
                 this.talkService.SaveList();
                 this.navCtrl.remove(0,1).then(() => this.navCtrl.pop());
