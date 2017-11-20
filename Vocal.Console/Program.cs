@@ -23,7 +23,7 @@ namespace Vocal.Console
             {
                 foreach(var item in users)
                 {
-                    item.Talks = new List<Talk>();
+                    //item.Talks = new List<Talk>();
                     Repository.Instance.UpdateUser(item);
                 }
                 success = true;

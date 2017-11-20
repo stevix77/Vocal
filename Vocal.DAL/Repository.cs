@@ -55,7 +55,8 @@ namespace Vocal.DAL
             MongoClient client = new MongoClient(settings);
             return client;
         }
-        
+
+
 
         #region Authentification
 
@@ -300,7 +301,7 @@ namespace Vocal.DAL
             }
             return null;
         }
-
+        
         //people i follow
         public List<People> GetFollowing(string userId, int pageSize, int pageNumber)
         {
@@ -415,51 +416,18 @@ namespace Vocal.DAL
         #endregion
 
         #region Talk
-
-        //public List<Talk> GetTalks(string userId)
-        //{
-        //    var collection = _db.GetCollection<Talk>(Settings.Default.CollectionTalk);
-        //    var query = new FilterDefinitionBuilder<Talk>().In("Users._id", new[] { userId });
-        //    var list = collection.Find(query).ToList();
-        //    //var list = collection.Find(x => x.Users.Any(y => y.Id == userId)).ToList();
-        //    return list;
-        //}
-
-        //public bool AddMessageToNewTalk(string idTalk, Message msg)
-        //{
-        //    var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
-        //    var talk = new Talk { Id = Guid.NewGuid().ToString(), Messages = new List<Message>(), VocalName = DateTime.Now.ToString("MM-dd-yyyy-HH-mm-ss") };
-        //    talk.Messages.Add(msg);
-        //    collection.ReplaceOne(x => x.Id == talk.Id, talk);
-        //    return true;
-
-        //    return false;
-        //}
-
-
-        //public bool AddMessageToTalk(string idTalk, Message msg)
-        //{
-        //    var collection = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
-        //    var talk = collection.Find(x => x.Id == idTalk).SingleOrDefault();
-        //    if (talk != null)
-        //    {
-        //        talk.Messages.Add(msg);
-        //        collection.ReplaceOne(x => x.Id == talk.Id, talk);
-        //        return true
-        //    }
-        //    return false;
-        //}
-
-
-        public Talk GetTalk(string idTalk, string userId)
+        
+        public Message GetMessageById(string messageId, string userId)
         {
-            var user = GetUserById(userId);
-            if (user != null)
-            {
-                return user.Talks.SingleOrDefault(x => x.Id == idTalk );
-            }
-            //must create a proper exception to catch correctly the error 
-            throw new Exception("User not found");
+            var collection = _db.GetCollection<Message>(Properties.Settings.Default.CollectionMessage);
+            var mess = collection.Find(x => x.Id == Guid.Parse(messageId) && x.Users.Any(y => y.Recipient.Id == userId)).SingleOrDefault();
+            return mess;
+        }
+        
+        public void AddMessage(Message m)
+        {
+            var db = _db.GetCollection<Message>(Properties.Settings.Default.CollectionMessage);
+            db.InsertOne(m);
         }
 
         public List<Talk> GetListTalk(string userId)
@@ -471,39 +439,6 @@ namespace Vocal.DAL
             }
             //must create a proper exception to catch correctly the error 
             throw new Exception("User not found");
-        }
-
-        public bool AddTalk(Talk talk, List<User> users)
-        {
-            foreach(var u in users)
-            {
-                u.Talks.Add(talk);
-                UpdateUser(u);
-            }
-            return true;
-        }
-
-        public Talk AddMessageToTalk(string talkId, List<User> users, Message message)
-        {
-            Talk talk = GetTalk(talkId, message.Sender.Id);
-            foreach (var u in users)
-            {
-                var t = u.Talks.SingleOrDefault(x => x.Id == talkId && !x.IsDeleted);
-                if (t == null)
-                {
-                    t = new Talk { Id = talk.Id, Recipients = talk.Recipients, Name = talk.Name };
-                    u.Talks.Add(t);
-                }
-                t.TotalDuration = message.Duration.HasValue ? message.Duration.Value : 0;
-                t.Messages.Add(message);
-                t.DateLastMessage = message.SentTime;
-                UpdateUser(u);
-                if (u.Id == message.Sender.Id)
-                {
-                    talk = t;
-                }
-            }
-            return talk;
         }
 
         public bool ArchiveTalk(string talkId, string userId)
@@ -561,34 +496,40 @@ namespace Vocal.DAL
 
         public List<Message> GetMessages(string talkId, DateTime? lastMessage, string userId)
         {
-            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
-            var user = db.Find(x => x.Id == userId && x.Talks.Any(y => y.Id == talkId)).SingleOrDefault();
-            var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
-            if (talk != null)
-                return lastMessage.HasValue ? talk.Messages.Where(x => !x.IsDeleted && x.ArrivedTime >= lastMessage.Value).ToList() :
-                                              talk.Messages.Where(x => !x.IsDeleted).ToList();
+            var db = _db.GetCollection<Message>(Properties.Settings.Default.CollectionMessage);
+            var find = db.Find(x => x.Talk.Id == talkId && x.Users.Any(y => y.Recipient.Id == userId && !y.IsDeleted) && lastMessage.HasValue ? x.SentTime > lastMessage.Value : true);
+            return find.ToList();
+        }
+
+        public Talk GetTalk(List<string> users)
+        {
+            var db = _db.GetCollection<Message>(Properties.Settings.Default.CollectionMessage);
+            var mess = db.Find(x => x.Users.Select(y => y.Recipient.Id).All(y => users.Contains(y))).FirstOrDefault();
+            if (mess != null)
+                return mess.Talk;
             else
                 return null;
         }
 
         public bool SetIsRead(string userId, string talkId, List<Message> messsages)
         {
-            var reader = GetUserById(userId);
-            var talk = reader.Talks.SingleOrDefault(x => x.Id == talkId);
-            var users = GetUsersById(talk.Recipients.Select(x => x.Id).ToList());
-            foreach(var u in users)
+            foreach(var item in messsages)
             {
-                var t = u.Talks.SingleOrDefault(x => x.Id == talk.Id);
-                var msgs = t.Messages.Where(x => messsages.Any(y => y.Id == x.Id)).ToList();
-                foreach(var m in msgs)
+                var user = item.Users.SingleOrDefault(x => x.Recipient.Id == userId);
+                if(user != null)
                 {
-                    var user = m.Users.SingleOrDefault(x => x.Recipient.Id == userId);
-                    if(user != null)
-                        user.ListenDate = DateTime.Now;
+                    user.ListenDate = DateTime.Now;
+                    UpdateMessage(item);
                 }
-                UpdateUser(u);
             }
-            return false;
+            return true;
+        }
+
+        private bool UpdateMessage(Message item)
+        {
+            var db = _db.GetCollection<Message>(Properties.Settings.Default.CollectionMessage);
+            var req = db.ReplaceOne(x => x.Id == item.Id, item);
+            return req.MatchedCount == req.ModifiedCount;
         }
 
         #endregion

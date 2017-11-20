@@ -23,7 +23,6 @@ namespace Vocal.Model.DB
         public Settings Settings { get; set; } = new Settings();
         public List<People> Followers { get; set; } = new List<People>();
         public List<People> Following { get; set; } = new List<People>();
-
-        public List<Talk> Talks { get; set; } = new List<Talk>();
+        
     }
 }

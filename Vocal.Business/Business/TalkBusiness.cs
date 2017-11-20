@@ -45,23 +45,18 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<string> GetMessageById(string talkId, string messageId, string userId, string lang)
+        public static Response<string> GetMessageById(string messageId, string userId, string lang)
         {
             var response = new Response<string>();
             try
             {
-                LogManager.LogDebug(talkId, messageId, userId, lang);
+                LogManager.LogDebug(messageId, userId, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-                var user = Repository.Instance.GetUserById(userId);
-                if (user == null)
-                    throw new CustomException(Resources_Language.UserNotExisting);
-                var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
-                if (talk == null)
-                    throw new CustomException(Resources_Language.Unauthorize);
-                var mess = talk.Messages.SingleOrDefault(x => x.Id == new Guid(messageId));
-                if (mess == null)
-                    throw new CustomException(Resources_Language.Unauthorize);
-                response.Data = mess.Content;
+                var mess = Repository.Instance.GetMessageById(messageId, userId);
+                if (mess != null)
+                    response.Data = mess.Content;
+                else
+                    throw new CustomException(Resources_Language.TalkNotExisting);
             }
             catch (TimeoutException tex)
             {
@@ -188,41 +183,31 @@ namespace Vocal.Business.Business
             {
                 LogManager.LogDebug(request);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(request.Lang);
-                var user = Repository.Instance.GetUserById(request.IdSender);
-                if (user != null)
+                if ((MessageType)request.MessageType == MessageType.Vocal)  // si mess vocal alors convertir
                 {
-                    if ((MessageType)request.MessageType == MessageType.Vocal)  // si mess vocal alors convertir
+                    var bs64 = request.Content.Split(',').LastOrDefault();
+                    var file = Converter.ConvertToWav(bs64);
+                    if (file == null)
+                        throw new Exception();
+                    request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
+                }
+                if(string.IsNullOrEmpty(request.IdTalk))
+                {
+                    request.IdsRecipient.Add(request.IdSender);
+                    var talk = Repository.Instance.GetTalk(request.IdsRecipient);
+                    if(talk == null) // aucun message entre ces idsRecipient
                     {
-                        var bs64 = request.Content.Split(',').LastOrDefault();
-                        var file = Converter.ConvertToWav(bs64);
-                        if (file == null)
-                            throw new Exception();
-                        request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
+                        if (Repository.Instance.CheckIfAllUsersExist(request.IdsRecipient)) // vérifier si les ids existent en base
+                            CreateNewTalk(request, response);
+                        else
+                            throw new Exception("AllUsers not exist");
                     }
-                    if (string.IsNullOrEmpty(request.IdTalk)) // IdTalk null si envoi message par SendVocal ou par Message mais aucun message dans la page
-                    {
-                        var talk = user.Talks.SingleOrDefault(x => x.Recipients.Where(y => y.Id != request.IdSender).Select(y => y.Id).OrderBy(y => y).ToList().SequenceEqual(request.IdsRecipient.OrderBy(y => y))); // vérifier si une convers existe (-1 car request.IdsRecipient ne contient pas le current user 
-                        if (talk == null) // la conversation n'existe pas
-                        {
-                            if (Repository.Instance.CheckIfAllUsersExist(request.IdsRecipient)) // vérifier si les ids existent en base
-                                CreateNewTalk(request, response, user);
-                            else
-                                throw new Exception("AllUsers not exist");
-                        }
-                        else // conversation existe, ajouter message à la convers
-                        {
-                            request.IdTalk = talk.Id;
-                            AddMessageToTalk(request, response, talk, user);
-                        }
-                    }
-                    else // envoi du message à partir d'une conversation existante
-                    {
-                        var talk = user.Talks.SingleOrDefault(x => x.Id == request.IdTalk);
-                        AddMessageToTalk(request, response, talk, user);
-                    }
+                    else
+                        AddMessageToTalk(request, response, talk.Id);
+                    
                 }
                 else
-                    throw new Exception($"User {request.IdSender} doesn't exist");
+                    AddMessageToTalk(request, response, request.IdTalk);
             }
             catch (TimeoutException tex)
             {
@@ -242,10 +227,10 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        private static void CreateNewTalk(SendMessageRequest request, Response<SendMessageResponse> response, User sender)
+        private static void CreateNewTalk(SendMessageRequest request, Response<SendMessageResponse> response)
         {
             var allUsers = Repository.Instance.GetUsersById(request.IdsRecipient);
-            allUsers.Add(sender);
+            var sender = allUsers.SingleOrDefault(x => x.Id == request.IdSender);
             var m = new Message
             {
                 Id = Guid.NewGuid(),
@@ -254,16 +239,11 @@ namespace Vocal.Business.Business
                 Content = request.Content,
                 ContentType = (MessageType)request.MessageType,
                 Sender = sender.ToPeople(),
-                Users = allUsers.Where(x => x.Id != sender.Id).Select(x => new UserListen() { Recipient = x.ToPeople()/*, ListenDate = x == user.Id ? DateTime.Now : new DateTime?()*/ }).ToList(),
-                Duration = request.Duration
+                Users = allUsers.Select(x => new UserListen() { Recipient = x.ToPeople()/*, ListenDate = x == user.Id ? DateTime.Now : new DateTime?()*/ }).ToList(),
+                Duration = request.Duration,
+                Talk = new Talk { Id = Guid.NewGuid().ToString() }
             };
-            var talk = new Talk() { Id = Guid.NewGuid().ToString(), Recipients = allUsers.Select(x => x.ToPeople()).ToList(), TotalDuration = request.Duration.HasValue ? request.Duration.Value : 0 };
-            talk.Messages.Add(m);
-            talk.DateLastMessage = m.ArrivedTime;
-
-            Repository.Instance.AddTalk(talk, allUsers);
-
-            response.Data.Talk = Bind.Bind_Talk(talk, request.IdSender);
+            Repository.Instance.AddMessage(m);
             response.Data.Message = Bind.Bind_Message(m);
             response.Data.IsSent = true;
             Task.Run(async () => {
@@ -271,12 +251,14 @@ namespace Vocal.Business.Business
                 var users = allUsers.Where(x => x.Id != request.IdSender);
                 var titleNotif = GenerateTitleNotif(m, string.Join(",", users.Select(x => x.Username)));
                 var messNotif = GenerateMessageNotif(m);
-                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), NotifType.Talk, messNotif, titleNotif, talk.Id);
+                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), NotifType.Talk, messNotif, titleNotif, m.Talk.Id);
             });
         }
 
-        private static void AddMessageToTalk(SendMessageRequest request, Response<SendMessageResponse> response, Talk talk, User sender)
+        private static void AddMessageToTalk(SendMessageRequest request, Response<SendMessageResponse> response, string talkId)
         {
+            var allUsers = Repository.Instance.GetUsersById(request.IdsRecipient);
+            var sender = allUsers.SingleOrDefault(x => x.Id == request.IdSender);
             var m = new Message
             {
                 Id = Guid.NewGuid(),
@@ -285,31 +267,18 @@ namespace Vocal.Business.Business
                 Content = request.Content,
                 ContentType = (MessageType)request.MessageType,
                 Sender = sender.ToPeople(),
-                Users = talk.Recipients.Where(x => x.Id != request.IdSender).Select(x => new UserListen { Recipient = x }).ToList(),
+                Users = allUsers.Select(x => new UserListen { Recipient = x.ToPeople() }).ToList(),
                 Duration = request.Duration
             };
-            talk.Messages.Add(m);
-            var recipients = Repository.Instance.GetUsersById(talk.Recipients.Select(x => x.Id).ToList());
-            foreach (var item in recipients)
-            {
-                var t = item.Talks.SingleOrDefault(x => x.Id == talk.Id);
-                if(t != null)
-                {
-                    t.TotalDuration = m.Duration.HasValue ? m.Duration.Value : 0;
-                    t.Messages.Add(m);
-                    t.DateLastMessage = m.SentTime;
-                    Repository.Instance.UpdateUser(item);
-                }
-            }
-            response.Data.Talk = Bind.Bind_Talk(talk, request.IdSender);
+            Repository.Instance.AddMessage(m);
             response.Data.Message = Bind.Bind_Message(m);
             response.Data.IsSent = true;
             Task.Run(async () => {
                 await HubService.Instance.SendMessage(response.Data, request.IdsRecipient); // envoi message via signalr
-                var users = recipients.Where(x => x.Id != request.IdSender);
+                var users = allUsers.Where(x => x.Id != request.IdSender);
                 var titleNotif = GenerateTitleNotif(m, string.Join(",", users.Select(x => x.Username)));
                 var messNotif = GenerateMessageNotif(m);
-                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), NotifType.Talk, messNotif, titleNotif, talk.Id);
+                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), NotifType.Talk, messNotif, titleNotif, talkId);
             });
         }
 
