@@ -8,5 +8,6 @@ namespace Vocal.Model.DB
     {
         public string Id { get; set; }
         public string Name { get; set; } = null;
+        //public List<Message> Messages { get; set; } = new List<Message>();
     } 
 }

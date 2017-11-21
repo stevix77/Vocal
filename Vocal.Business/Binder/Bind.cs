@@ -44,6 +44,23 @@ namespace Vocal.Business.Binder
             return users;
         }
 
+        internal static List<TalkResponse> Bind_Talks(List<Message> list, string userId)
+        {
+            var talks = new List<TalkResponse>();
+            foreach(var item in list)
+            {
+                talks.Add(new TalkResponse
+                {
+                    Id = item.Talk.Id,
+                    DateLastMessage = item.SentTime,
+                    Name = string.IsNullOrEmpty(item.Talk.Name) ? string.Join(",", item.Users.Select(x => x.Recipient.Username)) : item.Talk.Name,
+                    Users = Bind_Users(item.Users.Select(x => x.Recipient).ToList()),
+                    HasNewMessage = item.Users.SingleOrDefault(x => x.Recipient.Id == userId).ListenDate.HasValue ? false : true
+                });
+            }
+            return talks;
+        }
+
         internal static List<UserResponse> Bind_People(List<People> list)
         {
             var users = new List<UserResponse>();
@@ -162,45 +179,7 @@ namespace Vocal.Business.Binder
             }
             return list;
         }
-
-        internal static List<TalkResponse> Bind_Talks(List<Talk> list, string userId)
-        {
-            var response = new List<TalkResponse>();
-            if(list.Count > 0)
-            {
-                foreach (var item in list)
-                {
-                    var message = item.Messages.LastOrDefault();
-                    var users = item.Recipients.Where(x => x.Id != userId);
-                    response.Add(new TalkResponse
-                    {
-                        Id = item.Id,
-                        Name = item.Name ?? string.Join(", ", users.Select(x => x.Username)),
-                        Users = Bind_People(item.Recipients),
-                        DateLastMessage = message.SentTime,
-                        HasNewMessage = message.Sender.Id != userId && message.Users.SingleOrDefault(x => x.Recipient.Id == userId && x.ListenDate.HasValue) == null,
-                        Duration = item.TotalDuration
-                    });
-                }
-                response = response.OrderByDescending(x => x.DateLastMessage).ToList();
-            }
-            return response;
-        }
-        internal static TalkResponse Bind_Talk(Talk talk, string userId)
-        {
-            var message = talk.Messages.LastOrDefault();
-            var users = talk.Recipients.Where(x => x.Id != userId);
-            return new TalkResponse
-            {
-                Id = talk.Id,
-                Name = talk.Name ?? string.Join(", ", users.Select(x => x.Username)),
-                Users = Bind_People(talk.Recipients),
-                DateLastMessage = message.SentTime,
-                HasNewMessage = message.Sender.Id != userId && message.Users.SingleOrDefault(x => x.Recipient.Id == userId && x.ListenDate.HasValue) == null,
-                Duration = talk.TotalDuration
-            };
-        }
-
+        
 
         internal static List<MessageResponse> Bind_Messages(List<Message> list)
         {
@@ -231,7 +210,7 @@ namespace Vocal.Business.Binder
             settings.Genders = GetChoices(user.Settings.Gender);
             settings.Notifs = GetChoices(user.Settings.IsNotifiable);
             settings.Name = $"{user.Firstname} {user.Lastname} @{user.Username}";
-            settings.TotalDuration = user.Talks.SelectMany(x => x.Messages).Where(x => x.Sender.Id == user.Id && x.ContentType == MessageType.Vocal).Sum(x => x.Duration.GetValueOrDefault(0));
+            settings.TotalDuration = 0;
             return settings;
         }
 
@@ -243,18 +222,6 @@ namespace Vocal.Business.Binder
                 new ChoiceResponse { Id = 1, IsChecked = isNotifiable == true, Label = Resources_Language.Active }
             };
             return choices;
-        }
-
-        internal static TalkResponse Bind_Talks(Talk talk, string userId)
-        {
-            var response = new TalkResponse();
-            var message = talk.Messages.LastOrDefault();
-            response.Id = talk.Id;
-            response.Name = string.Join(", ", talk.Recipients.Where(x => x.Id != userId).Select(x => x.Username));
-            response.Users = Bind_People(talk.Recipients);
-            response.DateLastMessage = message.SentTime;
-            response.HasNewMessage = message.Sender.Id != userId && !message.Users.Any(x => x.Recipient.Id == userId && !x.ListenDate.HasValue);
-            return response;
         }
 
         internal static MessageResponse Bind_Message(Vocal.Model.DB.Message m)
@@ -316,6 +283,17 @@ namespace Vocal.Business.Binder
                 });
             }
             return genders;
+        }
+
+        internal static TalkResponse Bind_Talks(Message message, string userId)
+        {
+            var talkResponse = new TalkResponse();
+            talkResponse.DateLastMessage = message.ArrivedTime;
+            talkResponse.HasNewMessage = false;
+            talkResponse.Id = message.Talk.Id;
+            talkResponse.Name = message.Talk.Name;
+            talkResponse.Duration = message.Duration.GetValueOrDefault(0);
+            return talkResponse;
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using Vocal.Model.DB;
 using Vocal.Model.Helpers;
+using MongoDB.Bson;
 
 namespace Vocal.DAL
 {
@@ -430,67 +431,79 @@ namespace Vocal.DAL
             db.InsertOne(m);
         }
 
-        public List<Talk> GetListTalk(string userId)
+        public List<Message> GetListTalk(string userId)
         {
-            var user = GetUserById(userId);
-            if (user != null)
-            {
-                return user.Talks.Where(x => !x.IsArchived && !x.IsDeleted).ToList();
-            }
-            //must create a proper exception to catch correctly the error 
-            throw new Exception("User not found");
+            var db = _db.GetCollection<Message>(Properties.Settings.Default.CollectionMessage);
+            var list = db.Aggregate()
+                          .Match(x => x.Users.Any(y => y.Recipient.Id == userId && !y.IsArchived))
+                          .Group(x => x.Talk, x => x.OrderByDescending(y => y.SentTime).FirstOrDefault())
+                          .SortByDescending(x => x.SentTime).ToList();
+            return list;
         }
 
         public bool ArchiveTalk(string talkId, string userId)
         {
-            var user = GetUserById(userId);
-            if (user != null)
+            var mess = GetLastMessage(talkId, userId);
+            if (mess == null)
+                return false;
+            var user = mess.Users.SingleOrDefault(x => x.Recipient.Id == userId);
+            if(user != null)
             {
-                var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
-                talk.IsArchived = true;
-                UpdateUser(user);
+                user.IsArchived = true;
+                return UpdateMessage(mess);
             }
-            throw new Exception("User not found");
+            return false;
+        }
+
+        private Message GetLastMessage(string talkId, string userId)
+        {
+            var db = _db.GetCollection<Message>(Properties.Settings.Default.CollectionMessage);
+            return db.Find(x => x.Talk.Id == talkId).SortByDescending(x => x.ArrivedTime).FirstOrDefault();
         }
 
         public bool UnArchiveTalk(string talkId, string userId)
         {
-            var user = GetUserById(userId);
-            if (user != null)
+            var list = GetMessages(talkId, null, userId);
+            if (list == null || list.Count == 0)
+                return false;
+            var mess = list.SingleOrDefault(x => x.Users.Any(y => y.Recipient.Id == userId && y.IsArchived));
+            if(mess != null)
             {
-                var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
-                talk.IsArchived = false;
-                UpdateUser(user);
+                mess.Users.SingleOrDefault(y => y.Recipient.Id == userId).IsArchived = false;
+                UpdateMessage(mess);
             }
-            throw new Exception("User not found");
+            return true;
         }
 
         public bool DeleteTalk(string talkId, string userId)
         {
-            var user = GetUserById(userId);
-            if (user != null)
+            var count = 0;
+            var list = GetMessages(talkId, null, userId);
+            if (list == null || list.Count == 0)
+                return false;
+            foreach (var item in list)
             {
-                var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
-                talk.IsDeleted = true;
-                UpdateUser(user);
+                item.Users.SingleOrDefault(x => x.Recipient.Id == userId).IsDeleted = true;
+                count += UpdateMessage(item) ? 1 : 0;
             }
-            throw new Exception("User not found");
+            return count == list.Count;
         }
 
-        public bool DeleteMessage(string talkId, List<string> messageIds, string userId)
+        public bool DeleteMessage(List<string> messageIds, string userId)
         {
-            var user = GetUserById(userId);
-            if (user != null)
+            var count = 0;
+            if (messageIds == null || messageIds.Count == 0)
+                return false;
+            foreach (var item in messageIds)
             {
-                var talk = user.Talks.SingleOrDefault(x => x.Id == talkId);
-                var messages = talk.Messages.Where(x => messageIds.Contains(x.Id.ToString()));
-                foreach(var m in messages)
+                var mess = GetMessageById(item, userId);
+                if(mess != null)
                 {
-                    m.IsDeleted = true;
+                    mess.Users.SingleOrDefault(x => x.Recipient.Id == userId).IsDeleted = true;
+                    count += UpdateMessage(mess) ? 1 : 0;
                 }
-                UpdateUser(user);
             }
-            throw new Exception("User not found");
+            return count == messageIds.Count;
         }
 
 

@@ -244,6 +244,7 @@ namespace Vocal.Business.Business
                 Talk = new Talk { Id = Guid.NewGuid().ToString() }
             };
             Repository.Instance.AddMessage(m);
+            response.Data.Talk = Bind.Bind_Talks(m, request.IdSender);
             response.Data.Message = Bind.Bind_Message(m);
             response.Data.IsSent = true;
             Task.Run(async () => {
@@ -271,6 +272,7 @@ namespace Vocal.Business.Business
                 Duration = request.Duration
             };
             Repository.Instance.AddMessage(m);
+            response.Data.Talk = Bind.Bind_Talks(m, request.IdSender);
             response.Data.Message = Bind.Bind_Message(m);
             response.Data.IsSent = true;
             Task.Run(async () => {
@@ -302,7 +304,7 @@ namespace Vocal.Business.Business
 
         public static Response<ActionResponse> DeleteMessage(DeleteMessageRequest request)
         {
-            return ActionOnTalk(request, () => Repository.Instance.DeleteMessage(request.IdTalk, request.IdMessages, request.IdSender));
+            return ActionOnTalk(request, () => Repository.Instance.DeleteMessage(request.IdMessages, request.IdSender));
         }
 
         private static Response<ActionResponse> ActionOnTalk(Request request, Func<bool> action)
