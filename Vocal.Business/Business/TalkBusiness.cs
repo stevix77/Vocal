@@ -191,9 +191,9 @@ namespace Vocal.Business.Business
                         throw new Exception();
                     request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
                 }
-                if(string.IsNullOrEmpty(request.IdTalk))
+                request.IdsRecipient.Add(request.IdSender);
+                if (string.IsNullOrEmpty(request.IdTalk))
                 {
-                    request.IdsRecipient.Add(request.IdSender);
                     var talk = Repository.Instance.GetTalk(request.IdsRecipient);
                     if(talk == null) // aucun message entre ces idsRecipient
                     {
@@ -203,11 +203,14 @@ namespace Vocal.Business.Business
                             throw new Exception("AllUsers not exist");
                     }
                     else
-                        AddMessageToTalk(request, response, talk.Id);
+                        AddMessageToTalk(request, response, talk);
                     
                 }
                 else
-                    AddMessageToTalk(request, response, request.IdTalk);
+                {
+                    var talk = Repository.Instance.GetTalk(request.IdsRecipient);
+                    AddMessageToTalk(request, response, talk);
+                }
             }
             catch (TimeoutException tex)
             {
@@ -231,6 +234,14 @@ namespace Vocal.Business.Business
         {
             var allUsers = Repository.Instance.GetUsersById(request.IdsRecipient);
             var sender = allUsers.SingleOrDefault(x => x.Id == request.IdSender);
+            var talk = new Talk
+            {
+                Id = Guid.NewGuid().ToString(),
+                Users = allUsers.Select(x => x.Id).ToList() ,
+                Duration = (MessageType)request.MessageType == MessageType.Vocal ? request.Duration.Value : 0
+            };
+            talk.Users.ForEach(x => { talk.ListArchive.Add(x, false); talk.ListDelete.Add(x, false); });
+            allUsers.ForEach(x => talk.ListPictures.Add(x.Id, x.Pictures.SingleOrDefault(y => y.Type == PictureType.Talk).Value));
             var m = new Message
             {
                 Id = Guid.NewGuid(),
@@ -239,12 +250,13 @@ namespace Vocal.Business.Business
                 Content = request.Content,
                 ContentType = (MessageType)request.MessageType,
                 Sender = sender.ToPeople(),
-                Users = allUsers.Select(x => new UserListen() { Recipient = x.ToPeople()/*, ListenDate = x == user.Id ? DateTime.Now : new DateTime?()*/ }).ToList(),
+                Users = allUsers.Where(x => x.Id != sender.Id).Select(x => new UserListen() { Recipient = x.ToPeople()/*, ListenDate = x == user.Id ? DateTime.Now : new DateTime?()*/ }).ToList(),
                 Duration = request.Duration,
-                Talk = new Talk { Id = Guid.NewGuid().ToString() }
+                TalkId = talk.Id
             };
+            Repository.Instance.AddTalk(talk);
             Repository.Instance.AddMessage(m);
-            response.Data.Talk = Bind.Bind_Talks(m, request.IdSender);
+            response.Data.Talk = Bind.Bind_Talks(talk, m, request.IdSender);
             response.Data.Message = Bind.Bind_Message(m);
             response.Data.IsSent = true;
             Task.Run(async () => {
@@ -252,11 +264,11 @@ namespace Vocal.Business.Business
                 var users = allUsers.Where(x => x.Id != request.IdSender);
                 var titleNotif = GenerateTitleNotif(m, string.Join(",", users.Select(x => x.Username)));
                 var messNotif = GenerateMessageNotif(m);
-                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), NotifType.Talk, messNotif, titleNotif, m.Talk.Id);
+                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), NotifType.Talk, messNotif, titleNotif, talk.Id);
             });
         }
 
-        private static void AddMessageToTalk(SendMessageRequest request, Response<SendMessageResponse> response, string talkId)
+        private static void AddMessageToTalk(SendMessageRequest request, Response<SendMessageResponse> response, Talk talk)
         {
             var allUsers = Repository.Instance.GetUsersById(request.IdsRecipient);
             var sender = allUsers.SingleOrDefault(x => x.Id == request.IdSender);
@@ -269,10 +281,14 @@ namespace Vocal.Business.Business
                 ContentType = (MessageType)request.MessageType,
                 Sender = sender.ToPeople(),
                 Users = allUsers.Select(x => new UserListen { Recipient = x.ToPeople() }).ToList(),
-                Duration = request.Duration
+                Duration = request.Duration, 
+                TalkId = talk.Id
             };
+            talk.Duration += m.ContentType == MessageType.Vocal ? m.Duration.GetValueOrDefault(0) : 0;
+            talk.LastMessage = m.ArrivedTime;
+            Repository.Instance.UpdateTalk(talk);
             Repository.Instance.AddMessage(m);
-            response.Data.Talk = Bind.Bind_Talks(m, request.IdSender);
+            response.Data.Talk = Bind.Bind_Talks(talk, m, request.IdSender);
             response.Data.Message = Bind.Bind_Message(m);
             response.Data.IsSent = true;
             Task.Run(async () => {
@@ -280,7 +296,7 @@ namespace Vocal.Business.Business
                 var users = allUsers.Where(x => x.Id != request.IdSender);
                 var titleNotif = GenerateTitleNotif(m, string.Join(",", users.Select(x => x.Username)));
                 var messNotif = GenerateMessageNotif(m);
-                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), NotifType.Talk, messNotif, titleNotif, talkId);
+                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), NotifType.Talk, messNotif, titleNotif, talk.Id);
             });
         }
 
@@ -289,21 +305,25 @@ namespace Vocal.Business.Business
 
         public static Response<ActionResponse> ArchiveTalk(UpdateTalkRequest request)
         {
+            LogManager.LogDebug(request);
             return ActionOnTalk(request, () => Repository.Instance.ArchiveTalk(request.IdTalk, request.IdSender));
         }
 
         public static Response<ActionResponse> UnarchiveTalk(UpdateTalkRequest request)
         {
+            LogManager.LogDebug(request);
             return ActionOnTalk(request, () => Repository.Instance.UnArchiveTalk(request.IdTalk, request.IdSender));
         }
 
         public static Response<ActionResponse> DeleteTalk(UpdateTalkRequest request)
         {
+            LogManager.LogDebug(request);
             return ActionOnTalk(request, () => Repository.Instance.DeleteTalk(request.IdTalk, request.IdSender));
         }
 
         public static Response<ActionResponse> DeleteMessage(DeleteMessageRequest request)
         {
+            LogManager.LogDebug(request);
             return ActionOnTalk(request, () => Repository.Instance.DeleteMessage(request.IdMessages, request.IdSender));
         }
 
@@ -315,7 +335,6 @@ namespace Vocal.Business.Business
                 Resources_Language.Culture = new System.Globalization.CultureInfo(request.Lang);
                 if (request != null)
                 {
-                    LogManager.LogDebug(request);
                     if (action())
                     {
                         response.Data.IsDone = true;

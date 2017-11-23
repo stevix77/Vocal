@@ -16,8 +16,7 @@ namespace Vocal.Model.DB
         public People Sender { get; set; }
         public List<UserListen> Users { get; set; }
         public int? Duration { get; set; }
-
-        public Talk Talk { get; set; }
+        public string TalkId { get; set; }
         public Message Parent { get; set; }
 
         /////some variable in readiness for stats

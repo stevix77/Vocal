@@ -44,18 +44,18 @@ namespace Vocal.Business.Binder
             return users;
         }
 
-        internal static List<TalkResponse> Bind_Talks(List<Message> list, string userId)
+        internal static List<TalkResponse> Bind_Talks(List<Talk> list, string userId)
         {
             var talks = new List<TalkResponse>();
             foreach(var item in list)
             {
                 talks.Add(new TalkResponse
                 {
-                    Id = item.Talk.Id,
-                    DateLastMessage = item.SentTime,
-                    Name = string.IsNullOrEmpty(item.Talk.Name) ? string.Join(",", item.Users.Select(x => x.Recipient.Username)) : item.Talk.Name,
-                    Users = Bind_Users(item.Users.Select(x => x.Recipient).ToList()),
-                    HasNewMessage = item.Users.SingleOrDefault(x => x.Recipient.Id == userId).ListenDate.HasValue ? false : true
+                    Id = item.Id,
+                    DateLastMessage = item.LastMessage,
+                    //Users = item.Users,
+                    Duration = item.Duration,
+                    Picture = item.Users.Count == 2 ? item.ListPictures.SingleOrDefault(x => x.Key != userId).Value : ""
                 });
             }
             return talks;
@@ -189,7 +189,7 @@ namespace Vocal.Business.Binder
                 response.Add(new MessageResponse
                 {
                     ArrivedTime = item.ArrivedTime,
-                    Content = item.ContentType == MessageType.Text ? item.Content : null,
+                    Content = (MessageType)item.ContentType == MessageType.Text ? item.Content : null,
                     ContentType = (int)item.ContentType,
                     Id = item.Id.ToString(),
                     SentTime = item.SentTime,
@@ -285,14 +285,13 @@ namespace Vocal.Business.Binder
             return genders;
         }
 
-        internal static TalkResponse Bind_Talks(Message message, string userId)
+        internal static TalkResponse Bind_Talks(Talk talk, Message message, string userId)
         {
             var talkResponse = new TalkResponse();
-            talkResponse.DateLastMessage = message.ArrivedTime;
-            talkResponse.HasNewMessage = false;
-            talkResponse.Id = message.Talk.Id;
-            talkResponse.Name = message.Talk.Name;
-            talkResponse.Duration = message.Duration.GetValueOrDefault(0);
+            talkResponse.DateLastMessage = talk.LastMessage;
+            talkResponse.Id = talk.Id;
+            talkResponse.Name = string.Join(",", talk.Users.Where(x => x != userId).ToList());
+            talkResponse.Duration = talk.Duration;
             return talkResponse;
         }
     }

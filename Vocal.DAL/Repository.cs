@@ -129,19 +129,19 @@ namespace Vocal.DAL
             return db.Count(filter) == userIds.Count;
         }
 
-        public List<Vocal.Model.DB.User> GetUsersById(List<string> userIds)
+        public List<User> GetUsersById(List<string> userIds)
         {
-            List<Vocal.Model.DB.User> users = new List<Vocal.Model.DB.User>();
-            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
-            var filter = new FilterDefinitionBuilder<Vocal.Model.DB.User>().In(x => x.Id, userIds);
+            var users = new List<User>();
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, userIds);
             users = db.Find(filter).ToList();
             return users;
         }
 
-        public List<Vocal.Model.DB.People> GetUsersByIdInPeole(List<string> userIds)
+        public List<People> GetUsersByIdInPeole(List<string> userIds)
         {
-            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
-            var filter = new FilterDefinitionBuilder<Vocal.Model.DB.User>().In(x => x.Id, userIds);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, userIds);
             return db.Find(filter)
                      .ToList()
                      .Select(Mapper.ToPeople)
@@ -302,7 +302,13 @@ namespace Vocal.DAL
             }
             return null;
         }
-        
+
+        public void UpdateTalk(Talk talk)
+        {
+            var db = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
+            var req = db.ReplaceOne(x => x.Id == talk.Id, talk);
+        }
+
         //people i follow
         public List<People> GetFollowing(string userId, int pageSize, int pageNumber)
         {
@@ -431,26 +437,23 @@ namespace Vocal.DAL
             db.InsertOne(m);
         }
 
-        public List<Message> GetListTalk(string userId)
+        public List<Talk> GetListTalk(string userId)
         {
-            var db = _db.GetCollection<Message>(Properties.Settings.Default.CollectionMessage);
+            var db = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
             var list = db.Aggregate()
-                          .Match(x => x.Users.Any(y => y.Recipient.Id == userId && !y.IsArchived))
-                          .Group(x => x.Talk, x => x.OrderByDescending(y => y.SentTime).FirstOrDefault())
-                          .SortByDescending(x => x.SentTime).ToList();
+                          .Match(x => x.Users.Any(y => y == userId) && !x.ListArchive[userId] && !x.ListDelete[userId])
+                          .SortByDescending(x => x.LastMessage).ToList();
             return list;
         }
 
         public bool ArchiveTalk(string talkId, string userId)
         {
-            var mess = GetLastMessage(talkId, userId);
-            if (mess == null)
-                return false;
-            var user = mess.Users.SingleOrDefault(x => x.Recipient.Id == userId);
-            if(user != null)
+            var talk = GetTalkById(talkId);
+            if (talk != null)
             {
-                user.IsArchived = true;
-                return UpdateMessage(mess);
+                talk.ListArchive[userId] = true;
+                UpdateTalk(talk);
+                return true;
             }
             return false;
         }
@@ -458,35 +461,37 @@ namespace Vocal.DAL
         private Message GetLastMessage(string talkId, string userId)
         {
             var db = _db.GetCollection<Message>(Properties.Settings.Default.CollectionMessage);
-            return db.Find(x => x.Talk.Id == talkId).SortByDescending(x => x.ArrivedTime).FirstOrDefault();
+            return db.Find(x => x.TalkId == talkId).SortByDescending(x => x.ArrivedTime).FirstOrDefault();
         }
 
         public bool UnArchiveTalk(string talkId, string userId)
         {
-            var list = GetMessages(talkId, null, userId);
-            if (list == null || list.Count == 0)
-                return false;
-            var mess = list.SingleOrDefault(x => x.Users.Any(y => y.Recipient.Id == userId && y.IsArchived));
-            if(mess != null)
+            var talk = GetTalkById(talkId);
+            if (talk != null)
             {
-                mess.Users.SingleOrDefault(y => y.Recipient.Id == userId).IsArchived = false;
-                UpdateMessage(mess);
+                talk.ListArchive[userId] = false;
+                UpdateTalk(talk);
+                return true;
             }
-            return true;
+            return false;
         }
 
         public bool DeleteTalk(string talkId, string userId)
         {
-            var count = 0;
-            var list = GetMessages(talkId, null, userId);
-            if (list == null || list.Count == 0)
-                return false;
-            foreach (var item in list)
+            var talk = GetTalkById(talkId);
+            if (talk != null)
             {
-                item.Users.SingleOrDefault(x => x.Recipient.Id == userId).IsDeleted = true;
-                count += UpdateMessage(item) ? 1 : 0;
+                talk.ListDelete[userId] = true;
+                UpdateTalk(talk);
+                return true;
             }
-            return count == list.Count;
+            return false;
+        }
+
+        public Talk GetTalkById(string talkId)
+        {
+            var db = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
+            return db.Find(x => x.Id == talkId).SingleOrDefault();
         }
 
         public bool DeleteMessage(List<string> messageIds, string userId)
@@ -510,18 +515,28 @@ namespace Vocal.DAL
         public List<Message> GetMessages(string talkId, DateTime? lastMessage, string userId)
         {
             var db = _db.GetCollection<Message>(Properties.Settings.Default.CollectionMessage);
-            var find = db.Find(x => x.Talk.Id == talkId && x.Users.Any(y => y.Recipient.Id == userId && !y.IsDeleted) && lastMessage.HasValue ? x.SentTime > lastMessage.Value : true);
-            return find.ToList();
+            if(lastMessage.HasValue)
+                return db.Find(x => x.TalkId == talkId && x.ArrivedTime > lastMessage.Value).ToList();
+            else
+                return db.Find(x => x.TalkId == talkId).ToList();
         }
 
         public Talk GetTalk(List<string> users)
         {
-            var db = _db.GetCollection<Message>(Properties.Settings.Default.CollectionMessage);
-            var mess = db.Find(x => x.Users.Select(y => y.Recipient.Id).All(y => users.Contains(y))).FirstOrDefault();
-            if (mess != null)
-                return mess.Talk;
+            var db = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
+            var query = db.Aggregate().Match(Builders<Talk>.Filter.All("Users", users)).SingleOrDefault();
+            //var query = db.Find(filter).SingleOrDefault();
+            //var mess = db.Find(x => users.All(y => x.Users.Select(z => z.Recipient.Id).ToList().Contains(y))).ToList();
+            if (query != null)
+                return query;
             else
                 return null;
+        }
+
+        public void AddTalk(Talk talk)
+        {
+            var db = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
+            db.InsertOne(talk);
         }
 
         public bool SetIsRead(string userId, string talkId, List<Message> messsages)

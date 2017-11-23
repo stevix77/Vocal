@@ -47,6 +47,8 @@
     <Compile Include="DB\MessageType.cs" />
     <Compile Include="DB\Monitoring.cs" />
     <Compile Include="DB\People.cs" />
+    <Compile Include="DB\Picture.cs" />
+    <Compile Include="DB\PictureType.cs" />
     <Compile Include="DB\ResetPassword.cs" />
     <Compile Include="DB\Search.cs" />
     <Compile Include="DB\Settings.cs" />

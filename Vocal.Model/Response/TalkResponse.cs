@@ -11,5 +11,6 @@ namespace Vocal.Model.Response
         public DateTime DateLastMessage { get; set; }
         public bool HasNewMessage { get; set; }
         public int Duration { get; set; }
+        public string Picture { get; set; }
     }
 }
