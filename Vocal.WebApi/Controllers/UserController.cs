@@ -44,6 +44,13 @@ namespace Vocal.WebApi.Controllers
             return Business.Tools.Monitoring.Execute(UserBusiness.UpdateUser, obj.UserId, request.Value, request.UpdateType, request.Lang);
         }
 
+        [HttpPost, Route("profil"), CustomAuthorize]
+        public Response<UserResponse> GetUserById(ProfilRequest request)
+        {
+            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
+            return Business.Tools.Monitoring.Execute(UserBusiness.GetUserById, obj.UserId, request.UserId, request.Lang);
+        }
+
         [HttpPost, Route("list"), CustomAuthorize]
         public Response<List<UserResponse>> GetListUsers(Request request)
         {

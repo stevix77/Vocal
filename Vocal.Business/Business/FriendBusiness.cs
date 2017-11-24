@@ -20,13 +20,16 @@ namespace Vocal.Business.Business
             {
                 LogManager.LogDebug(userId, pageNumber, pageSize, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-                response.Data = CacheManager.GetCache<List<UserResponse>>("");
+                response.Data = CacheManager.GetCache<List<UserResponse>>(CacheManager.GetKey(Settings.Default.CacheKeyFriend, userId));
                 if (response.Data != null)
                     return response;
                 var list = Repository.Instance.GetFriends(userId, pageSize, pageNumber);
                 response.Data = Binder.Bind.Bind_Users(list);
-                if (response.Data.Count > 0)
-                    CacheManager.SetCache("", response.Data);
+                Task.Run(() =>
+                {
+                    if (response.Data.Count > 0)
+                        CacheManager.SetCache(CacheManager.GetKey(Settings.Default.CacheKeyFriend, userId), response.Data);
+                });
             }
             catch (TimeoutException tex)
             {
@@ -57,7 +60,7 @@ namespace Vocal.Business.Business
                 if (response.Data)
                     Task.Run(async () =>
                     {
-                        CacheManager.RemoveCache("");
+                        CacheManager.RemoveCache(CacheManager.GetKey(Settings.Default.CacheKeyFriend, userId));
                         var user = Repository.Instance.GetUserById(userId);
                         if(user != null)
                             await NotificationBusiness.SendNotification(ids, NotifType.AddFriend, user.Username);
@@ -89,6 +92,11 @@ namespace Vocal.Business.Business
             try
             {
                 response.Data = Repository.Instance.RemoveFriends(userId, ids);
+                Task.Run(() =>
+                {
+                    if (response.Data)
+                        CacheManager.RemoveCache(CacheManager.GetKey(Settings.Default.CacheKeyFriend, userId));
+                });
             }
             catch (TimeoutException tex)
             {
@@ -115,9 +123,17 @@ namespace Vocal.Business.Business
             {
                 LogManager.LogDebug(userId, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                //response.Data = CacheManager.GetCache<List<PeopleResponse>>(GetKey(Settings.Default.CacheKeyContactAddedMe, userId));
+                //if (response.Data != null)
+                //    return response;
                 var user = Repository.Instance.GetUserById(userId);
                 var list = Repository.Instance.GetFriendsAddedMe(userId);
                 response.Data = Binder.Bind.Bind_People(user, list);
+                //Task.Run(() =>
+                //{
+                //    if (response.Data.Count > 0)
+                //        CacheManager.SetCache(GetKey(Settings.Default.CacheKeyContactAddedMe, userId), response.Data);
+                //});
             }
             catch (TimeoutException tex)
             {

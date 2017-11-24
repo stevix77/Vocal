@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace Vocal.Model.Response
 {
     public class UserResponse
@@ -9,5 +11,6 @@ namespace Vocal.Model.Response
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Picture { get; set; }
+        public Dictionary<string, string> Pictures { get; set; } = new Dictionary<string, string>();
     }
 }

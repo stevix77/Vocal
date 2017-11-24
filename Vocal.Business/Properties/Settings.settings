@@ -59,5 +59,14 @@
     <Setting Name="PictureUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="CacheKeyFriend" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CacheFriend_{0}</Value>
+    </Setting>
+    <Setting Name="CacheKeyContactAddedMe" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CacheContact_{0}</Value>
+    </Setting>
+    <Setting Name="CacheSettings" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CacheSettings_{0}</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
