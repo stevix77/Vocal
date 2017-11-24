@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Vocal.Business.Properties;
 using Vocal.Business.Security;
 using Vocal.Business.Tools;
@@ -228,8 +229,47 @@ namespace Vocal.Business.Business
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {
+                response.Data = CacheManager.GetCache<SettingsResponse>(CacheManager.GetKey(Properties.Settings.Default.CacheSettings, userId));
+                if (response.Data != null)
+                    return response;
                 var user = Repository.Instance.GetUserById(userId);
                 response.Data = Binder.Bind.Bind_UserSettings(user);
+                Task.Run(() =>
+                {
+                    if (response.Data != null)
+                        CacheManager.SetCache(CacheManager.GetKey(Properties.Settings.Default.CacheSettings, userId), response.Data);
+                });
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
+
+        public static Response<UserResponse> GetUserById(string requestUserId, string userId, string lang)
+        {
+            var response = new Response<UserResponse>();
+            try
+            {
+                LogManager.LogDebug(userId, lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var user = Repository.Instance.GetUserById(userId);
+                if (user != null)
+                    response.Data = Binder.Bind.Bind_User(user);
+                else
+                    throw new CustomException(Resources_Language.UserNotExisting);
             }
             catch (TimeoutException tex)
             {

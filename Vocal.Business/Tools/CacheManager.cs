@@ -27,5 +27,9 @@ namespace Vocal.Business.Tools
         {
             System.Web.HttpRuntime.Cache.Remove(key);
         }
+        public static string GetKey(string cacheKey, string value)
+        {
+            return string.Format(cacheKey, value);
+        }
     }
 }
