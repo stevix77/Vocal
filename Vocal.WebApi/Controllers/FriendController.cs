@@ -20,9 +20,10 @@ namespace Vocal.WebApi.Controllers
         }
 
         [HttpPost, CustomAuthorize, Route("addedMe")]
-        public Response<List<PeopleResponse>> GetContactsAddMe(GetFriendsRequest request)
+        public Response<List<PeopleResponse>> GetContactsAddMe(Request request)
         {
-            return Business.Tools.Monitoring.Execute(FriendBusiness.GetFriendsAddedMe, request.UserId, request.Lang);
+            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
+            return Business.Tools.Monitoring.Execute(FriendBusiness.GetFriendsAddedMe, obj.UserId, request.Lang);
         }
 
         [HttpPost, CustomAuthorize, Route("add")]

@@ -36,31 +36,25 @@ export class InitService {
       request.Lang = params.Lang;
       let urlInit = url.Init();
       let cookie = this.cookieService.GetAuthorizeCookie(urlInit, params.User)
-      this.httpService.Post(urlInit, request, cookie).subscribe(
-        resp => {
-          let response = resp.json() as Response<InitResponse>;
-          if(response.HasError) {
-            this.Errors.push(response.ErrorMessage)            
-          }
-          else {
-            let errorSettings = response.Data.Errors.find(x => x.Key == KeyStore.Settings.toString());
-            let errorFriends = response.Data.Errors.find(x => x.Key == KeyStore.Friends.toString());
-            let errorTalks = response.Data.Errors.find(x => x.Key == KeyStore.Talks.toString());
-            let errors = response.Data.Errors.find(x => x.Key == KeyStore.FriendsAddedMe.toString());
-            this.saveData(response.Data.Friends, errorFriends, KeyStore.Friends);
-            this.saveData(response.Data.Talks, errorTalks, KeyStore.Talks);
-            this.saveData(response.Data.Settings, errorSettings, KeyStore.Settings);
-            this.saveData(response.Data.FriendsAddedMe, errors, KeyStore.FriendsAddedMe);
-          }
-        },
-        error => {
-          this.events.publish("ErrorInit", error);
-          this.exceptionService.Add(error);
-        }
-      )
+      return this.httpService.Post(urlInit, request, cookie);
     } catch (error) {
       this.events.publish("ErrorInit", error);
       this.exceptionService.Add(error);
+    }
+  }
+
+  manageData(response: Response<InitResponse>) {
+    if(response.HasError) {
+      this.Errors.push(response.ErrorMessage)
+    }
+    else {
+      let errorSettings = response.Data.Errors.find(x => x.Key == KeyStore.Settings.toString());
+      let errorFriends = response.Data.Errors.find(x => x.Key == KeyStore.Friends.toString());
+      let errorTalks = response.Data.Errors.find(x => x.Key == KeyStore.Talks.toString());
+      let errors = response.Data.Errors.find(x => x.Key == KeyStore.FriendsAddedMe.toString());
+      this.saveData(response.Data.Friends, errorFriends, KeyStore.Friends);
+      this.saveData(response.Data.Talks, errorTalks, KeyStore.Talks);
+      this.saveData(response.Data.Settings, errorSettings, KeyStore.Settings);
     }
   }
 

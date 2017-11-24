@@ -239,7 +239,7 @@ namespace Vocal.Business.Business
             {
                 Id = Guid.NewGuid().ToString(),
                 Recipients = allUsers.Select(x => x.Id).ToList(),
-                Duration = (MessageType)request.MessageType == MessageType.Vocal ? request.Duration.Value : 0,
+                Duration = (MessageType)request.MessageType == MessageType.Vocal && request.Duration.HasValue && request.Duration.Value > 0 ? request.Duration.Value : 0,
                 LastMessage = dt,
                 Users = allUsers.Select(x => x.ToPeople()).ToList()
             };
@@ -254,7 +254,7 @@ namespace Vocal.Business.Business
                 ContentType = (MessageType)request.MessageType,
                 Sender = sender.ToPeople(),
                 Users = allUsers.Where(x => x.Id != sender.Id).Select(x => new UserListen() { Recipient = x.ToPeople()/*, ListenDate = x == user.Id ? DateTime.Now : new DateTime?()*/ }).ToList(),
-                Duration = request.Duration,
+                Duration = (MessageType)request.MessageType == MessageType.Vocal ? talk.Duration : 0,
                 TalkId = talk.Id
             };
             Repository.Instance.AddTalk(talk);
@@ -284,10 +284,10 @@ namespace Vocal.Business.Business
                 ContentType = (MessageType)request.MessageType,
                 Sender = sender.ToPeople(),
                 Users = allUsers.Select(x => new UserListen { Recipient = x.ToPeople() }).ToList(),
-                Duration = request.Duration, 
+                Duration = (MessageType)request.MessageType == MessageType.Vocal && request.Duration.HasValue && request.Duration.Value >= 0 ? request.Duration.Value : new int?(), 
                 TalkId = talk.Id
             };
-            talk.Duration += m.ContentType == MessageType.Vocal ? m.Duration.GetValueOrDefault(0) : 0;
+            talk.Duration += m.ContentType == MessageType.Vocal && m.Duration.HasValue ? m.Duration.Value : 0;
             talk.LastMessage = m.ArrivedTime;
             Repository.Instance.UpdateTalk(talk);
             Repository.Instance.AddMessage(m);

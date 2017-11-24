@@ -126,9 +126,12 @@ namespace Vocal.Business.Business
                 //response.Data = CacheManager.GetCache<List<PeopleResponse>>(GetKey(Settings.Default.CacheKeyContactAddedMe, userId));
                 //if (response.Data != null)
                 //    return response;
-                var user = Repository.Instance.GetUserById(userId);
-                var list = Repository.Instance.GetFriendsAddedMe(userId);
-                response.Data = Binder.Bind.Bind_People(user, list);
+                Model.DB.User user = null;
+                List<Model.DB.User> list = null;
+                Parallel.Invoke(() => user = Repository.Instance.GetUserById(userId),
+                                () => list = Repository.Instance.GetFriendsAddedMe(userId));
+                if(user != null && list != null)
+                    response.Data = Binder.Bind.Bind_People(user, list);
                 //Task.Run(() =>
                 //{
                 //    if (response.Data.Count > 0)

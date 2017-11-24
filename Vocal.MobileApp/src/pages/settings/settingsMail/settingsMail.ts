@@ -3,18 +3,16 @@ import { NavParams, NavController} from 'ionic-angular';
 import { Response } from '../../../models/response';
 import { params } from "../../../services/params";
 import { url } from "../../../services/url";
-import { SettingsResponse } from '../../../models/response/settingsResponse';
 import { UpdateRequest } from "../../../models/request/updateRequest";
 import { HttpService } from "../../../services/httpService";
 import { CookieService } from "../../../services/cookieService";
 import { StoreService } from "../../../services/storeService";
+import { SettingsService } from "../../../services/settingsService";
 import { UpdateType } from "../../../models/enums";
-import { KeyStore } from '../../../models/enums';
 
 @Component({
   selector: "app-settingsMail",
-  templateUrl: "./settingsMail.html",
-  providers: [HttpService, CookieService]
+  templateUrl: "./settingsMail.html"
 })
 
 export class SettingsMail implements OnInit {
@@ -22,19 +20,13 @@ export class SettingsMail implements OnInit {
   Email: string;
   PageTitle: string;
   PageLabel: string;
-  settingsStore: SettingsResponse;
-  constructor(private navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, private cookieService: CookieService, private storeService: StoreService) { 
+  constructor(private navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, private cookieService: CookieService, private storeService: StoreService, private settingsService: SettingsService) { 
     this.PageLabel = "Modifier mon adresse e-mail";
     this.PageTitle = "Réglages";
   }
 
   ionViewDidEnter() {
     this.Email = this.navParams.get('Email');
-    this.storeService.Get(KeyStore[KeyStore.Settings]).then(
-      store => {
-        this.settingsStore = store;
-      }
-    )
   }
 
   Submit() {
@@ -49,8 +41,8 @@ export class SettingsMail implements OnInit {
       resp => { 
         let response = resp.json() as Response<Boolean>;
         if(!response.HasError) {
-          this.settingsStore.Email = this.Email;
-          this.storeService.Set(KeyStore[KeyStore.Settings], this.settingsStore)
+          this.settingsService.settings.Email = this.Email;
+          this.settingsService.save();
           this.navCtrl.pop();
         } else {
           

@@ -22,7 +22,6 @@ import { HubService } from '../services/hubService';
 import {KeyStore} from '../models/enums';
 import {HubMethod} from '../models/enums';
 import { InitResponse } from '../models/response/InitResponse';
-import { Request } from "../models/request/Request";
 import { ExceptionService } from "../services/exceptionService";
 import { MessagePage } from "../pages/message/message";
 import { Deeplinks } from '@ionic-native/deeplinks';
@@ -61,6 +60,7 @@ export class VocalApp {
               private initService: InitService, ) {
     this.initializeApp();
     events.subscribe("ErrorInit", (error) => this.showToast(error));
+    events.subscribe("Error", (error) => this.showToast(error));
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Home', component: HomePage }
@@ -270,7 +270,16 @@ export class VocalApp {
   }
 
   init() {
-    this.initService.init();
+    this.initService.init().subscribe(
+      resp => {
+        let response = resp.json() as Response<InitResponse>;
+        this.initService.manageData(response);
+      },
+      error => {
+        this.events.publish("ErrorInit", error);
+        this.exceptionService.Add(error);
+      }
+    );
   }
 
   showAlert(message) {

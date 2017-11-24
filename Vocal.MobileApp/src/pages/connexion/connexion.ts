@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, ToastController } from 'ionic-angular';
+import { NavController, ToastController, Events } from 'ionic-angular';
 import { StoreService } from '../../services/storeService';
 import {params} from '../../services/params';
 import { Response } from '../../models/Response';
@@ -15,6 +15,7 @@ import { PasswordForgotPage } from '../passwordForgot/passwordForgot';
 import { ExceptionService } from "../../services/exceptionService";
 import { KeyStore } from "../../models/enums";
 import { InitService } from "../../services/initService";
+import { InitResponse } from "../../models/response/InitResponse";
 
 @Component({
   selector: 'page-connexion',
@@ -35,7 +36,8 @@ export class Connexion {
               private storeService: StoreService,
               private initService: InitService,
               private toastCtrl: ToastController, 
-              private exceptionService: ExceptionService) {
+              private exceptionService: ExceptionService,
+              private events: Events) {
     
   }
 
@@ -61,8 +63,17 @@ export class Connexion {
             appUser.Token = functions.GenerateToken(response.Data.Username, this.model.Password);
             this.storeService.Set(KeyStore[KeyStore.User], appUser);
             params.User = appUser;
-            this.initService.init();
-            this.navCtrl.push(VocalListPage);
+            this.initService.init().subscribe(
+              resp => {
+                let response = resp.json() as Response<InitResponse>;
+                this.initService.manageData(response);
+                this.navCtrl.push(VocalListPage);
+              },
+              error => {
+                this.events.publish("ErrorInit", error);
+                this.exceptionService.Add(error);
+              }
+            );
           }
         },
         error => {

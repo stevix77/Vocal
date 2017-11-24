@@ -13,8 +13,10 @@ import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { url } from "../../services/url";
 import { UpdateRequest } from "../../models/request/updateRequest";
+import { Request } from "../../models/request/request";
 import { Response } from '../../models/response';
 import { ExceptionService } from "../../services/exceptionService";
+import { PeopleResponse } from "../../models/response/peopleResponse";
 
 /**
  * Generated class for the ModalProfilePage page.
@@ -74,8 +76,31 @@ export class ModalProfilePage {
     });
   }
 
+  ionViewWillEnter() {
+    this.getContactAddedMe();
+  }
+
   dismiss() {
     this.viewCtrl.dismiss();
+  }
+
+  getContactAddedMe() {
+    let urlServ = url.GetContactAddedMe();
+    let obj: Request = {
+      Lang: params.Lang
+    };
+    let cookie = this.cookieService.GetAuthorizeCookie(urlServ, params.User)
+    this.httpService.Post<Request>(urlServ, obj, cookie).subscribe(
+      resp => {
+        let response = resp.json() as Response<Array<PeopleResponse>>;
+        if(response.HasError) {
+          console.log(response.ErrorMessage);
+          this.showToast(response.ErrorMessage);
+        } else {
+          this.friendsAddedMe = response.Data;
+        }
+      }
+    )
   }
 
   takePic(srcType) {

@@ -97,6 +97,11 @@ namespace Vocal.Business.Business
                 }
                 Repository.Instance.UpdateUser(user);
                 response.Data = true;
+                Task.Run(() =>
+                {
+                    if (response.Data)
+                        CacheManager.RemoveCache(CacheManager.GetKey(Properties.Settings.Default.CacheSettings, userId));
+                });
             }
             catch (TimeoutException tex)
             {
