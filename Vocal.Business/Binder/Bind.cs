@@ -53,9 +53,10 @@ namespace Vocal.Business.Binder
                 {
                     Id = item.Id,
                     DateLastMessage = item.LastMessage,
-                    //Users = item.Users,
+                    Users = Bind_Users(item.Users),
                     Duration = item.Duration,
-                    Picture = item.Users.Count == 2 ? item.ListPictures.SingleOrDefault(x => x.Key != userId).Value : ""
+                    Name = item.Recipients.Count == 2 ? string.Join(",", item.Users.Where(x => x.Id != userId).Select(x => x.Username).ToList()) : item.Name,
+                    Picture = item.Recipients.Count == 2 ? item.ListPictures.SingleOrDefault(x => x.Key != userId).Value : ""
                 });
             }
             return talks;
@@ -290,8 +291,10 @@ namespace Vocal.Business.Binder
             var talkResponse = new TalkResponse();
             talkResponse.DateLastMessage = talk.LastMessage;
             talkResponse.Id = talk.Id;
-            talkResponse.Name = string.Join(",", talk.Users.Where(x => x != userId).ToList());
+            talkResponse.Name = !string.IsNullOrEmpty(talk.Name) ? string.Join(",", talk.Users.Where(x => x.Id != userId).Select(x => x.Username).ToList()) : talk.Name;
             talkResponse.Duration = talk.Duration;
+            talkResponse.Users = Bind_Users(talk.Users);
+            talkResponse.Picture = talk.Users.Count == 2 ? talk.Users.SingleOrDefault(x => x.Id != userId).Pictures.SingleOrDefault(x => x.Type == PictureType.Talk).Value : string.Empty;
             return talkResponse;
         }
     }

@@ -234,19 +234,22 @@ namespace Vocal.Business.Business
         {
             var allUsers = Repository.Instance.GetUsersById(request.IdsRecipient);
             var sender = allUsers.SingleOrDefault(x => x.Id == request.IdSender);
+            var dt = DateTime.Now;
             var talk = new Talk
             {
                 Id = Guid.NewGuid().ToString(),
-                Users = allUsers.Select(x => x.Id).ToList() ,
-                Duration = (MessageType)request.MessageType == MessageType.Vocal ? request.Duration.Value : 0
+                Recipients = allUsers.Select(x => x.Id).ToList(),
+                Duration = (MessageType)request.MessageType == MessageType.Vocal ? request.Duration.Value : 0,
+                LastMessage = dt,
+                Users = allUsers.Select(x => x.ToPeople()).ToList()
             };
-            talk.Users.ForEach(x => { talk.ListArchive.Add(x, false); talk.ListDelete.Add(x, false); });
+            talk.Recipients.ForEach(x => { talk.ListArchive.Add(x, false); talk.ListDelete.Add(x, false); });
             allUsers.ForEach(x => talk.ListPictures.Add(x.Id, x.Pictures.SingleOrDefault(y => y.Type == PictureType.Talk).Value));
             var m = new Message
             {
                 Id = Guid.NewGuid(),
                 SentTime = request.SentTime,
-                ArrivedTime = DateTime.Now,
+                ArrivedTime = dt,
                 Content = request.Content,
                 ContentType = (MessageType)request.MessageType,
                 Sender = sender.ToPeople(),

@@ -6,6 +6,7 @@ using MongoDB.Driver;
 using Vocal.Model.DB;
 using Vocal.Model.Helpers;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 
 namespace Vocal.DAL
 {
@@ -57,7 +58,33 @@ namespace Vocal.DAL
             return client;
         }
 
+        #region transfert data
 
+        public List<Model.DB.Old.User> GetOldUsers()
+        {
+            var db = _db.GetCollection<Model.DB.Old.User>("User");
+            var users = db.Aggregate().ToList();
+            return users;
+        }
+
+        public void InsertNewUsers(List<User> users)
+        {
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            db.InsertMany(users);
+        }
+
+        public void InsertNewTalks(List<Talk> talks)
+        {
+            var db = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
+            db.InsertMany(talks);
+        }
+
+        public void InsertNewMessages(List<Message> messages)
+        {
+            var db = _db.GetCollection<Message>(Properties.Settings.Default.CollectionMessage);
+            db.InsertMany(messages);
+        }
+        #endregion
 
         #region Authentification
 
@@ -441,7 +468,7 @@ namespace Vocal.DAL
         {
             var db = _db.GetCollection<Talk>(Properties.Settings.Default.CollectionTalk);
             var list = db.Aggregate()
-                          .Match(x => x.Users.Any(y => y == userId) && !x.ListArchive[userId] && !x.ListDelete[userId])
+                          .Match(x => x.Recipients.Any(y => y == userId) && !x.ListArchive[userId] && !x.ListDelete[userId])
                           .SortByDescending(x => x.LastMessage).ToList();
             return list;
         }

@@ -14,7 +14,7 @@ namespace Vocal.Model.DB
         public DateTime SentTime { get; set; }
         public DateTime ArrivedTime { get; set; }
         public People Sender { get; set; }
-        public List<UserListen> Users { get; set; }
+        public List<UserListen> Users { get; set; } = new List<UserListen>();
         public int? Duration { get; set; }
         public string TalkId { get; set; }
         public Message Parent { get; set; }

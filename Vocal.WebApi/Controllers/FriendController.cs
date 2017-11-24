@@ -19,6 +19,12 @@ namespace Vocal.WebApi.Controllers
             return Business.Tools.Monitoring.Execute(FriendBusiness.GetFriends, request.UserId, request.PageNumber, request.PageSize, request.Lang);
         }
 
+        [HttpPost, CustomAuthorize, Route("addedMe")]
+        public Response<List<PeopleResponse>> GetContactsAddMe(GetFriendsRequest request)
+        {
+            return Business.Tools.Monitoring.Execute(FriendBusiness.GetFriendsAddedMe, request.UserId, request.Lang);
+        }
+
         [HttpPost, CustomAuthorize, Route("add")]
         public Response<bool> AddFriends(ManageFriendsRequest request)
         {

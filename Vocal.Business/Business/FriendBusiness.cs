@@ -20,8 +20,13 @@ namespace Vocal.Business.Business
             {
                 LogManager.LogDebug(userId, pageNumber, pageSize, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                response.Data = CacheManager.GetCache<List<UserResponse>>("");
+                if (response.Data != null)
+                    return response;
                 var list = Repository.Instance.GetFriends(userId, pageSize, pageNumber);
                 response.Data = Binder.Bind.Bind_Users(list);
+                if (response.Data.Count > 0)
+                    CacheManager.SetCache("", response.Data);
             }
             catch (TimeoutException tex)
             {
@@ -52,6 +57,7 @@ namespace Vocal.Business.Business
                 if (response.Data)
                     Task.Run(async () =>
                     {
+                        CacheManager.RemoveCache("");
                         var user = Repository.Instance.GetUserById(userId);
                         if(user != null)
                             await NotificationBusiness.SendNotification(ids, NotifType.AddFriend, user.Username);

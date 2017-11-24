@@ -44,15 +44,7 @@ namespace Vocal.Business.Business
                     else
                         response.Data.Errors.Add(new KeyValueResponse<string, string>(KeyStore.Friends.ToString(), response.ErrorMessage));
                 });
-                var actionFriendsAddedMe = new Action(() =>
-                {
-                    var resp = FriendBusiness.GetFriendsAddedMe(userId, lang);
-                    if (!resp.HasError)
-                        response.Data.FriendsAddedMe = resp.Data;
-                    else
-                        response.Data.Errors.Add(new KeyValueResponse<string, string>(KeyStore.FriendsAddedMe.ToString(), response.ErrorMessage));
-                });
-                Parallel.Invoke(actionFriends, actionSettings, actionTalks, actionFriendsAddedMe);
+                Parallel.Invoke(actionFriends, actionSettings, actionTalks);
             }
             catch (TimeoutException tex)
             {
