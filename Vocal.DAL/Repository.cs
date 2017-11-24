@@ -59,13 +59,7 @@ namespace Vocal.DAL
         }
 
         #region transfert data
-
-        public List<Model.DB.Old.User> GetOldUsers()
-        {
-            var db = _db.GetCollection<Model.DB.Old.User>("User");
-            var users = db.Aggregate().ToList();
-            return users;
-        }
+        
 
         public void InsertNewUsers(List<User> users)
         {
