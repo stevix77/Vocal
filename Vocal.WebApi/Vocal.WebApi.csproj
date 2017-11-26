@@ -259,6 +259,7 @@
     <Compile Include="Controllers\TalkController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\VocalApiController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

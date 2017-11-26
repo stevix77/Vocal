@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using Vocal.Model.DB;
 using Vocal.Model.Helpers;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 
 namespace Vocal.DAL
 {
@@ -16,9 +14,11 @@ namespace Vocal.DAL
         {
         }
 
-        static Repository() { }
+        static Repository() {
+        }
 
         private static readonly Repository _instance = new Repository();
+
         public static Repository Instance
         {
             get
@@ -60,7 +60,6 @@ namespace Vocal.DAL
 
         #region transfert data
         
-
         public void InsertNewUsers(List<User> users)
         {
             var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
@@ -82,9 +81,9 @@ namespace Vocal.DAL
 
         #region Authentification
 
-        public Vocal.Model.DB.User Login(string login, string password)
+        public User Login(string login, string password)
         {
-            var collection = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
+            var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var user = collection.Find(x => x.Password == password && (x.Email.ToLower() == login || x.Username.ToLower() == login)).SingleOrDefault();
             return user;
         }
@@ -110,29 +109,29 @@ namespace Vocal.DAL
 
         #region User 
 
-        public void AddUser(Vocal.Model.DB.User user)
+        public void AddUser(User user)
         {
-            var collection = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
+            var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             collection.InsertOne(user);
         }
 
-        public Vocal.Model.DB.User GetUserById(string id)
+        public User GetUserById(string id)
         {
             var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var user = db.Find(x => x.Id == id).SingleOrDefault();
             return user;
         }
 
-        public Vocal.Model.DB.User GetUserByEmail(string email)
+        public User GetUserByEmail(string email)
         {
-            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var user = db.Find(x => x.Email.ToLower() == email).SingleOrDefault();
             return user;
         }
 
-        public Vocal.Model.DB.User GetUserByUsername(string username)
+        public User GetUserByUsername(string username)
         {
-            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var user = db.Find(x => x.Username.ToLower() == username).SingleOrDefault();
             return user;
         }
@@ -203,10 +202,10 @@ namespace Vocal.DAL
             return success;
         }
 
-        public List<Vocal.Model.DB.User> GetAllUsers()
+        public List<User> GetAllUsers()
         {
-            var users = new List<Vocal.Model.DB.User>();
-            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
+            var users = new List<User>();
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             users = db.AsQueryable().ToList();
             return users;
         }
@@ -215,11 +214,11 @@ namespace Vocal.DAL
 
         #region Friends
 
-        public List<Vocal.Model.DB.User> SearchFriendsByEmails(List<string> emails)
+        public List<User> SearchFriendsByEmails(List<string> emails)
         {
-            var users = new List<Vocal.Model.DB.User>();
-            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
-            var filter = new FilterDefinitionBuilder<Vocal.Model.DB.User>().In(x => x.Email, emails);
+            var users = new List<User>();
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
+            var filter = new FilterDefinitionBuilder<User>().In(x => x.Email, emails);
             users = db.Find(filter).ToList();
             return users;
         }
@@ -297,9 +296,9 @@ namespace Vocal.DAL
             return null;
         }
 
-        public List<Vocal.Model.DB.User> GetFriendsAddedMe(string userId)
+        public List<User> GetFriendsAddedMe(string userId)
         {
-            var db = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
+            var db = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             var list = db.Find(x => x.Friends.Any(y => y.Id == userId && y.DateAdded > DateTime.Now.AddDays(-7))).ToList();
             return list;
         }
@@ -583,9 +582,6 @@ namespace Vocal.DAL
 
         #endregion
 
-
-
-
         public T AddToDb<T>(T obj)
         {
             var collection = _db.GetCollection<T>(obj.GetType().Name);
@@ -607,10 +603,10 @@ namespace Vocal.DAL
             return list;
         }
 
-        public List<Vocal.Model.DB.User> SearchPeopleByEmail(string keyword)
+        public List<User> SearchPeopleByEmail(string keyword)
         {
-            var list = new List<Vocal.Model.DB.User>();
-            var collection = _db.GetCollection<Vocal.Model.DB.User>(Properties.Settings.Default.CollectionUser);
+            var list = new List<User>();
+            var collection = _db.GetCollection<User>(Properties.Settings.Default.CollectionUser);
             list = collection.Find(x => x.Email.ToLower().Contains(keyword))
                                         .ToList();
             return list;

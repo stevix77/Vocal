@@ -10,7 +10,7 @@ namespace Vocal.WebApi.Controllers
 {
     [EnableCors("*", "*", "*")]
     [RoutePrefix("api/auth")]
-    public class AuthController : ApiController
+    public class AuthController : VocalApiController
     {
         [HttpPost]
         [Route("login")]
