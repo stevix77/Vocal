@@ -66,11 +66,11 @@ namespace Vocal.Business.Business
             try
             {
                 LogManager.LogDebug(ids, type, param);
-                foreach (var id in ids)
+                var users = Repository.Instance.GetUsersById(ids);
+                foreach (var item in users.Where(x => x.Settings.IsNotifiable))
                 {
-                    var u = Repository.Instance.GetUserById(id);
-                    var tag = $"{Properties.Settings.Default.TagUser}:{id}";
-                    foreach (var d in u.Devices.Select(x => new { Platform = x.Platform, Lang = x.Lang }).Distinct())
+                    var tag = $"{Properties.Settings.Default.TagUser}:{item.Id}";
+                    foreach (var d in item.Devices.Select(x => new { Platform = x.Platform, Lang = x.Lang }).Distinct())
                     {
                         var payload = string.Format(GetTemplate(type, d.Platform, d.Lang, param));
                         await NotificationHub.Instance.SendNotification(d.Platform, tag, payload);

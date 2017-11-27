@@ -22,8 +22,17 @@ namespace Vocal.Business.Binder
                 Picture = user.Picture,
                 Username = user.Username,
                 Firstname = user.Firstname,
-                Lastname = user.Lastname
+                Lastname = user.Lastname,
+                Pictures = Bind_Pictures(user.Pictures)
             };
+        }
+
+        private static Dictionary<int, string> Bind_Pictures(List<Picture> pictures)
+        {
+            var picts = new Dictionary<int, string>();
+            foreach (var item in pictures)
+                picts.Add((int)item.Type, item.Value);
+            return picts;
         }
 
         internal static List<UserResponse> Bind_Users(List<User> list)
@@ -31,15 +40,7 @@ namespace Vocal.Business.Binder
             var users = new List<UserResponse>();
             foreach(var item in list)
             {
-                users.Add(new UserResponse
-                {
-                    Email = item.Email,
-                    Firstname = item.Firstname,
-                    Id = item.Id,
-                    Lastname = item.Lastname,
-                    Picture = item.Picture,
-                    Username = item.Username
-                });
+                users.Add(Bind_User(item));
             }
             return users;
         }
@@ -67,15 +68,7 @@ namespace Vocal.Business.Binder
             var users = new List<UserResponse>();
             foreach (var item in list)
             {
-                users.Add(new UserResponse
-                {
-                    Email = item.Email,
-                    Firstname = item.Firstname,
-                    Id = item.Id,
-                    Lastname = item.Lastname,
-                    Picture = item.Picture,
-                    Username = item.Username
-                });
+                users.Add(Bind_People(item));
             }
             return users;
         }
@@ -89,7 +82,8 @@ namespace Vocal.Business.Binder
                 Id = people.Id,
                 Lastname = people.Lastname,
                 Picture = people.Picture,
-                Username = people.Username
+                Username = people.Username,
+                Pictures = Bind_Pictures(people.Pictures)
             };
         }
 
@@ -99,15 +93,7 @@ namespace Vocal.Business.Binder
             var users = new List<UserResponse>();
             foreach (var item in list)
             {
-                users.Add(new UserResponse
-                {
-                    Email = item.Email,
-                    Firstname = item.Firstname,
-                    Id = item.Id,
-                    Lastname = item.Lastname,
-                    Picture = item.Picture,
-                    Username = item.Username
-                });
+                users.Add(Bind_People(item));
             }
             return users;
         }
@@ -117,32 +103,36 @@ namespace Vocal.Business.Binder
             var list = new List<PeopleResponse>();
             foreach(var item in listSearch)
             {
-                var friend = user.Friends.Find(x => x.Id == item.Id);
-                if (friend == null) // il n'existe pas dans ma liste d'amis
+                if(item.Settings.Contact != Contacted.Nobody)
                 {
-                    list.Add(new PeopleResponse
+                    var friend = user.Friends.Find(x => x.Id == item.Id);
+                    if (friend == null) // il n'existe pas dans ma liste d'amis
                     {
-                        Email = item.Email,
-                        IsFriend = false,
-                        Firstname = item.Firstname,
-                        Id = item.Id,
-                        Lastname = item.Lastname,
-                        Picture = item.Picture,
-                        Username = item.Username
-                    });
+                        list.Add(new PeopleResponse
+                        {
+                            Email = item.Email,
+                            IsFriend = false,
+                            Firstname = item.Firstname,
+                            Id = item.Id,
+                            Lastname = item.Lastname,
+                            Picture = item.Picture,
+                            Username = item.Username,
+                            Pictures = Bind_Pictures(item.Pictures)
+                        });
+                    }
+                    else
+                        list.Add(new PeopleResponse
+                        {
+                            Email = item.Email,
+                            IsFriend = true,
+                            Firstname = item.Firstname,
+                            Id = item.Id,
+                            Lastname = item.Lastname,
+                            Picture = item.Picture,
+                            Username = item.Username,
+                            Pictures = Bind_Pictures(item.Pictures)
+                        });
                 }
-                else if(!friend.IsFriend) // s'il est dans ma liste d'amis mais qu'il n'a pas encore accepté ma demande
-                    list.Add(new PeopleResponse
-                    {
-                        Email = item.Email,
-                        IsFriend = true,
-                        Firstname = item.Firstname,
-                        Id = item.Id,
-                        Lastname = item.Lastname,
-                        Picture = item.Picture,
-                        Username = item.Username
-                    });
-                // sinon c'est qu'il est dans ma liste d'amis et qu'il a accepté ma demande donc ne pas afficher dans le résultat de la recherche
             }
             return list;
         }
@@ -205,7 +195,7 @@ namespace Vocal.Business.Binder
         {
             var settings = new SettingsResponse();
             settings.BirthdayDate = user.BirthdayDate;
-            settings.Blocked = Bind_People(user.Settings.Blocked);
+            settings.Blocked = Bind_Users(user.Settings.Blocked);
             settings.Contacts = GetChoices(user.Settings.Contact);
             settings.Email = user.Email;
             settings.Genders = GetChoices(user.Settings.Gender);

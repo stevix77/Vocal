@@ -61,6 +61,7 @@
     <Compile Include="Request\DeleteMessageRequest.cs" />
     <Compile Include="Request\GetFollowUserRequest.cs" />
     <Compile Include="Request\GetMessagesRequest.cs" />
+    <Compile Include="Request\IsSendableRequest.cs" />
     <Compile Include="Request\ManageFollowUserRequest.cs" />
     <Compile Include="Request\ManageFriendsRequest.cs" />
     <Compile Include="Request\CookieRequest.cs" />

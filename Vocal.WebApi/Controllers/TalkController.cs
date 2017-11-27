@@ -27,6 +27,13 @@ namespace Vocal.WebApi.Controllers
             return Monitoring.Execute(TalkBusiness.GetMessages, request.TalkId, request.LastMessage, obj.UserId, request.Lang);
         }
 
+        [Route("IsSendable"), HttpPost]
+        public Response<bool> IsSendable(IsSendableRequest request)
+        {
+            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
+            return Monitoring.Execute(TalkBusiness.IsSendable, obj.UserId, request.Users, request.Lang);
+        }
+
         [Route("SendMessage"), HttpPost]
         public Response<SendMessageResponse> SendMessage(SendMessageRequest request)
         {

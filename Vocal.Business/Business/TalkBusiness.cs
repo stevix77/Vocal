@@ -175,6 +175,33 @@ namespace Vocal.Business.Business
         //    return response;
         //}
 
+        public static Response<bool> IsSendable(string userId, List<string> users, string lang)
+        {
+            var response = new Response<bool>();
+            try
+            {
+                LogManager.LogDebug(userId, users, lang);
+                Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                var recipients = Repository.Instance.GetUsersById(users);
+                response.Data = recipients.TrueForAll(x => !x.Settings.Blocked.Exists(y => y.Id == userId) && (x.Settings.Contact == Contacted.Everybody || (x.Settings.Contact == Contacted.Friends && x.Friends.Exists(y => y.Id == userId))));
+            }
+            catch (TimeoutException tex)
+            {
+                LogManager.LogError(tex);
+                response.ErrorMessage = Resources_Language.TimeoutError;
+            }
+            catch (CustomException cex)
+            {
+                LogManager.LogError(cex);
+                response.ErrorMessage = cex.Message;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex);
+                response.ErrorMessage = Resources_Language.TechnicalError;
+            }
+            return response;
+        }
 
         public static Response<SendMessageResponse> SendMessage(SendMessageRequest request)
         {
