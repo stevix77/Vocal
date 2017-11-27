@@ -82,12 +82,12 @@ namespace Vocal.WebApi.Signalr
 
         public void BeginTalkMess(string talkId)
         {
-            Clients.OthersInGroup(talkId).BeginTalking();
+            Clients.OthersInGroup(talkId).BeginTalking(talkId);
         }
 
         public void EndTalkMess(string talkId)
         {
-            Clients.OthersInGroup(talkId).EndTalking();
+            Clients.OthersInGroup(talkId).EndTalking(talkId);
         }
 
         public void UpdateListenUser(string talkId, List<MessageResponse> obj)

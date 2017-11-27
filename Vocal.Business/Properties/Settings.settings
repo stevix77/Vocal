@@ -80,5 +80,11 @@
     <Setting Name="PictureTalkHeight" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="DefaultImageProfil" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">default.jpg</Value>
+    </Setting>
+    <Setting Name="DefaultImageTalk" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">default.jpg</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

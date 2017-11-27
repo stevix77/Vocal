@@ -48,6 +48,8 @@ export class VocalListPage {
     private talkService: TalkService) {
 
     events.subscribe(HubMethod[HubMethod.Receive], () => this.initialize())
+    events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.BeginTalk(obj))
+    events.subscribe(HubMethod[HubMethod.EndTalking], (obj) => this.EndTalk(obj))
 
     this.isApp = this.config.get('isApp');
     
@@ -126,6 +128,14 @@ export class VocalListPage {
         }
       }
     );
+  }
+
+  BeginTalk(talkId) {
+
+  }
+
+  EndTalk(talkId) {
+    
   }
 
   formatDateMessage(items){

@@ -53,6 +53,8 @@ export class MessagePage {
     this.model.talkId = this.navParams.get("TalkId");
     this.model.userId = this.navParams.get("UserId");
     this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj.Message))
+    events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.BeginTalk(obj))
+    events.subscribe(HubMethod[HubMethod.EndTalking], (obj) => this.EndTalk(obj))
 
     this.isApp = this.config.get('isApp');
   }
@@ -131,6 +133,14 @@ export class MessagePage {
         }
       }
     );
+  }
+
+  BeginTalk(talkId) {
+    
+  }
+    
+  EndTalk(talkId) {
+    
   }
 
   loadMessages() {

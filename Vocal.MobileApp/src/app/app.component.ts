@@ -305,6 +305,27 @@ export class VocalApp {
       this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
     })
 
+    this.hubService.hubProxy.on(HubMethod[HubMethod.BeginTalk], (obj) => {
+      console.log(obj);
+      this.events.publish(HubMethod[HubMethod.BeginTalk], obj);
+    });
+
+    this.hubService.hubProxy.on(HubMethod[HubMethod.EndTalking], (obj) => {
+      console.log(obj);
+      this.events.publish(HubMethod[HubMethod.EndTalking], obj);
+    });
+
+    this.hubService.hubProxy.on(HubMethod[HubMethod.AddFriend], (obj) => {
+      console.log(obj);
+      let message = obj + " vous a ajouté dans sa liste d'amis";
+      this.showToast(message);
+    });
+
+    this.hubService.hubProxy.on(HubMethod[HubMethod.UpdateListenUser], (obj) => {
+      console.log(obj);
+      this.events.publish(HubMethod[HubMethod.UpdateListenUser], obj);
+    });
+
     this.hubService.hubProxy.on(HubMethod[HubMethod.Receive], (obj) => {
       console.log(obj);
       // if(obj.Message.User.Id != params.User.Id) {
