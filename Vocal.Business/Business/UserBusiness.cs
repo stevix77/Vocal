@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Vocal.Business.Properties;
 using Vocal.Business.Security;
@@ -7,6 +8,7 @@ using Vocal.Business.Tools;
 using Vocal.DAL;
 using Vocal.Model.Business;
 using Vocal.Model.DB;
+using Vocal.Model.Helpers;
 using Vocal.Model.Response;
 
 namespace Vocal.Business.Business
@@ -87,10 +89,19 @@ namespace Vocal.Business.Business
                         break;
                     case Update.Picture:
                         var filename = $"{user.Id}.jpeg";
-                        var filepath = $"{Properties.Settings.Default.PicturePath}\\{filename}";
                         var bs64 = value.ToString().Split(',').GetValue(1).ToString();
-                        Converter.ConvertToImageAndSave(bs64, filepath);
-                        user.Picture = $"{Properties.Settings.Default.PictureUrl}/{filename}";
+                        user.Pictures = new List<Picture>();
+                        foreach (var pictureType in Enum.GetNames(typeof(PictureType)))
+                        {
+                            var p = (PictureType)Enum.Parse(typeof(PictureType), pictureType);
+                            var filepath = $"{Properties.Settings.Default.PicturePath}\\{pictureType}\\{filename}";
+                            Converter.ConvertToImageAndSave(bs64, filepath, GetWidth(p), GetHeight(p));
+                            user.Pictures.Add(new Picture
+                            {
+                                Type = p,
+                                Value = $"{Properties.Settings.Default.PictureUrl}/{pictureType}/{filename}"
+                            });
+                        }
                         break;
                     default:
                         break;
@@ -205,28 +216,6 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        private static void BlockedUser(Vocal.Model.DB.User user, string userId)
-        {
-            var index = user.Settings.Blocked.FindIndex(x => x.Id == userId);
-            if (index >= 0)
-                user.Settings.Blocked.RemoveAt(index);
-            else
-            {
-                var userToBlock = Repository.Instance.GetUserById(userId);
-                if (userToBlock != null)
-                    user.Settings.Blocked.Add(new Vocal.Model.DB.People
-                    {
-                        Email = userToBlock.Email,
-                        Firstname = userToBlock.Firstname,
-                        Id = userToBlock.Id,
-                        Lastname = userToBlock.Lastname,
-                        Picture = userToBlock.Picture,
-                        Username = userToBlock.Username
-                    });
-            }
-
-        }
-
         public static Response<SettingsResponse> GetSettings(string userId, string lang)
         {
             var response = new Response<SettingsResponse>();
@@ -325,6 +314,40 @@ namespace Vocal.Business.Business
                 response.ErrorMessage = Resources_Language.TechnicalError;
             }
             return response;
+        }
+
+        private static void BlockedUser(Vocal.Model.DB.User user, string userId)
+        {
+            var index = user.Settings.Blocked.FindIndex(x => x.Id == userId);
+            if (index >= 0)
+                user.Settings.Blocked.RemoveAt(index);
+            else
+            {
+                var userToBlock = Repository.Instance.GetUserById(userId);
+                if (userToBlock != null)
+                    user.Settings.Blocked.Add(userToBlock.ToPeople());
+            }
+
+        }
+
+        private static int GetWidth(PictureType type)
+        {
+            if (type == PictureType.Profil)
+                return Properties.Settings.Default.PictureProfilWidth;
+            else if (type == PictureType.Talk)
+                return Properties.Settings.Default.PictureTalkWidth;
+            else
+                return 0;
+        }
+
+        private static int GetHeight(PictureType type)
+        {
+            if (type == PictureType.Profil)
+                return Properties.Settings.Default.PictureProfilHeight;
+            else if (type == PictureType.Talk)
+                return Properties.Settings.Default.PictureTalkHeight;
+            else
+                return 0;
         }
     }
 }

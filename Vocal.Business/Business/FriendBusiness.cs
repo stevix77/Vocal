@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Vocal.Business.Properties;
+using Vocal.Business.Signalr;
 using Vocal.Business.Tools;
 using Vocal.DAL;
 using Vocal.Model.Business;
@@ -63,7 +64,10 @@ namespace Vocal.Business.Business
                         CacheManager.RemoveCache(CacheManager.GetKey(Settings.Default.CacheKeyFriend, userId));
                         var user = Repository.Instance.GetUserById(userId);
                         if(user != null)
+                        {
+                            await HubService.Instance.AddFriends(ids, user.Username);
                             await NotificationBusiness.SendNotification(ids, NotifType.AddFriend, user.Username);
+                        }
                     });
             }
             catch (TimeoutException tex)

@@ -116,20 +116,20 @@ namespace Vocal.Business.Business
             return payload;
         }
 
-        private static string GetPayloadAddFriends(string platform, string lang, string username)
+        private static string GetPayloadAddFriends(string platform, string lang)
         {
             string payload = string.Empty;
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             switch (platform)
             {
                 case "gcm":
-                    payload = string.Format(PayloadSettings.Default.AddFriendsAndroid, Resources_Language.TextNotifAddFriend, username);
+                    payload = PayloadSettings.Default.AddFriendsAndroid;
                     break;
                 case "apns":
-                    payload = string.Format(PayloadSettings.Default.AddFriendsiOs, Resources_Language.TextNotifAddFriend, username);
+                    payload = PayloadSettings.Default.AddFriendsiOs;
                     break;
                 case "wns":
-                    payload = string.Format(PayloadSettings.Default.AddFriendsWindows, Resources_Language.TextNotifAddFriend, username);
+                    payload = PayloadSettings.Default.AddFriendsWindows;
                     break;
                 default:
                     break;
@@ -163,7 +163,7 @@ namespace Vocal.Business.Business
             switch (type)
             {
                 case NotifType.AddFriend:
-                    template = GetPayloadAddFriends(platform, lang, param.ElementAt(0));
+                    template = string.Format(GetPayloadAddFriends(platform, lang), param.GetValue(0));
                     break;
                 case NotifType.Talk:
                     template = string.Format(GetPayloadTalk(platform), param.GetValue(0), param.GetValue(1), param.GetValue(2));

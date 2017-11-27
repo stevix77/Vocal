@@ -13,7 +13,8 @@ namespace Vocal.Model.Helpers
                 Id = user.Id,
                 Lastname = user.Lastname,
                 Picture = user.Picture,
-                Username = user.Username
+                Username = user.Username,
+                Pictures = user.Pictures
             };
         }
     }

@@ -90,6 +90,7 @@
     <Compile Include="Response\UserListenResponse.cs" />
     <Compile Include="Response\PeopleResponse.cs" />
     <Compile Include="Response\UserResponse.cs" />
+    <Compile Include="Signalr\Message.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vocal.Tools\Vocal.Tools.csproj">
