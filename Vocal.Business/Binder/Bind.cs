@@ -27,11 +27,15 @@ namespace Vocal.Business.Binder
             };
         }
 
-        private static Dictionary<int, string> Bind_Pictures(List<Picture> pictures)
+        private static List<PictureResponse> Bind_Pictures(List<Picture> pictures)
         {
-            var picts = new Dictionary<int, string>();
+            var picts = new List<PictureResponse>();
             foreach (var item in pictures)
-                picts.Add((int)item.Type, item.Value);
+                picts.Add(new PictureResponse 
+                {
+                    Type = (int)item.Type, 
+                    Value = item.Value)
+                });
             return picts;
         }
 
