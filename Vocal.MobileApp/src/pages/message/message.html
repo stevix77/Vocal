@@ -51,7 +51,7 @@
           <ion-col col-10>
             <ion-item>
               <input type="hidden" ng-model="model.talkId" value="{{model.talkId}}" ng-init="model.talkId=model.talkId"/>
-              <ion-input type="text" name="Message" [(ngModel)]="model.Message" placeholder="Say something..." required></ion-input>
+              <ion-input type="text" name="Message" (ionInput)="change()" [(ngModel)]="model.Message" placeholder="Say something..." required></ion-input>
             </ion-item>
           </ion-col>
           <ion-col col-2>

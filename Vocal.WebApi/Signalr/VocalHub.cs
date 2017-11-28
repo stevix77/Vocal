@@ -80,14 +80,14 @@ namespace Vocal.WebApi.Signalr
             }
         }
 
-        public void BeginTalkMess(string talkId)
+        public void BeginTalk(string talkId, string username)
         {
-            Clients.OthersInGroup(talkId).BeginTalking(talkId);
+            Clients.OthersInGroup(talkId).BeginTalk(username);
         }
 
-        public void EndTalkMess(string talkId)
+        public void EndTalk(string talkId)
         {
-            Clients.OthersInGroup(talkId).EndTalking(talkId);
+            Clients.OthersInGroup(talkId).EndTalk();
         }
 
         public void UpdateListenUser(string talkId, List<MessageResponse> obj)

@@ -7,7 +7,7 @@ import { PopoverFriendsAddedMePage } from '../../pages/popover-friends-added-me/
 import { AppUser } from '../../models/appUser';
 import { params } from "../../services/params";
 import { StoreService } from '../../services/storeService';
-import { KeyStore, UpdateType } from "../../models/enums";
+import { KeyStore, UpdateType, PictureType } from "../../models/enums";
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
@@ -140,7 +140,7 @@ export class ModalProfilePage {
           console.log(response.ErrorMessage);
           this.showToast(response.ErrorMessage);
         } else {
-          this.User.Picture = params.User.Picture = picture;
+          this.User.Pictures.find(x => x.Type == PictureType.Profil).Value = params.User.Pictures.find(x => x.Type == PictureType.Profil).Value = picture;
           this.storeService.Set(KeyStore[KeyStore.User], params.User);
         }
       }

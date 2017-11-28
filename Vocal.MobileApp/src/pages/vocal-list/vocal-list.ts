@@ -12,6 +12,7 @@ import { params } from '../../services/params';
 import { Response } from '../../models/Response';
 import { url } from '../../services/url';
 import { Timer } from '../../services/timer';
+import { HubService } from "../../services/hubService";
 
 
 /**
@@ -45,12 +46,10 @@ export class VocalListPage {
     private httpService: HttpService, 
     private cookieService: CookieService, 
     private storeService: StoreService,
-    private talkService: TalkService) {
+    private talkService: TalkService,
+    private hubService: HubService) {
 
     events.subscribe(HubMethod[HubMethod.Receive], () => this.initialize())
-    events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.BeginTalk(obj))
-    events.subscribe(HubMethod[HubMethod.EndTalking], (obj) => this.EndTalk(obj))
-
     this.isApp = this.config.get('isApp');
     
   }
@@ -128,14 +127,6 @@ export class VocalListPage {
         }
       }
     );
-  }
-
-  BeginTalk(talkId) {
-
-  }
-
-  EndTalk(talkId) {
-    
   }
 
   formatDateMessage(items){
