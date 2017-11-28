@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { UserResponse } from "../../models/response/userResponse";
-import { KeyStore } from "../../models/enums";
+import { KeyStore, PictureType } from "../../models/enums";
 import { StoreService } from "../../services/storeService";
 import { CookieService } from "../../services/cookieService";
 import { HttpService } from "../../services/httpService";
@@ -12,6 +12,7 @@ import { Response } from '../../models/response';
 import { ManageFriendsRequest } from "../../models/request/manageFriendsRequest";
 import { PeopleResponse } from "../../models/response/peopleResponse";
 import { MessagePage } from "../message/message";
+import { PictureResponse } from "../../models/response/pictureResponse";
 
 /**
  * Generated class for the FriendsListPage page.
@@ -70,6 +71,10 @@ export class FriendsListPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad FriendsListPage');
+  }
+
+  getPicture(pictures: Array<PictureResponse>) {
+    return pictures.find(x => x.Type == PictureType.Talk).Value;
   }
 
   LoadFriends() {

@@ -59,7 +59,7 @@ export class Connexion {
             appUser.Firstname = response.Data.Firstname;
             appUser.Lastname = response.Data.Lastname;
             appUser.Username = response.Data.Username;
-            appUser.Picture = response.Data.Picture;
+            appUser.Pictures = response.Data.Pictures;
             appUser.Token = functions.GenerateToken(response.Data.Username, this.model.Password);
             this.storeService.Set(KeyStore[KeyStore.User], appUser);
             params.User = appUser;
