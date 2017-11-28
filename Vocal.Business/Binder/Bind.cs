@@ -34,7 +34,7 @@ namespace Vocal.Business.Binder
                 picts.Add(new PictureResponse 
                 {
                     Type = (int)item.Type, 
-                    Value = item.Value)
+                    Value = item.Value
                 });
             return picts;
         }
