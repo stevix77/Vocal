@@ -11,6 +11,6 @@ namespace Vocal.Model.Response
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Picture { get; set; }
-        public Dictionary<int, string> Pictures { get; set; } = new Dictionary<int, string>();
+        public List<PictureResponse> Pictures { get; set; } = new List<PictureResponse>();
     }
 }
