@@ -1,18 +1,2 @@
 page-connexion{
-  ion-label{
-    text-transform: uppercase;
-    color: $grey;
-
-  }
-  form{
-    padding: 20%;
-    .list > .item-block:first-child{
-      border-top: none;
-    }
-    .list .item-block .item-inner,
-    .list > .item-block:last-child{
-      border-bottom-width: 2px;
-      border-bottom-color: $grey;
-    }
-  } 
 }
