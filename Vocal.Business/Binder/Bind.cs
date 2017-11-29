@@ -19,7 +19,6 @@ namespace Vocal.Business.Binder
             {
                 Email = user.Email,
                 Id = user.Id,
-                Picture = user.Picture,
                 Username = user.Username,
                 Firstname = user.Firstname,
                 Lastname = user.Lastname,
@@ -67,17 +66,7 @@ namespace Vocal.Business.Binder
             }
             return talks;
         }
-
-        internal static List<UserResponse> Bind_People(List<People> list)
-        {
-            var users = new List<UserResponse>();
-            foreach (var item in list)
-            {
-                users.Add(Bind_People(item));
-            }
-            return users;
-        }
-
+        
         internal static UserResponse Bind_People(People people)
         {
             return new UserResponse
@@ -86,7 +75,6 @@ namespace Vocal.Business.Binder
                 Firstname = people.Firstname,
                 Id = people.Id,
                 Lastname = people.Lastname,
-                Picture = people.Picture,
                 Username = people.Username,
                 Pictures = Bind_Pictures(people.Pictures)
             };
@@ -103,6 +91,24 @@ namespace Vocal.Business.Binder
             return users;
         }
 
+        internal static PeopleResponse Bind_People(User user, bool isFriend, bool isBlocked)
+        {
+            if (user != null)
+                return new PeopleResponse
+                {
+                    Email = user.Email,
+                    IsFriend = isFriend,
+                    Firstname = user.Firstname,
+                    Id = user.Id,
+                    Lastname = user.Lastname,
+                    Username = user.Username,
+                    Pictures = Bind_Pictures(user.Pictures),
+                    IsBlocked = isBlocked
+                };
+            else
+                return null;
+        }
+
         internal static List<PeopleResponse> Bind_SearchPeople(User user, List<User> listSearch)
         {
             var list = new List<PeopleResponse>();
@@ -113,17 +119,7 @@ namespace Vocal.Business.Binder
                     var friend = user.Friends.Find(x => x.Id == item.Id);
                     if (friend == null) // il n'existe pas dans ma liste d'amis
                     {
-                        list.Add(new PeopleResponse
-                        {
-                            Email = item.Email,
-                            IsFriend = false,
-                            Firstname = item.Firstname,
-                            Id = item.Id,
-                            Lastname = item.Lastname,
-                            Picture = item.Picture,
-                            Username = item.Username,
-                            Pictures = Bind_Pictures(item.Pictures)
-                        });
+                        list.Add(Bind_People(item, false, user.Settings.Blocked.Exists(x => x.Id == item.Id)));
                     }
                     else
                         list.Add(new PeopleResponse
@@ -133,9 +129,9 @@ namespace Vocal.Business.Binder
                             Firstname = item.Firstname,
                             Id = item.Id,
                             Lastname = item.Lastname,
-                            Picture = item.Picture,
                             Username = item.Username,
-                            Pictures = Bind_Pictures(item.Pictures)
+                            Pictures = Bind_Pictures(item.Pictures),
+                            IsBlocked = user.Settings.Blocked.Exists(x => x.Id == item.Id)
                         });
                 }
             }
@@ -149,29 +145,9 @@ namespace Vocal.Business.Binder
             {
                 var friend = user.Friends.Find(x => x.Id == item.Id);
                 if (friend == null) // il n'existe pas dans ma liste d'amis
-                {
-                    list.Add(new PeopleResponse
-                    {
-                        Email = item.Email,
-                        IsFriend = false,
-                        Firstname = item.Firstname,
-                        Id = item.Id,
-                        Lastname = item.Lastname,
-                        Username = item.Username,
-                        Pictures = Bind_Pictures(item.Pictures)
-                    });
-                }
+                    list.Add(Bind_People(item, false, user.Settings.Blocked.Exists(x => x.Id == item.Id)));
                 else // il existe dans ma liste d'ami et est mon ami
-                    list.Add(new PeopleResponse
-                    {
-                        Email = item.Email,
-                        IsFriend = true,
-                        Firstname = item.Firstname,
-                        Id = item.Id,
-                        Lastname = item.Lastname,
-                        Username = item.Username,
-                        Pictures = Bind_Pictures(item.Pictures)
-                    });
+                    list.Add(Bind_People(item, true, user.Settings.Blocked.Exists(x => x.Id == item.Id)));
             }
             return list;
         }

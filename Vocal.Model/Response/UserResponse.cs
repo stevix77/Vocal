@@ -10,7 +10,6 @@ namespace Vocal.Model.Response
         public string Username { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
-        public string Picture { get; set; }
         public List<PictureResponse> Pictures { get; set; } = new List<PictureResponse>();
     }
 }
