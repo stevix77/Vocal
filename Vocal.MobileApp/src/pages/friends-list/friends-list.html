@@ -20,15 +20,16 @@
       Mes amis
     </ion-list-header>
     <ion-item-sliding *ngFor="let friend of Friends">
-      <ion-item>
+      <ion-item (click)="presentActionSheet(friend.Id)">
         <ion-avatar item-start>
-          <img alt="picture" src="https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-1/p24x24/16602600_10154441388394576_4490155536874187938_n.jpg?oh=21c11ffc32c0b439c7ee5b32629d6b97&oe=5A1910E7">
+          <img *ngIf="friend.Picture; else defaultBlock" alt="" [src]="friend.Picture">
         </ion-avatar>
+        <ng-template #defaultBlock><ion-icon name="contact"></ion-icon></ng-template>
         <h3>{{ friend.Username }}</h3>
       </ion-item>
       <ion-item-options side="right">
         <button (click)="sendMessage(friend.Id)" ion-button icon-only><ion-icon name="chatboxes"></ion-icon></button>
-        <button (click)="showConfirm(friend.Id)" ion-button icon-only color="danger"><ion-icon name="trash"></ion-icon></button>
+        <button (click)="showDeleteContact(friend.Id)" ion-button icon-only color="danger"><ion-icon name="trash"></ion-icon></button>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
