@@ -30,12 +30,13 @@ namespace Vocal.Business.Binder
         private static List<PictureResponse> Bind_Pictures(List<Picture> pictures)
         {
             var picts = new List<PictureResponse>();
-            foreach (var item in pictures)
-                picts.Add(new PictureResponse 
-                {
-                    Type = (int)item.Type, 
-                    Value = item.Value
-                });
+            if(pictures != null)
+                foreach (var item in pictures)
+                    picts.Add(new PictureResponse 
+                    {
+                        Type = (int)item.Type, 
+                        Value = item.Value
+                    });
             return picts;
         }
 
@@ -156,8 +157,8 @@ namespace Vocal.Business.Binder
                         Firstname = item.Firstname,
                         Id = item.Id,
                         Lastname = item.Lastname,
-                        Picture = item.Picture,
-                        Username = item.Username
+                        Username = item.Username,
+                        Pictures = Bind_Pictures(item.Pictures)
                     });
                 }
                 else // il existe dans ma liste d'ami et est mon ami
@@ -168,8 +169,8 @@ namespace Vocal.Business.Binder
                         Firstname = item.Firstname,
                         Id = item.Id,
                         Lastname = item.Lastname,
-                        Picture = item.Picture,
-                        Username = item.Username
+                        Username = item.Username,
+                        Pictures = Bind_Pictures(item.Pictures)
                     });
             }
             return list;

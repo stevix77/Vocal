@@ -42,7 +42,7 @@ namespace Vocal.Business.Business
                     if (!resp.HasError)
                         response.Data.Friends = resp.Data;
                     else
-                        response.Data.Errors.Add(new KeyValueResponse<string, string>(KeyStore.Friends.ToString(), response.ErrorMessage));
+                        response.Data.Errors.Add(new KeyValueResponse<string, string>(KeyStore.Friends.ToString(), resp.ErrorMessage));
                 });
                 Parallel.Invoke(actionFriends, actionSettings, actionTalks);
             }
