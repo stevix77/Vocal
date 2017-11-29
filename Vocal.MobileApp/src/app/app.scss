@@ -44,3 +44,12 @@ form{
     border-bottom-color: $grey;
   }
 }
+
+ion-list-header{
+  &.list-header{
+    border-bottom: none;
+  }
+  ion-label{
+    text-transform: none;
+  }
+}
