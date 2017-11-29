@@ -5,24 +5,21 @@
     </button>
     <ion-title>Home</ion-title>
   </ion-navbar>
-</ion-header> -->
+</ion-header> --> 
 
-<ion-content padding>
-
-  <div class="wrapper-logo" text-center margin>
-    <img src="https://dummyimage.com/200x200/000/fff&text=logo" alt="">
+<ion-content text-centr>
+  <div class="wrapper-valign">
+    <div class="wrapper-logo" text-center margin>
+      <img src="assets/imgs/logo.png" alt="Vocal">
+    </div>
+  
+    <div class="wrapper-form" text-center margin>
+      <div>
+        <button round ion-button (click)="goToConnexion()">Connexion</button>
+      </div>
+      <div>
+        <button round ion-button (click)="goToInscription()">Inscription</button>
+      </div>
+    </div>
   </div>
-
-  <div class="wrapper-form" text-center margin>
-    <button ion-button (click)="goToConnexion()">Connexion</button>
-    <br><br>
-    <button ion-button (click)="goToInscription()">Inscription</button>
-  </div>
-
-  <!-- <p>
-      <button ion-button (click)="goToPasswordForgot1()">password 1</button>
-      <button ion-button (click)="goToPasswordForgot2('ste@val.fr')">password 2</button>
-  </p> -->
-
-  <!-- <button ion-button secondary menuToggle>Toggle Menu</button> -->
 </ion-content>
