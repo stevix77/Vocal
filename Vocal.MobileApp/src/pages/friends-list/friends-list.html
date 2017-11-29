@@ -22,7 +22,7 @@
     <ion-item-sliding *ngFor="let friend of Friends">
       <ion-item>
         <ion-avatar item-start>
-          <img alt="picture" [src]="getPicture(friend.Pictures)">
+          <img alt="picture" [src]="friend.Picture ? friend.Picture : 'assets/default-picture-80x80.jpg'"> 
         </ion-avatar>
         <h3>{{ friend.Username }}</h3>
       </ion-item>
