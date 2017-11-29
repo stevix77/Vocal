@@ -95,7 +95,8 @@ let components = [
     BrowserModule,
     HttpModule,
     IonicModule.forRoot(VocalApp, {
-      isApp: !document.URL.startsWith('http')
+      isApp: !document.URL.startsWith('http'),
+      backButtonText: ''
     }),
   ],
   bootstrap: [IonicApp],
