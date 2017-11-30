@@ -15,6 +15,4 @@ namespace Vocal.Model.DB
         public DateTime DateAdded { get; set; }
         public bool IsFriend { get; set; }
     }
-
-    
 }

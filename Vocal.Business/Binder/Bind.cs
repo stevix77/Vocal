@@ -15,6 +15,7 @@ namespace Vocal.Business.Binder
         {
             if (user == null)
                 return null;
+
             return new UserResponse
             {
                 Email = user.Email,
@@ -161,7 +162,7 @@ namespace Vocal.Business.Binder
                 response.Add(new MessageResponse
                 {
                     ArrivedTime = item.ArrivedTime,
-                    Content = (MessageType)item.ContentType == MessageType.Text ? item.Content : null,
+                    Content = item.ContentType == MessageType.Text ? item.Content : null,
                     ContentType = (int)item.ContentType,
                     Id = item.Id.ToString(),
                     SentTime = item.SentTime,
@@ -188,25 +189,25 @@ namespace Vocal.Business.Binder
 
         private static List<ChoiceResponse> GetChoices(bool isNotifiable)
         {
-            var choices = new List<ChoiceResponse>()
+            return new List<ChoiceResponse>()
             {
                 new ChoiceResponse { Id = 0, IsChecked = isNotifiable == false, Label = Resources_Language.Deactive },
                 new ChoiceResponse { Id = 1, IsChecked = isNotifiable == true, Label = Resources_Language.Active }
             };
-            return choices;
         }
 
-        internal static MessageResponse Bind_Message(Vocal.Model.DB.Message m)
+        internal static MessageResponse Bind_Message(Message m)
         {
-            var message = new MessageResponse();
-            message.ArrivedTime = m.ArrivedTime;
-            message.Content = m.Content;
-            message.ContentType = (int)m.ContentType;
-            message.Id = m.Id.ToString();
-            message.User = Bind_People(m.Sender);
-            message.Users = Bind_UsersListen(m.Users);
-            message.SentTime = m.SentTime;
-            return message;
+           return new MessageResponse
+            {
+                ArrivedTime = m.ArrivedTime,
+                Content = m.Content,
+                ContentType = (int)m.ContentType,
+                Id = m.Id.ToString(),
+                User = Bind_People(m.Sender),
+                Users = Bind_UsersListen(m.Users),
+                SentTime = m.SentTime
+            };
         }
 
         private static List<UserListenResponse> Bind_UsersListen(List<UserListen> users)
@@ -259,14 +260,15 @@ namespace Vocal.Business.Binder
 
         internal static TalkResponse Bind_Talks(Talk talk, Message message, string userId)
         {
-            var talkResponse = new TalkResponse();
-            talkResponse.DateLastMessage = talk.LastMessage;
-            talkResponse.Id = talk.Id;
-            talkResponse.Name = !string.IsNullOrEmpty(talk.Name) ? string.Join(",", talk.Users.Where(x => x.Id != userId).Select(x => x.Username).ToList()) : talk.Name;
-            talkResponse.Duration = talk.Duration;
-            talkResponse.Users = Bind_Users(talk.Users);
-            talkResponse.Picture = talk.Users.Count == 2 ? talk.Users.SingleOrDefault(x => x.Id != userId).Pictures.SingleOrDefault(x => x.Type == PictureType.Talk).Value : string.Empty;
-            return talkResponse;
+            return new TalkResponse
+            {
+                DateLastMessage = talk.LastMessage,
+                Id = talk.Id,
+                Name = !string.IsNullOrEmpty(talk.Name) ? string.Join(",", talk.Users.Where(x => x.Id != userId).Select(x => x.Username).ToList()) : talk.Name,
+                Duration = talk.Duration,
+                Users = Bind_Users(talk.Users),
+                Picture = talk.Users.Count == 2 ? talk.Users.SingleOrDefault(x => x.Id != userId).Pictures.SingleOrDefault(x => x.Type == PictureType.Talk).Value : string.Empty
+            };
         }
     }
 }

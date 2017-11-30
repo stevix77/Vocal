@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Vocal.Business.Binder;
 using Vocal.Business.Properties;
 using Vocal.Business.Security;
-using Vocal.Business.Signalr;
 using Vocal.Business.Tools;
 using Vocal.DAL;
-using Vocal.Model;
 using Vocal.Model.Business;
 using Vocal.Model.DB;
 using Vocal.Model.Response;

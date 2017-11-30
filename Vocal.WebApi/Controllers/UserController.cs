@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Http.Cors;
-//using System.Web.Mvc;
 using Vocal.Business.Business;
 using Vocal.Model.Business;
 using Vocal.Model.Request;
@@ -16,7 +11,7 @@ namespace Vocal.WebApi.Controllers
 {
     [EnableCors("*", "*", "*")]
     [RoutePrefix("api/user")]
-    public class UserController : ApiController
+    public class UserController : VocalApiController
     {
         [HttpPost,Route("IsExistsUsername")]
         public Response<bool> IsExistsUsername(UserExistsRequest request)
@@ -33,22 +28,19 @@ namespace Vocal.WebApi.Controllers
         [HttpPost, Route("me"), CustomAuthorize]
         public Response<SettingsResponse> GetSettings(Request request)
         {
-            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
-            return Business.Tools.Monitoring.Execute(UserBusiness.GetSettings, obj.UserId, request.Lang);
+            return Business.Tools.Monitoring.Execute(UserBusiness.GetSettings, GetUserIdFromCookie(), request.Lang);
         }
 
         [HttpPost, Route("me/update"), CustomAuthorize]
         public Response<bool> UpdateUser(UpdateRequest request)
         {
-            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
-            return Business.Tools.Monitoring.Execute(UserBusiness.UpdateUser, obj.UserId, request.Value, request.UpdateType, request.Lang);
+            return Business.Tools.Monitoring.Execute(UserBusiness.UpdateUser, GetUserIdFromCookie(), request.Value, request.UpdateType, request.Lang);
         }
 
         [HttpPost, Route("profil"), CustomAuthorize]
         public Response<UserResponse> GetUserById(ProfilRequest request)
         {
-            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
-            return Business.Tools.Monitoring.Execute(UserBusiness.GetUserById, obj.UserId, request.UserId, request.Lang);
+            return Business.Tools.Monitoring.Execute(UserBusiness.GetUserById, GetUserIdFromCookie(), request.UserId, request.Lang);
         }
 
         [HttpPost, Route("list"), CustomAuthorize]
@@ -60,15 +52,13 @@ namespace Vocal.WebApi.Controllers
         [HttpPost, Route("block"), CustomAuthorize]
         public Response<bool> BlockUsers(ManageFriendsRequest request)
         {
-            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
-            return Business.Tools.Monitoring.Execute(UserBusiness.BlockUsers, obj.UserId, request.Ids, request.Lang);
+            return Business.Tools.Monitoring.Execute(UserBusiness.BlockUsers, GetUserIdFromCookie(), request.Ids, request.Lang);
         }
 
         [HttpPost, Route("unblock"), CustomAuthorize]
         public Response<bool> UnblockUsers(ManageFriendsRequest request)
         {
-            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
-            return Business.Tools.Monitoring.Execute(UserBusiness.UnblockUsers, obj.UserId, request.Ids, request.Lang);
+            return Business.Tools.Monitoring.Execute(UserBusiness.UnblockUsers, GetUserIdFromCookie(), request.Ids, request.Lang);
         }
     }
 }

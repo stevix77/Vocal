@@ -11,7 +11,7 @@ namespace Vocal.WebApi.Controllers
 {
     [EnableCors("*", "*", "*")]
     [RoutePrefix("api/follow")]
-    public class FollowController : ApiController
+    public class FollowController : VocalApiController
     {
         [HttpPost, CustomAuthorize, Route("getFollowers")]
         public Response<List<UserResponse>> GetFollowers(GetFollowUserRequest request)

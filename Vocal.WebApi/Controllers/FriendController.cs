@@ -11,7 +11,7 @@ namespace Vocal.WebApi.Controllers
 {
     [EnableCors("*", "*", "*")]
     [RoutePrefix("api/friend")]
-    public class FriendController : ApiController
+    public class FriendController : VocalApiController
     {
         [HttpPost, CustomAuthorize, Route("getFriends")]
         public Response<List<UserResponse>> GetFriends(GetFriendsRequest request)
@@ -22,8 +22,7 @@ namespace Vocal.WebApi.Controllers
         [HttpPost, CustomAuthorize, Route("addedMe")]
         public Response<List<PeopleResponse>> GetContactsAddMe(Request request)
         {
-            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
-            return Business.Tools.Monitoring.Execute(FriendBusiness.GetFriendsAddedMe, obj.UserId, request.Lang);
+            return Business.Tools.Monitoring.Execute(FriendBusiness.GetFriendsAddedMe, GetUserIdFromCookie(), request.Lang);
         }
 
         [HttpPost, CustomAuthorize, Route("add")]

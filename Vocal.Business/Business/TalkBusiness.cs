@@ -113,68 +113,6 @@ namespace Vocal.Business.Business
             Repository.Instance.SetIsRead(userId, talkId, messages);
             await HubService.Instance.UpdateTalk(talkId, Bind.Bind_Messages(messages));
         }
-
-        //public static Response<SendMessageResponse> SendMessage(SendMessageRequest request)
-        //{
-        //    var response = new Response<SendMessageResponse> { Data = new SendMessageResponse { IsSent = false } };
-        //    try
-        //    {
-        //        Resources_Language.Culture = new System.Globalization.CultureInfo(request.Lang);
-        //        if (request != null)
-        //        {
-        //            LogManager.LogDebug(request);
-        //            if (/*Repository.Instance.CheckIfAllUsersExist(request.IdsRecipient)*/ true)
-        //            {
-        //                if((MessageType)request.MessageType == MessageType.Vocal)
-        //                {
-        //                    var bs64 = request.Content.Split(',').LastOrDefault();
-        //                    var file = Converter.ConvertToWav(bs64);
-        //                    if (file == null)
-        //                        throw new Exception();
-        //                    request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
-        //                }
-
-        //                if (string.IsNullOrEmpty(request.IdTalk))
-        //                {
-        //                    //create an talk for each user and add the new message into
-        //                    CreateNewTalk(request, response);
-        //                }
-        //                else
-        //                {
-        //                    //retrieve all talks of the users in add the new message into
-        //                    AddMessageToTalk(request, response);
-        //                }
-        //            }
-        //            else
-        //            {
-        //                LogManager.LogError(new Exception("Weird. Some friend of this dude don't exist "));
-        //                response.ErrorMessage = Resources_Language.TechnicalError;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            LogManager.LogError(new Exception("No Data"));
-        //            response.ErrorMessage = Resources_Language.NoDataMessage;
-        //        }
-        //    }
-        //    catch (TimeoutException tex)
-        //    {
-        //        LogManager.LogError(tex);
-        //        response.ErrorMessage = Resources_Language.TimeoutError;
-        //    }
-        //    catch (CustomException cex)
-        //    {
-        //        LogManager.LogError(cex);
-        //        response.ErrorMessage = cex.Message;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        LogManager.LogError(ex);
-        //        response.ErrorMessage = Resources_Language.TechnicalError;
-        //    }
-        //    return response;
-        //}
-
         public static Response<bool> IsSendable(string userId, List<string> users, string lang)
         {
             var response = new Response<bool>();
@@ -314,7 +252,6 @@ namespace Vocal.Business.Business
             response.Data.Message = Bind.Bind_Message(m);
             response.Data.IsSent = true;
         }
-
         public static Response<ActionResponse> ArchiveTalk(UpdateTalkRequest request)
         {
             LogManager.LogDebug(request);
