@@ -1,5 +1,5 @@
 import { MessageRequest } from './../../models/request/messageRequest';
-import { HubMethod, PictureType } from '../../models/enums';
+import { HubMethod, PictureType, MessageType } from '../../models/enums';
 import { MessageResponse } from './../../models/response/messageResponse';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, Events, Config } from 'ionic-angular';
@@ -110,7 +110,7 @@ export class MessagePage {
   }
 
   sendMessage(){
-    var obj = new SendMessageRequest(params.User.Id, this.model.talkId, this.model.Message, 2, []);
+    var obj = new SendMessageRequest(params.User.Id, this.model.talkId, this.model.Message, MessageType.Text, this.model.talkId == null ? [this.model.userId] : []);
     obj.Lang = params.Lang;
     let urlSearch = url.SendMessage();
     let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)

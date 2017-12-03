@@ -119,6 +119,7 @@ export class VocalApp {
     };
     const pushObject: PushObject = this.push.init(pushOptions);
     pushObject.on('registration').subscribe((data: any) => {
+      this.showAlert(data);
       console.log('device token -> ' + data.registrationId);
       this.storeService.Get("registration").then((r) => {
         if(r == null || r != data.registrationId)
@@ -169,6 +170,7 @@ export class VocalApp {
     });
 
     pushObject.on('error').subscribe(error => {
+      this.showAlert(error);
       console.log('Error with Push plugin' + error);
     });
   }

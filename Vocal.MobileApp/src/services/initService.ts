@@ -51,7 +51,6 @@ export class InitService {
       let errorSettings = response.Data.Errors.find(x => x.Key == KeyStore.Settings.toString());
       let errorFriends = response.Data.Errors.find(x => x.Key == KeyStore.Friends.toString());
       let errorTalks = response.Data.Errors.find(x => x.Key == KeyStore.Talks.toString());
-      let errors = response.Data.Errors.find(x => x.Key == KeyStore.FriendsAddedMe.toString());
       this.saveData(response.Data.Friends, errorFriends, KeyStore.Friends);
       this.saveData(response.Data.Talks, errorTalks, KeyStore.Talks);
       this.saveData(response.Data.Settings, errorSettings, KeyStore.Settings);
