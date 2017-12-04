@@ -267,7 +267,7 @@ namespace Vocal.Business.Binder
                 Name = !string.IsNullOrEmpty(talk.Name) ? string.Join(",", talk.Users.Where(x => x.Id != userId).Select(x => x.Username).ToList()) : talk.Name,
                 Duration = talk.Duration,
                 Users = Bind_Users(talk.Users),
-                Picture = talk.Users.Count == 2 ? talk.Users.SingleOrDefault(x => x.Id != userId).Pictures.SingleOrDefault(x => x.Type == PictureType.Talk).Value : string.Empty
+                Picture = talk.Users.Count == 2 ? talk.Users.SingleOrDefault(x => x.Id != userId).Pictures.SingleOrDefault(x => x.Type == PictureType.Talk)?.Value : string.Empty
             };
         }
     }
