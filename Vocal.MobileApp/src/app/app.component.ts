@@ -16,7 +16,7 @@ import {Response} from '../models/response';
 import {KeyValueResponse} from '../models/response/keyValueResponse';
 import {Store} from '../models/enums';
 import { CookieService } from "../services/cookieService";
-import { Push, PushObject } from '@ionic-native/push';
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
 import { NotificationRegisterRequest } from "../models/request/notificationRegisterRequest";
 import { HubService } from '../services/hubService';
 import {KeyStore} from '../models/enums';
@@ -76,6 +76,7 @@ export class VocalApp {
     .catch(e => {
       params.Lang = navigator.language;
     });
+    this.showAlert(params.Lang);
   }
 
   GetAllResources() {
@@ -112,24 +113,26 @@ export class VocalApp {
   }
 
   initPushNotification() {
-    var pushOptions = {
-      android: { senderID: '1054724390279' },
-      ios: { alert: true, badge: true, sound: true },
+    const pushOptions = {
+      android: {senderID: '1054724390279'},
+      ios: { alert: 'true', badge: true, sound: 'true' },
       windows: {}
     };
     const pushObject: PushObject = this.push.init(pushOptions);
     pushObject.on('registration').subscribe((data: any) => {
-      this.showAlert(data);
+      this.showToast(data.registrationId);
       console.log('device token -> ' + data.registrationId);
       this.storeService.Get("registration").then((r) => {
         if(r == null || r != data.registrationId)
           this.RegisterToNH(data.registrationId);
       })
-      
     });
     
     pushObject.on('notification').subscribe((data: any) => {
       console.log('data -> ' + data);
+      this.showAlert(data);
+      for(var i in data)
+        this.showAlert(data[i])
       switch(params.Platform) {
         case "gcm":
           this.androidNotification(data);
@@ -170,7 +173,12 @@ export class VocalApp {
     });
 
     pushObject.on('error').subscribe(error => {
-      this.showAlert(error);
+      this.showToast(error.message);
+      for(var i in error) {
+        this.showAlert(error[i]);
+        for(var j in error[i])
+          this.showAlert(error[i][j])
+      }
       console.log('Error with Push plugin' + error);
     });
   }
@@ -204,7 +212,7 @@ export class VocalApp {
   }
 
   androidNotification(notification) {
-    
+    this.showAlert(notification);
   }
 
   initializeApp() {
@@ -213,6 +221,9 @@ export class VocalApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.GetAllResources();
+      this.SetLanguage();
+      this.SetPlatform();
       this.storeService.Get(KeyStore[KeyStore.User]).then(
       user => {
         if(user != null) {
@@ -227,6 +238,7 @@ export class VocalApp {
         }
       ).catch(error => {
         console.log(error);
+        this.showToast(error);
         this.rootPage = HomePage;
       });
       this.deeplinks.routeWithNavController(this.nav, {
@@ -236,9 +248,6 @@ export class VocalApp {
       }, (err) => {
         console.log(err);
       })
-      this.GetAllResources();
-      this.SetLanguage();
-      this.SetPlatform();
       if(this.config.get('isApp')) this.client = new WindowsAzure.MobileServiceClient("https://mobileappvocal.azurewebsites.net");
     });
   }
@@ -247,6 +256,7 @@ export class VocalApp {
 
   SetPlatform() {
     let platform = '';
+    this.showAlert("platform : " + this.device.platform);
     switch(this.device.platform) {
       case 'windows':
         platform = Store[Store.wns]
@@ -263,6 +273,8 @@ export class VocalApp {
         break;
     }
     params.Platform = platform;
+    this.showAlert(this.device.platform)
+    this.showAlert(params.Platform)
   }
 
   openPage(page) {
