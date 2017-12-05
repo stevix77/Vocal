@@ -210,7 +210,7 @@ namespace Vocal.Business.Business
                 Users = allUsers.Select(x => x.ToPeople()).ToList()
             };
             talk.Recipients.ForEach(x => { talk.ListArchive.Add(x, false); talk.ListDelete.Add(x, false); });
-            allUsers.ForEach(x => talk.ListPictures.Add(x.Id, x.Pictures.SingleOrDefault(y => y.Type == PictureType.Talk).Value));
+            allUsers.ForEach(x => talk.ListPictures.Add(x.Id, x.Pictures.SingleOrDefault(y => y.Type == PictureType.Talk)?.Value));
             var m = new Message
             {
                 Id = Guid.NewGuid(),
