@@ -9,6 +9,7 @@ using Vocal.Model.DB;
 using Vocal.Business.Tools;
 using Vocal.Business.Properties;
 using Vocal.DAL;
+using Newtonsoft.Json;
 
 namespace Vocal.Business.Business
 {
@@ -73,7 +74,9 @@ namespace Vocal.Business.Business
                     foreach (var d in item.Devices.Select(x => new { Platform = x.Platform, Lang = x.Lang }).Distinct())
                     {
                         var payload = string.Format(GetTemplate(type, d.Platform, d.Lang, param));
-                        await NotificationHub.Instance.SendNotification(d.Platform, tag, payload);
+                        LogManager.LogDebug($"Payload : {payload}");
+                        var rep = await NotificationHub.Instance.SendNotification(d.Platform, tag, payload);
+                        LogManager.LogDebug(JsonConvert.SerializeObject(rep));
                     }
                 }
                 response.Data = true;

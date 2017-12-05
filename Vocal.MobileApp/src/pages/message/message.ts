@@ -153,7 +153,9 @@ export class MessagePage {
     this.talkService.Talks.find(x => x.Id == this.model.talkId).Users.forEach(x => {
       if(x.Id != params.User.Id){
         this.VocalName += x.Username + " ";
-        this.Picture = x.Pictures.find(x => x.Type == PictureType.Talk).Value;
+        let pict = x.Pictures.find(x => x.Type == PictureType.Talk);
+        if(pict != null)
+          this.Picture = pict.Value;
       }
     });
   }
