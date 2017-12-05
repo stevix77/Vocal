@@ -68,7 +68,7 @@
     "cordova-plugin-compat": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-compat@1.2.0"
+            "id": "cordova-plugin-compat@1.1.0"
         },
         "is_top_level": true,
         "variables": {}
@@ -87,9 +87,7 @@
             "id": "phonegap-plugin-push@^2.0.0"
         },
         "is_top_level": true,
-        "variables": {
-            "SENDER_ID": "1054724390279"
-        }
+        "variables": {}
     },
     "cordova-plugin-ms-azure-mobile-apps": {
         "source": {
@@ -150,6 +148,14 @@
         "source": {
             "type": "registry",
             "id": "info.protonet.imageresizer@^0.1.1"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-camera": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-camera@^2.4.1"
         },
         "is_top_level": true,
         "variables": {}

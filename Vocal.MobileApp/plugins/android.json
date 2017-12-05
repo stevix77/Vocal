@@ -7,83 +7,22 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-console": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-contacts": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-datepicker": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-device": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-file": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-globalization": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-media": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-ms-azure-mobile-apps": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-statusbar": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "ionic-plugin-keyboard": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
         "com-badrit-base64": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-camera": {
-            "PACKAGE_NAME": "VocalDev2"
+            "PACKAGE_NAME": "fr.vocal.Vocal"
         },
         "cordova-plugin-compat": {
-            "PACKAGE_NAME": "io.ionic.starter"
+            "PACKAGE_NAME": "fr.vocal.Vocal"
         },
-        "ionic-plugin-deeplinks": {
-            "URL_SCHEME": "vocal",
-            "DEEPLINK_SCHEME": "https",
-            "DEEPLINK_HOST": "vocal.com",
-            "ANDROID_PATH_PREFIX": "/",
-            "ANDROID_2_PATH_PREFIX": "/",
-            "ANDROID_3_PATH_PREFIX": "/",
-            "ANDROID_4_PATH_PREFIX": "/",
-            "ANDROID_5_PATH_PREFIX": "/",
-            "DEEPLINK_2_SCHEME": " ",
-            "DEEPLINK_2_HOST": " ",
-            "DEEPLINK_3_SCHEME": " ",
-            "DEEPLINK_3_HOST": " ",
-            "DEEPLINK_4_SCHEME": " ",
-            "DEEPLINK_4_HOST": " ",
-            "DEEPLINK_5_SCHEME": " ",
-            "DEEPLINK_5_HOST": " ",
-            "PACKAGE_NAME": "VocalDev2"
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
         },
-        "info.protonet.imageresizer": {
-            "PACKAGE_NAME": "VocalDev2"
+        "phonegap-plugin-push": {
+            "SENDER_ID": "1054724390279",
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
         }
     },
-    "dependent_plugins": {
-        "cordova-sqlite-storage": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        },
-        "cordova-plugin-nativeaudio": {
-            "PACKAGE_NAME": "io.ionic.starter"
-        }
-    }
+    "dependent_plugins": {}
 }
