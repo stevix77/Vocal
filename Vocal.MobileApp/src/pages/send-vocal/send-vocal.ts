@@ -15,6 +15,7 @@ import { Response } from '../../models/response';
 import { TalkResponse } from '../../models/response/talkResponse';
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
 import { AudioRecorder } from '../../services/audiorecorder';
+import { ExceptionService } from "../../services/exceptionService";
 
 /**
  * Generated class for the SendVocalPage page.
@@ -42,7 +43,8 @@ export class SendVocalPage {
               private audioRecorder: AudioRecorder, 
               private cookieService: CookieService, 
               private httpService: HttpService,
-              private talkService: TalkService) {
+              private talkService: TalkService,
+              private exceptionService: ExceptionService) {
   }
 
   ionViewDidLoad() {
@@ -91,6 +93,7 @@ export class SendVocalPage {
         );
       }).catch(err => {
         console.log(err);
+        this.exceptionService.Add(err);
       });
     }
   }

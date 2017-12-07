@@ -16,7 +16,7 @@ import {Response} from '../models/response';
 import {KeyValueResponse} from '../models/response/keyValueResponse';
 import {Store} from '../models/enums';
 import { CookieService } from "../services/cookieService";
-import { Push, PushObject, PushOptions } from '@ionic-native/push';
+import { Push, PushObject } from '@ionic-native/push';
 import { NotificationRegisterRequest } from "../models/request/notificationRegisterRequest";
 import { HubService } from '../services/hubService';
 import {KeyStore} from '../models/enums';
@@ -76,7 +76,6 @@ export class VocalApp {
     .catch(e => {
       params.Lang = navigator.language;
     });
-    this.showAlert(params.Lang);
   }
 
   GetAllResources() {
@@ -114,7 +113,7 @@ export class VocalApp {
 
   initPushNotification() {
     const pushOptions = {
-      android: {senderID: '1054724390279'},
+      android: {},
       ios: { alert: 'true', badge: true, sound: 'true' },
       windows: {}
     };
@@ -130,9 +129,6 @@ export class VocalApp {
     
     pushObject.on('notification').subscribe((data: any) => {
       console.log('data -> ' + data);
-      this.showAlert(data);
-      for(var i in data)
-        this.showAlert(data[i])
       switch(params.Platform) {
         case "gcm":
           this.androidNotification(data);
@@ -174,11 +170,7 @@ export class VocalApp {
 
     pushObject.on('error').subscribe(error => {
       this.showToast(error.message);
-      for(var i in error) {
-        this.showAlert(error[i]);
-        for(var j in error[i])
-          this.showAlert(error[i][j])
-      }
+      this.exceptionService.Add(error.message)
       console.log('Error with Push plugin' + error);
     });
   }
@@ -212,7 +204,6 @@ export class VocalApp {
   }
 
   androidNotification(notification) {
-    this.showAlert(notification);
   }
 
   initializeApp() {
@@ -256,7 +247,6 @@ export class VocalApp {
 
   SetPlatform() {
     let platform = '';
-    this.showAlert("platform : " + this.device.platform);
     switch(this.device.platform) {
       case 'windows':
         platform = Store[Store.wns]
@@ -273,8 +263,6 @@ export class VocalApp {
         break;
     }
     params.Platform = platform;
-    this.showAlert(this.device.platform)
-    this.showAlert(params.Platform)
   }
 
   openPage(page) {

@@ -66,7 +66,7 @@ namespace Vocal.Business.Business
                         if(user != null)
                         {
                             await HubService.Instance.AddFriends(ids, user.Username);
-                            await NotificationBusiness.SendNotification(ids, NotifType.AddFriend, user.Username);
+                            await NotificationBusiness.SendNotification(ids, (int)NotifType.AddFriend, user.Username);
                         }
                     });
             }

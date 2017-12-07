@@ -23,10 +23,10 @@ namespace Vocal.Business.Tools
         AddFriend
     }
 
-    public enum NotifType
+    public enum NotifType : int
     {
-        Talk,
-        AddFriend,
-        Follow
+        Talk = 0,
+        AddFriend = 1,
+        Follow = 2
     }
 }

@@ -317,7 +317,7 @@ namespace Vocal.Business.Business
                 await HubService.Instance.SendMessage(response, response.Talk.Users.Select(x => x.Id).ToList()); // envoi message via signalr
                 var titleNotif = GenerateTitleNotif(response.Message, string.Join(",", users.Select(x => x.Username)));
                 var messNotif = GenerateMessageNotif(response.Message);
-                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), NotifType.Talk, messNotif, titleNotif, response.Talk.Id);
+                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), (int)NotifType.Talk, messNotif, titleNotif, response.Talk.Id);
             });
         }
 

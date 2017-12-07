@@ -61,7 +61,7 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static async Task<Response<bool>> SendNotification(List<string> ids, NotifType type, params string[] param)
+        public static async Task<Response<bool>> SendNotification(List<string> ids, int type, params string[] param)
         {
             var response = new Response<bool>();
             try
@@ -73,8 +73,8 @@ namespace Vocal.Business.Business
                     var tag = $"{Properties.Settings.Default.TagUser}:{item.Id}";
                     foreach (var d in item.Devices.Select(x => new { Platform = x.Platform, Lang = x.Lang }).Distinct())
                     {
-                        var payload = string.Format(GetTemplate(type, d.Platform, d.Lang, param));
-                        LogManager.LogDebug($"Payload : {payload}");
+                        var payload = GetTemplate(type, d.Platform, d.Lang, param);
+                        LogManager.LogDebug(string.Format("Payload {0}", payload));
                         var rep = await NotificationHub.Instance.SendNotification(d.Platform, tag, payload);
                         LogManager.LogDebug(JsonConvert.SerializeObject(rep));
                     }
@@ -116,6 +116,7 @@ namespace Vocal.Business.Business
                 default:
                     break;
             }
+            LogManager.LogDebug($"platform {platform} - payload {payload}");
             return payload;
         }
 
@@ -160,23 +161,26 @@ namespace Vocal.Business.Business
             return payload;
         }
 
-        private static string GetTemplate(NotifType type, string platform, string lang, params string[] param)
+        private static string GetTemplate(int type, string platform, string lang, params string[] param)
         {
             string template = string.Empty;
             switch (type)
             {
-                case NotifType.AddFriend:
+                case (int)NotifType.AddFriend:
                     template = string.Format(GetPayloadAddFriends(platform, lang), param.GetValue(0));
                     break;
-                case NotifType.Talk:
-                    template = string.Format(GetPayloadTalk(platform), param.GetValue(0), param.GetValue(1), param.GetValue(2));
+                case (int)NotifType.Talk:
+                    LogManager.LogDebug("0: {0} 1: {1} 2: {2}", param.GetValue(0), param.GetValue(1), param.GetValue(2));
+                    var ch = GetPayloadTalk(platform);
+                    template = string.Format(ch, param.GetValue(0).ToString(), param.GetValue(1).ToString(), param.GetValue(2).ToString());
                     break;
-                case NotifType.Follow:
+                case (int)NotifType.Follow:
                     template = string.Format(GetPayloadFollow(platform), param.GetValue(0));
                     break;
                 default:
                     break;
             }
+            LogManager.LogDebug(string.Format("platform - {0} - template {1}", platform, template));
             return template;
         }
 

@@ -536,9 +536,9 @@ namespace Vocal.DAL
         {
             var db = _db.GetCollection<Message>(Properties.Settings.Default.CollectionMessage);
             if(lastMessage.HasValue)
-                return db.Find(x => x.TalkId == talkId && x.ArrivedTime > lastMessage.Value).ToList();
+                return db.Find(x => x.TalkId == talkId && x.ArrivedTime > lastMessage.Value && x.Users.Any(y => y.Recipient.Id == userId && !y.IsArchived && !y.IsDeleted)).ToList();
             else
-                return db.Find(x => x.TalkId == talkId).ToList();
+                return db.Find(x => x.TalkId == talkId && x.Users.Any(y => y.Recipient.Id == userId && !y.IsArchived && !y.IsDeleted)).ToList();
         }
 
         public Talk GetTalk(List<string> users)

@@ -84,6 +84,11 @@ export class ModalProfilePage {
     this.viewCtrl.dismiss();
   }
 
+  getPicture() {
+    let picture = this.User.Pictures.find(x => x.Type == PictureType.Profil);
+    return picture != null ? picture.Value : "";
+  }
+
   getContactAddedMe() {
     let urlServ = url.GetContactAddedMe();
     let obj: Request = {
