@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using Vocal.Model.DB;
+using Vocal.Model.Request;
 using Vocal.Model.Helpers;
+using MongoDB.Bson;
 
 namespace Vocal.DAL
 {
@@ -12,6 +14,7 @@ namespace Vocal.DAL
     {
         private Repository()
         {
+            MongoDB.Bson.Serialization.BsonClassMap.RegisterClassMap<SendMessageRequest>();
         }
 
         static Repository() {
@@ -626,6 +629,22 @@ namespace Vocal.DAL
         {
             var collection = _db.GetCollection<Monitoring>(Properties.Settings.Default.CollectionMonitoring);
             collection.InsertOne(obj);
+        }
+
+        #endregion
+
+        #region Backup
+
+        public List<BsonDocument> GetAllCollections()
+        {
+            var collections = _db.ListCollections().ToList();
+            return collections;
+        }
+
+        public List<object> GetDocuments(string collectionName)
+        {
+            var data = _db.GetCollection<object>(collectionName);
+            return data.Find(x => true).ToList();
         }
 
         #endregion
