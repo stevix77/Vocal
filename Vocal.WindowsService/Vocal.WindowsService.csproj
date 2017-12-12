@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5A5F6EEC-108C-4A13-BE62-0D164CC3748A}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{0A7FD436-A189-4046-A2BC-D7FF70A113B6}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Vocal.Console</RootNamespace>
-    <AssemblyName>Vocal.Console</AssemblyName>
+    <RootNamespace>Vocal.WindowsService</RootNamespace>
+    <AssemblyName>Vocal.WindowsService</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,45 +33,47 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProjectInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ProjectInstaller.Designer.cs">
+      <DependentUpon>ProjectInstaller.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service1.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Service1.Designer.cs">
+      <DependentUpon>Service1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vocal.Business\Vocal.Business.csproj">
       <Project>{fed2004a-41ac-43ef-b43f-c01900103999}</Project>
       <Name>Vocal.Business</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Vocal.DAL\Vocal.DAL.csproj">
-      <Project>{41fc38be-ae82-4f89-8e81-dc57f6b610b3}</Project>
-      <Name>Vocal.DAL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Vocal.Model\Vocal.Model.csproj">
-      <Project>{b76d6ce5-b158-4eb9-8a35-54da7cee32ea}</Project>
-      <Name>Vocal.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Vocal.Tools\Vocal.Tools.csproj">
-      <Project>{9198f034-6876-4e86-a84a-50624d6c7742}</Project>
-      <Name>Vocal.Tools</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ProjectInstaller.resx">
+      <DependentUpon>ProjectInstaller.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

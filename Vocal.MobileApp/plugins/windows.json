@@ -10,16 +10,10 @@
         "com-badrit-base64": {
             "PACKAGE_NAME": "Vocal"
         },
-        "cordova-plugin-compat": {
-            "PACKAGE_NAME": "Vocal"
-        },
         "cordova-plugin-contacts": {
             "PACKAGE_NAME": "Vocal"
         },
         "cordova-plugin-datepicker": {
-            "PACKAGE_NAME": "Vocal"
-        },
-        "cordova-plugin-device": {
             "PACKAGE_NAME": "Vocal"
         },
         "cordova-plugin-file": {
@@ -43,17 +37,7 @@
         "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "Vocal"
         },
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "Vocal"
-        },
         "ionic-plugin-keyboard": {
-            "PACKAGE_NAME": "Vocal"
-        },
-        "phonegap-plugin-push": {
-            "SENDER_ID": "1054724390279",
-            "PACKAGE_NAME": "Vocal"
-        },
-        "cordova-plugin-camera": {
             "PACKAGE_NAME": "Vocal"
         },
         "ionic-plugin-deeplinks": {
@@ -63,6 +47,21 @@
             "PACKAGE_NAME": "Vocal"
         },
         "info.protonet.imageresizer": {
+            "PACKAGE_NAME": "Vocal"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "Vocal"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "Vocal"
+        },
+        "phonegap-plugin-push": {
+            "PACKAGE_NAME": "Vocal"
+        },
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "Vocal"
+        },
+        "cordova-plugin-camera": {
             "PACKAGE_NAME": "Vocal"
         }
     },

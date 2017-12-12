@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 using Vocal.Model.DB;
 using Vocal.Business;
 using Vocal.DAL;
+using Vocal.Business.Business;
+using Newtonsoft.Json;
 
 namespace Vocal.Console
 {
     class Program
     {
-        private static string _userId = "1253e161-2663-4976-8ead-717305596de5";
+        private static string _userId = "9247d518-0019-4bb6-b7aa-196b84158b28";
         static void Main(string[] args)
         {
-            var response = Business.Business.TalkBusiness.GetTalks(_userId, "fr");
+            //BackupBusiness.ExportCollections();
         }
         
     }
