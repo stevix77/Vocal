@@ -10,34 +10,13 @@
         "com-badrit-base64": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
-        "cordova-plugin-camera": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
-        "cordova-plugin-compat": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
-        "cordova-plugin-contacts": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
         "cordova-plugin-datepicker": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
         "cordova-plugin-device": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
-        "cordova-plugin-file": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
         "cordova-plugin-globalization": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
-        "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
-        "cordova-plugin-media": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
-        "cordova-plugin-ms-azure-mobile-apps": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
         "cordova-plugin-splashscreen": {
@@ -47,6 +26,27 @@
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
         "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "ionic-plugin-keyboard": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-contacts": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-media": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-ms-azure-mobile-apps": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
         "info.protonet.imageresizer": {
@@ -71,21 +71,15 @@
             "DEEPLINK_5_HOST": " ",
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
-        "ionic-plugin-keyboard": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
         "phonegap-plugin-push": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         }
     },
     "dependent_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
         "cordova-sqlite-storage": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
-        "cordova-plugin-nativeaudio": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
-        "msopentech.azure.NotificationHub": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         }
     }

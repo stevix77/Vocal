@@ -73,7 +73,7 @@ export class AudioRecorder {
       case Store[Store.apns]:
         return 'wav'
       case Store[Store.gcm]:
-        return '3gp'
+        return 'mp3'
       case Store[Store.wns]:
         return 'm4a';
       default:
@@ -83,7 +83,7 @@ export class AudioRecorder {
 
   // Used in send-vocal.ts
   getFile() : Promise<string>{
-    return this.file.readAsDataURL(this.file.dataDirectory, this.filename);
+    return this.file.readAsDataURL(this.file.externalDataDirectory, this.filename);
   }
 
   getMediaDuration() : number {
@@ -92,7 +92,8 @@ export class AudioRecorder {
 
   getMedia() {
     if(this.mediaObject == null) {
-      this.mediaObject = this.media.create(this.file.dataDirectory + this.filename);
+      let name = this.file.externalDataDirectory + this.filename;
+      this.mediaObject = this.media.create(name);
       // this.mediaObject = this.media.create('../Library/NoCloud/' + this.filename);
     } else {
     }
@@ -139,7 +140,6 @@ export class AudioRecorder {
     //this.timer.startTimer();
     if(this.isApp) {
       console.log('start recording');
-      this.showAlert(this.mediaObject);
       if(this.mediaObject != null) {
         this.mediaObject.release();
         this.mediaObject = null;
@@ -150,7 +150,6 @@ export class AudioRecorder {
   }
 
   stopRecording() {
-    this.showAlert(this.mediaObject);
     if(this.isApp) this.getMedia().stopRecord();
   }
 
