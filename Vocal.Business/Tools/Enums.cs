@@ -19,13 +19,14 @@ namespace Vocal.Business.Tools
     {
         Connect,
         Send,
-        UpdateListenUser
+        UpdateListenUser,
+        AddFriend
     }
 
-    public enum NotifType
+    public enum NotifType : int
     {
-        Talk,
-        AddFriend,
-        Follow
+        Talk = 0,
+        AddFriend = 1,
+        Follow = 2
     }
 }

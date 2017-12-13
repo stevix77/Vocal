@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Vocal.Business.Properties;
+using Vocal.Business.Signalr;
 using Vocal.Business.Tools;
 using Vocal.DAL;
 using Vocal.Model.Business;
@@ -20,8 +21,16 @@ namespace Vocal.Business.Business
             {
                 LogManager.LogDebug(userId, pageNumber, pageSize, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+                response.Data = CacheManager.GetCache<List<UserResponse>>(CacheManager.GetKey(Settings.Default.CacheKeyFriend, userId));
+                if (response.Data != null)
+                    return response;
                 var list = Repository.Instance.GetFriends(userId, pageSize, pageNumber);
                 response.Data = Binder.Bind.Bind_Users(list);
+                Task.Run(() =>
+                {
+                    if (response.Data.Count > 0)
+                        CacheManager.SetCache(CacheManager.GetKey(Settings.Default.CacheKeyFriend, userId), response.Data);
+                });
             }
             catch (TimeoutException tex)
             {
@@ -52,9 +61,13 @@ namespace Vocal.Business.Business
                 if (response.Data)
                     Task.Run(async () =>
                     {
+                        CacheManager.RemoveCache(CacheManager.GetKey(Settings.Default.CacheKeyFriend, userId));
                         var user = Repository.Instance.GetUserById(userId);
                         if(user != null)
-                            await NotificationBusiness.SendNotification(ids, NotifType.AddFriend, user.Username);
+                        {
+                            await HubService.Instance.AddFriends(ids, user.Username);
+                            await NotificationBusiness.SendNotification(ids, (int)NotifType.AddFriend, user.Username);
+                        }
                     });
             }
             catch (TimeoutException tex)
@@ -83,6 +96,11 @@ namespace Vocal.Business.Business
             try
             {
                 response.Data = Repository.Instance.RemoveFriends(userId, ids);
+                Task.Run(() =>
+                {
+                    if (response.Data)
+                        CacheManager.RemoveCache(CacheManager.GetKey(Settings.Default.CacheKeyFriend, userId));
+                });
             }
             catch (TimeoutException tex)
             {
@@ -109,9 +127,20 @@ namespace Vocal.Business.Business
             {
                 LogManager.LogDebug(userId, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-                var user = Repository.Instance.GetUserById(userId);
-                var list = Repository.Instance.GetFriendsAddedMe(userId);
-                response.Data = Binder.Bind.Bind_People(user, list);
+                //response.Data = CacheManager.GetCache<List<PeopleResponse>>(GetKey(Settings.Default.CacheKeyContactAddedMe, userId));
+                //if (response.Data != null)
+                //    return response;
+                Model.DB.User user = null;
+                List<Model.DB.User> list = null;
+                Parallel.Invoke(() => user = Repository.Instance.GetUserById(userId),
+                                () => list = Repository.Instance.GetFriendsAddedMe(userId));
+                if(user != null && list != null)
+                    response.Data = Binder.Bind.Bind_People(user, list);
+                //Task.Run(() =>
+                //{
+                //    if (response.Data.Count > 0)
+                //        CacheManager.SetCache(GetKey(Settings.Default.CacheKeyContactAddedMe, userId), response.Data);
+                //});
             }
             catch (TimeoutException tex)
             {

@@ -1,8 +1,10 @@
 <ion-header [class]="isRecording ? 'anime-hide' : ''">
   <ion-navbar hideBackButton="true">
-    <ion-avatar start>
-      <img src="https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-1/p24x24/16602600_10154441388394576_4490155536874187938_n.jpg?oh=21c11ffc32c0b439c7ee5b32629d6b97&oe=5A1910E7">
-    </ion-avatar>
+    <ion-item>
+      <ion-avatar start>
+        <img [src]="Picture" alt="">
+      </ion-avatar>
+    </ion-item>
     <ion-title>
       {{VocalName}}
     </ion-title>
@@ -49,7 +51,7 @@
           <ion-col col-10>
             <ion-item>
               <input type="hidden" ng-model="model.talkId" value="{{model.talkId}}" ng-init="model.talkId=model.talkId"/>
-              <ion-input type="text" name="Message" [(ngModel)]="model.Message" placeholder="Say something..." required></ion-input>
+              <ion-input type="text" name="Message" (ionInput)="change()" [(ngModel)]="model.Message" placeholder="Say something..." required></ion-input>
             </ion-item>
           </ion-col>
           <ion-col col-2>

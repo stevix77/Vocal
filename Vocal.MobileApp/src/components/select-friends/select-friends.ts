@@ -13,12 +13,10 @@ import { UserResponse } from '../../models/response/userResponse';
 })
 export class SelectFriendsComponent {
 
-  text: string;
   @Input() Friends: Array<UserResponse>;
 
   constructor() {
     console.log('Hello SelectFriendsComponent Component');
-    this.text = 'Hello World';
   }
 
 }

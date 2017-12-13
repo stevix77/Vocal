@@ -103,10 +103,11 @@ namespace Vocal.DAL
             return notification;
         }
 
-        public async Task SendNotification(string platform, string tag, string payload)
+        public async Task<object> SendNotification(string platform, string tag, string payload)
         {
             var notif = GenerateNotif(platform, payload);
             var result = await Hub.SendNotificationAsync(notif, tag);
+            return new { Failure = result.Failure, Notificationid = result.NotificationId, State = result.State, Success = result.Success, Results = result.Results };
         }
     }
 }

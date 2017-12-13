@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Vocal.Business.Binder;
 using Vocal.Business.Properties;
 using Vocal.Business.Security;
-using Vocal.Business.Signalr;
 using Vocal.Business.Tools;
 using Vocal.DAL;
-using Vocal.Model;
 using Vocal.Model.Business;
 using Vocal.Model.DB;
 using Vocal.Model.Response;
@@ -116,6 +111,15 @@ namespace Vocal.Business
                         Firstname = firstname,
                         Lastname = lastname
                     };
+                    foreach (var pictureType in Enum.GetNames(typeof(PictureType)))
+                    {
+                        var p = (PictureType)Enum.Parse(typeof(PictureType), pictureType);
+                        user.Pictures.Add(new Picture
+                        {
+                            Type = p,
+                            Value = $"{Properties.Settings.Default.PictureUrl}/{pictureType}/{GetDefaultImage(p)}"
+                        });
+                    }
                     Repository.Instance.AddUser(user);
                     response.Data = Bind.Bind_User(user);
                 }
@@ -214,6 +218,16 @@ namespace Vocal.Business
                 response.ErrorMessage = Resources_Language.TechnicalError;
             }
             return response;
+        }
+
+        private static string GetDefaultImage(PictureType p)
+        {
+            if (p == PictureType.Profil)
+                return Properties.Settings.Default.DefaultImageProfil;
+            else if (p == PictureType.Talk)
+                return Properties.Settings.Default.DefaultImageTalk;
+            else
+                return string.Empty;
         }
     }
 }

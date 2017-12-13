@@ -17,14 +17,14 @@
 <ion-content padding>
 <div text-center>
   <div class="profile-pic">
-    <img [src]="User.Picture">
+    <img [src]="getPicture()">
     <div class="wrapper-button" padding (click)="presentActionSheetProfile()">
       <ion-icon icon-only name="settings" color="light"></ion-icon>
       Modifier sa photo
     </div>
   </div>
   <h2>{{User.Firstname}} {{User.Lastname}}</h2>
-  <span class="vocal-total">35h de vocal à votre actif</span>
+  <span class="vocal-total">{{totalDuration}}h de vocal à votre actif</span>
 </div>
 
 <ion-list inset>

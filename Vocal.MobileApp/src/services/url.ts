@@ -79,5 +79,11 @@ var url = {
     },
     DeleteTalk() : string {
         return this.BaseUri + "/api/talk/deleteTalk";
+    },
+    GetProfil() : string {
+        return this.BaseUri + "/api/user/profil";
+    },
+    GetContactAddedMe() : string {
+        return this.BaseUri + "/api/friend/addedMe";
     }
 }

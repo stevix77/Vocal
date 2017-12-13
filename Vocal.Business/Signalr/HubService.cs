@@ -46,12 +46,17 @@ namespace Vocal.Business.Signalr
 
         internal async Task SendMessage(SendMessageResponse data, List<string> idsRecipient)
         {
-            await Proxy.Invoke(HubMethod.Send.ToString(), data, idsRecipient);
+            await Proxy.Invoke(HubMethod.Send.ToString(), idsRecipient, data);
         }
 
-        internal void UpdateTalk(string talkId, List<MessageResponse> list)
+        internal async Task UpdateTalk(string talkId, List<MessageResponse> list)
         {
-            Proxy.Invoke(HubMethod.UpdateListenUser.ToString(), talkId, list);
+            await Proxy.Invoke(HubMethod.UpdateListenUser.ToString(), talkId, list);
+        }
+
+        internal async Task AddFriends(List<string> ids, string username)
+        {
+            await Proxy.Invoke(HubMethod.AddFriend.ToString(), ids, username);
         }
     }
 }

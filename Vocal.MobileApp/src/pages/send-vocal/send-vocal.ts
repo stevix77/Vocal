@@ -15,6 +15,7 @@ import { Response } from '../../models/response';
 import { TalkResponse } from '../../models/response/talkResponse';
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
 import { AudioRecorder } from '../../services/audiorecorder';
+import { ExceptionService } from "../../services/exceptionService";
 
 /**
  * Generated class for the SendVocalPage page.
@@ -42,7 +43,8 @@ export class SendVocalPage {
               private audioRecorder: AudioRecorder, 
               private cookieService: CookieService, 
               private httpService: HttpService,
-              private talkService: TalkService) {
+              private talkService: TalkService,
+              private exceptionService: ExceptionService) {
   }
 
   ionViewDidLoad() {
@@ -54,8 +56,8 @@ export class SendVocalPage {
     if(!this.isSending) {
       this.isSending = true;
       let users = [];
-      Promise.all([this.audioRecorder.getFile(), this.audioRecorder.getMediaDuration()]).then(values => {
-        this.FileValue = values[0];
+      this.audioRecorder.getFile().then(fileValue => {
+        this.FileValue = fileValue;
         this.Friends.forEach(elt => {
         if(elt.Checked)
           users.push(elt.Id);
@@ -63,7 +65,7 @@ export class SendVocalPage {
         let date = new Date();
         let request: SendMessageRequest = {
           content: this.FileValue,
-          duration: values[1],
+          duration: this.navParams.get('duration'),
           sentTime: date,
           idsRecipient: users,
           messageType: MessageType.Vocal,
@@ -88,15 +90,16 @@ export class SendVocalPage {
               console.log(response);
             }
           }
-        )
+        );
       }).catch(err => {
         console.log(err);
+        this.exceptionService.Add(err);
       });
     }
   }
 
   GetFriends() {
-    this.storeService.Get(KeyStore.Friends.toString()).then(
+    this.storeService.Get(KeyStore[KeyStore.Friends]).then(
       friends => {
         if(friends != null)
           this.Friends = friends;
@@ -121,7 +124,7 @@ export class SendVocalPage {
         let response = resp.json() as Response<Array<UserResponse>>;
         if(!response.HasError) {
           this.Friends = response.Data;
-          this.storeService.Set(KeyStore.Friends.toString(), this.Friends)
+          this.storeService.Set(KeyStore[KeyStore.Friends], this.Friends)
         } else {
           
         }
@@ -130,7 +133,7 @@ export class SendVocalPage {
   }
 
   GetTalkList() {
-    return this.storeService.Get(KeyStore.Talks.toString()).then(
+    return this.storeService.Get(KeyStore[KeyStore.Talks]).then(
       talks => {
         this.Talks = talks;
       }
@@ -141,7 +144,7 @@ export class SendVocalPage {
   }
 
   SaveTalks() {
-    this.storeService.Set(KeyStore.Talks.toString(), this.Talks);
+    this.storeService.Set(KeyStore[KeyStore.Talks], this.Talks);
   }
 
 }

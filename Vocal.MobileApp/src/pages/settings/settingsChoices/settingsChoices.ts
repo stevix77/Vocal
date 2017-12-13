@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { NavParams} from 'ionic-angular';
+import { NavParams, Events} from 'ionic-angular';
 import { Response } from '../../../models/response';
 import { params } from "../../../services/params";
 import { url } from "../../../services/url";
@@ -7,11 +7,11 @@ import { UpdateRequest } from "../../../models/request/updateRequest";
 import { HttpService } from "../../../services/httpService";
 import { CookieService } from "../../../services/cookieService";
 import { UpdateType } from "../../../models/enums";
+import { SettingsService } from "../../../services/settingsService";
 
 @Component({
   selector: "app-SettingsChoices",
-  templateUrl: "./settingsChoices.html",
-  providers: [HttpService, CookieService]
+  templateUrl: "./settingsChoices.html"
 })
 
 export class SettingsChoices implements OnInit {
@@ -22,7 +22,7 @@ export class SettingsChoices implements OnInit {
   pageTitle: string;
   pageLabel: string;
 
-  constructor(public navParams: NavParams, private httpService: HttpService, private cookieService: CookieService) { 
+  constructor(public navParams: NavParams, private httpService: HttpService, private cookieService: CookieService, private settingsService: SettingsService, private events: Events) { 
     this.list = this.navParams.get('Obj');
     this.updateType = this.navParams.get('UpdateType');
   }
@@ -78,9 +78,9 @@ export class SettingsChoices implements OnInit {
         resp => { 
           let response = resp.json() as Response<Boolean>;
           if(!response.HasError) {
-            
+            this.settingsService.remove();
           } else {
-            
+            this.events.publish(response.ErrorMessage);
           }
         }
       );

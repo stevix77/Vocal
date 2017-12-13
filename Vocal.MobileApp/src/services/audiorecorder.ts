@@ -23,7 +23,7 @@ export class AudioRecorder {
     private file: File) {
     this.filename = 'recording.' + this.getExtension();
     this.isApp = this.config.get('isApp');
-    this.initEffects();
+    //this.initEffects();
   }
 
   applyEffect(filter) {
@@ -76,6 +76,8 @@ export class AudioRecorder {
         return '3gp'
       case Store[Store.wns]:
         return 'm4a';
+      default:
+        return '';
     }
   }
 
@@ -89,10 +91,9 @@ export class AudioRecorder {
   }
 
   getMedia() {
-    console.log(this.file.dataDirectory);
     if(this.mediaObject == null) {
-      //this.mediaObject = this.media.create(this.file.dataDirectory + this.filename);
-      this.mediaObject = this.media.create('../Library/NoCloud/' + this.filename);
+      this.mediaObject = this.media.create(this.file.dataDirectory + this.filename);
+      // this.mediaObject = this.media.create('../Library/NoCloud/' + this.filename);
     } else {
     }
     return this.mediaObject;
@@ -129,17 +130,27 @@ export class AudioRecorder {
     });
   }
 
+  release() {
+    this.mediaObject.release();
+  }
+
   startRecording() {
     //this.timer = new Timer();
     //this.timer.startTimer();
     if(this.isApp) {
       console.log('start recording');
+      this.showAlert(this.mediaObject);
+      if(this.mediaObject != null) {
+        this.mediaObject.release();
+        this.mediaObject = null;
+      }
+      console.log(this.mediaObject);
       this.getMedia().startRecord();
     }
   }
 
   stopRecording() {
-    
+    this.showAlert(this.mediaObject);
     if(this.isApp) this.getMedia().stopRecord();
   }
 

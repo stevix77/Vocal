@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vocal.Tools;
+﻿using Vocal.Tools;
 
 namespace Vocal.Model.DB
 {
@@ -35,5 +30,11 @@ namespace Vocal.Model.DB
         BirthdayDate = 5,
         Blocked = 6,
         Picture = 7
+    }
+
+    public enum PictureType
+    {
+        Profil,
+        Talk
     }
 }

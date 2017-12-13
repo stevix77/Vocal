@@ -47,6 +47,7 @@
     <Compile Include="DB\MessageType.cs" />
     <Compile Include="DB\Monitoring.cs" />
     <Compile Include="DB\People.cs" />
+    <Compile Include="DB\Picture.cs" />
     <Compile Include="DB\ResetPassword.cs" />
     <Compile Include="DB\Search.cs" />
     <Compile Include="DB\Settings.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Request\DeleteMessageRequest.cs" />
     <Compile Include="Request\GetFollowUserRequest.cs" />
     <Compile Include="Request\GetMessagesRequest.cs" />
+    <Compile Include="Request\IsSendableRequest.cs" />
     <Compile Include="Request\ManageFollowUserRequest.cs" />
     <Compile Include="Request\ManageFriendsRequest.cs" />
     <Compile Include="Request\CookieRequest.cs" />
@@ -67,6 +69,7 @@
     <Compile Include="Request\MessageRequest.cs" />
     <Compile Include="Request\NotificationRegisterRequest.cs" />
     <Compile Include="Request\PasswordRequest.cs" />
+    <Compile Include="Request\ProfilRequest.cs" />
     <Compile Include="Request\RegisterRequest.cs" />
     <Compile Include="Request\Request.cs" />
     <Compile Include="Request\SearchFriendsRequest.cs" />
@@ -87,12 +90,16 @@
     <Compile Include="Response\UserListenResponse.cs" />
     <Compile Include="Response\PeopleResponse.cs" />
     <Compile Include="Response\UserResponse.cs" />
+    <Compile Include="Signalr\Message.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vocal.Tools\Vocal.Tools.csproj">
       <Project>{9198f034-6876-4e86-a84a-50624d6c7742}</Project>
       <Name>Vocal.Tools</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Response\PictureResponse.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

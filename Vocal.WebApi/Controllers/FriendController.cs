@@ -11,12 +11,18 @@ namespace Vocal.WebApi.Controllers
 {
     [EnableCors("*", "*", "*")]
     [RoutePrefix("api/friend")]
-    public class FriendController : ApiController
+    public class FriendController : VocalApiController
     {
         [HttpPost, CustomAuthorize, Route("getFriends")]
         public Response<List<UserResponse>> GetFriends(GetFriendsRequest request)
         {
             return Business.Tools.Monitoring.Execute(FriendBusiness.GetFriends, request.UserId, request.PageNumber, request.PageSize, request.Lang);
+        }
+
+        [HttpPost, CustomAuthorize, Route("addedMe")]
+        public Response<List<PeopleResponse>> GetContactsAddMe(Request request)
+        {
+            return Business.Tools.Monitoring.Execute(FriendBusiness.GetFriendsAddedMe, GetUserIdFromCookie(), request.Lang);
         }
 
         [HttpPost, CustomAuthorize, Route("add")]

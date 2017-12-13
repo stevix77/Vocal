@@ -7,14 +7,16 @@ import { PopoverFriendsAddedMePage } from '../../pages/popover-friends-added-me/
 import { AppUser } from '../../models/appUser';
 import { params } from "../../services/params";
 import { StoreService } from '../../services/storeService';
-import { KeyStore, UpdateType } from "../../models/enums";
+import { KeyStore, UpdateType, PictureType } from "../../models/enums";
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { url } from "../../services/url";
 import { UpdateRequest } from "../../models/request/updateRequest";
+import { Request } from "../../models/request/request";
 import { Response } from '../../models/response';
 import { ExceptionService } from "../../services/exceptionService";
+import { PeopleResponse } from "../../models/response/peopleResponse";
 
 /**
  * Generated class for the ModalProfilePage page.
@@ -32,6 +34,7 @@ export class ModalProfilePage {
   private User: AppUser;
   private CountFriendsAddedMe: number = 0;
   private friendsAddedMe: Array<Object>;
+  private totalDuration: number = 0;
   private options: CameraOptions = {
     quality: 50,
     destinationType: this.camera.DestinationType.DATA_URL,
@@ -59,6 +62,7 @@ export class ModalProfilePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ModalProfilePage');
+
     this.storeService.Get(KeyStore[KeyStore.FriendsAddedMe]).then(
       friends => {
         if(friends != null) {
@@ -66,11 +70,42 @@ export class ModalProfilePage {
           this.CountFriendsAddedMe = friends.length;
         }
       }
-    )
+    );
+    this.storeService.Get(KeyStore[KeyStore.Settings]).then(settings => {
+        if(settings.TotalDuration) this.totalDuration = settings.TotalDuration;
+    });
+  }
+
+  ionViewWillEnter() {
+    this.getContactAddedMe();
   }
 
   dismiss() {
     this.viewCtrl.dismiss();
+  }
+
+  getPicture() {
+    let picture = this.User.Pictures.find(x => x.Type == PictureType.Profil);
+    return picture != null ? picture.Value : "";
+  }
+
+  getContactAddedMe() {
+    let urlServ = url.GetContactAddedMe();
+    let obj: Request = {
+      Lang: params.Lang
+    };
+    let cookie = this.cookieService.GetAuthorizeCookie(urlServ, params.User)
+    this.httpService.Post<Request>(urlServ, obj, cookie).subscribe(
+      resp => {
+        let response = resp.json() as Response<Array<PeopleResponse>>;
+        if(response.HasError) {
+          console.log(response.ErrorMessage);
+          this.showToast(response.ErrorMessage);
+        } else {
+          this.friendsAddedMe = response.Data;
+        }
+      }
+    )
   }
 
   takePic(srcType) {
@@ -110,7 +145,7 @@ export class ModalProfilePage {
           console.log(response.ErrorMessage);
           this.showToast(response.ErrorMessage);
         } else {
-          this.User.Picture = params.User.Picture = picture;
+          this.User.Pictures.find(x => x.Type == PictureType.Profil).Value = params.User.Pictures.find(x => x.Type == PictureType.Profil).Value = picture;
           this.storeService.Set(KeyStore[KeyStore.User], params.User);
         }
       }
@@ -126,10 +161,12 @@ export class ModalProfilePage {
   }
 
   showFriendsAddedMeList(evt) {
-    let popover = this.popoverCtrl.create(PopoverFriendsAddedMePage, {friends:this.friendsAddedMe}, {cssClass: 'friends-added-me'});
-    popover.present({
-      ev: evt
-    });
+    if(this.CountFriendsAddedMe > 0) {
+      let popover = this.popoverCtrl.create(PopoverFriendsAddedMePage, {friends:this.friendsAddedMe}, {cssClass: 'friends-added-me'});
+      popover.present({
+        ev: evt
+      });
+    }
   }
 
   goToSettings() {

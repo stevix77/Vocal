@@ -14,6 +14,8 @@ import { Response } from '../../models/Response';
 import { url } from '../../services/url';
 import { Timer } from '../../services/timer';
 import { DeleteTalkRequest } from '../../models/request/deleteTalkRequest';
+import { HubService } from "../../services/hubService";
+
 
 /**
  * Generated class for the VocalListPage page.
@@ -34,7 +36,7 @@ export class VocalListPage {
   isRecording: boolean = false;
   isTiming: boolean = false;
   timer: Timer;
-  time: String = '0:00';
+  time: String = '';
   
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -46,10 +48,10 @@ export class VocalListPage {
     private httpService: HttpService, 
     private cookieService: CookieService, 
     private storeService: StoreService,
-    private talkService: TalkService) {
+    private talkService: TalkService,
+    private hubService: HubService) {
 
     events.subscribe(HubMethod[HubMethod.Receive], () => this.initialize())
-
     this.isApp = this.config.get('isApp');
     
   }
@@ -67,11 +69,13 @@ export class VocalListPage {
   }
 
   ionViewDidEnter() {
+    console.log('ionViewDidEnter VocalListPage');
     this.initialize();
   }
 
   toggleRecording() {
     this.isRecording = !this.isRecording;
+    if(!this.isRecording) this.initialize();
     console.log('toggleRecording');
   }
   
@@ -81,6 +85,7 @@ export class VocalListPage {
   }
 
   startTimer() {
+    this.time = '0:00';
     this.timer = new Timer(this.events);
     this.events.subscribe('update:timer', timeFromTimer => {
       this.time = timeFromTimer;
@@ -90,7 +95,6 @@ export class VocalListPage {
 
   stopTimer() {
     this.timer.stopTimer();
-    this.time = '0:00';
   }
 
   showProfile() {
@@ -129,8 +133,13 @@ export class VocalListPage {
 
   formatDateMessage(items){
     items.forEach(item => {
-      if(item.DateLastMessage) {
+      if(item.DateLastMessage && typeof(item.DateLastMessage) != 'object') {
         item.DateLastMessage = this.getFormattedDateLastMessage(item.DateLastMessage);
+      }
+      if(item.Users.length == 2) {
+        item.Users.forEach(user => {
+          if(user.Id != params.User.Id) item.Picture = user.Picture;
+        });
       }
     });
   }
@@ -148,10 +157,20 @@ export class VocalListPage {
     }
     // If yesterday, we display "Yesterday"
     if(msgDate.getDate() != now.getDate() && msgDate < now) {
-      var tmp = msgDate;
+      let tmp = new Date(msgDate);
       tmp.setDate(tmp.getDate() + 1);
       if(tmp.getDate() == now.getDate()) {
         isYesterday = true;
+      }
+    }
+    // If less than a week, we display the day, like "Monday"
+    if(msgDate.getDate() != now.getDate() && msgDate < now) {
+      for(let i = 2; i < 7; i++) {
+        let tmp = new Date(msgDate);
+        tmp.setDate(tmp.getDate() + i);
+        if(tmp.getDate() == now.getDate()) {
+          isWeek = true;
+        }
       }
     }
 
@@ -162,12 +181,15 @@ export class VocalListPage {
     this.talkService.LoadList().then(() => {
       if(this.talkService.Talks != null) {
         this.vocalList = this.talkService.Talks;
-        if(this.vocalList.length > 0) this.formatDateMessage(this.vocalList);
+        if(this.vocalList.length > 0) {
+          this.formatDateMessage(this.vocalList);
+        }
       }
       else {  
         this.getVocalList();
       }
-    })
+      console.log(this.vocalList);
+    });
   }
 
   deleteMessage(id, index){

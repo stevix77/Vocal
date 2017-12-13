@@ -83,7 +83,7 @@ namespace Vocal.Business.Business
                     var user = Repository.Instance.GetUserById(userId);
                     if(user != null)
                     {
-                        await NotificationBusiness.SendNotification(ids, NotifType.Follow, user.Username);
+                        await NotificationBusiness.SendNotification(ids, (int)NotifType.Follow, user.Username);
                     }
                 });
             }

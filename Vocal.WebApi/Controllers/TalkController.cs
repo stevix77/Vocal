@@ -6,13 +6,12 @@ using Vocal.Business.Tools;
 using Vocal.Model.Business;
 using Vocal.Model.Request;
 using Vocal.Model.Response;
-using Vocal.WebApi.Attribute;
 
 namespace Vocal.WebApi.Controllers
 {
     [EnableCors("*", "*", "*")]
     [RoutePrefix("api/talk")]
-    public class TalkController : ApiController
+    public class TalkController : VocalApiController
     {
         [Route("list"), HttpPost]
         public Response<List<TalkResponse>> GetTalks(TalkRequest request)
@@ -23,8 +22,14 @@ namespace Vocal.WebApi.Controllers
         [Route("messages"), HttpPost]
         public Response<List<MessageResponse>> GetMessages(GetMessagesRequest request)
         {
+            return Monitoring.Execute(TalkBusiness.GetMessages, request.TalkId, request.LastMessage, GetUserIdFromCookie(), request.Lang);
+        }
+
+        [Route("IsSendable"), HttpPost]
+        public Response<bool> IsSendable(IsSendableRequest request)
+        {
             var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
-            return Monitoring.Execute(TalkBusiness.GetMessages, request.TalkId, request.LastMessage, obj.UserId, request.Lang);
+            return Monitoring.Execute(TalkBusiness.IsSendable, obj.UserId, request.Users, request.Lang);
         }
 
         [Route("SendMessage"), HttpPost]
@@ -36,8 +41,7 @@ namespace Vocal.WebApi.Controllers
         [Route("message"), HttpPost]
         public Response<string> GetMessageById(MessageRequest request)
         {
-            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
-            return Monitoring.Execute(TalkBusiness.GetMessageById, request.TalkId, request.MessageId, obj.UserId, request.Lang);
+            return Monitoring.Execute(TalkBusiness.GetMessageById, request.MessageId, GetUserIdFromCookie(), request.Lang);
         }
 
         [Route("ArchiveTalk"), HttpPost]

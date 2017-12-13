@@ -14,3 +14,42 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+.header-form{
+  padding: 20% 10% 0;
+  h2{
+    font-size: 1.8rem;
+  }
+  small{
+    font-size: 1.2rem;
+    color: $grey;
+    margin-top: 5%;
+    text-align: left;
+    display: block;
+  }
+}
+form{
+  padding: 20% 10%;
+  ion-label{
+    text-transform: uppercase;
+    color: $grey;
+
+  }
+  .list > .item-block:first-child{
+    border-top: none;
+  }
+  .list .item-block .item-inner,
+  .list > .item-block:last-child{
+    border-bottom-width: 2px;
+    border-bottom-color: $grey;
+  }
+}
+
+ion-list-header{
+  &.list-header{
+    border-bottom: none;
+  }
+  ion-label{
+    text-transform: none;
+  }
+}

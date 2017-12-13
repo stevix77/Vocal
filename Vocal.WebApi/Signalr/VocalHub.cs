@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Threading.Tasks;
-using Vocal.Business.Tools;
-using Vocal.Business.Properties;
 using Vocal.Model.Response;
+using Vocal.Model.Signalr;
 
 namespace Vocal.WebApi.Signalr
 {
@@ -64,37 +61,40 @@ namespace Vocal.WebApi.Signalr
                 Groups.Remove(item, talkId);
         }
 
-        public void Send(SendMessageResponse response, List<string> usersId)
+        #region Envoi de message
+
+        public void Send(List<string> usersId, SendMessageResponse obj)
         {
             foreach(var item in usersId)
-                JoinTalk(item, response.Talk.Id);
-            JoinTalk(response.Message.User.Id, response.Talk.Id);
-            this.Clients.Group(response.Talk.Id).Receive(response);
+                JoinTalk(item, obj.Talk.Id);
+            JoinTalk(obj.Message.User.Id, obj.Talk.Id);
+            this.Clients.Group(obj.Talk.Id).Receive(obj);
         }
 
-        public void BeginTalkMess(string username, string talkId, string lang)
+        public void AddFriend(List<string> users, string username)
         {
-            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-            var message = $"{username} {Resources_Language.TalkingMessage}";
-            Clients.OthersInGroup(talkId).Talking(message);
+            foreach(var id in users)
+            {
+                foreach (var connection in _users[id])
+                    Clients.Client(connection).AddFriend(username);
+            }
         }
 
-        public void EndTalkMess(string talkId)
+        public void BeginTalk(string talkId, string username)
         {
-            Clients.OthersInGroup(talkId).EndTalking();
+            Clients.OthersInGroup(talkId).BeginTalk(username);
         }
 
-        public void UpdateListenUser(string talkId, List<MessageResponse> messages)
+        public void EndTalk(string talkId)
         {
-            Clients.Group(talkId).UpdateListenUser(messages);
+            Clients.OthersInGroup(talkId).EndTalk();
         }
 
-        public void UpdateListenUser(string talkId)
+        public void UpdateListenUser(string talkId, List<MessageResponse> obj)
         {
-            var user = _users.SingleOrDefault(x => x.Value.Any(y => y == Context.ConnectionId));
-            //TODO
-            if(!string.IsNullOrEmpty(user.Key))
-                Business.Business.TalkBusiness.UpdateListenUser(user.Key, talkId, null);
+            Clients.Group(talkId).UpdateListenUser(obj);
         }
+
+        #endregion
     }
 }
