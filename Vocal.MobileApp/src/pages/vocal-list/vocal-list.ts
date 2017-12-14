@@ -5,6 +5,7 @@ import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
 import { TalkResponse } from '../../models/response/talkResponse';
+import { ActionResponse } from '../../models/response/actionResponse';
 import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
 import { HubMethod } from '../../models/enums';
 import { MessagePage } from '../message/message';
@@ -12,6 +13,7 @@ import { params } from '../../services/params';
 import { Response } from '../../models/Response';
 import { url } from '../../services/url';
 import { Timer } from '../../services/timer';
+import { DeleteTalkRequest } from '../../models/request/deleteTalkRequest';
 import { HubService } from "../../services/hubService";
 
 
@@ -186,12 +188,31 @@ export class VocalListPage {
       else {  
         this.getVocalList();
       }
-      console.log(this.vocalList);
     });
   }
 
-  deleteMessage(id){
-    console.log('delete : ' + id);
+  deleteMessage(id, index){
+    let itemIndex = index;
+    let request: DeleteTalkRequest = {
+      Lang: params.Lang,
+      IdSender: params.User.Id,
+      IdTalk: id,
+      SentTime: new Date()
+    };
+    let urlDelete = url.DeleteTalk();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlDelete, params.User);
+    this.httpService.Post<DeleteTalkRequest>(urlDelete, request, cookie).subscribe(
+      resp => {
+        let response = resp.json() as Response<ActionResponse>;
+        if(!response.HasError && response.Data.IsDone){
+          this.talkService.UpdateList(this.vocalList[itemIndex]);
+          this.vocalList.splice(itemIndex, 1);
+        }
+        else {
+          this.showAlert(response.ErrorMessage);
+        }
+      }
+    );
   }
 
   archiveMessage(id){
