@@ -188,12 +188,10 @@ export class VocalListPage {
       else {  
         this.getVocalList();
       }
-      console.log(this.vocalList);
     });
   }
 
   deleteMessage(id, index){
-    console.log(id, index);
     let itemIndex = index;
     let request: DeleteTalkRequest = {
       Lang: params.Lang,
@@ -207,6 +205,7 @@ export class VocalListPage {
       resp => {
         let response = resp.json() as Response<ActionResponse>;
         if(!response.HasError && response.Data.IsDone){
+          this.talkService.UpdateList(this.vocalList[itemIndex]);
           this.vocalList.splice(itemIndex, 1);
         }
         else {

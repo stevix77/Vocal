@@ -57,6 +57,7 @@ export class SendVocalPage {
       this.isSending = true;
       let users = [];
       this.audioRecorder.getFile().then(fileValue => {
+        console.log(fileValue);
         this.FileValue = fileValue;
         this.Friends.forEach(elt => {
         if(elt.Checked)

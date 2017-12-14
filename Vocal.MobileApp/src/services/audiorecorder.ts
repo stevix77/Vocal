@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Config, AlertController } from 'ionic-angular';
+import { Config, AlertController, Platform } from 'ionic-angular';
 import { Timer } from './timer';
 import { params } from './params';
 import { Store } from '../models/enums';
 import { Media, MediaObject } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
+import { swipeShouldReset } from 'ionic-angular/util/util';
 
 
 @Injectable()
@@ -19,6 +20,7 @@ export class AudioRecorder {
   constructor(
     public config:Config,
     public alertCtrl: AlertController,
+    public plt: Platform,
     private media: Media, 
     private file: File) {
     this.filename = 'recording.' + this.getExtension();
@@ -64,26 +66,31 @@ export class AudioRecorder {
   }
 
   getEffectFromFilter(filter){
-
     return this.effects[filter];
   }
 
+  getFilePath() {
+    let path = '';
+    if(this.plt.is('ios')) path = '../Library/NoCloud/';
+    if(this.plt.is('android')) path = this.file.externalDataDirectory;
+    
+    return path;
+  }
+
   getExtension() {
-    switch (params.Platform) {
-      case Store[Store.apns]:
-        return 'wav'
-      case Store[Store.gcm]:
-        return '3gp'
-      case Store[Store.wns]:
-        return 'm4a';
-      default:
-        return '';
-    }
+    let extension = '';
+    if(this.plt.is('ios')) extension = 'wav';
+    if(this.plt.is('android')) extension = '3gp';
+    
+    return extension;
   }
 
   // Used in send-vocal.ts
   getFile() : Promise<string>{
-    return this.file.readAsDataURL(this.file.dataDirectory, this.filename);
+    let path = '';
+    if(this.plt.is('ios')) path = this.file.dataDirectory;
+    if(this.plt.is('android')) path = this.file.externalDataDirectory;
+    return this.file.readAsDataURL(path, this.filename);
   }
 
   getMediaDuration() : number {
@@ -92,8 +99,7 @@ export class AudioRecorder {
 
   getMedia() {
     if(this.mediaObject == null) {
-      this.mediaObject = this.media.create(this.file.dataDirectory + this.filename);
-      // this.mediaObject = this.media.create('../Library/NoCloud/' + this.filename);
+      this.mediaObject = this.media.create(this.getFilePath() + this.filename);
     } else {
     }
     return this.mediaObject;
@@ -139,7 +145,6 @@ export class AudioRecorder {
     //this.timer.startTimer();
     if(this.isApp) {
       console.log('start recording');
-      this.showAlert(this.mediaObject);
       if(this.mediaObject != null) {
         this.mediaObject.release();
         this.mediaObject = null;
@@ -150,7 +155,6 @@ export class AudioRecorder {
   }
 
   stopRecording() {
-    this.showAlert(this.mediaObject);
     if(this.isApp) this.getMedia().stopRecord();
   }
 
