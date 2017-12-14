@@ -52,7 +52,7 @@
     "cordova-plugin-file": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-file@latest"
+            "id": "cordova-plugin-file@^4.3.3"
         },
         "is_top_level": true,
         "variables": {}
@@ -84,10 +84,12 @@
     "cordova-plugin-media": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-media@latest"
+            "id": "cordova-plugin-media@^3.0.1"
         },
         "is_top_level": true,
-        "variables": {}
+        "variables": {
+            "MICROPHONE_USAGE_DESCRIPTION": " "
+        }
     },
     "com-badrit-base64": {
         "source": {
@@ -100,14 +102,26 @@
     "ionic-plugin-deeplinks": {
         "source": {
             "type": "registry",
-            "id": "ionic-plugin-deeplinks"
+            "id": "ionic-plugin-deeplinks@^1.0.15"
         },
         "is_top_level": true,
         "variables": {
             "URL_SCHEME": "vocal",
             "DEEPLINK_SCHEME": "https",
             "DEEPLINK_HOST": "vocal.com",
-            "ANDROID_PATH_PREFIX": "/"
+            "ANDROID_PATH_PREFIX": "/",
+            "ANDROID_2_PATH_PREFIX": "/",
+            "ANDROID_3_PATH_PREFIX": "/",
+            "ANDROID_4_PATH_PREFIX": "/",
+            "ANDROID_5_PATH_PREFIX": "/",
+            "DEEPLINK_2_SCHEME": " ",
+            "DEEPLINK_2_HOST": " ",
+            "DEEPLINK_3_SCHEME": " ",
+            "DEEPLINK_3_HOST": " ",
+            "DEEPLINK_4_SCHEME": " ",
+            "DEEPLINK_4_HOST": " ",
+            "DEEPLINK_5_SCHEME": " ",
+            "DEEPLINK_5_HOST": " "
         }
     },
     "info.protonet.imageresizer": {
@@ -137,15 +151,17 @@
     "phonegap-plugin-push": {
         "source": {
             "type": "registry",
-            "id": "phonegap-plugin-push@2.0.0"
+            "id": "phonegap-plugin-push@^2.0.0"
         },
         "is_top_level": true,
-        "variables": {}
+        "variables": {
+            "SENDER_ID": "1054724390279"
+        }
     },
     "cordova-plugin-camera": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-camera@2.4.1"
+            "id": "cordova-plugin-camera@^2.4.1"
         },
         "is_top_level": true,
         "variables": {}
@@ -153,9 +169,9 @@
     "cordova-plugin-compat": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-compat@1.1.0"
+            "id": "cordova-plugin-compat@^1.1.0"
         },
-        "is_top_level": true,
+        "is_top_level": false,
         "variables": {}
     }
 }

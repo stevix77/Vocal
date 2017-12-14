@@ -113,14 +113,12 @@ export class VocalApp {
 
   initPushNotification() {
     const pushOptions = {
-      android: {},
+      android: {senderID: "1054724390279"},
       ios: { alert: 'true', badge: true, sound: 'true' },
       windows: {}
     };
     const pushObject: PushObject = this.push.init(pushOptions);
     pushObject.on('registration').subscribe((data: any) => {
-      this.showToast(data.registrationId);
-      console.log('device token -> ' + data.registrationId);
       this.storeService.Get("registration").then((r) => {
         if(r == null || r != data.registrationId)
           this.RegisterToNH(data.registrationId);
@@ -176,8 +174,8 @@ export class VocalApp {
   }
 
   windowsNotification(notification) {
-      let args = notification.additionalData.pushNotificationReceivedEventArgs.toastNotification.content.getElementsByTagName('toast')[0].getAttribute('launch') as string;
-      let value = args.split('=')[1];
+    let args = notification.additionalData.pushNotificationReceivedEventArgs.toastNotification.content.getElementsByTagName('toast')[0].getAttribute('launch') as string;
+    let value = args.split('=')[1];
     if(notification.additionalData.coldstart) {
       this.nav.push(MessagePage, {TalkId: value})
     } else {
@@ -200,10 +198,47 @@ export class VocalApp {
   }
 
   iosNotification(notification) {
-    
+    if(notification.additionalData.coldstart) {
+      this.nav.push(MessagePage, {TalkId: notification.additionalData.talkId})
+    } else {
+      let confirmAlert = this.alertCtrl.create({
+        title: notification.title,
+        message: notification.message,
+        buttons: [{
+          text: 'Ignore',
+          role: 'cancel'
+        }, {
+          text: 'View',
+          handler: () => {
+            //TODO: Your logic here
+            this.nav.push(MessagePage, {TalkId: notification.additionalData.talkId});
+          }
+        }]
+      });
+      confirmAlert.present();
+    }
   }
 
   androidNotification(notification) {
+    if(notification.additionalData.coldstart) {
+      this.nav.push(MessagePage, {TalkId: notification.additionalData.talkId})
+    } else {
+      let confirmAlert = this.alertCtrl.create({
+        title: notification.title,
+        message: notification.message,
+        buttons: [{
+          text: 'Ignore',
+          role: 'cancel'
+        }, {
+          text: 'View',
+          handler: () => {
+            //TODO: Your logic here
+            this.nav.push(MessagePage, {TalkId: notification.additionalData.talkId});
+          }
+        }]
+      });
+      confirmAlert.present();
+    }
   }
 
   initializeApp() {
