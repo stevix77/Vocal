@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Vocal.Business.Properties;
+using Vocal.Business.Tools;
 using Vocal.DAL;
 
 namespace Vocal.Business.Backup
@@ -19,19 +20,22 @@ namespace Vocal.Business.Backup
         {
             try
             {
-                while(true)
+                while (true)
                 {
                     var collections = Repository.Instance.GetAllCollections();
                     foreach (var item in collections)
                     {
                         var name = item.GetElement("name").Value.ToString();
-                        var docs = Repository.Instance.GetDocuments(name);
-                        if (docs.Count > 0)
+                        if(!name.ToLower().Equals("monitoring"))
                         {
-                            var json = JsonConvert.SerializeObject(docs);
-                            if (!Directory.Exists($"{Settings.Default.BackupPath}/export"))
-                                Directory.CreateDirectory($"{Settings.Default.BackupPath}/export");
-                            File.WriteAllText($"{Settings.Default.BackupPath}/export/{name}.json", json);
+                            var docs = Repository.Instance.GetDocuments(name);
+                            if (docs.Count > 0)
+                            {
+                                var json = JsonConvert.SerializeObject(docs);
+                                if (!Directory.Exists($"{Settings.Default.BackupPath}/export"))
+                                    Directory.CreateDirectory($"{Settings.Default.BackupPath}/export");
+                                File.WriteAllText($"{Settings.Default.BackupPath}/export/{name}.json", json);
+                            }
                         }
                     }
                     Thread.Sleep(1000 * 3600 * 6);
@@ -39,7 +43,7 @@ namespace Vocal.Business.Backup
             }
             catch (Exception ex)
             {
-                throw ex;
+                
             }
         }
     }
