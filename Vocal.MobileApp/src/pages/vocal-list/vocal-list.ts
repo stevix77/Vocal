@@ -14,6 +14,7 @@ import { Response } from '../../models/Response';
 import { url } from '../../services/url';
 import { Timer } from '../../services/timer';
 import { DeleteTalkRequest } from '../../models/request/deleteTalkRequest';
+import { ArchiveTalkRequest } from '../../models/request/archiveTalkRequest';
 import { HubService } from "../../services/hubService";
 
 
@@ -205,7 +206,7 @@ export class VocalListPage {
       resp => {
         let response = resp.json() as Response<ActionResponse>;
         if(!response.HasError && response.Data.IsDone){
-          this.talkService.UpdateList(this.vocalList[itemIndex]);
+          this.talkService.DeleteTalk(this.vocalList[itemIndex]);
           this.vocalList.splice(itemIndex, 1);
         }
         else {
@@ -215,8 +216,28 @@ export class VocalListPage {
     );
   }
 
-  archiveMessage(id){
-    console.log('archive : ' + id);
+  archiveMessage(id, index){
+    let itemIndex = index;
+    let request: ArchiveTalkRequest = {
+      Lang: params.Lang,
+      IdSender: params.User.Id,
+      IdTalk: id,
+      SentTime: new Date()
+    };
+    let urlArchive = url.ArchiveTalk();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlArchive, params.User);
+    this.httpService.Post<ArchiveTalkRequest>(urlArchive, request, cookie).subscribe(
+      resp => {
+        let response = resp.json() as Response<ActionResponse>;
+        if(!response.HasError && response.Data.IsDone){
+          this.talkService.DeleteTalk(this.vocalList[itemIndex]);
+          this.vocalList.splice(itemIndex, 1);
+        }
+        else {
+          this.showAlert(response.ErrorMessage);
+        }
+      }
+    );
   }
 
   goToMessage(id) {
