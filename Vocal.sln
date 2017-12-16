@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocal.Console", "Vocal.Cons
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocal.WindowsService", "Vocal.WindowsService\Vocal.WindowsService.csproj", "{0A7FD436-A189-4046-A2BC-D7FF70A113B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocal.Administration", "Vocal.Administration\Vocal.Administration.csproj", "{15FD4FE2-34B9-4E79-90E7-160C95D41B80}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -143,22 +141,6 @@ Global
 		{0A7FD436-A189-4046-A2BC-D7FF70A113B6}.Release|x64.Build.0 = Release|Any CPU
 		{0A7FD436-A189-4046-A2BC-D7FF70A113B6}.Release|x86.ActiveCfg = Release|Any CPU
 		{0A7FD436-A189-4046-A2BC-D7FF70A113B6}.Release|x86.Build.0 = Release|Any CPU
-		{15FD4FE2-34B9-4E79-90E7-160C95D41B80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{15FD4FE2-34B9-4E79-90E7-160C95D41B80}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{15FD4FE2-34B9-4E79-90E7-160C95D41B80}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{15FD4FE2-34B9-4E79-90E7-160C95D41B80}.Debug|ARM.Build.0 = Debug|Any CPU
-		{15FD4FE2-34B9-4E79-90E7-160C95D41B80}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{15FD4FE2-34B9-4E79-90E7-160C95D41B80}.Debug|x64.Build.0 = Debug|Any CPU
-		{15FD4FE2-34B9-4E79-90E7-160C95D41B80}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{15FD4FE2-34B9-4E79-90E7-160C95D41B80}.Debug|x86.Build.0 = Debug|Any CPU
-		{15FD4FE2-34B9-4E79-90E7-160C95D41B80}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{15FD4FE2-34B9-4E79-90E7-160C95D41B80}.Release|Any CPU.Build.0 = Release|Any CPU
-		{15FD4FE2-34B9-4E79-90E7-160C95D41B80}.Release|ARM.ActiveCfg = Release|Any CPU
-		{15FD4FE2-34B9-4E79-90E7-160C95D41B80}.Release|ARM.Build.0 = Release|Any CPU
-		{15FD4FE2-34B9-4E79-90E7-160C95D41B80}.Release|x64.ActiveCfg = Release|Any CPU
-		{15FD4FE2-34B9-4E79-90E7-160C95D41B80}.Release|x64.Build.0 = Release|Any CPU
-		{15FD4FE2-34B9-4E79-90E7-160C95D41B80}.Release|x86.ActiveCfg = Release|Any CPU
-		{15FD4FE2-34B9-4E79-90E7-160C95D41B80}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
