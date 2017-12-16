@@ -80,6 +80,12 @@ var url = {
     DeleteTalk() : string {
         return this.BaseUri + "/api/talk/deleteTalk";
     },
+    ArchiveTalk() : string {
+        return this.BaseUri + "/api/talk/ArchiveTalk";
+    },
+    UnarchiveTalk() : string {
+        return this.BaseUri + "/api/talk/unarchiveTalk";
+    },
     GetProfil() : string {
         return this.BaseUri + "/api/user/profil";
     },
