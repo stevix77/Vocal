@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Vocal.Business.Properties;
 using Vocal.DAL;
 
 namespace Vocal.Business.Backup
@@ -28,9 +29,9 @@ namespace Vocal.Business.Backup
                         if (docs.Count > 0)
                         {
                             var json = JsonConvert.SerializeObject(docs);
-                            if (!Directory.Exists("export"))
-                                Directory.CreateDirectory("export");
-                            File.WriteAllText($"export/{name}.json", json);
+                            if (!Directory.Exists($"{Settings.Default.BackupPath}/export"))
+                                Directory.CreateDirectory($"{Settings.Default.BackupPath}/export");
+                            File.WriteAllText($"{Settings.Default.BackupPath}/export/{name}.json", json);
                         }
                     }
                     Thread.Sleep(1000 * 3600 * 6);

@@ -601,7 +601,7 @@ namespace Vocal.DAL
             list = collection.Find(x => (x.Username.ToLower().Contains(keyword) || 
                                         x.Firstname.ToLower().Contains(keyword) || 
                                         x.Lastname.ToLower().Contains(keyword)) &&
-                                        x.Id != userId)
+                                        x.Id != userId && x.Settings.Contact != Contacted.Nobody)
                                         .ToList();
             return list;
         }

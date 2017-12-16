@@ -114,28 +114,7 @@ namespace Vocal.Business.Binder
         {
             var list = new List<PeopleResponse>();
             foreach(var item in listSearch)
-            {
-                if(item.Settings.Contact != Contacted.Nobody)
-                {
-                    var friend = user.Friends.Find(x => x.Id == item.Id);
-                    if (friend == null) // il n'existe pas dans ma liste d'amis
-                    {
-                        list.Add(Bind_People(item, false, user.Settings.Blocked.Exists(x => x.Id == item.Id)));
-                    }
-                    else
-                        list.Add(new PeopleResponse
-                        {
-                            Email = item.Email,
-                            IsFriend = true,
-                            Firstname = item.Firstname,
-                            Id = item.Id,
-                            Lastname = item.Lastname,
-                            Username = item.Username,
-                            Pictures = Bind_Pictures(item.Pictures),
-                            IsBlocked = user.Settings.Blocked.Exists(x => x.Id == item.Id)
-                        });
-                }
-            }
+                list.Add(Bind_People(item, false, user.Settings.Blocked.Exists(x => x.Id == item.Id)));
             return list;
         }
 
