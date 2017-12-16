@@ -205,7 +205,7 @@ export class VocalListPage {
       resp => {
         let response = resp.json() as Response<ActionResponse>;
         if(!response.HasError && response.Data.IsDone){
-          this.talkService.UpdateList(this.vocalList[itemIndex]);
+          this.talkService.DeleteTalk(this.vocalList[itemIndex]);
           this.vocalList.splice(itemIndex, 1);
         }
         else {
