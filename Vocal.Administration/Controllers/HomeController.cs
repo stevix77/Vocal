@@ -1,4 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Vocal.Model;
+using Vocal.Business;
+using Vocal.Business.Business;
+using MongoDB.Driver;
+using Vocal.Model.DB;
+using Vocal.Business.Admin;
 
 namespace Vocal.Administration.Controllers
 {
@@ -6,7 +12,14 @@ namespace Vocal.Administration.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            var response = UserManager.GetListUsers();
+            if(response.HasError)
+            {
+                ViewBag.Error = response.ErrorMessage;
+                return View("Error");
+            }
+            else
+                return View(response.Data);
         }
     }
 }

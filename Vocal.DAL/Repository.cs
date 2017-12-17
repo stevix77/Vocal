@@ -15,6 +15,8 @@ namespace Vocal.DAL
         private Repository()
         {
             MongoDB.Bson.Serialization.BsonClassMap.RegisterClassMap<SendMessageRequest>();
+            MongoDB.Bson.Serialization.BsonClassMap.RegisterClassMap<DeleteMessageRequest>();
+            MongoDB.Bson.Serialization.BsonClassMap.RegisterClassMap<UpdateTalkRequest>();
         }
 
         static Repository() {
