@@ -60,5 +60,11 @@ namespace Vocal.WebApi.Controllers
         {
             return Business.Tools.Monitoring.Execute(UserBusiness.UnblockUsers, GetUserIdFromCookie(), request.Ids, request.Lang);
         }
+
+        [HttpPost, Route("block/list"), CustomAuthorize]
+        public Response<List<UserResponse>> GetUsersBlocked(Request request)
+        {
+            return Business.Tools.Monitoring.Execute(UserBusiness.GetUsersBlocked, GetUserIdFromCookie(), request.Lang);
+        }
     }
 }
