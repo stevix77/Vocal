@@ -25,8 +25,8 @@ namespace Vocal.Business.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<toast launch=\"talkId={2}\"><visual><binding template =\"ToastText02\"><text id=\"1\">" +
-            "{1}</text><text id=\"2\">{0}</text></binding></visual></toast>")]
+        [global::System.Configuration.DefaultSettingValueAttribute("<toast launch=\"talkId={2}&action={3}\"><visual><binding template =\"ToastText02\"><t" +
+            "ext id=\"1\">{1}</text><text id=\"2\">{0}</text></binding></visual></toast>")]
         public string TalkWindows {
             get {
                 return ((string)(this["TalkWindows"]));
@@ -62,7 +62,7 @@ namespace Vocal.Business.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{{\'data\' : {{\'message\' : \'{0}\',  \'userId\': \'{1}\' }}}}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("{{\'data\' : {{\'message\' : \'{0}\',  \'userId\': \'{1}\', \'action\': \'{2}\' }}}}")]
         public string AddFriendsAndroid {
             get {
                 return ((string)(this["AddFriendsAndroid"]));
@@ -71,7 +71,7 @@ namespace Vocal.Business.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{{\"aps\" : {{\'alert\' : \'{0}\',  \'userId\' : \'{1}\' }}}}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("{{\"aps\" : {{\'alert\' : \'{0}\',  \'userId\' : \'{1}\', \'action\': \'{2}\' }}}}")]
         public string AddFriendsiOs {
             get {
                 return ((string)(this["AddFriendsiOs"]));
@@ -80,8 +80,8 @@ namespace Vocal.Business.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<toast launch=\"userId={1}\"><visual><binding template =\"ToastText01\"><text id=\"2\">" +
-            "{0}</text></binding></visual></toast>")]
+        [global::System.Configuration.DefaultSettingValueAttribute("<toast launch=\"userId={1}&action={2}\"><visual><binding template =\"ToastText01\"><t" +
+            "ext id=\"2\">{0}</text></binding></visual></toast>")]
         public string AddFriendsWindows {
             get {
                 return ((string)(this["AddFriendsWindows"]));
@@ -90,7 +90,8 @@ namespace Vocal.Business.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{{\'data\' : {{\'message\' : \'{0}\', \'title\' : \'{1}\', \'talkId\' : \'{2}\' }}}}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("{{\'data\' : {{\'message\' : \'{0}\', \'title\' : \'{1}\', \'talkId\' : \'{2}\', \'action\': \'{3}" +
+            "\' }}}}")]
         public string TalkAndroid {
             get {
                 return ((string)(this["TalkAndroid"]));
@@ -99,7 +100,8 @@ namespace Vocal.Business.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{{\"aps\" : {{\'alert\' : \'{0}\', \'title\' : \'{1}\', \'talkId\' : \'{2}\' }}}}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("{{\"aps\" : {{\'alert\' : \'{0}\', \'title\' : \'{1}\', \'talkId\' : \'{2}\', \'action\': \'{3}\' }" +
+            "}}}")]
         public string TalkiOs {
             get {
                 return ((string)(this["TalkiOs"]));

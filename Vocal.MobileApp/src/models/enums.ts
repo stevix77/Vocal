@@ -44,3 +44,9 @@ export enum HubMethod {
     EndTalk,
     AddFriend
 }
+
+export enum NotifType {
+    Talk = 0,
+    AddFriend = 1,
+    Follow = 2
+}

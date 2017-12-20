@@ -91,5 +91,8 @@ var url = {
     },
     GetContactAddedMe() : string {
         return this.BaseUri + "/api/friend/addedMe";
+    },
+    GetBlockedList() : string {
+        return this.BaseUri + "/api/user/block/list";
     }
 }
