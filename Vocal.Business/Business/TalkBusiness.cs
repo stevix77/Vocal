@@ -315,9 +315,11 @@ namespace Vocal.Business.Business
             Task.Run(async () => {
                 var users = response.Talk.Users.Where(x => x.Id != senderId);
                 await HubService.Instance.SendMessage(response, response.Talk.Users.Select(x => x.Id).ToList()); // envoi message via signalr
-                var titleNotif = GenerateTitleNotif(response.Message, string.Join(",", users.Select(x => x.Username)));
+                //var titleNotif = GenerateTitleNotif(response.Message, );
                 var messNotif = GenerateMessageNotif(response.Message);
-                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), (int)NotifType.Talk, messNotif, titleNotif, response.Talk.Id);
+                var vocalName = string.Join(",", users.Select(x => x.Username)); 
+
+                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), (int)NotifType.Talk, response.Talk.Id, vocalName, response.Message.User.Username, response.Message.ContentType == (int)MessageType.Text ? response.Message.Content : string.Empty);
             });
         }
 
@@ -336,16 +338,5 @@ namespace Vocal.Business.Business
                     : m.Content
                 : string.Empty;
         }
-
-        //private static async Task RegisterNotificationToTalk(List<User> allUser, string talkId)
-        //{
-        //    foreach(var item in allUser)
-        //    {
-        //        foreach(var device in item.Devices)
-        //        {
-        //            await NotificationHub.Instance.RegistrationUser(device.RegistrationId, device.Channel, device.Platform, string.Format(Properties.Settings.Default.TagTalk, talkId))
-        //        }
-        //    }
-        //}
     }
 }

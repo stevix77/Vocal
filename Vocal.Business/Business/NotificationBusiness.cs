@@ -71,7 +71,7 @@ namespace Vocal.Business.Business
                 foreach (var item in users.Where(x => x.Settings.IsNotifiable))
                 {
                     var tag = $"{Properties.Settings.Default.TagUser}:{item.Id}";
-                    foreach (var d in item.Devices.Select(x => new { Platform = x.Platform, Lang = x.Lang }).Distinct())
+                    foreach (var d in item.Devices.Select(x => new {  x.Platform, x.Lang }).Distinct())
                     {
                         var payload = GetTemplate(type, d.Platform, d.Lang, param);
                         LogManager.LogDebug(string.Format("Payload {0}", payload));
@@ -120,10 +120,9 @@ namespace Vocal.Business.Business
             return payload;
         }
 
-        private static string GetPayloadAddFriends(string platform, string lang)
+        private static string GetPayloadAddFriends(string platform)
         {
             string payload = string.Empty;
-            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             switch (platform)
             {
                 case "gcm":
@@ -138,6 +137,7 @@ namespace Vocal.Business.Business
                 default:
                     break;
             }
+            LogManager.LogDebug($"platform {platform} - payload {payload}");
             return payload;
         }
 
@@ -164,15 +164,21 @@ namespace Vocal.Business.Business
         private static string GetTemplate(int type, string platform, string lang, params string[] param)
         {
             string template = string.Empty;
+            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+            string str = string.Empty;
             switch (type)
             {
                 case (int)NotifType.AddFriend:
-                    template = string.Format(GetPayloadAddFriends(platform, lang), param.GetValue(0));
+                    LogManager.LogDebug("0: {0} - 1: {1}", param.GetValue(0), param.GetValue(1));
+                    str = GetPayloadAddFriends(platform);
+                    template = string.Format(str, $"{param.GetValue(0).ToString()} {Resources_Language.TextNotifAddFriend}", param.GetValue(1).ToString(), type);
                     break;
                 case (int)NotifType.Talk:
                     LogManager.LogDebug("0: {0} 1: {1} 2: {2}", param.GetValue(0), param.GetValue(1), param.GetValue(2));
-                    var ch = GetPayloadTalk(platform);
-                    template = string.Format(ch, param.GetValue(0).ToString(), param.GetValue(1).ToString(), param.GetValue(2).ToString());
+                    str = GetPayloadTalk(platform);
+                    var title = $"{param.GetValue(2)} @ {param.GetValue(1)}";
+                    var mess = !string.IsNullOrEmpty(param.GetValue(3).ToString()) ? param.GetValue(3).ToString().Length > 20 ? param.GetValue(3).ToString().Substring(0, 20) : param.GetValue(3).ToString() : string.Empty;
+                    template = string.Format(str, mess, title, param.GetValue(0).ToString(), type);
                     break;
                 case (int)NotifType.Follow:
                     template = string.Format(GetPayloadFollow(platform), param.GetValue(0));

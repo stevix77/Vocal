@@ -20,7 +20,7 @@ import { Push, PushObject } from '@ionic-native/push';
 import { NotificationRegisterRequest } from "../models/request/notificationRegisterRequest";
 import { HubService } from '../services/hubService';
 import {KeyStore} from '../models/enums';
-import {HubMethod} from '../models/enums';
+import { HubMethod, NotifType } from '../models/enums';
 import { InitResponse } from '../models/response/InitResponse';
 import { ExceptionService } from "../services/exceptionService";
 import { MessagePage } from "../pages/message/message";
@@ -173,11 +173,65 @@ export class VocalApp {
     });
   }
 
+  // goNotifAction(data) {
+  //   switch (data.action as number) {
+  //     case NotifType.Talk:
+  //       switch (params.Platform) {
+  //         case "gcm":
+  //           this.nav.push(MessagePage, { TalkId: data.talkId });
+  //           break;
+  //         case "apns":
+  //           this.nav.push(MessagePage, { TalkId: data.talkId });
+  //           break;
+  //         case "wns": //talkId={2}&amp;action={3}
+  //           let args = data.pushNotificationReceivedEventArgs.toastNotification.content.getElementsByTagName('toast')[0].getAttribute('launch') as string;
+  //           let value = args.split('=')[1];
+  //           return ""
+  //         default:
+  //           break;
+  //       }
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }
+
+  goNotifAction(data) {
+    switch (params.Platform) {
+      case "gcm":
+      case "apns":
+        switch (data.action) {
+          case NotifType.Talk:
+            this.nav.push(MessagePage, { TalkId: data.talkId });
+            break;
+          case NotifType.AddFriend:
+            break;
+          default:
+            break;
+        }
+        break;
+      case "wns": //talkId={2}&amp;action={3}
+        let args = data.pushNotificationReceivedEventArgs.toastNotification.content.getElementsByTagName('toast')[0].getAttribute('launch') as string;
+        let param = args.split('&');
+        let action = param[1].split('=')[1];
+        let value = param[0].split('=')[1];
+        switch (Number.parseInt(action)) {
+          case NotifType.Talk:
+            this.nav.push(MessagePage, { TalkId: value });
+            break;
+          case NotifType.AddFriend:
+            break;
+          default:
+            break;
+        }
+      default:
+        break;
+    }
+  }
+
   windowsNotification(notification) {
-    let args = notification.additionalData.pushNotificationReceivedEventArgs.toastNotification.content.getElementsByTagName('toast')[0].getAttribute('launch') as string;
-    let value = args.split('=')[1];
     if(notification.additionalData.coldstart) {
-      this.nav.push(MessagePage, {TalkId: value})
+      this.goNotifAction(notification.additionalData);
     } else {
       let confirmAlert = this.alertCtrl.create({
         title: notification.title,
@@ -189,7 +243,7 @@ export class VocalApp {
           text: 'View',
           handler: () => {
             //TODO: Your logic here
-            this.nav.push(MessagePage, {TalkId: value});
+            this.goNotifAction(notification.additionalData);
           }
         }]
       });
@@ -199,7 +253,7 @@ export class VocalApp {
 
   iosNotification(notification) {
     if(notification.additionalData.coldstart) {
-      this.nav.push(MessagePage, {TalkId: notification.additionalData.talkId})
+      this.goNotifAction(notification.additionalData);
     } else {
       let confirmAlert = this.alertCtrl.create({
         title: notification.title,
@@ -211,7 +265,7 @@ export class VocalApp {
           text: 'View',
           handler: () => {
             //TODO: Your logic here
-            this.nav.push(MessagePage, {TalkId: notification.additionalData.talkId});
+            this.goNotifAction(notification.additionalData);
           }
         }]
       });
@@ -221,7 +275,7 @@ export class VocalApp {
 
   androidNotification(notification) {
     if(notification.additionalData.coldstart) {
-      this.nav.push(MessagePage, {TalkId: notification.additionalData.talkId})
+      this.goNotifAction(notification.additionalData);
     } else {
       let confirmAlert = this.alertCtrl.create({
         title: notification.title,
@@ -233,7 +287,7 @@ export class VocalApp {
           text: 'View',
           handler: () => {
             //TODO: Your logic here
-            this.nav.push(MessagePage, {TalkId: notification.additionalData.talkId});
+            this.goNotifAction(notification.additionalData);
           }
         }]
       });

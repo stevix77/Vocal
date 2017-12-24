@@ -4,7 +4,7 @@
 
     public abstract class VocalApiController : ApiController
     {
-        public string GetUserIdFromCookie()
+        protected string GetUserIdFromCookie()
         {
             return Helpers.Helper.GetAuthorizeCookie(ActionContext).UserId;
         }

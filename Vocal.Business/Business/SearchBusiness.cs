@@ -28,11 +28,11 @@ namespace Vocal.Business.Business
                 var list = Repository.Instance.SearchPeople(userId, keyword);
                 foreach(var item in list)
                 {
-                    if (item.Username.ToLower().StartsWith(keyword) || item.Firstname.ToLower().StartsWith(keyword) || item.Lastname.ToLower().StartsWith(keyword))
+                    if ((item.Username.ToLower().StartsWith(keyword) || item.Firstname.ToLower().StartsWith(keyword) || item.Lastname.ToLower().StartsWith(keyword)) && !user.Friends.Exists(x => x.Id == item.Id))
                         listStart.Add(item);
-                    else if ((item.Username.ToLower().EndsWith(keyword) || item.Firstname.ToLower().EndsWith(keyword) || item.Lastname.ToLower().EndsWith(keyword)) && !listStart.Contains(item))
+                    else if ((item.Username.ToLower().EndsWith(keyword) || item.Firstname.ToLower().EndsWith(keyword) || item.Lastname.ToLower().EndsWith(keyword)) && !user.Friends.Exists(x => x.Id == item.Id) && !listStart.Contains(item))
                         listEnd.Add(item);
-                    else if (!listStart.Contains(item) && !listEnd.Contains(item))
+                    else if (!listStart.Contains(item) && !listEnd.Contains(item) && !user.Friends.Exists(x => x.Id == item.Id))
                         listContains.Add(item);
                 }
                 listStart.AddRange(listContains);
@@ -73,16 +73,16 @@ namespace Vocal.Business.Business
             {
                 LogManager.LogDebug(userId, keyword, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-                var listStart = new List<Vocal.Model.DB.User>();
-                var listEnd = new List<Vocal.Model.DB.User>();
-                var listContains = new List<Vocal.Model.DB.User>();
+                var listStart = new List<User>();
+                var listEnd = new List<User>();
+                var listContains = new List<User>();
                 var user = Repository.Instance.GetUserById(userId);
                 var list = Repository.Instance.SearchPeopleByEmail(keyword);
                 foreach (var item in list)
                 {
-                    if (item.Username.ToLower().StartsWith(keyword) || item.Firstname.ToLower().StartsWith(keyword) || item.Lastname.ToLower().StartsWith(keyword))
+                    if (item.Email.ToLower().StartsWith(keyword))
                         listStart.Add(item);
-                    else if ((item.Username.ToLower().EndsWith(keyword) || item.Firstname.ToLower().EndsWith(keyword) || item.Lastname.ToLower().EndsWith(keyword)) && !listStart.Contains(item))
+                    else if (item.Email.ToLower().EndsWith(keyword) && !listStart.Contains(item))
                         listEnd.Add(item);
                     else if (!listStart.Contains(item) && !listEnd.Contains(item))
                         listContains.Add(item);

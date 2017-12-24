@@ -12,7 +12,7 @@ namespace Vocal.DAL.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.1.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.5.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -112,6 +112,26 @@ namespace Vocal.DAL.Properties {
         public string Hubname {
             get {
                 return ((string)(this["Hubname"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Endpoint=sb://mobileappvocal.servicebus.windows.net/;SharedAccessKeyName=DefaultF" +
+            "ullSharedAccessSignature;SharedAccessKey=h6TObd/MF8tY9JiQjiHRj4c3C2+XYjbYQe0CzgZ" +
+            "nmoA=")]
+        public string DefaultFullSharedAccessSignature1 {
+            get {
+                return ((string)(this["DefaultFullSharedAccessSignature1"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("vocal")]
+        public string Hubname1 {
+            get {
+                return ((string)(this["Hubname1"]));
             }
         }
         

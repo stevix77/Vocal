@@ -36,6 +36,16 @@ export class TalkService {
     });
   }
 
+  DeleteTalk(talk: TalkResponse) {
+    let tIndex = this.Talks.findIndex(x => x.Id == talk.Id);
+    if(tIndex >= 0){
+      this.Talks.splice(tIndex, 1);
+      this.SaveList();
+    } else {
+      console.log('No talk to delete found');
+    }
+  }
+
   UpdateList(talk: TalkResponse) {
     let t = this.Talks.find(x => x.Id == talk.Id);
     if(t == null) {
