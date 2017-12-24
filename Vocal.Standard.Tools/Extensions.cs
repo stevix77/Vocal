@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Vocal.Tools
 {
     public static class Extensions
     {
         /// <summary>
-        /// R�cup�rer l'attribut StringEnumAttribute d'une valeur d'une enum
+        /// Récupérer l'attribut StringEnumAttribute d'une valeur d'une enum
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>

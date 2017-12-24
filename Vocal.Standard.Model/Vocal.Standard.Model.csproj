@@ -4,4 +4,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Signalr\" />
+    <Folder Include="Response\" />
+    <Folder Include="Request\" />
+    <Folder Include="Helpers\" />
+    <Folder Include="Business\" />
+    <Folder Include="DB\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Vocal.Standard.Tools\Vocal.Standard.Tools.csproj" />
+  </ItemGroup>
 </Project>
