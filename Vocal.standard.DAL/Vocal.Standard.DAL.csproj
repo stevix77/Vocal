@@ -2,11 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+	<RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.5.0" />
     <PackageReference Include="Microsoft.Azure.NotificationHubs" Version="2.0.0-preview1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.5.0" />
     <PackageReference Include="DnsClient" Version="1.0.7" />
   </ItemGroup>
   <ItemGroup>

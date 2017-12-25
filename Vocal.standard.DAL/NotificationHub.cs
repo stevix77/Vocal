@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Azure.NotificationHubs;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Azure.NotificationHubs;
 using Vocal.Model.Context;
-using Vocal.DAL.Exception;
 
 namespace Vocal.DAL
 {
@@ -20,6 +19,10 @@ namespace Vocal.DAL
 
         public static NotificationHub Init(HubContext config)
         {
+            if (_instance != null)
+            {
+                return _instance;
+            }
             _config = config;
             _instance = new NotificationHub();
             return _instance;

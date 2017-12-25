@@ -16,31 +16,37 @@ namespace Vocal.DAL
 
         static DbContext _config;
         static Repository _instance;
-        static MongoClient _client = GetClient();
-        static IMongoDatabase _db = GetDatabase();
+        MongoClient _client;
+        IMongoDatabase _db;
 
         Repository()
         {
             MongoDB.Bson.Serialization.BsonClassMap.RegisterClassMap<SendMessageRequest>();
             MongoDB.Bson.Serialization.BsonClassMap.RegisterClassMap<DeleteMessageRequest>();
             MongoDB.Bson.Serialization.BsonClassMap.RegisterClassMap<UpdateTalkRequest>();
+            _client = GetClient();
+            _db = GetDatabase();
         }
 
 
         public static Repository Init(DbContext config)
         {
+            if(_instance != null)
+            {
+                return _instance;
+            }
             _config = config;
             _instance = new Repository();
             return _instance;
         }
 
 
-        static IMongoDatabase GetDatabase()
+        IMongoDatabase GetDatabase()
         {
             return _client.GetDatabase(_config.DocumentDBName);
         }
 
-        static MongoClient GetClient()
+        MongoClient GetClient()
         {
             var settings = new MongoClientSettings
             {

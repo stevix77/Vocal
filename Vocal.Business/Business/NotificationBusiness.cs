@@ -13,8 +13,6 @@ namespace Vocal.Business.Business
 {
     public class NotificationBusiness : BaseBusiness
     {
-        NotificationHub _notificationHub;
-
         public NotificationBusiness(DbContext dbContext, HubContext hubContext) : base(dbContext)
         {
             _notificationHub = NotificationHub.Init(hubContext);
