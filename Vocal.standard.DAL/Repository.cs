@@ -1,11 +1,10 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using Vocal.DAL.Context;
-using Vocal.DAL.Exception;
+using Vocal.Model.Context;
 using Vocal.Model.DB;
 using Vocal.Model.Helpers;
 using Vocal.Model.Request;
@@ -28,21 +27,13 @@ namespace Vocal.DAL
         }
 
 
-        public static void Init(DbContext config)
+        public static Repository Init(DbContext config)
         {
             _config = config;
             _instance = new Repository();
+            return _instance;
         }
 
-        public static Repository Instance
-        {
-            get
-            {
-                if(_config != null)
-                    return _instance;
-                throw new NoInitializedException();
-            }
-        }
 
         static IMongoDatabase GetDatabase()
         {

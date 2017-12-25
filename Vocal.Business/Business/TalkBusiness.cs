@@ -8,6 +8,7 @@ using Vocal.Business.Signalr;
 using Vocal.Business.Tools;
 using Vocal.DAL;
 using Vocal.Model.Business;
+using Vocal.Model.Context;
 using Vocal.Model.DB;
 using Vocal.Model.Helpers;
 using Vocal.Model.Request;
@@ -15,16 +16,28 @@ using Vocal.Model.Response;
 
 namespace Vocal.Business.Business
 {
-    public static class TalkBusiness
+    public class TalkBusiness : BaseBusiness
     {
-        public static Response<List<TalkResponse>> GetTalks(string userId, string lang)
+        readonly NotificationBusiness _notificationBusiness;
+
+        public TalkBusiness(DbContext context, HubContext hubContext) : base(context, hubContext)
+        {
+            _notificationBusiness = new NotificationBusiness(_repository, _notificationHub);
+        }
+
+        internal TalkBusiness(Repository repository, NotificationHub notificationHub) : base(repository, notificationHub)
+        {
+            _notificationBusiness = new NotificationBusiness(_repository, _notificationHub);
+        }
+
+        public Response<List<TalkResponse>> GetTalks(string userId, string lang)
         {
             var response = new Response<List<TalkResponse>>();
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             LogManager.LogDebug(userId, lang);
             try
             {
-                var list = Repository.Instance.GetListTalk(userId);
+                var list = _repository.GetListTalk(userId);
                 response.Data = Bind.Bind_Talks(list, userId);
             }
             catch (TimeoutException tex)
@@ -45,14 +58,14 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<string> GetMessageById(string messageId, string userId, string lang)
+        public Response<string> GetMessageById(string messageId, string userId, string lang)
         {
             var response = new Response<string>();
             try
             {
                 LogManager.LogDebug(messageId, userId, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-                var mess = Repository.Instance.GetMessageById(messageId, userId);
+                var mess = _repository.GetMessageById(messageId, userId);
                 if (mess != null)
                     response.Data = mess.Content;
                 else
@@ -76,14 +89,14 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<List<MessageResponse>> GetMessages(string talkId, DateTime? lastMessage, string userId, string lang)
+        public Response<List<MessageResponse>> GetMessages(string talkId, DateTime? lastMessage, string userId, string lang)
         {
             var response = new Response<List<MessageResponse>>();
             try
             {
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
                 LogManager.LogDebug(talkId, lastMessage, userId, lang);
-                var messages = Repository.Instance.GetMessages(talkId, lastMessage, userId);
+                var messages = _repository.GetMessages(talkId, lastMessage, userId);
                 if (messages == null)
                     throw new CustomException(Resources_Language.TalkNotExisting);
                 response.Data = Bind.Bind_Messages(messages);
@@ -108,19 +121,19 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static async Task UpdateListenUser(string userId, string talkId, List<Message> messages)
+        public async Task UpdateListenUser(string userId, string talkId, List<Message> messages)
         {
-            Repository.Instance.SetIsRead(userId, talkId, messages);
+            _repository.SetIsRead(userId, talkId, messages);
             await HubService.Instance.UpdateTalk(talkId, Bind.Bind_Messages(messages));
         }
-        public static Response<bool> IsSendable(string userId, List<string> users, string lang)
+        public Response<bool> IsSendable(string userId, List<string> users, string lang)
         {
             var response = new Response<bool>();
             try
             {
                 LogManager.LogDebug(userId, users, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-                var recipients = Repository.Instance.GetUsersById(users);
+                var recipients = _repository.GetUsersById(users);
                 response.Data = recipients.TrueForAll(x => !x.Settings.Blocked.Exists(y => y.Id == userId) && (x.Settings.Contact == Contacted.Everybody || (x.Settings.Contact == Contacted.Friends && x.Friends.Exists(y => y.Id == userId))));
             }
             catch (TimeoutException tex)
@@ -141,7 +154,7 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<SendMessageResponse> SendMessage(SendMessageRequest request)
+        public Response<SendMessageResponse> SendMessage(SendMessageRequest request)
         {
             var response = new Response<SendMessageResponse> { Data = new SendMessageResponse { IsSent = false } };
             try
@@ -159,10 +172,10 @@ namespace Vocal.Business.Business
                 if (string.IsNullOrEmpty(request.IdTalk))
                 {
                     request.IdsRecipient.Add(request.IdSender);
-                    var talk = Repository.Instance.GetTalk(request.IdsRecipient);
+                    var talk = _repository.GetTalk(request.IdsRecipient);
                     if(talk == null) // aucun message entre ces idsRecipient
                     {
-                        if (Repository.Instance.CheckIfAllUsersExist(request.IdsRecipient)) // vérifier si les ids existent en base
+                        if (_repository.CheckIfAllUsersExist(request.IdsRecipient)) // vérifier si les ids existent en base
                             CreateNewTalk(request, response);
                         else
                             throw new Exception("AllUsers not exist");
@@ -172,7 +185,7 @@ namespace Vocal.Business.Business
                 }
                 else
                 {
-                    var talk = Repository.Instance.GetTalkById(request.IdTalk);
+                    var talk = _repository.GetTalkById(request.IdTalk);
                     AddMessageToTalk(request, response, talk);
                 }
                 if (response.Data.IsSent)
@@ -196,9 +209,9 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        private static void CreateNewTalk(SendMessageRequest request, Response<SendMessageResponse> response)
+        private void CreateNewTalk(SendMessageRequest request, Response<SendMessageResponse> response)
         {
-            var allUsers = Repository.Instance.GetUsersById(request.IdsRecipient);
+            var allUsers = _repository.GetUsersById(request.IdsRecipient);
             var sender = allUsers.SingleOrDefault(x => x.Id == request.IdSender);
             var dt = DateTime.Now;
             var talk = new Talk
@@ -223,14 +236,14 @@ namespace Vocal.Business.Business
                 Duration = (MessageType)request.MessageType == MessageType.Vocal ? talk.Duration : 0,
                 TalkId = talk.Id
             };
-            Repository.Instance.AddTalk(talk);
-            Repository.Instance.AddMessage(m);
+            _repository.AddTalk(talk);
+            _repository.AddMessage(m);
             response.Data.Talk = Bind.Bind_Talks(talk, m, request.IdSender);
             response.Data.Message = Bind.Bind_Message(m);
             response.Data.IsSent = true;
         }
 
-        private static void AddMessageToTalk(SendMessageRequest request, Response<SendMessageResponse> response, Talk talk)
+        private void AddMessageToTalk(SendMessageRequest request, Response<SendMessageResponse> response, Talk talk)
         {
             var m = new Message
             {
@@ -246,37 +259,37 @@ namespace Vocal.Business.Business
             };
             talk.Duration += m.ContentType == MessageType.Vocal && m.Duration.HasValue ? m.Duration.Value : 0;
             talk.LastMessage = m.ArrivedTime;
-            Repository.Instance.UpdateTalk(talk);
-            Repository.Instance.AddMessage(m);
+            _repository.UpdateTalk(talk);
+            _repository.AddMessage(m);
             response.Data.Talk = Bind.Bind_Talks(talk, m, request.IdSender);
             response.Data.Message = Bind.Bind_Message(m);
             response.Data.IsSent = true;
         }
-        public static Response<ActionResponse> ArchiveTalk(UpdateTalkRequest request)
+        public Response<ActionResponse> ArchiveTalk(UpdateTalkRequest request)
         {
             LogManager.LogDebug(request);
-            return ActionOnTalk(request, () => Repository.Instance.ArchiveTalk(request.IdTalk, request.IdSender));
+            return ActionOnTalk(request, () => _repository.ArchiveTalk(request.IdTalk, request.IdSender));
         }
 
-        public static Response<ActionResponse> UnarchiveTalk(UpdateTalkRequest request)
+        public Response<ActionResponse> UnarchiveTalk(UpdateTalkRequest request)
         {
             LogManager.LogDebug(request);
-            return ActionOnTalk(request, () => Repository.Instance.UnArchiveTalk(request.IdTalk, request.IdSender));
+            return ActionOnTalk(request, () => _repository.UnArchiveTalk(request.IdTalk, request.IdSender));
         }
 
-        public static Response<ActionResponse> DeleteTalk(UpdateTalkRequest request)
+        public Response<ActionResponse> DeleteTalk(UpdateTalkRequest request)
         {
             LogManager.LogDebug(request);
-            return ActionOnTalk(request, () => Repository.Instance.DeleteTalk(request.IdTalk, request.IdSender));
+            return ActionOnTalk(request, () => _repository.DeleteTalk(request.IdTalk, request.IdSender));
         }
 
-        public static Response<ActionResponse> DeleteMessage(DeleteMessageRequest request)
+        public Response<ActionResponse> DeleteMessage(DeleteMessageRequest request)
         {
             LogManager.LogDebug(request);
-            return ActionOnTalk(request, () => Repository.Instance.DeleteMessage(request.IdMessages, request.IdSender));
+            return ActionOnTalk(request, () => _repository.DeleteMessage(request.IdMessages, request.IdSender));
         }
 
-        private static Response<ActionResponse> ActionOnTalk(Request request, Func<bool> action)
+        private Response<ActionResponse> ActionOnTalk(Request request, Func<bool> action)
         {
             var response = new Response<ActionResponse> { Data = new ActionResponse { IsDone = false } };
             try
@@ -310,7 +323,7 @@ namespace Vocal.Business.Business
             return response;
         }
         
-        private static void SendNotif(SendMessageResponse response, string senderId)
+        private void SendNotif(SendMessageResponse response, string senderId)
         {
             Task.Run(async () => {
                 var users = response.Talk.Users.Where(x => x.Id != senderId);
@@ -319,7 +332,7 @@ namespace Vocal.Business.Business
                 var messNotif = GenerateMessageNotif(response.Message);
                 var vocalName = string.Join(",", users.Select(x => x.Username)); 
 
-                await NotificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), (int)NotifType.Talk, response.Talk.Id, vocalName, response.Message.User.Username, response.Message.ContentType == (int)MessageType.Text ? response.Message.Content : string.Empty);
+                await _notificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), (int)NotifType.Talk, response.Talk.Id, vocalName, response.Message.User.Username, response.Message.ContentType == (int)MessageType.Text ? response.Message.Content : string.Empty);
             });
         }
 

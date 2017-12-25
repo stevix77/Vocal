@@ -1,33 +1,43 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Vocal.Model.Response;
-using Vocal.Model.Business;
-using Vocal.Model.DB;
-using Vocal.Business.Tools;
 using Vocal.Business.Properties;
+using Vocal.Business.Tools;
 using Vocal.DAL;
-using Newtonsoft.Json;
+using Vocal.Model.Business;
+using Vocal.Model.Context;
 
 namespace Vocal.Business.Business
 {
-    public static class NotificationBusiness
+    public class NotificationBusiness : BaseBusiness
     {
-        public static async Task<Response<string>> GetRegistrationId(string channel, string userId, string platform, string lang)
+        NotificationHub _notificationHub;
+
+        public NotificationBusiness(DbContext dbContext, HubContext hubContext) : base(dbContext)
+        {
+            _notificationHub = NotificationHub.Init(hubContext);
+        }
+
+        internal NotificationBusiness(Repository repository, NotificationHub notificationHub) : base(repository)
+        {
+            _notificationHub = notificationHub;
+        }
+
+        public async Task<Response<string>> GetRegistrationId(string channel, string userId, string platform, string lang)
         {
             var response = new Response<string>();
             LogManager.LogDebug(channel, userId, platform, lang);
             try
             {
-                var user = Repository.Instance.GetUserById(userId);
+                var user = _repository.GetUserById(userId);
                 if(user != null)
                 {
                     if(true)
                     //if (!user.Devices.Exists(x => x.Channel == channel))
                     {
-                        var registrationId = await NotificationHub.Instance.GetRegistrationId(channel);
+                        var registrationId = await _notificationHub.GetRegistrationId(channel);
                         var tag = $"{Properties.Settings.Default.TagUser}:{userId}";
                         user.Devices.Add(new Vocal.Model.DB.Device
                         {
@@ -37,8 +47,8 @@ namespace Vocal.Business.Business
                             Tags = new List<string>() { tag },
                             Lang = lang
                         });
-                        Repository.Instance.UpdateUser(user);
-                        await NotificationHub.Instance.RegistrationUser(registrationId, channel, platform, tag);
+                        _repository.UpdateUser(user);
+                        await _notificationHub.RegistrationUser(registrationId, channel, platform, tag);
                         response.Data = registrationId;
                     }
                 }
@@ -61,13 +71,13 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static async Task<Response<bool>> SendNotification(List<string> ids, int type, params string[] param)
+        public async Task<Response<bool>> SendNotification(List<string> ids, int type, params string[] param)
         {
             var response = new Response<bool>();
             try
             {
                 LogManager.LogDebug(ids, type, param);
-                var users = Repository.Instance.GetUsersById(ids);
+                var users = _repository.GetUsersById(ids);
                 foreach (var item in users.Where(x => x.Settings.IsNotifiable))
                 {
                     var tag = $"{Properties.Settings.Default.TagUser}:{item.Id}";
@@ -75,7 +85,7 @@ namespace Vocal.Business.Business
                     {
                         var payload = GetTemplate(type, d.Platform, d.Lang, param);
                         LogManager.LogDebug(string.Format("Payload {0}", payload));
-                        var rep = await NotificationHub.Instance.SendNotification(d.Platform, tag, payload);
+                        var rep = await _notificationHub.SendNotification(d.Platform, tag, payload);
                         LogManager.LogDebug(JsonConvert.SerializeObject(rep));
                     }
                 }
@@ -99,7 +109,7 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        private static string GetPayloadTalk(string platform)
+        private string GetPayloadTalk(string platform)
         {
             string payload = string.Empty;
             switch (platform)
@@ -120,7 +130,7 @@ namespace Vocal.Business.Business
             return payload;
         }
 
-        private static string GetPayloadAddFriends(string platform)
+        private string GetPayloadAddFriends(string platform)
         {
             string payload = string.Empty;
             switch (platform)
@@ -141,7 +151,7 @@ namespace Vocal.Business.Business
             return payload;
         }
 
-        private static string GetPayloadFollow(string platform)
+        private string GetPayloadFollow(string platform)
         {
             string payload = string.Empty;
             switch (platform)
@@ -161,7 +171,7 @@ namespace Vocal.Business.Business
             return payload;
         }
 
-        private static string GetTemplate(int type, string platform, string lang, params string[] param)
+        private string GetTemplate(int type, string platform, string lang, params string[] param)
         {
             string template = string.Empty;
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);

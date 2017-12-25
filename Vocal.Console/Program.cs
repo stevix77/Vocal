@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vocal.Model.DB;
-using Vocal.Business;
-using Vocal.DAL;
-using Vocal.Business.Business;
-using Newtonsoft.Json;
-
-namespace Vocal.Console
+﻿namespace Vocal.Console
 {
     class Program
     {

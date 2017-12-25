@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vocal.Business.Properties;
+﻿using System.Threading.Tasks;
+using Vocal.Business.Business;
 using Vocal.Business.Tools;
 using Vocal.DAL;
-using Vocal.Model.DB;
+using Vocal.Model.Context;
 
 namespace Vocal.Business.Security
 {
-    public static class Authorize
+    public class Authorize : BaseBusiness
     {
+        public Authorize(DbContext context) : base(context)
+        {
+
+        }
         /// <summary>
         /// Check if it's token's id
         /// </summary>
@@ -19,7 +19,7 @@ namespace Vocal.Business.Security
         /// <param name="sign">Signature de la requête</param>
         /// <param name="timestamp">Timestamp utilisé pour générer la signature</param>
         /// <returns>True if matching</returns>
-        public static bool IsAuthorize(string id, string sign, string timestamp, string url)
+        public bool IsAuthorize(string id, string sign, string timestamp, string url)
         {
             bool authorize = false;
             if (!IsSignatureExist(sign))
@@ -28,7 +28,7 @@ namespace Vocal.Business.Security
                 token = CacheManager.GetCache<string>($"{Properties.Settings.Default.CacheKeyToken}_{id}");
                 if (string.IsNullOrEmpty(token))
                 {
-                    var user = Repository.Instance.GetUserById(id);
+                    var user = _repository.GetUserById(id);
                     if (user != null)
                     {
                         token = user.Token;
@@ -45,14 +45,14 @@ namespace Vocal.Business.Security
             return authorize;
         }
 
-        private static void SaveSignature(string sign, string userId)
+        private void SaveSignature(string sign, string userId)
         {
-            Repository.Instance.SaveSign(userId, sign);
+            _repository.SaveSign(userId, sign);
         }
 
-        private static bool IsSignatureExist(string sign)
+        private bool IsSignatureExist(string sign)
         {
-            var exists = Repository.Instance.GetSignature(sign);
+            var exists = _repository.GetSignature(sign);
             return exists;
         }
     }

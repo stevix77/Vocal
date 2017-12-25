@@ -2,21 +2,29 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Vocal.Model.Context;
 
 namespace Vocal.Administration
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
         public IConfiguration Configuration { get; }
+
+        public Startup(IHostingEnvironment env)
+        {
+            var builder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
+
+            builder.AddEnvironmentVariables();
+            Configuration = builder.Build();
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<DbContext>(Configuration.GetSection("DbContext"));
+            services.Configure<HubContext>(Configuration.GetSection("HubContext"));
             services.AddMvc();
         }
 
@@ -27,10 +35,10 @@ namespace Vocal.Administration
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
+            //else
+            //{
+            //    app.UseExceptionHandler("/Home/Error");
+            //}
 
             app.UseStaticFiles();
 

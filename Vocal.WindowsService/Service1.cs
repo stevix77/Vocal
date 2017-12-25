@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 using Vocal.Business.Backup;
+using Vocal.Model.Context;
 
 namespace Vocal.WindowsService
 {
@@ -24,7 +18,7 @@ namespace Vocal.WindowsService
         {
             try
             {
-                t = new System.Threading.Thread(BackupBusiness.ExportCollections);
+                t = new System.Threading.Thread(new BackupBusiness(new DbContext()).ExportCollections);
                 t.Start();
             }
             catch (Exception)

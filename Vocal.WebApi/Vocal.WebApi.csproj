@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Vocal.WebApi</RootNamespace>
     <AssemblyName>Vocal.WebApi</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -25,10 +25,12 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <Use64BitIISExpress />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
-    <DebugType></DebugType>
+    <DebugType>
+    </DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -113,6 +115,7 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.0.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
@@ -127,8 +130,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
@@ -162,13 +164,13 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
@@ -209,6 +211,7 @@
     <Content Include="Configs\connectionStrings.prod.config" />
     <Content Include="Configs\Vocal.DAL.Properties.Settings.prod.config" />
     <Content Include="Configs\Vocal.Business.Properties.Settings.prod.config" />
+    <Content Include="Configs\appSettings.localhost.config" />
     <None Include="Properties\PublishProfiles\local.pubxml" />
     <None Include="Properties\PublishProfiles\wsvocal - FTP %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\wsvocal - FTP.pubxml" />
@@ -261,6 +264,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ContextGenerator.cs" />
     <Compile Include="Helpers\Helper.cs" />
     <Compile Include="Models\PasswordReset.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -294,9 +298,9 @@
       <Project>{fed2004a-41ac-43ef-b43f-c01900103999}</Project>
       <Name>Vocal.Business</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Vocal.Model\Vocal.Model.csproj">
-      <Project>{b76d6ce5-b158-4eb9-8a35-54da7cee32ea}</Project>
-      <Name>Vocal.Model</Name>
+    <ProjectReference Include="..\Vocal.Standard.Model\Vocal.Standard.Model.csproj">
+      <Project>{3e9d3641-aac3-4a42-aa6f-1c3f1ff3e521}</Project>
+      <Name>Vocal.Standard.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -1,4 +1,4 @@
-﻿namespace Vocal.DAL.Context
+﻿namespace Vocal.Model.Context
 {
     public class DbContext
     {
@@ -14,5 +14,6 @@
         public string CollectionMessage { get; set; }
         public string CollectionMonitoring { get; set; }
         public string CollectionSearch { get; set; }
+        public string CollectionSign { get; set; }
     }
 }

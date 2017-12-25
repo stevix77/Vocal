@@ -1,18 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Vocal.Business.Properties;
 using Vocal.Business.Tools;
 using Vocal.Model.Business;
+using Vocal.Model.Context;
 using Vocal.Model.Response;
+using Vocal.DAL;
 
 namespace Vocal.Business.Business
 {
-    public static class InitBusiness
+    public class InitBusiness : BaseBusiness
     {
-        public static Response<InitResponse> Initialize(string userId, string lang)
+        readonly UserBusiness _userBusiness; 
+        readonly TalkBusiness _talkBusiness;
+        readonly FriendBusiness _friendBusiness;
+
+        public InitBusiness(DbContext dbContext, HubContext hubContext) : base(dbContext, hubContext)
+        {
+            _userBusiness = new UserBusiness(_repository);
+            _talkBusiness = new TalkBusiness(_repository, _notificationHub);
+            _friendBusiness = new FriendBusiness(_repository, _notificationHub);
+        }
+
+        internal InitBusiness(Repository repository, NotificationHub notificationHub) : base(repository, notificationHub)
+        {
+            _userBusiness = new UserBusiness(_repository);
+            _talkBusiness = new TalkBusiness(_repository, _notificationHub);
+            _friendBusiness = new FriendBusiness(_repository, _notificationHub);
+        }
+
+        public Response<InitResponse> Initialize(string userId, string lang)
         {
             var response = new Response<InitResponse>();
             try
@@ -22,7 +39,7 @@ namespace Vocal.Business.Business
                 response.Data = new InitResponse();
                 var actionSettings = new Action(() =>
                 {
-                    var resp = UserBusiness.GetSettings(userId, lang);
+                    var resp = _userBusiness.GetSettings(userId, lang);
                     if (!resp.HasError)
                         response.Data.Settings = resp.Data;
                     else
@@ -30,7 +47,7 @@ namespace Vocal.Business.Business
                 });
                 var actionTalks = new Action(() =>
                 {
-                    var resp = TalkBusiness.GetTalks(userId, lang);
+                    var resp = _talkBusiness.GetTalks(userId, lang);
                     if (!resp.HasError)
                         response.Data.Talks = resp.Data;
                     else
@@ -38,7 +55,7 @@ namespace Vocal.Business.Business
                 });
                 var actionFriends = new Action(() =>
                 {
-                    var resp = FriendBusiness.GetFriends(userId, 0, 0, lang);
+                    var resp = _friendBusiness.GetFriends(userId, 0, 0, lang);
                     if (!resp.HasError)
                         response.Data.Friends = resp.Data;
                     else

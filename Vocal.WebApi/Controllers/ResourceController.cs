@@ -14,7 +14,7 @@ namespace Vocal.WebApi.Controllers
         [HttpPost, Route("list/{lang}")]
         public Response<List<KeyValueResponse<string, string>>> List(string lang)
         {
-            return Business.Tools.Monitoring.Execute(ResourceBusiness.GetAllResources, lang);
+            return _monitoring.Execute(ResourceBusiness.GetAllResources, lang);
         }
     }
 }

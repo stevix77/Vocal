@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Azure.NotificationHubs;
-using Vocal.DAL.Context;
+using Vocal.Model.Context;
 using Vocal.DAL.Exception;
 
 namespace Vocal.DAL
@@ -9,7 +9,6 @@ namespace Vocal.DAL
     public class NotificationHub
     {
         static HubContext _config;
-
         static NotificationHub _instance;
 
         NotificationHubClient Hub { get; set; }
@@ -19,20 +18,11 @@ namespace Vocal.DAL
             Hub = NotificationHubClient.CreateClientFromConnectionString(_config.DefaultFullSharedAccessSignature, _config.Hubname, true);
         }
 
-        public static void Init(HubContext config)
+        public static NotificationHub Init(HubContext config)
         {
             _config = config;
             _instance = new NotificationHub();
-        }
-
-        public static NotificationHub Instance
-        {
-            get
-            {
-                if (_config != null)
-                    return _instance;
-                throw new NoInitializedException();
-            }
+            return _instance;
         }
 
         public async Task<string> GetRegistrationId(string channel)
@@ -121,7 +111,7 @@ namespace Vocal.DAL
         {
             var notif = GenerateNotif(platform, payload);
             var result = await Hub.SendNotificationAsync(notif, tag);
-            return new { Failure = result.Failure, Notificationid = result.NotificationId, State = result.State, Success = result.Success, Results = result.Results };
+            return new { result.Failure, Notificationid = result.NotificationId, result.State, result.Success, result.Results };
         }
     }
 }
