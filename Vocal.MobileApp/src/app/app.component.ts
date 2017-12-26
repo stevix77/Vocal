@@ -169,32 +169,10 @@ export class VocalApp {
     pushObject.on('error').subscribe(error => {
       this.showToast(error.message);
       this.exceptionService.Add(error.message)
+      // this.exceptionService.Add("push error")
       console.log('Error with Push plugin' + error);
     });
   }
-
-  // goNotifAction(data) {
-  //   switch (data.action as number) {
-  //     case NotifType.Talk:
-  //       switch (params.Platform) {
-  //         case "gcm":
-  //           this.nav.push(MessagePage, { TalkId: data.talkId });
-  //           break;
-  //         case "apns":
-  //           this.nav.push(MessagePage, { TalkId: data.talkId });
-  //           break;
-  //         case "wns": //talkId={2}&amp;action={3}
-  //           let args = data.pushNotificationReceivedEventArgs.toastNotification.content.getElementsByTagName('toast')[0].getAttribute('launch') as string;
-  //           let value = args.split('=')[1];
-  //           return ""
-  //         default:
-  //           break;
-  //       }
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // }
 
   goNotifAction(data) {
     switch (params.Platform) {
@@ -369,6 +347,7 @@ export class VocalApp {
       error => {
         this.events.publish("ErrorInit", error);
         this.exceptionService.Add(error);
+        // this.exceptionService.Add("init error");
       }
     );
   }

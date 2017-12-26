@@ -56,7 +56,8 @@ namespace Vocal.Business.Signalr
 
         internal async Task AddFriends(List<string> ids, string username)
         {
-            await Proxy.Invoke(HubMethod.AddFriend.ToString(), ids, username);
+            await Proxy.Invoke(HubMethod.AddFriend.ToString(), new { list = ids, username = username });
+            LogManager.LogDebug("Hub AddFriends END");
         }
     }
 }

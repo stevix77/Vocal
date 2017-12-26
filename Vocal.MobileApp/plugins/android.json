@@ -7,9 +7,6 @@
         "files": {}
     },
     "installed_plugins": {
-        "com-badrit-base64": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
         "cordova-plugin-datepicker": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
@@ -29,6 +26,9 @@
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
         "ionic-plugin-keyboard": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "com-badrit-base64": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
         "cordova-plugin-camera": {
