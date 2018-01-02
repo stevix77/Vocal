@@ -77,7 +77,6 @@ export class VocalListPage {
   toggleRecording() {
     this.isRecording = !this.isRecording;
     if(!this.isRecording) this.initialize();
-    console.log('toggleRecording');
   }
   
   toggleTiming() {
