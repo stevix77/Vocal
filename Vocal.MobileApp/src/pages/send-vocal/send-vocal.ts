@@ -15,6 +15,7 @@ import { Response } from '../../models/response';
 import { TalkResponse } from '../../models/response/talkResponse';
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
 import { AudioRecorder } from '../../services/audiorecorder';
+import { ExceptionService } from "../../services/exceptionService";
 
 /**
  * Generated class for the SendVocalPage page.
@@ -42,7 +43,8 @@ export class SendVocalPage {
               private audioRecorder: AudioRecorder, 
               private cookieService: CookieService, 
               private httpService: HttpService,
-              private talkService: TalkService) {
+              private talkService: TalkService,
+              private exceptionService: ExceptionService) {
   }
 
   ionViewDidLoad() {
@@ -54,8 +56,9 @@ export class SendVocalPage {
     if(!this.isSending) {
       this.isSending = true;
       let users = [];
-      Promise.all([this.audioRecorder.getFile(), this.audioRecorder.getMediaDuration()]).then(values => {
-        this.FileValue = values[0];
+      this.audioRecorder.getFile().then(fileValue => {
+        console.log(fileValue);
+        this.FileValue = fileValue;
         this.Friends.forEach(elt => {
         if(elt.Checked)
           users.push(elt.Id);
@@ -63,14 +66,14 @@ export class SendVocalPage {
         let date = new Date();
         let request: SendMessageRequest = {
           content: this.FileValue,
-          duration: values[1],
+          duration: this.navParams.get('duration'),
           sentTime: date,
           idsRecipient: users,
           messageType: MessageType.Vocal,
           Lang: params.Lang,
           idSender: params.User.Id,
           IdTalk: null
-        }
+        };
         let urlSendVocal = url.SendMessage();
         let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
         this.httpService.Post(urlSendVocal, request, cookie).subscribe(
@@ -88,9 +91,10 @@ export class SendVocalPage {
               console.log(response);
             }
           }
-        )
+        );
       }).catch(err => {
         console.log(err);
+        this.exceptionService.Add(err);
       });
     }
   }

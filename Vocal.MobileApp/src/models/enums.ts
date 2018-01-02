@@ -29,10 +29,24 @@ export enum MessageType {
     Text = 2
 }
 
+export enum PictureType {
+    Profil = 1,
+    Talk = 2
+}
+
 export enum HubMethod {
     Connect,
     Send,
     Receive,
     SubscribeToTalks,
-    UpdateListenUser
+    UpdateListenUser,
+    BeginTalk,
+    EndTalk,
+    AddFriend
+}
+
+export enum NotifType {
+    Talk = 0,
+    AddFriend = 1,
+    Follow = 2
 }

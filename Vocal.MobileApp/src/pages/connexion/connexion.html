@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
@@ -7,26 +7,28 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content text-center>
   <form #form="ngForm" (ngSubmit)="submitConnexion()" novalidate>
     <ion-list>
 
-    <ion-item>
+    <ion-item no-padding>
+      <ion-label stacked>Nom d'utilisateur</ion-label>
       <ion-input type="text" placeholder="Username" name="Username" required [(ngModel)]="model.Username" ></ion-input>
     </ion-item>
 
-    <ion-item>
+    <ion-item no-padding>
+      <ion-label stacked>Mot de passe</ion-label>
       <ion-input type="password" placeholder="Password" name="Password" required minlength="8" [(ngModel)]="model.Password"></ion-input>
     </ion-item>
 
     </ion-list>
 
-    <button ion-button type="button" (click)="goToForgotPassword()">Mot de passe oublié ?</button>
-
-    <br>
-    <br>
-
-    <button ion-button type="submit" [disabled]="!form.valid">Connexion</button>
+    <div>
+      <button round ion-button type="button" (click)="goToForgotPassword()">Mot de passe oublié ?</button>
+    </div>
+    <div>
+      <button round ion-button type="submit" [disabled]="!form.valid">Connexion</button>
+    </div>
   </form>
 
 </ion-content>

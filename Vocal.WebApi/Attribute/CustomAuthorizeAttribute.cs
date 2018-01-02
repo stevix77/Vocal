@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Http.Controllers;
 using Vocal.Business.Security;
-using Vocal.Business.Tools;
+using Vocal.WebApi.Helpers;
 
 namespace Vocal.WebApi.Attribute
 {
@@ -13,14 +9,14 @@ namespace Vocal.WebApi.Attribute
     {
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
+            var dbContext = ContextGenerator.GetDbContext();
             bool isAuthorize = false;
-            var obj = Helpers.Helper.GetAuthorizeCookie(actionContext);
+            var obj = Helper.GetAuthorizeCookie(actionContext);
             if (obj != null)
             {
-                isAuthorize = Authorize.IsAuthorize(obj.UserId, obj.Sign, obj.Timestamp, actionContext.Request.RequestUri.AbsoluteUri);
+                isAuthorize = new Authorize(dbContext).IsAuthorize(obj.UserId, obj.Sign, obj.Timestamp, actionContext.Request.RequestUri.AbsoluteUri);
             }
             return isAuthorize;
-            //return base.AuthorizeCore(httpContext);
         }
     }
 }

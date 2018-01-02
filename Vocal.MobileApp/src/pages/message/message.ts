@@ -1,5 +1,5 @@
 import { MessageRequest } from './../../models/request/messageRequest';
-import { HubMethod } from '../../models/enums';
+import { HubMethod, PictureType, MessageType } from '../../models/enums';
 import { MessageResponse } from './../../models/response/messageResponse';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, Events, Config } from 'ionic-angular';
@@ -38,6 +38,7 @@ export class MessagePage {
   isTiming: boolean = false;
   timer: Timer;
   time: String = '0:00';
+  messUser: string;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
@@ -53,6 +54,8 @@ export class MessagePage {
     this.model.talkId = this.navParams.get("TalkId");
     this.model.userId = this.navParams.get("UserId");
     this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj.Message))
+    events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.beginTalk(obj))
+    events.subscribe(HubMethod[HubMethod.EndTalk], (obj) => this.endTalk())
 
     this.isApp = this.config.get('isApp');
   }
@@ -107,7 +110,7 @@ export class MessagePage {
   }
 
   sendMessage(){
-    var obj = new SendMessageRequest(params.User.Id, this.model.talkId, this.model.Message, 2, []);
+    var obj = new SendMessageRequest(params.User.Id, this.model.talkId, this.model.Message, MessageType.Text, this.model.talkId == null ? [this.model.userId] : []);
     obj.Lang = params.Lang;
     let urlSearch = url.SendMessage();
     let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
@@ -133,12 +136,26 @@ export class MessagePage {
     );
   }
 
+  beginTalk(username) {
+    this.messUser = username + " est en train d'écrire";
+  }
+    
+  endTalk() {
+    this.messUser = null;
+  }
+  
+  change() {
+    this.hubService.Invoke(HubMethod[HubMethod.BeginTalk], this.model.talkId, params.User.Username);
+  }
+
   loadMessages() {
     this.Messages = this.talkService.GetMessages(this.model.talkId)
     this.talkService.Talks.find(x => x.Id == this.model.talkId).Users.forEach(x => {
       if(x.Id != params.User.Id){
         this.VocalName += x.Username + " ";
-        this.Picture = x.Picture;
+        let pict = x.Pictures.find(x => x.Type == PictureType.Talk);
+        if(pict != null)
+          this.Picture = pict.Value;
       }
     });
   }
@@ -193,7 +210,7 @@ export class MessagePage {
 
   updateRoom(message) {
     this.Messages.push(message);
-    this.hubService.Invoke(HubMethod[HubMethod.UpdateListenUser], this.model.talkId)
+    //this.hubService.Invoke(HubMethod[HubMethod.UpdateListenUser], this.model.talkId)
   }
 
   getMessage(messId: string) {

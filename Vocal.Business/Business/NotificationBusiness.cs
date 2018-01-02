@@ -1,32 +1,41 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Vocal.Model.Response;
-using Vocal.Model.Business;
-using Vocal.Model.DB;
-using Vocal.Business.Tools;
 using Vocal.Business.Properties;
+using Vocal.Business.Tools;
 using Vocal.DAL;
+using Vocal.Model.Business;
+using Vocal.Model.Context;
 
 namespace Vocal.Business.Business
 {
-    public static class NotificationBusiness
+    public class NotificationBusiness : BaseBusiness
     {
-        public static async Task<Response<string>> GetRegistrationId(string channel, string userId, string platform, string lang)
+        public NotificationBusiness(DbContext dbContext, HubContext hubContext) : base(dbContext)
+        {
+            _notificationHub = NotificationHub.Init(hubContext);
+        }
+
+        internal NotificationBusiness(Repository repository, NotificationHub notificationHub) : base(repository)
+        {
+            _notificationHub = notificationHub;
+        }
+
+        public async Task<Response<string>> GetRegistrationId(string channel, string userId, string platform, string lang)
         {
             var response = new Response<string>();
             LogManager.LogDebug(channel, userId, platform, lang);
             try
             {
-                var user = Repository.Instance.GetUserById(userId);
+                var user = _repository.GetUserById(userId);
                 if(user != null)
                 {
                     if(true)
                     //if (!user.Devices.Exists(x => x.Channel == channel))
                     {
-                        var registrationId = await NotificationHub.Instance.GetRegistrationId(channel);
+                        var registrationId = await _notificationHub.GetRegistrationId(channel);
                         var tag = $"{Properties.Settings.Default.TagUser}:{userId}";
                         user.Devices.Add(new Vocal.Model.DB.Device
                         {
@@ -36,8 +45,8 @@ namespace Vocal.Business.Business
                             Tags = new List<string>() { tag },
                             Lang = lang
                         });
-                        Repository.Instance.UpdateUser(user);
-                        await NotificationHub.Instance.RegistrationUser(registrationId, channel, platform, tag);
+                        _repository.UpdateUser(user);
+                        await _notificationHub.RegistrationUser(registrationId, channel, platform, tag);
                         response.Data = registrationId;
                     }
                 }
@@ -60,20 +69,22 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static async Task<Response<bool>> SendNotification(List<string> ids, NotifType type, params string[] param)
+        public async Task<Response<bool>> SendNotification(List<string> ids, int type, params string[] param)
         {
             var response = new Response<bool>();
             try
             {
                 LogManager.LogDebug(ids, type, param);
-                foreach (var id in ids)
+                var users = _repository.GetUsersById(ids);
+                foreach (var item in users.Where(x => x.Settings.IsNotifiable))
                 {
-                    var u = Repository.Instance.GetUserById(id);
-                    var tag = $"{Properties.Settings.Default.TagUser}:{id}";
-                    foreach (var d in u.Devices.Select(x => new { Platform = x.Platform, Lang = x.Lang }).Distinct())
+                    var tag = $"{Properties.Settings.Default.TagUser}:{item.Id}";
+                    foreach (var d in item.Devices.Select(x => new {  x.Platform, x.Lang }).Distinct())
                     {
-                        var payload = string.Format(GetTemplate(type, d.Platform, d.Lang, param));
-                        await NotificationHub.Instance.SendNotification(d.Platform, tag, payload);
+                        var payload = GetTemplate(type, d.Platform, d.Lang, param);
+                        LogManager.LogDebug(string.Format("Payload {0}", payload));
+                        var rep = await _notificationHub.SendNotification(d.Platform, tag, payload);
+                        LogManager.LogDebug(JsonConvert.SerializeObject(rep));
                     }
                 }
                 response.Data = true;
@@ -96,7 +107,7 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        private static string GetPayloadTalk(string platform)
+        private string GetPayloadTalk(string platform)
         {
             string payload = string.Empty;
             switch (platform)
@@ -113,31 +124,32 @@ namespace Vocal.Business.Business
                 default:
                     break;
             }
+            LogManager.LogDebug($"platform {platform} - payload {payload}");
             return payload;
         }
 
-        private static string GetPayloadAddFriends(string platform, string lang, string username)
+        private string GetPayloadAddFriends(string platform)
         {
             string payload = string.Empty;
-            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             switch (platform)
             {
                 case "gcm":
-                    payload = string.Format(PayloadSettings.Default.AddFriendsAndroid, Resources_Language.TextNotifAddFriend, username);
+                    payload = PayloadSettings.Default.AddFriendsAndroid;
                     break;
                 case "apns":
-                    payload = string.Format(PayloadSettings.Default.AddFriendsiOs, Resources_Language.TextNotifAddFriend, username);
+                    payload = PayloadSettings.Default.AddFriendsiOs;
                     break;
                 case "wns":
-                    payload = string.Format(PayloadSettings.Default.AddFriendsWindows, Resources_Language.TextNotifAddFriend, username);
+                    payload = PayloadSettings.Default.AddFriendsWindows;
                     break;
                 default:
                     break;
             }
+            LogManager.LogDebug($"platform {platform} - payload {payload}");
             return payload;
         }
 
-        private static string GetPayloadFollow(string platform)
+        private string GetPayloadFollow(string platform)
         {
             string payload = string.Empty;
             switch (platform)
@@ -157,23 +169,32 @@ namespace Vocal.Business.Business
             return payload;
         }
 
-        private static string GetTemplate(NotifType type, string platform, string lang, params string[] param)
+        private string GetTemplate(int type, string platform, string lang, params string[] param)
         {
             string template = string.Empty;
+            Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
+            string str = string.Empty;
             switch (type)
             {
-                case NotifType.AddFriend:
-                    template = GetPayloadAddFriends(platform, lang, param.ElementAt(0));
+                case (int)NotifType.AddFriend:
+                    LogManager.LogDebug("0: {0} - 1: {1}", param.GetValue(0), param.GetValue(1));
+                    str = GetPayloadAddFriends(platform);
+                    template = string.Format(str, $"{param.GetValue(0).ToString()} {Resources_Language.TextNotifAddFriend}", param.GetValue(1).ToString(), type);
                     break;
-                case NotifType.Talk:
-                    template = string.Format(GetPayloadTalk(platform), param.GetValue(0), param.GetValue(1), param.GetValue(2));
+                case (int)NotifType.Talk:
+                    LogManager.LogDebug("0: {0} 1: {1} 2: {2}", param.GetValue(0), param.GetValue(1), param.GetValue(2));
+                    str = GetPayloadTalk(platform);
+                    var title = $"{param.GetValue(2)} @ {param.GetValue(1)}";
+                    var mess = !string.IsNullOrEmpty(param.GetValue(3).ToString()) ? param.GetValue(3).ToString().Length > 20 ? param.GetValue(3).ToString().Substring(0, 20) : param.GetValue(3).ToString() : string.Empty;
+                    template = string.Format(str, mess, title, param.GetValue(0).ToString(), type);
                     break;
-                case NotifType.Follow:
+                case (int)NotifType.Follow:
                     template = string.Format(GetPayloadFollow(platform), param.GetValue(0));
                     break;
                 default:
                     break;
             }
+            LogManager.LogDebug(string.Format("platform - {0} - template {1}", platform, template));
             return template;
         }
 

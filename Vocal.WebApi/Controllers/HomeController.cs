@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Http.Cors;
 using Vocal.Business.Business;
 using Vocal.Model.Business;
@@ -15,13 +10,19 @@ namespace Vocal.WebApi.Controllers
 {
     [EnableCors("*", "*", "*")]
     [CustomAuthorize, RoutePrefix("api/home")]
-    public class HomeController : ApiController
+    public class HomeController : VocalApiController
     {
+        readonly InitBusiness _initBusiness;
+
+        public HomeController()
+        {
+            _initBusiness = new InitBusiness(_dbContext, _hubContext);
+        }
+
         [HttpPost, Route("init")]
         public Response<InitResponse> Initialize(Request request)
         {
-            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
-            return Business.Tools.Monitoring.Execute(InitBusiness.Initialize, obj.UserId, request.Lang);
+            return _monitoring.Execute(_initBusiness.Initialize, GetUserIdFromCookie(), request.Lang);
         }
     }
 }

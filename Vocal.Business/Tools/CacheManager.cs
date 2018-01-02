@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Vocal.Business.Properties;
 
 namespace Vocal.Business.Tools
@@ -26,6 +22,10 @@ namespace Vocal.Business.Tools
         public static void RemoveCache(string key)
         {
             System.Web.HttpRuntime.Cache.Remove(key);
+        }
+        public static string GetKey(string cacheKey, string value)
+        {
+            return string.Format(cacheKey, value);
         }
     }
 }

@@ -15,15 +15,29 @@ namespace Vocal.Business.Binder
         {
             if (user == null)
                 return null;
+
             return new UserResponse
             {
                 Email = user.Email,
                 Id = user.Id,
-                Picture = user.Picture,
                 Username = user.Username,
                 Firstname = user.Firstname,
-                Lastname = user.Lastname
+                Lastname = user.Lastname,
+                Pictures = Bind_Pictures(user.Pictures)
             };
+        }
+
+        private static List<PictureResponse> Bind_Pictures(List<Picture> pictures)
+        {
+            var picts = new List<PictureResponse>();
+            if(pictures != null)
+                foreach (var item in pictures)
+                    picts.Add(new PictureResponse 
+                    {
+                        Type = (int)item.Type, 
+                        Value = item.Value
+                    });
+            return picts;
         }
 
         internal static List<UserResponse> Bind_Users(List<User> list)
@@ -31,37 +45,29 @@ namespace Vocal.Business.Binder
             var users = new List<UserResponse>();
             foreach(var item in list)
             {
-                users.Add(new UserResponse
-                {
-                    Email = item.Email,
-                    Firstname = item.Firstname,
-                    Id = item.Id,
-                    Lastname = item.Lastname,
-                    Picture = item.Picture,
-                    Username = item.Username
-                });
+                users.Add(Bind_User(item));
             }
             return users;
         }
 
-        internal static List<UserResponse> Bind_People(List<People> list)
+        internal static List<TalkResponse> Bind_Talks(List<Talk> list, string userId)
         {
-            var users = new List<UserResponse>();
-            foreach (var item in list)
+            var talks = new List<TalkResponse>();
+            foreach(var item in list)
             {
-                users.Add(new UserResponse
+                talks.Add(new TalkResponse
                 {
-                    Email = item.Email,
-                    Firstname = item.Firstname,
                     Id = item.Id,
-                    Lastname = item.Lastname,
-                    Picture = item.Picture,
-                    Username = item.Username
+                    DateLastMessage = item.LastMessage,
+                    Users = Bind_Users(item.Users),
+                    Duration = item.Duration,
+                    Name = item.Recipients.Count == 2 ? string.Join(",", item.Users.Where(x => x.Id != userId).Select(x => x.Username).ToList()) : item.Name,
+                    Picture = item.Recipients.Count == 2 ? item.ListPictures.SingleOrDefault(x => x.Key != userId).Value : ""
                 });
             }
-            return users;
+            return talks;
         }
-
+        
         internal static UserResponse Bind_People(People people)
         {
             return new UserResponse
@@ -70,8 +76,8 @@ namespace Vocal.Business.Binder
                 Firstname = people.Firstname,
                 Id = people.Id,
                 Lastname = people.Lastname,
-                Picture = people.Picture,
-                Username = people.Username
+                Username = people.Username,
+                Pictures = Bind_Pictures(people.Pictures)
             };
         }
 
@@ -81,51 +87,34 @@ namespace Vocal.Business.Binder
             var users = new List<UserResponse>();
             foreach (var item in list)
             {
-                users.Add(new UserResponse
-                {
-                    Email = item.Email,
-                    Firstname = item.Firstname,
-                    Id = item.Id,
-                    Lastname = item.Lastname,
-                    Picture = item.Picture,
-                    Username = item.Username
-                });
+                users.Add(Bind_People(item));
             }
             return users;
+        }
+
+        internal static PeopleResponse Bind_People(User user, bool isFriend, bool isBlocked)
+        {
+            if (user != null)
+                return new PeopleResponse
+                {
+                    Email = user.Email,
+                    IsFriend = isFriend,
+                    Firstname = user.Firstname,
+                    Id = user.Id,
+                    Lastname = user.Lastname,
+                    Username = user.Username,
+                    Pictures = Bind_Pictures(user.Pictures),
+                    IsBlocked = isBlocked
+                };
+            else
+                return null;
         }
 
         internal static List<PeopleResponse> Bind_SearchPeople(User user, List<User> listSearch)
         {
             var list = new List<PeopleResponse>();
             foreach(var item in listSearch)
-            {
-                var friend = user.Friends.Find(x => x.Id == item.Id);
-                if (friend == null) // il n'existe pas dans ma liste d'amis
-                {
-                    list.Add(new PeopleResponse
-                    {
-                        Email = item.Email,
-                        IsFriend = false,
-                        Firstname = item.Firstname,
-                        Id = item.Id,
-                        Lastname = item.Lastname,
-                        Picture = item.Picture,
-                        Username = item.Username
-                    });
-                }
-                else if(!friend.IsFriend) // s'il est dans ma liste d'amis mais qu'il n'a pas encore accepté ma demande
-                    list.Add(new PeopleResponse
-                    {
-                        Email = item.Email,
-                        IsFriend = true,
-                        Firstname = item.Firstname,
-                        Id = item.Id,
-                        Lastname = item.Lastname,
-                        Picture = item.Picture,
-                        Username = item.Username
-                    });
-                // sinon c'est qu'il est dans ma liste d'amis et qu'il a accepté ma demande donc ne pas afficher dans le résultat de la recherche
-            }
+                list.Add(Bind_People(item, false, user.Settings.Blocked.Exists(x => x.Id == item.Id)));
             return list;
         }
 
@@ -136,71 +125,13 @@ namespace Vocal.Business.Binder
             {
                 var friend = user.Friends.Find(x => x.Id == item.Id);
                 if (friend == null) // il n'existe pas dans ma liste d'amis
-                {
-                    list.Add(new PeopleResponse
-                    {
-                        Email = item.Email,
-                        IsFriend = false,
-                        Firstname = item.Firstname,
-                        Id = item.Id,
-                        Lastname = item.Lastname,
-                        Picture = item.Picture,
-                        Username = item.Username
-                    });
-                }
+                    list.Add(Bind_People(item, false, user.Settings.Blocked.Exists(x => x.Id == item.Id)));
                 else // il existe dans ma liste d'ami et est mon ami
-                    list.Add(new PeopleResponse
-                    {
-                        Email = item.Email,
-                        IsFriend = true,
-                        Firstname = item.Firstname,
-                        Id = item.Id,
-                        Lastname = item.Lastname,
-                        Picture = item.Picture,
-                        Username = item.Username
-                    });
+                    list.Add(Bind_People(item, true, user.Settings.Blocked.Exists(x => x.Id == item.Id)));
             }
             return list;
         }
-
-        internal static List<TalkResponse> Bind_Talks(List<Talk> list, string userId)
-        {
-            var response = new List<TalkResponse>();
-            if(list.Count > 0)
-            {
-                foreach (var item in list)
-                {
-                    var message = item.Messages.LastOrDefault();
-                    var users = item.Recipients.Where(x => x.Id != userId);
-                    response.Add(new TalkResponse
-                    {
-                        Id = item.Id,
-                        Name = item.Name ?? string.Join(", ", users.Select(x => x.Username)),
-                        Users = Bind_People(item.Recipients),
-                        DateLastMessage = message.SentTime,
-                        HasNewMessage = message.Sender.Id != userId && message.Users.SingleOrDefault(x => x.Recipient.Id == userId && x.ListenDate.HasValue) == null,
-                        Duration = item.TotalDuration
-                    });
-                }
-                response = response.OrderByDescending(x => x.DateLastMessage).ToList();
-            }
-            return response;
-        }
-        internal static TalkResponse Bind_Talk(Talk talk, string userId)
-        {
-            var message = talk.Messages.LastOrDefault();
-            var users = talk.Recipients.Where(x => x.Id != userId);
-            return new TalkResponse
-            {
-                Id = talk.Id,
-                Name = talk.Name ?? string.Join(", ", users.Select(x => x.Username)),
-                Users = Bind_People(talk.Recipients),
-                DateLastMessage = message.SentTime,
-                HasNewMessage = message.Sender.Id != userId && message.Users.SingleOrDefault(x => x.Recipient.Id == userId && x.ListenDate.HasValue) == null,
-                Duration = talk.TotalDuration
-            };
-        }
-
+        
 
         internal static List<MessageResponse> Bind_Messages(List<Message> list)
         {
@@ -225,49 +156,37 @@ namespace Vocal.Business.Binder
         {
             var settings = new SettingsResponse();
             settings.BirthdayDate = user.BirthdayDate;
-            settings.Blocked = Bind_People(user.Settings.Blocked);
+            settings.Blocked = Bind_Users(user.Settings.Blocked);
             settings.Contacts = GetChoices(user.Settings.Contact);
             settings.Email = user.Email;
             settings.Genders = GetChoices(user.Settings.Gender);
             settings.Notifs = GetChoices(user.Settings.IsNotifiable);
             settings.Name = $"{user.Firstname} {user.Lastname} @{user.Username}";
-            settings.TotalDuration = user.Talks.SelectMany(x => x.Messages).Where(x => x.Sender.Id == user.Id && x.ContentType == MessageType.Vocal).Sum(x => x.Duration.GetValueOrDefault(0));
+            settings.TotalDuration = 0;
             return settings;
         }
 
         private static List<ChoiceResponse> GetChoices(bool isNotifiable)
         {
-            var choices = new List<ChoiceResponse>()
+            return new List<ChoiceResponse>()
             {
                 new ChoiceResponse { Id = 0, IsChecked = isNotifiable == false, Label = Resources_Language.Deactive },
                 new ChoiceResponse { Id = 1, IsChecked = isNotifiable == true, Label = Resources_Language.Active }
             };
-            return choices;
         }
 
-        internal static TalkResponse Bind_Talks(Talk talk, string userId)
+        internal static MessageResponse Bind_Message(Message m)
         {
-            var response = new TalkResponse();
-            var message = talk.Messages.LastOrDefault();
-            response.Id = talk.Id;
-            response.Name = string.Join(", ", talk.Recipients.Where(x => x.Id != userId).Select(x => x.Username));
-            response.Users = Bind_People(talk.Recipients);
-            response.DateLastMessage = message.SentTime;
-            response.HasNewMessage = message.Sender.Id != userId && !message.Users.Any(x => x.Recipient.Id == userId && !x.ListenDate.HasValue);
-            return response;
-        }
-
-        internal static MessageResponse Bind_Message(Vocal.Model.DB.Message m)
-        {
-            var message = new MessageResponse();
-            message.ArrivedTime = m.ArrivedTime;
-            message.Content = m.Content;
-            message.ContentType = (int)m.ContentType;
-            message.Id = m.Id.ToString();
-            message.User = Bind_People(m.Sender);
-            message.Users = Bind_UsersListen(m.Users);
-            message.SentTime = m.SentTime;
-            return message;
+           return new MessageResponse
+            {
+                ArrivedTime = m.ArrivedTime,
+                Content = m.Content,
+                ContentType = (int)m.ContentType,
+                Id = m.Id.ToString(),
+                User = Bind_People(m.Sender),
+                Users = Bind_UsersListen(m.Users),
+                SentTime = m.SentTime
+            };
         }
 
         private static List<UserListenResponse> Bind_UsersListen(List<UserListen> users)
@@ -316,6 +235,19 @@ namespace Vocal.Business.Binder
                 });
             }
             return genders;
+        }
+
+        internal static TalkResponse Bind_Talks(Talk talk, Message message, string userId)
+        {
+            return new TalkResponse
+            {
+                DateLastMessage = talk.LastMessage,
+                Id = talk.Id,
+                Name = !string.IsNullOrEmpty(talk.Name) ? string.Join(",", talk.Users.Where(x => x.Id != userId).Select(x => x.Username).ToList()) : talk.Name,
+                Duration = talk.Duration,
+                Users = Bind_Users(talk.Users),
+                Picture = talk.Users.Count == 2 ? talk.Users.SingleOrDefault(x => x.Id != userId).Pictures.SingleOrDefault(x => x.Type == PictureType.Talk)?.Value : string.Empty
+            };
         }
     }
 }

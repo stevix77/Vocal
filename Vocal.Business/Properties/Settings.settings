@@ -59,5 +59,35 @@
     <Setting Name="PictureUrl" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="CacheKeyFriend" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CacheFriend_{0}</Value>
+    </Setting>
+    <Setting Name="CacheKeyContactAddedMe" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CacheContact_{0}</Value>
+    </Setting>
+    <Setting Name="CacheSettings" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CacheSettings_{0}</Value>
+    </Setting>
+    <Setting Name="PictureProfilWidth" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">375</Value>
+    </Setting>
+    <Setting Name="PictureProfilHeight" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">280</Value>
+    </Setting>
+    <Setting Name="PictureTalkWidth" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">80</Value>
+    </Setting>
+    <Setting Name="PictureTalkHeight" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">80</Value>
+    </Setting>
+    <Setting Name="DefaultImageProfil" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">default.jpg</Value>
+    </Setting>
+    <Setting Name="DefaultImageTalk" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">default.jpg</Value>
+    </Setting>
+    <Setting Name="BackupPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

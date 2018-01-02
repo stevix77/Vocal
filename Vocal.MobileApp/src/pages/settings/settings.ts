@@ -5,6 +5,7 @@ import { url } from "../../services/url";
 import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
+import { TalkService } from "../../services/talkService";
 import { SettingsResponse } from '../../models/response/settingsResponse';
 import { KeyStore } from '../../models/enums';
 import { Response } from '../../models/response';
@@ -12,6 +13,8 @@ import { Request } from "../../models/request/Request";
 import { SettingsChoices } from './settingsChoices/SettingsChoices';
 import { SettingsMail } from './settingsMail/SettingsMail';
 import { HomePage } from "../home/home";
+import { FriendsService } from "../../services/friendsService";
+import { SettingsService } from "../../services/settingsService";
 
 @Component({
   selector: "app-settings",
@@ -27,7 +30,10 @@ export class SettingsPage implements OnInit {
     public alertCtrl: AlertController, 
     private httpService: HttpService, 
     private cookieService: CookieService, 
-    private storeService: StoreService) { 
+    private storeService: StoreService,
+    private friendsService: FriendsService,
+    private talkService: TalkService,
+    private settingsService: SettingsService) { 
 
   }
 
@@ -35,15 +41,13 @@ export class SettingsPage implements OnInit {
     
   }
 
-  ionViewWillEnter() {
-    this.storeService.Get(KeyStore[KeyStore.Settings]).then(
-      store => {
-        if(store != null)
-          this.model.Settings = store;
-        else
-          this.LoadSettings();
-      }
-    )
+  ionViewDidEnter() {
+    this.settingsService.load().then(() => {
+      if(this.settingsService.settings != null)
+        this.model.Settings = this.settingsService.settings;
+      else 
+        this.LoadSettings();
+    })
   }
 
   showConfirmLogout() {
@@ -59,7 +63,10 @@ export class SettingsPage implements OnInit {
           text: 'Déconnexion',
           handler: () => {
             this.storeService.Clear();
+            this.talkService.Clear();
             params.User = null;
+            this.friendsService.clear();
+            this.settingsService.clear();
             this.navCtrl.setRoot(HomePage);
           }
         }

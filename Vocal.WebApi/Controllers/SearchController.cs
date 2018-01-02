@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using Vocal.Business.Business;
@@ -15,27 +11,31 @@ namespace Vocal.WebApi.Controllers
 {
     [EnableCors("*", "*", "*")]
     [RoutePrefix("api/search"), CustomAuthorize]
-    public class SearchController : ApiController
+    public class SearchController : VocalApiController
     {
+        readonly SearchBusiness _searchBusiness;
+
+        public SearchController()
+        {
+            _searchBusiness = new SearchBusiness(_dbContext);
+        }
+
         [HttpPost, Route("people")]
         public Response<List<PeopleResponse>> SearchPeople(SearchRequest request)
         {
-            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
-            return Business.Tools.Monitoring.Execute(SearchBusiness.SearchPeople, obj.UserId, request.Keyword, request.Lang);
+            return _monitoring.Execute(_searchBusiness.SearchPeople, GetUserIdFromCookie(), request.Keyword, request.Lang);
         }
 
         [HttpPost, Route("people/mail")]
         public Response<List<PeopleResponse>> SearchPeopleByEmail(SearchRequest request)
         {
-            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
-            return Business.Tools.Monitoring.Execute(SearchBusiness.SearchPeopleByEmail, obj.UserId, request.Keyword, request.Lang);
+            return _monitoring.Execute(_searchBusiness.SearchPeopleByEmail, GetUserIdFromCookie(), request.Keyword, request.Lang);
         }
         
         [HttpPost, Route("contact")]
         public Response<List<PeopleResponse>> SearchContacts(SearchFriendsRequest request)
         {
-            var obj = Helpers.Helper.GetAuthorizeCookie(ActionContext);
-            return Business.Tools.Monitoring.Execute(SearchBusiness.SearchContacts, obj.UserId, request.Emails, request.Lang);
+            return _monitoring.Execute(_searchBusiness.SearchContacts, GetUserIdFromCookie(), request.Emails, request.Lang);
         }
     }
 }

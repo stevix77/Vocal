@@ -1,3 +1,5 @@
+import { PictureResponse } from "./response/pictureResponse";
+
 export class AppUser {
 constructor(){}
 
@@ -7,5 +9,5 @@ constructor(){}
 	Lastname: string;
 	Username: string;
     Token : string;
-    Picture: string;
+    Pictures: Array<PictureResponse> = new Array<PictureResponse>();
 }

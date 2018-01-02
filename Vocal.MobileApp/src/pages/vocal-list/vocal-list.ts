@@ -5,6 +5,7 @@ import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { StoreService } from "../../services/storeService";
 import { TalkResponse } from '../../models/response/talkResponse';
+import { ActionResponse } from '../../models/response/actionResponse';
 import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
 import { HubMethod } from '../../models/enums';
 import { MessagePage } from '../message/message';
@@ -12,6 +13,9 @@ import { params } from '../../services/params';
 import { Response } from '../../models/Response';
 import { url } from '../../services/url';
 import { Timer } from '../../services/timer';
+import { DeleteTalkRequest } from '../../models/request/deleteTalkRequest';
+import { ArchiveTalkRequest } from '../../models/request/archiveTalkRequest';
+import { HubService } from "../../services/hubService";
 
 
 /**
@@ -33,7 +37,7 @@ export class VocalListPage {
   isRecording: boolean = false;
   isTiming: boolean = false;
   timer: Timer;
-  time: String = '0:00';
+  time: String = '';
   
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -45,10 +49,10 @@ export class VocalListPage {
     private httpService: HttpService, 
     private cookieService: CookieService, 
     private storeService: StoreService,
-    private talkService: TalkService) {
+    private talkService: TalkService,
+    private hubService: HubService) {
 
     events.subscribe(HubMethod[HubMethod.Receive], () => this.initialize())
-
     this.isApp = this.config.get('isApp');
     
   }
@@ -66,12 +70,13 @@ export class VocalListPage {
   }
 
   ionViewDidEnter() {
+    console.log('ionViewDidEnter VocalListPage');
     this.initialize();
   }
 
   toggleRecording() {
     this.isRecording = !this.isRecording;
-    console.log('toggleRecording');
+    if(!this.isRecording) this.initialize();
   }
   
   toggleTiming() {
@@ -80,6 +85,7 @@ export class VocalListPage {
   }
 
   startTimer() {
+    this.time = '0:00';
     this.timer = new Timer(this.events);
     this.events.subscribe('update:timer', timeFromTimer => {
       this.time = timeFromTimer;
@@ -89,7 +95,6 @@ export class VocalListPage {
 
   stopTimer() {
     this.timer.stopTimer();
-    this.time = '0:00';
   }
 
   showProfile() {
@@ -183,16 +188,55 @@ export class VocalListPage {
       else {  
         this.getVocalList();
       }
-      console.log(this.vocalList);
     });
   }
 
-  deleteMessage(id){
-    console.log('delete : ' + id);
+  deleteMessage(id, index){
+    let itemIndex = index;
+    let request: DeleteTalkRequest = {
+      Lang: params.Lang,
+      IdSender: params.User.Id,
+      IdTalk: id,
+      SentTime: new Date()
+    };
+    let urlDelete = url.DeleteTalk();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlDelete, params.User);
+    this.httpService.Post<DeleteTalkRequest>(urlDelete, request, cookie).subscribe(
+      resp => {
+        let response = resp.json() as Response<ActionResponse>;
+        if(!response.HasError && response.Data.IsDone){
+          this.talkService.DeleteTalk(this.vocalList[itemIndex]);
+          this.vocalList.splice(itemIndex, 1);
+        }
+        else {
+          this.showAlert(response.ErrorMessage);
+        }
+      }
+    );
   }
 
-  archiveMessage(id){
-    console.log('archive : ' + id);
+  archiveMessage(id, index){
+    let itemIndex = index;
+    let request: ArchiveTalkRequest = {
+      Lang: params.Lang,
+      IdSender: params.User.Id,
+      IdTalk: id,
+      SentTime: new Date()
+    };
+    let urlArchive = url.ArchiveTalk();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlArchive, params.User);
+    this.httpService.Post<ArchiveTalkRequest>(urlArchive, request, cookie).subscribe(
+      resp => {
+        let response = resp.json() as Response<ActionResponse>;
+        if(!response.HasError && response.Data.IsDone){
+          this.talkService.DeleteTalk(this.vocalList[itemIndex]);
+          this.vocalList.splice(itemIndex, 1);
+        }
+        else {
+          this.showAlert(response.ErrorMessage);
+        }
+      }
+    );
   }
 
   goToMessage(id) {

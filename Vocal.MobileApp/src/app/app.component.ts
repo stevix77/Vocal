@@ -20,13 +20,13 @@ import { Push, PushObject } from '@ionic-native/push';
 import { NotificationRegisterRequest } from "../models/request/notificationRegisterRequest";
 import { HubService } from '../services/hubService';
 import {KeyStore} from '../models/enums';
-import {HubMethod} from '../models/enums';
+import { HubMethod, NotifType } from '../models/enums';
 import { InitResponse } from '../models/response/InitResponse';
-import { Request } from "../models/request/Request";
 import { ExceptionService } from "../services/exceptionService";
 import { MessagePage } from "../pages/message/message";
 import { Deeplinks } from '@ionic-native/deeplinks';
 import { Inscription } from "../pages/inscription/inscription";
+import { InitService } from "../services/initService";
 
 declare var WindowsAzure: any;
 
@@ -56,9 +56,11 @@ export class VocalApp {
               private talkService: TalkService,
               private toastCtrl: ToastController,
               private exceptionService: ExceptionService,
-              private deeplinks: Deeplinks ) {
+              private deeplinks: Deeplinks,
+              private initService: InitService, ) {
     this.initializeApp();
-
+    events.subscribe("ErrorInit", (error) => this.showToast(error));
+    events.subscribe("Error", (error) => this.showToast(error));
     // used for an example of ngFor and navigation
     this.pages = [
       { title: 'Home', component: HomePage }
@@ -110,19 +112,17 @@ export class VocalApp {
   }
 
   initPushNotification() {
-    var pushOptions = {
-      android: { senderID: '1054724390279' },
-      ios: { alert: true, badge: true, sound: true },
+    const pushOptions = {
+      android: {senderID: "1054724390279"},
+      ios: { alert: 'true', badge: true, sound: 'true' },
       windows: {}
     };
     const pushObject: PushObject = this.push.init(pushOptions);
     pushObject.on('registration').subscribe((data: any) => {
-      console.log('device token -> ' + data.registrationId);
       this.storeService.Get("registration").then((r) => {
         if(r == null || r != data.registrationId)
           this.RegisterToNH(data.registrationId);
       })
-      
     });
     
     pushObject.on('notification').subscribe((data: any) => {
@@ -167,15 +167,71 @@ export class VocalApp {
     });
 
     pushObject.on('error').subscribe(error => {
+      this.showToast(error.message);
+      this.exceptionService.Add(error.message)
       console.log('Error with Push plugin' + error);
     });
   }
 
+  // goNotifAction(data) {
+  //   switch (data.action as number) {
+  //     case NotifType.Talk:
+  //       switch (params.Platform) {
+  //         case "gcm":
+  //           this.nav.push(MessagePage, { TalkId: data.talkId });
+  //           break;
+  //         case "apns":
+  //           this.nav.push(MessagePage, { TalkId: data.talkId });
+  //           break;
+  //         case "wns": //talkId={2}&amp;action={3}
+  //           let args = data.pushNotificationReceivedEventArgs.toastNotification.content.getElementsByTagName('toast')[0].getAttribute('launch') as string;
+  //           let value = args.split('=')[1];
+  //           return ""
+  //         default:
+  //           break;
+  //       }
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }
+
+  goNotifAction(data) {
+    switch (params.Platform) {
+      case "gcm":
+      case "apns":
+        switch (data.action) {
+          case NotifType.Talk:
+            this.nav.push(MessagePage, { TalkId: data.talkId });
+            break;
+          case NotifType.AddFriend:
+            break;
+          default:
+            break;
+        }
+        break;
+      case "wns": //talkId={2}&amp;action={3}
+        let args = data.pushNotificationReceivedEventArgs.toastNotification.content.getElementsByTagName('toast')[0].getAttribute('launch') as string;
+        let param = args.split('&');
+        let action = param[1].split('=')[1];
+        let value = param[0].split('=')[1];
+        switch (Number.parseInt(action)) {
+          case NotifType.Talk:
+            this.nav.push(MessagePage, { TalkId: value });
+            break;
+          case NotifType.AddFriend:
+            break;
+          default:
+            break;
+        }
+      default:
+        break;
+    }
+  }
+
   windowsNotification(notification) {
-      let args = notification.additionalData.pushNotificationReceivedEventArgs.toastNotification.content.getElementsByTagName('toast')[0].getAttribute('launch') as string;
-      let value = args.split('=')[1];
     if(notification.additionalData.coldstart) {
-      this.nav.push(MessagePage, {TalkId: value})
+      this.goNotifAction(notification.additionalData);
     } else {
       let confirmAlert = this.alertCtrl.create({
         title: notification.title,
@@ -187,7 +243,7 @@ export class VocalApp {
           text: 'View',
           handler: () => {
             //TODO: Your logic here
-            this.nav.push(MessagePage, {TalkId: value});
+            this.goNotifAction(notification.additionalData);
           }
         }]
       });
@@ -196,11 +252,47 @@ export class VocalApp {
   }
 
   iosNotification(notification) {
-    
+    if(notification.additionalData.coldstart) {
+      this.goNotifAction(notification.additionalData);
+    } else {
+      let confirmAlert = this.alertCtrl.create({
+        title: notification.title,
+        message: notification.message,
+        buttons: [{
+          text: 'Ignore',
+          role: 'cancel'
+        }, {
+          text: 'View',
+          handler: () => {
+            //TODO: Your logic here
+            this.goNotifAction(notification.additionalData);
+          }
+        }]
+      });
+      confirmAlert.present();
+    }
   }
 
   androidNotification(notification) {
-    
+    if(notification.additionalData.coldstart) {
+      this.goNotifAction(notification.additionalData);
+    } else {
+      let confirmAlert = this.alertCtrl.create({
+        title: notification.title,
+        message: notification.message,
+        buttons: [{
+          text: 'Ignore',
+          role: 'cancel'
+        }, {
+          text: 'View',
+          handler: () => {
+            //TODO: Your logic here
+            this.goNotifAction(notification.additionalData);
+          }
+        }]
+      });
+      confirmAlert.present();
+    }
   }
 
   initializeApp() {
@@ -209,6 +301,9 @@ export class VocalApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.GetAllResources();
+      this.SetLanguage();
+      this.SetPlatform();
       this.storeService.Get(KeyStore[KeyStore.User]).then(
       user => {
         if(user != null) {
@@ -223,6 +318,7 @@ export class VocalApp {
         }
       ).catch(error => {
         console.log(error);
+        this.showToast(error);
         this.rootPage = HomePage;
       });
       this.deeplinks.routeWithNavController(this.nav, {
@@ -232,9 +328,6 @@ export class VocalApp {
       }, (err) => {
         console.log(err);
       })
-      this.GetAllResources();
-      this.SetLanguage();
-      this.SetPlatform();
       if(this.config.get('isApp')) this.client = new WindowsAzure.MobileServiceClient("https://mobileappvocal.azurewebsites.net");
     });
   }
@@ -268,43 +361,16 @@ export class VocalApp {
   }
 
   init() {
-    try {
-      let request = new Request();
-      request.Lang = params.Lang;
-      let urlInit = url.Init();
-      let cookie = this.cookieService.GetAuthorizeCookie(urlInit, params.User)
-      this.httpService.Post(urlInit, request, cookie).subscribe(
-        resp => {
-          let response = resp.json() as Response<InitResponse>;
-          if(response.HasError)
-            this.showAlert(response.ErrorMessage)
-          else {
-            let errorSettings = response.Data.Errors.find(x => x.Key == KeyStore.Settings.toString());
-            let errorFriends = response.Data.Errors.find(x => x.Key == KeyStore.Friends.toString());
-            let errorTalks = response.Data.Errors.find(x => x.Key == KeyStore.Talks.toString());
-            let errors = response.Data.Errors.find(x => x.Key == KeyStore.FriendsAddedMe.toString());
-            this.SaveData(response.Data.Friends, errorFriends, KeyStore.Friends);
-            this.SaveData(response.Data.Talks, errorTalks, KeyStore.Talks);
-            this.SaveData(response.Data.Settings, errorSettings, KeyStore.Settings);
-            this.SaveData(response.Data.FriendsAddedMe, errors, KeyStore.FriendsAddedMe);
-          }
-        },
-        error => {
-          this.showAlert(error)
-          this.exceptionService.Add(error);
-        }
-      )
-    } catch (error) {
-      this.showAlert(error);
-      this.exceptionService.Add(error);
-    }
-  }
-
-  SaveData(data: any, error: KeyValueResponse<string, string>, key: KeyStore) {
-    if(error == null)
-      this.storeService.Set(KeyStore[key], data);
-    else
-      this.showAlert(error.Value);
+    this.initService.init().subscribe(
+      resp => {
+        let response = resp.json() as Response<InitResponse>;
+        this.initService.manageData(response);
+      },
+      error => {
+        this.events.publish("ErrorInit", error);
+        this.exceptionService.Add(error);
+      }
+    );
   }
 
   showAlert(message) {
@@ -329,6 +395,26 @@ export class VocalApp {
     this.talkService.LoadList().then(() => {
       this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
     })
+
+    this.hubService.hubProxy.on(HubMethod[HubMethod.BeginTalk], (obj) => {
+      console.log(obj);
+      this.events.publish(HubMethod[HubMethod.BeginTalk], obj);
+    });
+
+    this.hubService.hubProxy.on(HubMethod[HubMethod.EndTalk], () => {
+      this.events.publish(HubMethod[HubMethod.EndTalk]);
+    });
+
+    this.hubService.hubProxy.on(HubMethod[HubMethod.AddFriend], (obj) => {
+      console.log(obj);
+      let message = obj + " vous a ajouté dans sa liste d'amis";
+      this.showToast(message);
+    });
+
+    this.hubService.hubProxy.on(HubMethod[HubMethod.UpdateListenUser], (obj) => {
+      console.log(obj);
+      this.events.publish(HubMethod[HubMethod.UpdateListenUser], obj);
+    });
 
     this.hubService.hubProxy.on(HubMethod[HubMethod.Receive], (obj) => {
       console.log(obj);

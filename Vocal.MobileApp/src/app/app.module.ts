@@ -47,8 +47,10 @@ import { TalkService } from "../services/talkService";
 import { HubService } from "../services/hubService";
 import { Camera } from "@ionic-native/camera";
 import { FriendsService } from "../services/friendsService";
+import { InitService } from "../services/initService";
 import { ScanContactsPage } from "../pages/scan-contacts/scan-contacts";
 import { AudioRecorder } from "../services/audiorecorder";
+import { SettingsService } from "../services/settingsService";
 
 let components = [
   VocalApp,
@@ -93,7 +95,8 @@ let components = [
     BrowserModule,
     HttpModule,
     IonicModule.forRoot(VocalApp, {
-      isApp: !document.URL.startsWith('http')
+      isApp: !document.URL.startsWith('http'),
+      backButtonText: ''
     }),
   ],
   bootstrap: [IonicApp],
@@ -112,6 +115,8 @@ let components = [
     HubService,
     ExceptionService,
     FriendsService,
+    SettingsService,
+    InitService,
     AudioRecorder,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

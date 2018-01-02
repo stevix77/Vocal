@@ -2,14 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Vocal.Business.Properties" GeneratedClassName="PayloadSettings">
   <Profiles />
   <Settings>
-    <Setting Name="TalkAndroid" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">{"data" : {"message" : "{0}", "title" : {1}, "talkId" : {2} }}</Value>
-    </Setting>
-    <Setting Name="TalkiOs" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">{"aps" : {"alert" : "{0}", "title" : {1}, "talkId" : {2} }}</Value>
-    </Setting>
     <Setting Name="TalkWindows" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">&lt;toast launch="talkId={2}"&gt;&lt;visual&gt;&lt;binding template ="ToastText02"&gt;&lt;text id="1"&gt;{1}&lt;/text&gt;&lt;text id="2"&gt;{0}&lt;/text&gt;&lt;/binding&gt;&lt;/visual&gt;&lt;/toast&gt;</Value>
+      <Value Profile="(Default)">&lt;toast launch="talkId={2}&amp;action={3}"&gt;&lt;visual&gt;&lt;binding template ="ToastText02"&gt;&lt;text id="1"&gt;{1}&lt;/text&gt;&lt;text id="2"&gt;{0}&lt;/text&gt;&lt;/binding&gt;&lt;/visual&gt;&lt;/toast&gt;</Value>
     </Setting>
     <Setting Name="FollowAndroid" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
@@ -21,13 +15,19 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="AddFriendsAndroid" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">{{'data' : {{'message' : '{0}',  'userId': '{1}', 'action': '{2}' }}}}</Value>
     </Setting>
     <Setting Name="AddFriendsiOs" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">{{"aps" : {{'alert' : '{0}',  'userId' : '{1}', 'action': '{2}' }}}}</Value>
     </Setting>
     <Setting Name="AddFriendsWindows" Type="System.String" Scope="Application">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">&lt;toast launch="userId={1}&amp;action={2}"&gt;&lt;visual&gt;&lt;binding template ="ToastText01"&gt;&lt;text id="2"&gt;{0}&lt;/text&gt;&lt;/binding&gt;&lt;/visual&gt;&lt;/toast&gt;</Value>
+    </Setting>
+    <Setting Name="TalkAndroid" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{{'data' : {{'message' : '{0}', 'title' : '{1}', 'talkId' : '{2}', 'action': '{3}' }}}}</Value>
+    </Setting>
+    <Setting Name="TalkiOs" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{{"aps" : {{'alert' : '{0}', 'title' : '{1}', 'talkId' : '{2}', 'action': '{3}' }}}}</Value>
     </Setting>
   </Settings>
 </SettingsFile>

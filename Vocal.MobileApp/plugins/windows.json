@@ -10,7 +10,7 @@
         "com-badrit-base64": {
             "PACKAGE_NAME": "Vocal"
         },
-        "cordova-plugin-compat": {
+        "cordova-plugin-camera": {
             "PACKAGE_NAME": "Vocal"
         },
         "cordova-plugin-contacts": {
@@ -46,14 +46,7 @@
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "Vocal"
         },
-        "ionic-plugin-keyboard": {
-            "PACKAGE_NAME": "Vocal"
-        },
-        "phonegap-plugin-push": {
-            "SENDER_ID": "1054724390279",
-            "PACKAGE_NAME": "Vocal"
-        },
-        "cordova-plugin-camera": {
+        "info.protonet.imageresizer": {
             "PACKAGE_NAME": "Vocal"
         },
         "ionic-plugin-deeplinks": {
@@ -62,18 +55,18 @@
             "DEEPLINK_HOST": "vocal.com",
             "PACKAGE_NAME": "Vocal"
         },
-        "info.protonet.imageresizer": {
+        "ionic-plugin-keyboard": {
+            "PACKAGE_NAME": "Vocal"
+        },
+        "phonegap-plugin-push": {
             "PACKAGE_NAME": "Vocal"
         }
     },
     "dependent_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "Vocal"
+        },
         "cordova-sqlite-storage": {
-            "PACKAGE_NAME": "Vocal"
-        },
-        "cordova-plugin-nativeaudio": {
-            "PACKAGE_NAME": "Vocal"
-        },
-        "msopentech.azure.NotificationHub": {
             "PACKAGE_NAME": "Vocal"
         }
     }

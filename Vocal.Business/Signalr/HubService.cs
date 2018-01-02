@@ -1,14 +1,9 @@
 ﻿using Microsoft.AspNet.SignalR.Client;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Vocal.Business.Properties;
 using Vocal.Business.Tools;
 using Vocal.Model.Response;
-using Vocal.Model.DB;
 
 namespace Vocal.Business.Signalr
 {
@@ -46,12 +41,17 @@ namespace Vocal.Business.Signalr
 
         internal async Task SendMessage(SendMessageResponse data, List<string> idsRecipient)
         {
-            await Proxy.Invoke(HubMethod.Send.ToString(), data, idsRecipient);
+            await Proxy.Invoke(HubMethod.Send.ToString(), idsRecipient, data);
         }
 
-        internal void UpdateTalk(string talkId, List<MessageResponse> list)
+        internal async Task UpdateTalk(string talkId, List<MessageResponse> list)
         {
-            Proxy.Invoke(HubMethod.UpdateListenUser.ToString(), talkId, list);
+            await Proxy.Invoke(HubMethod.UpdateListenUser.ToString(), talkId, list);
+        }
+
+        internal async Task AddFriends(List<string> ids, string username)
+        {
+            await Proxy.Invoke(HubMethod.AddFriend.ToString(), ids, username);
         }
     }
 }

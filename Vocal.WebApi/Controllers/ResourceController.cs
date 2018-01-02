@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using Vocal.Business.Business;
@@ -12,12 +9,12 @@ namespace Vocal.WebApi.Controllers
 {
     [EnableCors("*", "*", "*")]
     [RoutePrefix("api/resource")]
-    public class ResourceController : ApiController
+    public class ResourceController : VocalApiController
     {
         [HttpPost, Route("list/{lang}")]
         public Response<List<KeyValueResponse<string, string>>> List(string lang)
         {
-            return Business.Tools.Monitoring.Execute(ResourceBusiness.GetAllResources, lang);
+            return _monitoring.Execute(ResourceBusiness.GetAllResources, lang);
         }
     }
 }

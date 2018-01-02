@@ -1,19 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Vocal.Business;
+using Vocal.Business.Business;
+using Vocal.Business.Tools;
+using Vocal.WebApi.Helpers;
 using Vocal.WebApi.Models;
 
 namespace Vocal.WebApi.Controllers
 {
     public class AccountController : Controller
     {
+        readonly AuthentificationBusiness _authentificationBusiness;
+        readonly Monitoring _monitoring;
+
+        public AccountController()
+        {
+            var dbContext = ContextGenerator.GetDbContext();
+            _authentificationBusiness = new AuthentificationBusiness(dbContext);
+            _monitoring = new Monitoring(dbContext);
+        }
+
+
         // GET: Account
         public ActionResult ResetPassword(string id, string token, string lang)
         {
-            var response = Business.Tools.Monitoring.Execute(AuthentificationBusiness.IsTokenValid, id, token, lang);
+            var response = _monitoring.Execute(_authentificationBusiness.IsTokenValid, id, token, lang);
             if (response.Data)
                 return View();
             else
@@ -29,7 +39,7 @@ namespace Vocal.WebApi.Controllers
         {
             if(ModelState.IsValid)
             {
-                var response = Business.Tools.Monitoring.Execute(AuthentificationBusiness.ResetPassword, model.Password, id, token, lang);
+                var response = _monitoring.Execute(_authentificationBusiness.ResetPassword, model.Password, id, token, lang);
                 if (response.Data)
                 {
                     ViewBag.Success = Business.Properties.Resources_Language.ResetPasswordSuccess;

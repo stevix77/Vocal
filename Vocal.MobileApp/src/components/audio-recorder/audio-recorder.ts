@@ -16,6 +16,8 @@ import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-voca
 export class AudioRecorderComponent {
 
   isApp: boolean;
+  time: number;
+  timer: number;
 
   constructor(public events: Events,
     public audioRecorder: AudioRecorder,
@@ -33,14 +35,17 @@ export class AudioRecorderComponent {
   }
 
   presentEditVocalModal() {
-    let editVocalModal = this.modalCtrl.create(ModalEditVocalPage);
+    let editVocalModal = this.modalCtrl.create(ModalEditVocalPage, {duration: this.time});
     editVocalModal.present();
   }
 
   startRecording() {
     console.log('start recording');
     this.events.publish('record:start');
-
+    this.time = 0;
+    this.timer = setInterval(() => {
+      this.time++;
+    }, 1000);
     try {
       this.audioRecorder.startRecording();
     }
@@ -52,6 +57,7 @@ export class AudioRecorderComponent {
   stopRecording() {
     console.log('stop recording');
     this.events.publish('record:stop');
+    clearInterval(this.timer);
     this.presentEditVocalModal();
     //document.querySelector('.ion-page ion-content .wrapper-record').remove();
     try {
