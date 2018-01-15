@@ -62,6 +62,9 @@
         },
         "info.protonet.imageresizer": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-nativeaudio": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
         }
     },
     "dependent_plugins": {

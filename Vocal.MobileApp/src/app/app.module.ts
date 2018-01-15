@@ -52,6 +52,8 @@ import { ScanContactsPage } from "../pages/scan-contacts/scan-contacts";
 import { AudioRecorder } from "../services/audiorecorder";
 import { SettingsService } from "../services/settingsService";
 
+import { NativeAudio } from '@ionic-native/native-audio';
+
 let components = [
   VocalApp,
   HomePage,
@@ -118,6 +120,7 @@ let components = [
     SettingsService,
     InitService,
     AudioRecorder,
+    NativeAudio,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

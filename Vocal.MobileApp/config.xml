@@ -130,4 +130,6 @@
     <plugin name="phonegap-plugin-push" spec="^2.0.0">
         <variable name="SENDER_ID" value="1054724390279" />
     </plugin>
+    <plugin name="cordova-plugin-nativeaudio" spec="^3.0.9" />
+    <allow-navigation href="http://192.168.0.32:8100" />
 </widget>

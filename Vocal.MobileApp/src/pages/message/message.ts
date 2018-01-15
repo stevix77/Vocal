@@ -16,6 +16,9 @@ import {DomSanitizer} from '@angular/platform-browser';
 import { Timer } from '../../services/timer';
 import { GetMessagesRequest } from "../../models/request/getMessagesRequest";
 
+import { NativeAudio } from '@ionic-native/native-audio';
+
+
 /**
  * Generated class for the MessagePage page.
  *
@@ -49,7 +52,8 @@ export class MessagePage {
               private events: Events,
               private talkService: TalkService,
               private hubService: HubService,
-              private domSanitizer: DomSanitizer) {
+              private domSanitizer: DomSanitizer,
+              private nativeAudio: NativeAudio) {
 
     this.model.talkId = this.navParams.get("TalkId");
     this.model.userId = this.navParams.get("UserId");
@@ -149,7 +153,7 @@ export class MessagePage {
   }
 
   loadMessages() {
-    this.Messages = this.talkService.GetMessages(this.model.talkId)
+    this.Messages = this.talkService.GetMessages(this.model.talkId);
     this.talkService.Talks.find(x => x.Id == this.model.talkId).Users.forEach(x => {
       if(x.Id != params.User.Id){
         this.VocalName += x.Username + " ";
@@ -233,25 +237,37 @@ export class MessagePage {
     // this.Messages.find(x => x.Id == messId).Content = mess;
   }
 
-  base64EncodingUTF8(str) {
-      var encoded = new TextEncoderLite('utf-8').encode(str);        
-      var b64Encoded = base64js.fromByteArray(encoded);
-      return b64Encoded;
-  }
+  // base64EncodingUTF8(str) {
+  //     var encoded = new TextEncoderLite('utf-8').encode(str);
+  //     var b64Encoded = base64js.fromByteArray(encoded);
+  //     return b64Encoded;
+  // }
 
   playVocal(messId: string, index: number) {
     let message = this.Messages[index];
-    console.log(message.Content);
-    let b64 = message.Content.replace('data:audio/wav;base64,', '');
+    console.log(message);
 
-    let audioCtx = new (window["AudioContext"] || window["webkitAudioContext"])();
-    let source = audioCtx.createBufferSource();
+    console.log(this.nativeAudio);
 
-    audioCtx.decodeAudioData(this.base64EncodingUTF8(b64), buffer => {
-      source.buffer = buffer;
-      source.connect(audioCtx.destination);
-      source.start(0);
-    });
+    this.nativeAudio.preloadSimple('uniqueId1', 'http://a353.phobos.apple.com/us/r1000/000/Music/v4/a4/46/52/a44652f6-0812-144b-b303-44cb3186dcde/mzaf_6548361306007274789.plus.aac.p.m4a').then(this.onPreloadSuccess, this.onPreloadError);
+
+  }
+
+  onPreloadSuccess() {
+    console.log('onPreloadSuccess');
+    this.nativeAudio.play('uniqueId1').then(this.onPlaySuccess, this.onPlayError);
+  }
+
+  onPreloadError() {
+
+  }
+
+  onPlaySuccess() {
+
+  }
+
+  onPlayError() {
+
   }
 
   showToast(message: string) :any {
