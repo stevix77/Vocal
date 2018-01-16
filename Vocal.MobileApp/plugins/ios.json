@@ -23,17 +23,10 @@
         "cordova-plugin-device": {
             "PACKAGE_NAME": "7904ValentinSteve.VocalDev2"
         },
-        "cordova-plugin-file": {
-            "PACKAGE_NAME": "7904ValentinSteve.VocalDev2"
-        },
         "cordova-plugin-globalization": {
             "PACKAGE_NAME": "7904ValentinSteve.VocalDev2"
         },
         "cordova-plugin-inappbrowser": {
-            "PACKAGE_NAME": "7904ValentinSteve.VocalDev2"
-        },
-        "cordova-plugin-media": {
-            "MICROPHONE_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "7904ValentinSteve.VocalDev2"
         },
         "cordova-plugin-ms-azure-mobile-apps": {
@@ -64,6 +57,13 @@
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
         "cordova-plugin-nativeaudio": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-media": {
+            "MICROPHONE_USAGE_DESCRIPTION": " ",
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-file": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         }
     },

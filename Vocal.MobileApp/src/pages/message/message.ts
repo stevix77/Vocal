@@ -17,7 +17,7 @@ import { Timer } from '../../services/timer';
 import { GetMessagesRequest } from "../../models/request/getMessagesRequest";
 
 import { NativeAudio } from '@ionic-native/native-audio';
-
+import { Media } from '@ionic-native/media';
 
 /**
  * Generated class for the MessagePage page.
@@ -245,17 +245,11 @@ export class MessagePage {
 
   playVocal(messId: string, index: number) {
     let message = this.Messages[index];
-    console.log(message);
-
-    console.log(this.nativeAudio);
-
-    this.nativeAudio.preloadSimple('uniqueId1', 'http://a353.phobos.apple.com/us/r1000/000/Music/v4/a4/46/52/a44652f6-0812-144b-b303-44cb3186dcde/mzaf_6548361306007274789.plus.aac.p.m4a').then(this.onPreloadSuccess, this.onPreloadError);
-
+    //let my_media = new Media('http://urbanhit.fr/upload/podcasts/audios/5a5c98471504b0.41195086.mp3', onSuccess, onError);
   }
 
   onPreloadSuccess() {
     console.log('onPreloadSuccess');
-    this.nativeAudio.play('uniqueId1').then(this.onPlaySuccess, this.onPlayError);
   }
 
   onPreloadError() {
