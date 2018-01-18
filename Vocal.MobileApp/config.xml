@@ -124,12 +124,12 @@
     <allow-navigation href="http://192.168.0.32:8100" />
     <allow-navigation href="http://192.168.1.21:8100" />
     <plugin name="cordova-plugin-file" spec="^4.3.3" />
-    <plugin name="cordova-plugin-media" spec="^3.0.1">
-        <variable name="MICROPHONE_USAGE_DESCRIPTION" value=" " />
-    </plugin>
     <plugin name="cordova-plugin-datepicker" spec="^0.9.3" />
     <plugin name="cordova-plugin-contacts" spec="^2.3.1">
         <variable name="CONTACTS_USAGE_DESCRIPTION" value=" " />
     </plugin>
     <plugin name="cordova-plugin-globalization" spec="^1.0.9" />
+    <plugin name="cordova-plugin-media" spec="^3.0.1">
+        <variable name="MICROPHONE_USAGE_DESCRIPTION" value=" " />
+    </plugin>
 </widget>

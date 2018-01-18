@@ -245,7 +245,9 @@ export class MessagePage {
 
   playVocal(messId: string, index: number) {
     let message = this.Messages[index];
-    //let my_media = new Media('http://urbanhit.fr/upload/podcasts/audios/5a5c98471504b0.41195086.mp3', onSuccess, onError);
+    let my_media = new Media();
+    let file = my_media.create('http://urbanhit.fr/upload/podcasts/audios/5a5c98471504b0.41195086.mp3');
+    file.play();
   }
 
   onPreloadSuccess() {
