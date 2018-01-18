@@ -13,22 +13,29 @@ namespace Vocal.WebApi.Controllers
     [RoutePrefix("api/search"), CustomAuthorize]
     public class SearchController : VocalApiController
     {
+        readonly SearchBusiness _searchBusiness;
+
+        public SearchController()
+        {
+            _searchBusiness = new SearchBusiness(_dbContext);
+        }
+
         [HttpPost, Route("people")]
         public Response<List<PeopleResponse>> SearchPeople(SearchRequest request)
         {
-            return Business.Tools.Monitoring.Execute(SearchBusiness.SearchPeople, GetUserIdFromCookie(), request.Keyword, request.Lang);
+            return _monitoring.Execute(_searchBusiness.SearchPeople, GetUserIdFromCookie(), request.Keyword, request.Lang);
         }
 
         [HttpPost, Route("people/mail")]
         public Response<List<PeopleResponse>> SearchPeopleByEmail(SearchRequest request)
         {
-            return Business.Tools.Monitoring.Execute(SearchBusiness.SearchPeopleByEmail, GetUserIdFromCookie(), request.Keyword, request.Lang);
+            return _monitoring.Execute(_searchBusiness.SearchPeopleByEmail, GetUserIdFromCookie(), request.Keyword, request.Lang);
         }
         
         [HttpPost, Route("contact")]
         public Response<List<PeopleResponse>> SearchContacts(SearchFriendsRequest request)
         {
-            return Business.Tools.Monitoring.Execute(SearchBusiness.SearchContacts, GetUserIdFromCookie(), request.Emails, request.Lang);
+            return _monitoring.Execute(_searchBusiness.SearchContacts, GetUserIdFromCookie(), request.Emails, request.Lang);
         }
     }
 }

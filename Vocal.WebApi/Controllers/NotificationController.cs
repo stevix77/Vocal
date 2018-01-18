@@ -12,10 +12,17 @@ namespace Vocal.WebApi.Controllers
     [RoutePrefix("api/notification")]
     public class NotificationController : VocalApiController
     {
+        readonly NotificationBusiness _notificationBusiness;
+
+        public NotificationController()
+        {
+            _notificationBusiness = new NotificationBusiness(_dbContext, _hubContext);
+        }
+
         [HttpPost, CustomAuthorize, Route("register")]
         public async Task<Response<string>> GetRegistrationId(NotificationRegisterRequest request)
         {
-            return await NotificationBusiness.GetRegistrationId(request.Channel, request.UserId, request.Platform, request.Lang);
+            return await _notificationBusiness.GetRegistrationId(request.Channel, request.UserId, request.Platform, request.Lang);
         }
     }
 }

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Vocal.WindowsService</RootNamespace>
     <AssemblyName>Vocal.WindowsService</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -29,6 +29,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -107,6 +108,10 @@
     <ProjectReference Include="..\Vocal.Business\Vocal.Business.csproj">
       <Project>{fed2004a-41ac-43ef-b43f-c01900103999}</Project>
       <Name>Vocal.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Vocal.Standard.Model\Vocal.Standard.Model.csproj">
+      <Project>{3E9D3641-AAC3-4A42-AA6F-1C3F1FF3E521}</Project>
+      <Name>Vocal.Standard.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

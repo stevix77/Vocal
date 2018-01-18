@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Vocal.Console</RootNamespace>
     <AssemblyName>Vocal.Console</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -60,17 +61,17 @@
       <Project>{fed2004a-41ac-43ef-b43f-c01900103999}</Project>
       <Name>Vocal.Business</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Vocal.DAL\Vocal.DAL.csproj">
-      <Project>{41fc38be-ae82-4f89-8e81-dc57f6b610b3}</Project>
-      <Name>Vocal.DAL</Name>
+    <ProjectReference Include="..\Vocal.standard.DAL\Vocal.standard.DAL.csproj">
+      <Project>{d48d2322-258b-454b-9d09-391c8abc2cf1}</Project>
+      <Name>Vocal.standard.DAL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Vocal.Model\Vocal.Model.csproj">
-      <Project>{b76d6ce5-b158-4eb9-8a35-54da7cee32ea}</Project>
-      <Name>Vocal.Model</Name>
+    <ProjectReference Include="..\Vocal.Standard.Model\Vocal.Standard.Model.csproj">
+      <Project>{3e9d3641-aac3-4a42-aa6f-1c3f1ff3e521}</Project>
+      <Name>Vocal.Standard.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Vocal.Tools\Vocal.Tools.csproj">
-      <Project>{9198f034-6876-4e86-a84a-50624d6c7742}</Project>
-      <Name>Vocal.Tools</Name>
+    <ProjectReference Include="..\Vocal.Standard.Tools\Vocal.Standard.Tools.csproj">
+      <Project>{f8e70db5-2150-4bdb-ba16-5fb1dda0e144}</Project>
+      <Name>Vocal.Standard.Tools</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

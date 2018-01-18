@@ -1,34 +1,35 @@
-﻿using MongoDB.Bson;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using Vocal.Business.Business;
 using Vocal.Business.Properties;
-using Vocal.Business.Tools;
 using Vocal.DAL;
+using Vocal.Model.Context;
 
 namespace Vocal.Business.Backup
 {
-    public class BackupBusiness
+    public class BackupBusiness : BaseBusiness
     {
-        public static void ExportCollections()
+        public BackupBusiness(DbContext context): base(context)
+        {
+
+        }
+         
+
+        public void ExportCollections()
         {
             try
             {
                 while (true)
                 {
-                    var collections = Repository.Instance.GetAllCollections();
+                    var collections = _repository.GetAllCollections();
                     foreach (var item in collections)
                     {
                         var name = item.GetElement("name").Value.ToString();
                         if(!name.ToLower().Equals("monitoring"))
                         {
-                            var docs = Repository.Instance.GetDocuments(name);
+                            var docs = _repository.GetDocuments(name);
                             if (docs.Count > 0)
                             {
                                 var json = JsonConvert.SerializeObject(docs);

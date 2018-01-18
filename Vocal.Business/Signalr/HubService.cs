@@ -1,14 +1,9 @@
 ﻿using Microsoft.AspNet.SignalR.Client;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Vocal.Business.Properties;
 using Vocal.Business.Tools;
 using Vocal.Model.Response;
-using Vocal.Model.DB;
 
 namespace Vocal.Business.Signalr
 {

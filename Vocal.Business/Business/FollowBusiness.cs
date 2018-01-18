@@ -1,27 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Vocal.Business.Properties;
 using Vocal.Business.Tools;
 using Vocal.DAL;
+using Vocal.Model.Context;
 using Vocal.Model.Business;
 using Vocal.Model.Response;
 
 namespace Vocal.Business.Business
 {
-    public static class FollowBusiness
+    public class FollowBusiness : BaseBusiness
     {
-        
-        public static Response<List<UserResponse>> GetFollowers(string userId, int pageNumber, int pageSize, string lang)
+        readonly NotificationBusiness _notificationBusiness;
+
+        public FollowBusiness(DbContext dbContext, HubContext hubContext) : base(dbContext, hubContext)
+        {
+            _notificationBusiness = new NotificationBusiness(_repository, _notificationHub);
+        }
+
+        internal FollowBusiness(Repository repository, NotificationHub notificationHub) : base(repository, notificationHub)
+        {
+            _notificationBusiness = new NotificationBusiness(_repository, _notificationHub);
+        }
+
+        public Response<List<UserResponse>> GetFollowers(string userId, int pageNumber, int pageSize, string lang)
         {
             var response = new Response<List<UserResponse>>();
             LogManager.LogDebug(userId, lang);
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {
-                var list = Repository.Instance.GetFollowers(userId, pageSize, pageNumber);
+                var list = _repository.GetFollowers(userId, pageSize, pageNumber);
                 response.Data = Binder.Bind.Bind_Users(list);
             }
             catch (TimeoutException tex)
@@ -42,14 +52,14 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<List<UserResponse>> GetFollowing(string userId, int pageNumber, int pageSize, string lang)
+        public Response<List<UserResponse>> GetFollowing(string userId, int pageNumber, int pageSize, string lang)
         {
             var response = new Response<List<UserResponse>>();
             LogManager.LogDebug(userId, lang);
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {
-                var list = Repository.Instance.GetFollowing(userId, pageSize, pageNumber);
+                var list = _repository.GetFollowing(userId, pageSize, pageNumber);
                 response.Data = Binder.Bind.Bind_Users(list);
             }
             catch (TimeoutException tex)
@@ -70,20 +80,20 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<bool> Follow(string userId, List<string> ids, string lang)
+        public Response<bool> Follow(string userId, List<string> ids, string lang)
         {
             var response = new Response<bool>();
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             LogManager.LogDebug(userId, ids, lang);
             try
             {
-                response.Data = Repository.Instance.Follow(userId, ids);
+                response.Data = _repository.Follow(userId, ids);
                 Task.Run(async () =>
                 {
-                    var user = Repository.Instance.GetUserById(userId);
+                    var user = _repository.GetUserById(userId);
                     if(user != null)
                     {
-                        await NotificationBusiness.SendNotification(ids, (int)NotifType.Follow, user.Username);
+                        await _notificationBusiness.SendNotification(ids, (int)NotifType.Follow, user.Username);
                     }
                 });
             }
@@ -105,14 +115,14 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<bool> Unfollow(string userId, List<string> ids, string lang)
+        public Response<bool> Unfollow(string userId, List<string> ids, string lang)
         {
             var response = new Response<bool>();
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             LogManager.LogDebug(userId, ids, lang);
             try
             {
-                response.Data = Repository.Instance.Unfollow(userId, ids);
+                response.Data = _repository.Unfollow(userId, ids);
             }
             catch (TimeoutException tex)
             {

@@ -12,10 +12,17 @@ namespace Vocal.WebApi.Controllers
     [CustomAuthorize, RoutePrefix("api/home")]
     public class HomeController : VocalApiController
     {
+        readonly InitBusiness _initBusiness;
+
+        public HomeController()
+        {
+            _initBusiness = new InitBusiness(_dbContext, _hubContext);
+        }
+
         [HttpPost, Route("init")]
         public Response<InitResponse> Initialize(Request request)
         {
-            return Business.Tools.Monitoring.Execute(InitBusiness.Initialize, GetUserIdFromCookie(), request.Lang);
+            return _monitoring.Execute(_initBusiness.Initialize, GetUserIdFromCookie(), request.Lang);
         }
     }
 }

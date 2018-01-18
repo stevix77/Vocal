@@ -1,21 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Vocal.Business.Properties;
 using Vocal.Business.Security;
 using Vocal.Business.Tools;
 using Vocal.DAL;
 using Vocal.Model.Business;
+using Vocal.Model.Context;
 using Vocal.Model.DB;
 using Vocal.Model.Helpers;
 using Vocal.Model.Response;
 
 namespace Vocal.Business.Business
 {
-    public static class UserBusiness
+    public class UserBusiness : BaseBusiness
     {
-        public static Response<bool> IsExistsUsername(string username, string lang)
+        public UserBusiness(DbContext context) : base(context)
+        {
+
+        }
+
+        internal UserBusiness(Repository repository) : base(repository)
+        {
+
+        }
+
+        public Response<bool> IsExistsUsername(string username, string lang)
         {
             var response = new Response<bool>();
             LogManager.LogDebug(username, lang);
@@ -23,7 +33,7 @@ namespace Vocal.Business.Business
             try
             {
                 username = username.ToLower();
-                var user = Repository.Instance.GetUserByUsername(username);
+                var user = _repository.GetUserByUsername(username);
                 if (user != null)
                 {
                     response.Data = true;
@@ -48,7 +58,7 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<bool> UpdateUser(string userId, object value, int updateType, string lang)
+        public Response<bool> UpdateUser(string userId, object value, int updateType, string lang)
         {
             var response = new Response<bool>();
             if(updateType != (int)Update.Picture)
@@ -56,7 +66,7 @@ namespace Vocal.Business.Business
             Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
             try
             {
-                var user = Repository.Instance.GetUserById(userId);
+                var user = _repository.GetUserById(userId);
                 var type = (Update)Enum.ToObject(typeof(Update), updateType);
                 switch(type)
                 {
@@ -106,7 +116,7 @@ namespace Vocal.Business.Business
                     default:
                         break;
                 }
-                Repository.Instance.UpdateUser(user);
+                _repository.UpdateUser(user);
                 response.Data = true;
                 Task.Run(() =>
                 {
@@ -132,14 +142,14 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<List<UserResponse>> GetUsersBlocked(string userId, string lang)
+        public Response<List<UserResponse>> GetUsersBlocked(string userId, string lang)
         {
             var response = new Response<List<UserResponse>>();
             try
             {
                 LogManager.LogDebug(userId, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-                var user = Repository.Instance.GetUserById(userId);
+                var user = _repository.GetUserById(userId);
                 if (user != null)
                     response.Data = Binder.Bind.Bind_Users(user.Settings.Blocked);
                 else
@@ -163,14 +173,14 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<bool> BlockUsers(string userId, List<string> ids, string lang)
+        public Response<bool> BlockUsers(string userId, List<string> ids, string lang)
         {
             var response = new Response<bool>();
             try
             {
                 LogManager.LogDebug(userId, ids, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-                var success = Repository.Instance.BlockUsers(userId, ids);
+                var success = _repository.BlockUsers(userId, ids);
                 response.Data = success;
             }
             catch (TimeoutException tex)
@@ -191,14 +201,14 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<bool> UnblockUsers(string userId, List<string> ids, string lang)
+        public Response<bool> UnblockUsers(string userId, List<string> ids, string lang)
         {
             var response = new Response<bool>();
             try
             {
                 LogManager.LogDebug(userId, ids, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-                var success = Repository.Instance.UnblockUsers(userId, ids);
+                var success = _repository.UnblockUsers(userId, ids);
                 response.Data = success;
             }
             catch (TimeoutException tex)
@@ -219,14 +229,14 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<List<UserResponse>> GetListUsers(string lang)
+        public Response<List<UserResponse>> GetListUsers(string lang)
         {
             var response = new Response<List<UserResponse>>();
             try
             {
                 LogManager.LogDebug(lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-                var list = Repository.Instance.GetAllUsers();
+                var list = _repository.GetAllUsers();
                 response.Data = Binder.Bind.Bind_Users(list);
             }
             catch (TimeoutException tex)
@@ -247,7 +257,7 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<SettingsResponse> GetSettings(string userId, string lang)
+        public Response<SettingsResponse> GetSettings(string userId, string lang)
         {
             var response = new Response<SettingsResponse>();
             LogManager.LogDebug(userId, lang);
@@ -257,7 +267,7 @@ namespace Vocal.Business.Business
                 response.Data = CacheManager.GetCache<SettingsResponse>(CacheManager.GetKey(Properties.Settings.Default.CacheSettings, userId));
                 if (response.Data != null)
                     return response;
-                var user = Repository.Instance.GetUserById(userId);
+                var user = _repository.GetUserById(userId);
                 response.Data = Binder.Bind.Bind_UserSettings(user);
                 Task.Run(() =>
                 {
@@ -283,14 +293,14 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<UserResponse> GetUserById(string requestUserId, string userId, string lang)
+        public Response<UserResponse> GetUserById(string requestUserId, string userId, string lang)
         {
             var response = new Response<UserResponse>();
             try
             {
                 LogManager.LogDebug(userId, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-                var user = Repository.Instance.GetUserById(userId);
+                var user = _repository.GetUserById(userId);
                 if (user != null)
                     response.Data = Binder.Bind.Bind_User(user);
                 else
@@ -314,7 +324,7 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<bool> IsExistsEmail(string email, string lang)
+        public Response<bool> IsExistsEmail(string email, string lang)
         {
             var response = new Response<bool>();
             LogManager.LogDebug(email, lang);
@@ -322,7 +332,7 @@ namespace Vocal.Business.Business
             try
             {
                 email = email.ToLower();
-                var user = Repository.Instance.GetUserByEmail(email);
+                var user = _repository.GetUserByEmail(email);
                 if (user != null)
                 {
                     response.Data = true;
@@ -347,21 +357,21 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        private static void BlockedUser(Vocal.Model.DB.User user, string userId)
+        private void BlockedUser(Vocal.Model.DB.User user, string userId)
         {
             var index = user.Settings.Blocked.FindIndex(x => x.Id == userId);
             if (index >= 0)
                 user.Settings.Blocked.RemoveAt(index);
             else
             {
-                var userToBlock = Repository.Instance.GetUserById(userId);
+                var userToBlock = _repository.GetUserById(userId);
                 if (userToBlock != null)
                     user.Settings.Blocked.Add(userToBlock.ToPeople());
             }
 
         }
 
-        private static int GetWidth(PictureType type)
+        private int GetWidth(PictureType type)
         {
             if (type == PictureType.Profil)
                 return Properties.Settings.Default.PictureProfilWidth;
@@ -371,7 +381,7 @@ namespace Vocal.Business.Business
                 return 0;
         }
 
-        private static int GetHeight(PictureType type)
+        private int GetHeight(PictureType type)
         {
             if (type == PictureType.Profil)
                 return Properties.Settings.Default.PictureProfilHeight;

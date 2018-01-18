@@ -1,20 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Vocal.Business.Properties;
 using Vocal.Business.Tools;
 using Vocal.DAL;
 using Vocal.Model.Business;
+using Vocal.Model.Context;
 using Vocal.Model.DB;
 using Vocal.Model.Response;
 
 namespace Vocal.Business.Business
 {
-    public static class SearchBusiness
+    public class SearchBusiness : BaseBusiness
     {
-        public static Response<List<PeopleResponse>> SearchPeople(string userId, string keyword, string lang)
+        public SearchBusiness(DbContext context) : base(context)
+        {
+
+        }
+
+        internal SearchBusiness(Repository repository) : base(repository)
+        {
+
+        }
+
+        public Response<List<PeopleResponse>> SearchPeople(string userId, string keyword, string lang)
         {
             var response = new Response<List<PeopleResponse>>();
             try
@@ -24,8 +34,8 @@ namespace Vocal.Business.Business
                 var listStart = new List<User>();
                 var listEnd = new List<User>();
                 var listContains = new List<User>();
-                var user = Repository.Instance.GetUserById(userId);
-                var list = Repository.Instance.SearchPeople(userId, keyword);
+                var user = _repository.GetUserById(userId);
+                var list = _repository.SearchPeople(userId, keyword);
                 foreach(var item in list)
                 {
                     if ((item.Username.ToLower().StartsWith(keyword) || item.Firstname.ToLower().StartsWith(keyword) || item.Lastname.ToLower().StartsWith(keyword)) && !user.Friends.Exists(x => x.Id == item.Id))
@@ -45,7 +55,7 @@ namespace Vocal.Business.Business
                         Keyword = keyword,
                         SearchDate = DateTime.Now
                     };
-                    Repository.Instance.AddSearch(search);
+                    _repository.AddSearch(search);
                 });
             }
             catch (TimeoutException tex)
@@ -66,7 +76,7 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<List<PeopleResponse>> SearchPeopleByEmail(string userId, string keyword, string lang)
+        public Response<List<PeopleResponse>> SearchPeopleByEmail(string userId, string keyword, string lang)
         {
             var response = new Response<List<PeopleResponse>>();
             try
@@ -76,8 +86,8 @@ namespace Vocal.Business.Business
                 var listStart = new List<User>();
                 var listEnd = new List<User>();
                 var listContains = new List<User>();
-                var user = Repository.Instance.GetUserById(userId);
-                var list = Repository.Instance.SearchPeopleByEmail(keyword);
+                var user = _repository.GetUserById(userId);
+                var list = _repository.SearchPeopleByEmail(keyword);
                 foreach (var item in list)
                 {
                     if (item.Email.ToLower().StartsWith(keyword))
@@ -97,7 +107,7 @@ namespace Vocal.Business.Business
                         Keyword = keyword,
                         SearchDate = DateTime.Now
                     };
-                    Repository.Instance.AddSearch(search);
+                    _repository.AddSearch(search);
                 });
             }
             catch (TimeoutException tex)
@@ -118,15 +128,15 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        public static Response<List<PeopleResponse>> SearchContacts(string userId, List<string> emails, string lang)
+        public Response<List<PeopleResponse>> SearchContacts(string userId, List<string> emails, string lang)
         {
             var response = new Response<List<PeopleResponse>>();
             try
             {
                 LogManager.LogDebug(userId, emails, lang);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(lang);
-                var user = Repository.Instance.GetUserById(userId);
-                var list = Repository.Instance.SearchFriendsByEmails(emails);
+                var user = _repository.GetUserById(userId);
+                var list = _repository.SearchFriendsByEmails(emails);
                 list.RemoveAll(x => user.Friends.Any(y => y.Id == x.Id) || x.Id == user.Id);
                 response.Data = Binder.Bind.Bind_SearchPeople(user, list);
             }
