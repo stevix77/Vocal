@@ -237,12 +237,6 @@ export class MessagePage {
     // this.Messages.find(x => x.Id == messId).Content = mess;
   }
 
-  // base64EncodingUTF8(str) {
-  //     var encoded = new TextEncoderLite('utf-8').encode(str);
-  //     var b64Encoded = base64js.fromByteArray(encoded);
-  //     return b64Encoded;
-  // }
-
   playVocal(messId: string, index: number) {
     let message = this.Messages[index];
     let my_media = new Media();
