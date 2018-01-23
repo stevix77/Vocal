@@ -1,13 +1,19 @@
 <ion-header [class]="isRecording ? 'anime-hide' : ''">
-  <ion-navbar hideBackButton="true">
-    <ion-item>
-      <ion-avatar start>
-        <img [src]="Picture" alt="">
+  <ion-navbar hideBackButton="true" color="primary">
+    <!-- <ion-avatar>
+      <img [src]="Picture" alt="">
+    </ion-avatar> -->
+    <ion-item no-margin no-padding no-lines color="primary">
+      <ion-avatar item-start>
+        <img src="assets/default-picture-80x80.jpg" alt="">
       </ion-avatar>
+      <div class="name">
+        {{VocalName}}
+      </div>
+      <div class="total-vocal">
+        12h de vocal
+      </div>
     </ion-item>
-    <ion-title>
-      {{VocalName}}
-    </ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="goToVocalList()"><ion-icon name="arrow-forward"></ion-icon></button>
     </ion-buttons>
@@ -19,8 +25,24 @@
     <ion-list-header>
       Conversation
     </ion-list-header>
+    <ion-item-sliding>
+      <ion-item>
+        <p>
+          <button ion-button round large icon-only><ion-icon name="play"></ion-icon></button>
+        </p>
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button icon-only><ion-icon name="closed-captioning"></ion-icon></button>
+        <button ion-button icon-only><ion-icon name="share-alt"></ion-icon></button>
+        <button ion-button icon-only><ion-icon name="download"></ion-icon></button>
+        <button ion-button icon-only color="danger"><ion-icon name="trash"></ion-icon></button>
+      </ion-item-options>
+    </ion-item-sliding>
     <ion-item-sliding *ngFor="let mess of Messages; let i = index">
       <ion-item>
+        <p>
+          <button ion-button round large icon-only><ion-icon name="play"></ion-icon></button>
+        </p>
         <p *ngIf="mess.ContentType == 2">{{mess.Content}}</p>
         <p *ngIf="mess.ContentType == 1">
           <button ion-button round large icon-only *ngIf="mess.Content == null" (click)="getMessage(mess.Id)"><ion-icon name="play"></ion-icon></button>
