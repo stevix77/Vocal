@@ -21,12 +21,38 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list [hidden]="isRecording">
+  <ion-list class="message-list" [hidden]="isRecording" no-lines>
     <ion-list-header>
       Conversation
     </ion-list-header>
-    <ion-item-sliding>
-      <ion-item>
+    <ion-item-sliding class="send">
+      <ion-item no-margin no-padding no-lines>
+        <p>
+          <button ion-button round large icon-only><ion-icon name="play"></ion-icon></button>
+        </p>
+      </ion-item>
+      <ion-item-options side="received">
+        <button ion-button icon-only><ion-icon name="closed-captioning"></ion-icon></button>
+        <button ion-button icon-only><ion-icon name="share-alt"></ion-icon></button>
+        <button ion-button icon-only><ion-icon name="download"></ion-icon></button>
+        <button ion-button icon-only color="danger"><ion-icon name="trash"></ion-icon></button>
+      </ion-item-options>
+    </ion-item-sliding>
+    <ion-item-sliding class="received">
+      <ion-item no-margin no-padding no-lines>
+        <p>
+          <button ion-button round large icon-only><ion-icon name="play"></ion-icon></button>
+        </p>
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button icon-only><ion-icon name="closed-captioning"></ion-icon></button>
+        <button ion-button icon-only><ion-icon name="share-alt"></ion-icon></button>
+        <button ion-button icon-only><ion-icon name="download"></ion-icon></button>
+        <button ion-button icon-only color="danger"><ion-icon name="trash"></ion-icon></button>
+      </ion-item-options>
+    </ion-item-sliding>
+    <ion-item-sliding class="send">
+      <ion-item no-margin no-padding no-lines>
         <p>
           <button ion-button round large icon-only><ion-icon name="play"></ion-icon></button>
         </p>
@@ -40,15 +66,10 @@
     </ion-item-sliding>
     <ion-item-sliding *ngFor="let mess of Messages; let i = index">
       <ion-item>
-        <p>
-          <button ion-button round large icon-only><ion-icon name="play"></ion-icon></button>
-        </p>
         <p *ngIf="mess.ContentType == 2">{{mess.Content}}</p>
         <p *ngIf="mess.ContentType == 1">
           <button ion-button round large icon-only *ngIf="mess.Content == null" (click)="getMessage(mess.Id)"><ion-icon name="play"></ion-icon></button>
           <button ion-button round large icon-only *ngIf="mess.Content != null" (click)="playVocal(mess.Id, i)"><ion-icon name="play"></ion-icon></button>
-          <!-- <audio controls [src]="domSanitizer.bypassSecurityTrustUrl(mess.Content)" *ngIf="mess.Content != null">
-          </audio> -->
         </p>
       </ion-item>
       <ion-item-options side="right">
@@ -79,9 +100,9 @@
       <!-- <ion-grid>
         <ion-row>
           <ion-col col-10> -->
-            <ion-item>
+            <ion-item no-lines>
               <input type="hidden" ng-model="model.talkId" value="{{model.talkId}}" ng-init="model.talkId=model.talkId"/>
-              <ion-input type="text" name="Message" (ionInput)="change()" [(ngModel)]="model.Message" placeholder="Say something..." required></ion-input>
+              <ion-input type="text" name="Message" (ionInput)="change()" [(ngModel)]="model.Message" placeholder="Envoyer un chat" required></ion-input>
             </ion-item>
           <!-- </ion-col> -->
           <!-- <ion-col col-2>

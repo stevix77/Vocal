@@ -35,4 +35,17 @@ page-message {
   ion-content{
     margin-bottom: 60px;
   }
+  .message-list{
+    .send ion-item{
+      background: rgb(155, 224, 176);
+    }
+    .received ion-item{
+      background: #aee;
+    }
+  }
+  ion-footer{
+    form{
+      padding:0;
+    }
+  }
 }
