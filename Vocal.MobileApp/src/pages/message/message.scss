@@ -37,10 +37,24 @@ page-message {
   }
   .message-list{
     .send ion-item{
-      background: rgb(155, 224, 176);
+      background: #aee;
+      border-radius : 0 35px 35px 0;
     }
     .received ion-item{
-      background: #aee;
+      background: rgb(155, 224, 176);
+      border-radius : 35px 0 0 35px;
+    }
+    .cta{
+      color: white;
+    }
+    .duration{
+      font-size: 2.4em;
+      margin:0;
+      .time{
+        display: block;
+        font-size:0.4em;
+        text-align: center;
+      }
     }
   }
   ion-footer{

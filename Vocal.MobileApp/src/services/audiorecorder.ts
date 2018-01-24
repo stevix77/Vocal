@@ -5,8 +5,6 @@ import { params } from './params';
 import { Store } from '../models/enums';
 import { Media, MediaObject } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
-import { swipeShouldReset } from 'ionic-angular/util/util';
-
 
 @Injectable()
 export class AudioRecorder {
@@ -140,17 +138,21 @@ export class AudioRecorder {
     this.mediaObject.release();
   }
 
+  createFile() {
+    console.log('createFile');
+    console.log(window);
+  //   dirEntry.getFile(fileName, {create: true, exclusive: false}, function(fileEntry) {
+
+  //     writeFile(fileEntry, null, isAppend);
+
+  // }, onErrorCreateFile);
+  }
+
   startRecording() {
-    //this.timer = new Timer();
-    //this.timer.startTimer();
+    console.log('AudioRecorder start recording');
     if(this.isApp) {
-      console.log('start recording');
-      if(this.mediaObject != null) {
-        this.mediaObject.release();
-        this.mediaObject = null;
-      }
-      console.log(this.mediaObject);
-      this.getMedia().startRecord();
+      this.createFile();
+      //this.getMedia().startRecord();
     }
   }
 

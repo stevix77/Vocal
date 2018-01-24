@@ -304,6 +304,7 @@ export class VocalApp {
       this.GetAllResources();
       this.SetLanguage();
       this.SetPlatform();
+      this.SetConfigIsApp();
       this.storeService.Get(KeyStore[KeyStore.User]).then(
       user => {
         if(user != null) {
@@ -332,7 +333,10 @@ export class VocalApp {
     });
   }
 
-
+  SetConfigIsApp(){
+    let isApp = (this.platform.is('ios') || this.platform.is('android') || this.platform.is('windows')) ? true : false;
+    this.config.set('isApp', isApp);
+  }
 
   SetPlatform() {
     let platform = '';

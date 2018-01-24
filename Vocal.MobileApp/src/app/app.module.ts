@@ -54,6 +54,8 @@ import { SettingsService } from "../services/settingsService";
 
 import { NativeAudio } from '@ionic-native/native-audio';
 
+
+
 let components = [
   VocalApp,
   HomePage,
@@ -97,7 +99,6 @@ let components = [
     BrowserModule,
     HttpModule,
     IonicModule.forRoot(VocalApp, {
-      isApp: !document.URL.startsWith('http'),
       backButtonText: ''
     }),
   ],

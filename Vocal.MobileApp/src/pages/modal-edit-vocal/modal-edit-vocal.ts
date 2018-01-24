@@ -46,9 +46,9 @@ export class ModalEditVocalPage {
   startPlayback() {
     try {
       this.audioRecorder.startPlayback();
-      console.log(this.audioRecorder.getMediaDuration());
     }
     catch (e) {
+      console.log(e);
       this.showAlert('Could not play recording.');
     }
   }
