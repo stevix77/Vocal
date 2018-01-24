@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Config, AlertController, Platform } from 'ionic-angular';
 import { Timer } from './timer';
-import { params } from './params';
-import { Store } from '../models/enums';
 import { Media, MediaObject } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
 
@@ -91,18 +89,6 @@ export class AudioRecorder {
     return this.file.readAsDataURL(path, this.filename);
   }
 
-  getMediaDuration() : number {
-    return this.mediaObject.getDuration();
-  }
-
-  getMedia() {
-    if(this.mediaObject == null) {
-      this.mediaObject = this.media.create(this.getFilePath() + this.filename);
-    } else {
-    }
-    return this.mediaObject;
-  }
-
   initEffects(){
     this.contexteAudio = new (window["AudioContext"] || window["webkitAudioContext"])();
     this.tuna = new window["Tuna"](this.contexteAudio);
@@ -139,33 +125,30 @@ export class AudioRecorder {
   }
 
   createFile() {
-    console.log('createFile');
-    console.log(window);
-  //   dirEntry.getFile(fileName, {create: true, exclusive: false}, function(fileEntry) {
-
-  //     writeFile(fileEntry, null, isAppend);
-
-  // }, onErrorCreateFile);
+    this.file = new File();
+    this.file.createFile(this.file.tempDirectory, 'my_file.m4a', true).then(() => {
+      this.mediaObject = this.media.create(this.file.tempDirectory.replace(/^file:\/\//, '') + 'my_file.m4a');
+      this.mediaObject.startRecord();
+    });
   }
 
   startRecording() {
     console.log('AudioRecorder start recording');
     if(this.isApp) {
       this.createFile();
-      //this.getMedia().startRecord();
     }
   }
 
   stopRecording() {
-    if(this.isApp) this.getMedia().stopRecord();
+    if(this.isApp) this.mediaObject.stopRecord();
   }
 
   startPlayback() {
-    if(this.isApp) this.getMedia().play();
+    if(this.isApp) this.mediaObject.play();
   }
 
   stopPlayback() {
-    if(this.isApp) this.getMedia().stop();
+    if(this.isApp) this.mediaObject.stop();
   }
 
   showAlert(message) {

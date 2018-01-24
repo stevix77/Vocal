@@ -26,7 +26,6 @@ export class ModalEditVocalPage {
     public alertCtrl: AlertController,
     public events: Events
     ) {
-    console.log('duration', navParams.get('duration'));
     this.viewCtrl.onDidDismiss( () => this.events.publish('edit-vocal:close') );
   }
 
