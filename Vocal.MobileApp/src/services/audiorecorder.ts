@@ -28,7 +28,7 @@ export class AudioRecorder {
     let contexteAudio = this.contexteAudio;
     var that = this;
     //this.file.readAsArrayBuffer(this.file.dataDirectory, this.filename).then((compressedBuffer) => {
-    this.file.readAsArrayBuffer('../Library/NoCloud/', this.filename).then((compressedBuffer) => {
+    this.file.readAsArrayBuffer(this.getFilePath(), this.filename).then((compressedBuffer) => {
       contexteAudio.decodeAudioData(compressedBuffer, function(buffer){
         var source = contexteAudio.createBufferSource();
         source.buffer = buffer;
@@ -67,15 +67,15 @@ export class AudioRecorder {
 
   getFilePath() {
     let path = '';
-    if(this.plt.is('ios')) path = '../Library/NoCloud/';
-    if(this.plt.is('android')) path = this.file.externalDataDirectory;
+    if(this.plt.is('ios')) path = this.file.tempDirectory;
+    if(this.plt.is('android')) path = this.file.cacheDirectory;
     
     return path;
   }
 
   getExtension() {
     let extension = '';
-    if(this.plt.is('ios')) extension = 'wav';
+    if(this.plt.is('ios')) extension = 'm4a';
     if(this.plt.is('android')) extension = '3gp';
     
     return extension;
@@ -83,10 +83,9 @@ export class AudioRecorder {
 
   // Used in send-vocal.ts
   getFile() : Promise<string>{
-    let path = '';
-    if(this.plt.is('ios')) path = this.file.dataDirectory;
-    if(this.plt.is('android')) path = this.file.externalDataDirectory;
-    return this.file.readAsDataURL(path, this.filename);
+    console.log(this.getFilePath());
+    console.log(this.filename);
+    return this.file.readAsDataURL(this.getFilePath(), this.filename);
   }
 
   initEffects(){
@@ -126,8 +125,9 @@ export class AudioRecorder {
 
   createFile() {
     this.file = new File();
-    this.file.createFile(this.file.tempDirectory, 'my_file.m4a', true).then(() => {
-      this.mediaObject = this.media.create(this.file.tempDirectory.replace(/^file:\/\//, '') + 'my_file.m4a');
+    this.file.createFile(this.getFilePath(), this.filename, true).then(() => {
+      let path = this.getFilePath().replace(/^file:\/\//, '');
+      this.mediaObject = this.media.create(path + this.filename);
       this.mediaObject.startRecord();
     });
   }
