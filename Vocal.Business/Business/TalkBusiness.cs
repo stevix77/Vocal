@@ -161,6 +161,7 @@ namespace Vocal.Business.Business
             {
                 LogManager.LogDebug(request);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(request.Lang);
+                var guid = Guid.NewGuid();
                 if ((MessageType)request.MessageType == MessageType.Vocal)  // si mess vocal alors convertir
                 {
                     var bs64 = request.Content.Split(',').LastOrDefault();
@@ -168,6 +169,8 @@ namespace Vocal.Business.Business
                     if (file == null)
                         throw new Exception();
                     request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
+                    var filename = Security.Hash.getHash(guid.ToString() + Properties.Settings.Default.Salt);
+                    Converter.ConvertToFileAndSave(bs64, $"{Properties.Settings.Default.DocsPath}/{filename}");
                 }
                 if (string.IsNullOrEmpty(request.IdTalk))
                 {
@@ -176,17 +179,17 @@ namespace Vocal.Business.Business
                     if(talk == null) // aucun message entre ces idsRecipient
                     {
                         if (_repository.CheckIfAllUsersExist(request.IdsRecipient)) // vérifier si les ids existent en base
-                            CreateNewTalk(request, response);
+                            CreateNewTalk(request, response, guid);
                         else
                             throw new Exception("AllUsers not exist");
                     }
                     else
-                        AddMessageToTalk(request, response, talk);
+                        AddMessageToTalk(request, response, talk, guid);
                 }
                 else
                 {
                     var talk = _repository.GetTalkById(request.IdTalk);
-                    AddMessageToTalk(request, response, talk);
+                    AddMessageToTalk(request, response, talk, guid);
                 }
                 if (response.Data.IsSent)
                     SendNotif(response.Data, request.IdSender);
@@ -209,7 +212,7 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        private void CreateNewTalk(SendMessageRequest request, Response<SendMessageResponse> response)
+        private void CreateNewTalk(SendMessageRequest request, Response<SendMessageResponse> response, Guid guid)
         {
             var allUsers = _repository.GetUsersById(request.IdsRecipient);
             var sender = allUsers.SingleOrDefault(x => x.Id == request.IdSender);
@@ -226,7 +229,7 @@ namespace Vocal.Business.Business
             allUsers.ForEach(x => talk.ListPictures.Add(x.Id, x.Pictures.SingleOrDefault(y => y.Type == PictureType.Talk)?.Value));
             var m = new Message
             {
-                Id = Guid.NewGuid(),
+                Id = guid,
                 SentTime = request.SentTime,
                 ArrivedTime = dt,
                 Content = request.Content,
@@ -243,11 +246,11 @@ namespace Vocal.Business.Business
             response.Data.IsSent = true;
         }
 
-        private void AddMessageToTalk(SendMessageRequest request, Response<SendMessageResponse> response, Talk talk)
+        private void AddMessageToTalk(SendMessageRequest request, Response<SendMessageResponse> response, Talk talk, Guid guid)
         {
             var m = new Message
             {
-                Id = Guid.NewGuid(),
+                Id = guid,
                 SentTime = request.SentTime,
                 ArrivedTime = DateTime.Now,
                 Content = request.Content,

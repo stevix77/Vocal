@@ -89,5 +89,8 @@
     <Setting Name="BackupPath" Type="System.String" Scope="Application">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="DocsPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">D:\Projects\Vocal\Vocal.WebApi\docs</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

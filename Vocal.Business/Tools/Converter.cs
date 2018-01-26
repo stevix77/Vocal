@@ -36,5 +36,17 @@ namespace Vocal.Business.Tools
                 }
             }
         }
+
+        public static void ConvertToFileAndSave(string base64File, string filename)
+        {
+            byte[] bytes = Convert.FromBase64String(base64File);
+            using (var file = new StreamMediaFoundationReader(new MemoryStream(bytes)))
+            {
+                using (var pcm = WaveFormatConversionStream.CreatePcmStream(file))
+                {
+                    MediaFoundationEncoder.EncodeToMp3(pcm, filename);
+                }
+            }
+        }
     }
 }
