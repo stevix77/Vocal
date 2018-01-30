@@ -170,7 +170,7 @@ namespace Vocal.Business.Business
                         throw new Exception();
                     request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
                     var filename = Security.Hash.getHash(guid.ToString() + Properties.Settings.Default.Salt);
-                    Converter.ConvertToFileAndSave(bs64, $"{Properties.Settings.Default.DocsPath}/{filename}");
+                    Converter.ConvertToFileAndSave(bs64, $"{Properties.Settings.Default.DocsPath}/{filename}.mp3");
                 }
                 if (string.IsNullOrEmpty(request.IdTalk))
                 {
