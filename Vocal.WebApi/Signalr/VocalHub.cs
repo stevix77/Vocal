@@ -3,6 +3,7 @@ using Microsoft.AspNet.SignalR.Hubs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Vocal.Business.Tools;
 using Vocal.Model.Response;
 using Vocal.Model.Signalr;
 
@@ -71,12 +72,15 @@ namespace Vocal.WebApi.Signalr
             this.Clients.Group(obj.Talk.Id).Receive(obj);
         }
 
-        public void AddFriend(List<string> users, string username)
+        public void AddFriend(dynamic obj)
         {
-            foreach(var id in users)
+            LogManager.LogDebug(obj);
+            foreach(var id in obj.list as List<string>)
             {
-                foreach (var connection in _users[id])
-                    Clients.Client(connection).AddFriend(username);
+                var connections = GetConnectionsId(id);
+                if (connections != null)
+                    foreach (var item in connections)
+                        Clients.Client(item).AddFriend(obj.username);
             }
         }
 

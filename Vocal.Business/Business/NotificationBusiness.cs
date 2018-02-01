@@ -177,12 +177,10 @@ namespace Vocal.Business.Business
             switch (type)
             {
                 case (int)NotifType.AddFriend:
-                    LogManager.LogDebug("0: {0} - 1: {1}", param.GetValue(0), param.GetValue(1));
                     str = GetPayloadAddFriends(platform);
                     template = string.Format(str, $"{param.GetValue(0).ToString()} {Resources_Language.TextNotifAddFriend}", param.GetValue(1).ToString(), type);
                     break;
                 case (int)NotifType.Talk:
-                    LogManager.LogDebug("0: {0} 1: {1} 2: {2}", param.GetValue(0), param.GetValue(1), param.GetValue(2));
                     str = GetPayloadTalk(platform);
                     var title = $"{param.GetValue(2)} @ {param.GetValue(1)}";
                     var mess = !string.IsNullOrEmpty(param.GetValue(3).ToString()) ? param.GetValue(3).ToString().Length > 20 ? param.GetValue(3).ToString().Substring(0, 20) : param.GetValue(3).ToString() : string.Empty;
@@ -194,7 +192,6 @@ namespace Vocal.Business.Business
                 default:
                     break;
             }
-            LogManager.LogDebug(string.Format("platform - {0} - template {1}", platform, template));
             return template;
         }
 
