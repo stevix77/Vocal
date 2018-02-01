@@ -53,9 +53,7 @@ export class MessagePage {
               private cookieService: CookieService,
               private events: Events,
               private talkService: TalkService,
-              private hubService: HubService,
-              private domSanitizer: DomSanitizer,
-              private nativeAudio: NativeAudio) {
+              private hubService: HubService) {
 
     this.model.talkId = this.navParams.get("TalkId");
     this.model.userId = this.navParams.get("UserId");
@@ -208,6 +206,7 @@ export class MessagePage {
     let index = 0;
     messages.forEach(element => {
       let mess = this.Messages.find(x => x.Id == element.Id);
+      mess.IsPlaying = false;
       if(mess == null) {
         this.Messages.splice(index, 0, element);
       }
@@ -240,15 +239,13 @@ export class MessagePage {
 
   playVocal(messId: string, index: number) {
     let message = this.Messages[index];
-    message.IsPlaying = true;
+    this.Messages[index].IsPlaying = true;
+    this.talkService.SaveMessages(this.model.talkId, this.Messages);
     console.log(message);
-    this.storeService.Get(KeyStore[KeyStore.User]).then(appUser => {
-      let str = functions.Crypt(message.Id + appUser.Token) + ".mp3";
-      console.log(str);
-      let my_media = new Media();
-      let file = my_media.create('http://vocal.westeurope.cloudapp.azure.com/docs/vocal/48ec57a95dec702eeea07ed8f639d88d22b5c2a641f7bbd509ebb570573cc97f.mp3');
-      file.play();
-    });
+    let uniqId = functions.Crypt(message.Id + params.Salt) + ".mp3";
+    let my_media = new Media();
+    let file = my_media.create(`http://vocal.westeurope.cloudapp.azure.com/docs/vocal/${uniqId}.mp3`);
+    file.play();
   }
 
   showToast(message: string) :any {
