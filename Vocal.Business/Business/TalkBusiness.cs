@@ -165,10 +165,10 @@ namespace Vocal.Business.Business
                 if ((MessageType)request.MessageType == MessageType.Vocal)  // si mess vocal alors convertir
                 {
                     var bs64 = request.Content.Split(',').LastOrDefault();
-                    var file = Converter.ConvertToWav(bs64);
-                    if (file == null)
-                        throw new Exception();
-                    request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
+                    //var file = Converter.ConvertToWav(bs64);
+                    //if (file == null)
+                    //    throw new Exception();
+                    //request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
                     var filename = Security.Hash.getHash(guid.ToString() + Properties.Settings.Default.Salt);
                     Converter.ConvertToFileAndSave(bs64, $"{Properties.Settings.Default.DocsPath}/{filename}.mp3");
                 }
@@ -227,16 +227,17 @@ namespace Vocal.Business.Business
             };
             talk.Recipients.ForEach(x => { talk.ListArchive.Add(x, false); talk.ListDelete.Add(x, false); });
             allUsers.ForEach(x => talk.ListPictures.Add(x.Id, x.Pictures.SingleOrDefault(y => y.Type == PictureType.Talk)?.Value));
+            var messType = (MessageType)request.MessageType;
             var m = new Message
             {
                 Id = guid,
                 SentTime = request.SentTime,
                 ArrivedTime = dt,
-                Content = request.Content,
-                ContentType = (MessageType)request.MessageType,
+                Content = messType == MessageType.Text ? request.Content : null,
+                ContentType = messType,
                 Sender = sender.ToPeople(),
-                Users = allUsers.Where(x => x.Id != sender.Id).Select(x => new UserListen() { Recipient = x.ToPeople()/*, ListenDate = x == user.Id ? DateTime.Now : new DateTime?()*/ }).ToList(),
-                Duration = (MessageType)request.MessageType == MessageType.Vocal ? talk.Duration : 0,
+                Users = allUsers.Where(x => x.Id != sender.Id).Select(x => new UserListen() { Recipient = x.ToPeople() }).ToList(),
+                Duration = messType == MessageType.Vocal ? talk.Duration : new int?(),
                 TalkId = talk.Id
             };
             _repository.AddTalk(talk);
@@ -248,16 +249,17 @@ namespace Vocal.Business.Business
 
         private void AddMessageToTalk(SendMessageRequest request, Response<SendMessageResponse> response, Talk talk, Guid guid)
         {
+            var messType = (MessageType)request.MessageType;
             var m = new Message
             {
                 Id = guid,
                 SentTime = request.SentTime,
                 ArrivedTime = DateTime.Now,
-                Content = request.Content,
-                ContentType = (MessageType)request.MessageType,
+                Content = messType == MessageType.Text ? request.Content : null,
+                ContentType = messType,
                 Sender = talk.Users.SingleOrDefault(x => x.Id == request.IdSender),
                 Users = talk.Users.Select(x => new UserListen { Recipient = x }).ToList(),
-                Duration = (MessageType)request.MessageType == MessageType.Vocal && request.Duration.HasValue && request.Duration.Value >= 0 ? request.Duration.Value : new int?(), 
+                Duration = messType == MessageType.Vocal ? talk.Duration : new int?(),
                 TalkId = talk.Id
             };
             talk.Duration += m.ContentType == MessageType.Vocal && m.Duration.HasValue ? m.Duration.Value : 0;
