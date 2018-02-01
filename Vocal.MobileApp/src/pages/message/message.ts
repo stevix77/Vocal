@@ -1,5 +1,5 @@
 import { MessageRequest } from './../../models/request/messageRequest';
-import { HubMethod, PictureType, MessageType } from '../../models/enums';
+import { HubMethod, PictureType, MessageType, KeyStore } from '../../models/enums';
 import { MessageResponse } from './../../models/response/messageResponse';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, Events, Config } from 'ionic-angular';
@@ -12,12 +12,13 @@ import { HttpService } from '../../services/httpService';
 import { CookieService } from '../../services/cookieService';
 import { TalkService } from "../../services/talkService";
 import { HubService } from "../../services/hubService";
-import {DomSanitizer} from '@angular/platform-browser';
+import { functions } from "../../services/functions";
 import { Timer } from '../../services/timer';
 import { GetMessagesRequest } from "../../models/request/getMessagesRequest";
 
-import { NativeAudio } from '@ionic-native/native-audio';
 import { Media } from '@ionic-native/media';
+
+import { StoreService } from '../../services/storeService';
 
 /**
  * Generated class for the MessagePage page.
@@ -46,14 +47,13 @@ export class MessagePage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
               public config: Config,
+              private storeService: StoreService,
               private httpService: HttpService, 
               private toastCtrl: ToastController, 
               private cookieService: CookieService,
               private events: Events,
               private talkService: TalkService,
-              private hubService: HubService,
-              private domSanitizer: DomSanitizer,
-              private nativeAudio: NativeAudio) {
+              private hubService: HubService) {
 
     this.model.talkId = this.navParams.get("TalkId");
     this.model.userId = this.navParams.get("UserId");
@@ -185,6 +185,7 @@ export class MessagePage {
             //this.sortMessages(response.Data);
             response.Data.forEach(item => {
               let mess = this.Messages.find(x => x.Id == item.Id);
+              item.IsPlaying = false;
               if(mess == null)
                 this.Messages.push(item);
             });
@@ -205,6 +206,7 @@ export class MessagePage {
     let index = 0;
     messages.forEach(element => {
       let mess = this.Messages.find(x => x.Id == element.Id);
+      mess.IsPlaying = false;
       if(mess == null) {
         this.Messages.splice(index, 0, element);
       }
@@ -237,8 +239,12 @@ export class MessagePage {
 
   playVocal(messId: string, index: number) {
     let message = this.Messages[index];
+    this.Messages[index].IsPlaying = true;
+    this.talkService.SaveMessages(this.model.talkId, this.Messages);
+    console.log(message);
+    let uniqId = functions.Crypt(message.Id + params.Salt) + ".mp3";
     let my_media = new Media();
-    let file = my_media.create('http://urbanhit.fr/upload/podcasts/audios/5a5c98471504b0.41195086.mp3');
+    let file = my_media.create(`http://vocal.westeurope.cloudapp.azure.com/docs/vocal/${uniqId}.mp3`);
     file.play();
   }
 

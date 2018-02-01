@@ -83,8 +83,6 @@ export class AudioRecorder {
 
   // Used in send-vocal.ts
   getFile() : Promise<string>{
-    console.log(this.getFilePath());
-    console.log(this.filename);
     return this.file.readAsDataURL(this.getFilePath(), this.filename);
   }
 
@@ -133,7 +131,6 @@ export class AudioRecorder {
   }
 
   startRecording() {
-    console.log('AudioRecorder start recording');
     if(this.isApp) {
       this.createFile();
     }
