@@ -270,3 +270,5 @@ __pycache__/
 # File System Mac
 *.DS_Store
 /Vocal.MobileApp/package-lock.json
+
+/Vocal.MobileApp/.sourcemaps
