@@ -29,12 +29,13 @@
       <ion-item no-margin no-padding no-lines>
         <p *ngIf="mess.ContentType == 2">{{mess.Content}}</p>
         <p *ngIf="mess.ContentType == 1">
-          <button class="cta" ion-button clear large icon-only *ngIf="mess.Content == null" (click)="getMessage(mess.Id)"><ion-icon name="play"></ion-icon></button>
+          <button hidden="!mess.IsPlaying" class="cta" ion-button clear large icon-only *ngIf="mess.Content == null" (click)="getMessage(mess.Id)"><ion-icon name="play"></ion-icon></button>
+          <button hidden="!mess.IsPlaying" class="cta" ion-button clear large icon-only *ngIf="mess.Content == null" (click)="getMessage(mess.Id)"><ion-icon name="pause"></ion-icon></button>
           <button class="cta" ion-button clear large icon-only *ngIf="mess.Content != null" (click)="playVocal(mess.Id, i)"><ion-icon name="play"></ion-icon></button>
         </p>
         <p class="duration" no-margin item-end>
           2:30
-          <small class="time">20:45</small>
+          <small class="time">{{ mess.SentTime | date: 'HH:ss' }}</small>
         </p>
       </ion-item>
       <ion-item-options side="right">

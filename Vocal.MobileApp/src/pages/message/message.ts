@@ -13,11 +13,9 @@ import { CookieService } from '../../services/cookieService';
 import { TalkService } from "../../services/talkService";
 import { HubService } from "../../services/hubService";
 import { functions } from "../../services/functions";
-import {DomSanitizer} from '@angular/platform-browser';
 import { Timer } from '../../services/timer';
 import { GetMessagesRequest } from "../../models/request/getMessagesRequest";
 
-import { NativeAudio } from '@ionic-native/native-audio';
 import { Media } from '@ionic-native/media';
 
 import { StoreService } from '../../services/storeService';
@@ -189,6 +187,7 @@ export class MessagePage {
             //this.sortMessages(response.Data);
             response.Data.forEach(item => {
               let mess = this.Messages.find(x => x.Id == item.Id);
+              item.IsPlaying = false;
               if(mess == null)
                 this.Messages.push(item);
             });
@@ -241,13 +240,14 @@ export class MessagePage {
 
   playVocal(messId: string, index: number) {
     let message = this.Messages[index];
+    message.IsPlaying = true;
     console.log(message);
     this.storeService.Get(KeyStore[KeyStore.User]).then(appUser => {
       let str = functions.Crypt(message.Id + appUser.Token) + ".mp3";
       console.log(str);
-      // let my_media = new Media();
-      // let file = my_media.create('http://urbanhit.fr/upload/podcasts/audios/5a5c98471504b0.41195086.mp3');
-      // file.play();
+      let my_media = new Media();
+      let file = my_media.create('http://vocal.westeurope.cloudapp.azure.com/docs/vocal/48ec57a95dec702eeea07ed8f639d88d22b5c2a641f7bbd509ebb570573cc97f.mp3');
+      file.play();
     });
   }
 
