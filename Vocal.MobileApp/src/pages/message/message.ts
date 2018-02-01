@@ -1,5 +1,5 @@
 import { MessageRequest } from './../../models/request/messageRequest';
-import { HubMethod, PictureType, MessageType } from '../../models/enums';
+import { HubMethod, PictureType, MessageType, KeyStore } from '../../models/enums';
 import { MessageResponse } from './../../models/response/messageResponse';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, Events, Config } from 'ionic-angular';
@@ -12,12 +12,15 @@ import { HttpService } from '../../services/httpService';
 import { CookieService } from '../../services/cookieService';
 import { TalkService } from "../../services/talkService";
 import { HubService } from "../../services/hubService";
+import { functions } from "../../services/functions";
 import {DomSanitizer} from '@angular/platform-browser';
 import { Timer } from '../../services/timer';
 import { GetMessagesRequest } from "../../models/request/getMessagesRequest";
 
 import { NativeAudio } from '@ionic-native/native-audio';
 import { Media } from '@ionic-native/media';
+
+import { StoreService } from '../../services/storeService';
 
 /**
  * Generated class for the MessagePage page.
@@ -46,6 +49,7 @@ export class MessagePage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
               public config: Config,
+              private storeService: StoreService,
               private httpService: HttpService, 
               private toastCtrl: ToastController, 
               private cookieService: CookieService,
@@ -237,9 +241,14 @@ export class MessagePage {
 
   playVocal(messId: string, index: number) {
     let message = this.Messages[index];
-    let my_media = new Media();
-    let file = my_media.create('http://urbanhit.fr/upload/podcasts/audios/5a5c98471504b0.41195086.mp3');
-    file.play();
+    console.log(message);
+    this.storeService.Get(KeyStore[KeyStore.User]).then(appUser => {
+      let str = functions.Crypt(message.Id + appUser.Token) + ".mp3";
+      console.log(str);
+      // let my_media = new Media();
+      // let file = my_media.create('http://urbanhit.fr/upload/podcasts/audios/5a5c98471504b0.41195086.mp3');
+      // file.play();
+    });
   }
 
   showToast(message: string) :any {
