@@ -1,46 +1,49 @@
 {
-  "prepare_queue": {
-    "installed": [],
-    "uninstalled": []
-  },
-  "config_munge": {
-    "files": {}
-  },
-  "installed_plugins": {
-    "com-badrit-base64": {
-      "PACKAGE_NAME": "fr.vocal.Vocal"
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
     },
-    "cordova-plugin-camera": {
-      "PACKAGE_NAME": "fr.vocal.Vocal"
+    "config_munge": {
+        "files": {}
     },
-    "cordova-plugin-contacts": {
-      "PACKAGE_NAME": "fr.vocal.Vocal"
+    "installed_plugins": {
+        "com-badrit-base64": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-camera": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-contacts": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-datepicker": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-globalization": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-media": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-nativeaudio": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        }
     },
-    "cordova-plugin-datepicker": {
-      "PACKAGE_NAME": "fr.vocal.Vocal"
-    },
-    "cordova-plugin-device": {
-      "PACKAGE_NAME": "fr.vocal.Vocal"
-    },
-    "cordova-plugin-file": {
-      "PACKAGE_NAME": "fr.vocal.Vocal"
-    },
-    "cordova-plugin-globalization": {
-      "PACKAGE_NAME": "fr.vocal.Vocal"
-    },
-    "cordova-plugin-inappbrowser": {
-      "PACKAGE_NAME": "fr.vocal.Vocal"
-    },
-    "cordova-plugin-media": {
-      "PACKAGE_NAME": "fr.vocal.Vocal"
+    "dependent_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        }
     }
-  },
-  "dependent_plugins": {
-    "cordova-plugin-compat": {
-      "PACKAGE_NAME": "fr.vocal.Vocal"
-    },
-    "cordova-sqlite-storage": {
-      "PACKAGE_NAME": "fr.vocal.Vocal"
-    }
-  }
 }
