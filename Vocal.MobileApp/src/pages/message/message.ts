@@ -181,7 +181,6 @@ export class MessagePage {
       this.httpService.Post(urlMessages, request, cookie).subscribe(
         resp => {
           let response = resp.json() as Response<Array<MessageResponse>>;
-          console.log(response);
           if(!response.HasError) {
             //this.sortMessages(response.Data);
             response.Data.forEach(item => {
@@ -224,7 +223,6 @@ export class MessagePage {
     this.httpService.Post<MessageRequest>(urlMessage, request, cookie).subscribe(
       resp => {
         let response = resp.json() as Response<string>;
-        console.log(response);
         if(response.HasError){
           this.showToast(response.ErrorMessage);
         }
@@ -237,33 +235,11 @@ export class MessagePage {
     // this.Messages.find(x => x.Id == messId).Content = mess;
   }
 
-  // base64EncodingUTF8(str) {
-  //     var encoded = new TextEncoderLite('utf-8').encode(str);
-  //     var b64Encoded = base64js.fromByteArray(encoded);
-  //     return b64Encoded;
-  // }
-
   playVocal(messId: string, index: number) {
     let message = this.Messages[index];
     let my_media = new Media();
     let file = my_media.create('http://urbanhit.fr/upload/podcasts/audios/5a5c98471504b0.41195086.mp3');
     file.play();
-  }
-
-  onPreloadSuccess() {
-    console.log('onPreloadSuccess');
-  }
-
-  onPreloadError() {
-
-  }
-
-  onPlaySuccess() {
-
-  }
-
-  onPlayError() {
-
   }
 
   showToast(message: string) :any {

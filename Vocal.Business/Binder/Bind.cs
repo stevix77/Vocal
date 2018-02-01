@@ -61,7 +61,7 @@ namespace Vocal.Business.Binder
                     DateLastMessage = item.LastMessage,
                     Users = Bind_Users(item.Users),
                     Duration = item.Duration,
-                    Name = item.Recipients.Count == 2 ? string.Join(",", item.Users.Where(x => x.Id != userId).Select(x => x.Username).ToList()) : item.Name,
+                    Name = string.Join(",", item.Users.Where(x => x.Id != userId).Select(x => x.Username).ToList()), //item.Recipients.Count == 2 ? string.Join(",", item.Users.Where(x => x.Id != userId).Select(x => x.Username).ToList()) : item.Name,
                     Picture = item.Recipients.Count == 2 ? item.ListPictures.SingleOrDefault(x => x.Key != userId).Value : ""
                 });
             }

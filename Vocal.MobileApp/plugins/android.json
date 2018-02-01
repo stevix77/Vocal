@@ -1,12 +1,33 @@
 {
-    "prepare_queue": {
-        "installed": [],
-        "uninstalled": []
-    },
-    "config_munge": {
-        "files": {}
-    },
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
     "installed_plugins": {
+        "cordova-plugin-datepicker": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-globalization": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "ionic-plugin-keyboard": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
         "com-badrit-base64": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
@@ -16,16 +37,7 @@
         "cordova-plugin-contacts": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
-        "cordova-plugin-datepicker": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
-        "cordova-plugin-device": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
         "cordova-plugin-file": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
-        "cordova-plugin-globalization": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
         "cordova-plugin-inappbrowser": {
@@ -34,16 +46,59 @@
         "cordova-plugin-media": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
-        "cordova-plugin-nativeaudio": {
+        "cordova-plugin-ms-azure-mobile-apps": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "info.protonet.imageresizer": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "ionic-plugin-deeplinks": {
+            "URL_SCHEME": "vocal",
+            "DEEPLINK_SCHEME": "https",
+            "DEEPLINK_HOST": "vocal.com",
+            "ANDROID_PATH_PREFIX": "/",
+            "ANDROID_2_PATH_PREFIX": "/",
+            "ANDROID_3_PATH_PREFIX": "/",
+            "ANDROID_4_PATH_PREFIX": "/",
+            "ANDROID_5_PATH_PREFIX": "/",
+            "DEEPLINK_2_SCHEME": " ",
+            "DEEPLINK_2_HOST": " ",
+            "DEEPLINK_3_SCHEME": " ",
+            "DEEPLINK_3_HOST": " ",
+            "DEEPLINK_4_SCHEME": " ",
+            "DEEPLINK_4_HOST": " ",
+            "DEEPLINK_5_SCHEME": " ",
+            "DEEPLINK_5_HOST": " ",
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "phonegap-plugin-push": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         }
     },
-    "dependent_plugins": {
-        "cordova-plugin-compat": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
-        "cordova-sqlite-storage": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        }
+    "cordova-plugin-datepicker": {
+        "PACKAGE_NAME": "fr.vocal.Vocal"
+    },
+    "cordova-plugin-device": {
+        "PACKAGE_NAME": "fr.vocal.Vocal"
+    },
+    "cordova-plugin-file": {
+        "PACKAGE_NAME": "fr.vocal.Vocal"
+    },
+    "cordova-plugin-globalization": {
+        "PACKAGE_NAME": "fr.vocal.Vocal"
+    },
+    "cordova-plugin-inappbrowser": {
+        "PACKAGE_NAME": "fr.vocal.Vocal"
+    },
+    "cordova-plugin-media": {
+        "PACKAGE_NAME": "fr.vocal.Vocal"
+    },
+  "dependent_plugins": {
+    "cordova-plugin-compat": {
+      "PACKAGE_NAME": "fr.vocal.Vocal"
+    },
+    "cordova-sqlite-storage": {
+      "PACKAGE_NAME": "fr.vocal.Vocal"
     }
+  }
 }

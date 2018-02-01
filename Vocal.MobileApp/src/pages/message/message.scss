@@ -1,4 +1,12 @@
 page-message {
+  ion-header{
+    .name{
+      font-weight: bold;
+    }
+    .total-vocal{
+      font-size: 0.8em;
+    }
+  }
   .grid{
     padding:0;
   }
@@ -10,7 +18,7 @@ page-message {
             background-color: green;
     }
 
-    &.msg-current-user-not-sent{
+    &.msg-current-user-not-sent{ 
         background-color: lightgreen;
     }
 
@@ -26,5 +34,32 @@ page-message {
   }
   ion-content{
     margin-bottom: 60px;
+  }
+  .message-list{
+    .send ion-item{
+      background: #aee;
+      border-radius : 0 35px 35px 0;
+    }
+    .received ion-item{
+      background: rgb(155, 224, 176);
+      border-radius : 35px 0 0 35px;
+    }
+    .cta{
+      color: white;
+    }
+    .duration{
+      font-size: 2.4em;
+      margin:0;
+      .time{
+        display: block;
+        font-size:0.4em;
+        text-align: center;
+      }
+    }
+  }
+  ion-footer{
+    form{
+      padding:0;
+    }
   }
 }

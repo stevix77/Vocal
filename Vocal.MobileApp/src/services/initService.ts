@@ -27,7 +27,7 @@ export class InitService {
               private httpService: HttpService,
               private exceptionService: ExceptionService,
               private events: Events) {
-    this.init();
+    //this.init();
   }
 
   init() {

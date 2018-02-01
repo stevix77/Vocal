@@ -62,7 +62,7 @@ namespace Vocal.Business.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{{\'data\' : {{\'message\' : \'{0}\',  \'userId\': \'{1}\', \'action\': \'{2}\' }}}}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("{{\"data\" : {{\"message\" : \"{0}\",  \"userId\": \"{1}\", \"action\": \"{2}\" }}}}")]
         public string AddFriendsAndroid {
             get {
                 return ((string)(this["AddFriendsAndroid"]));
@@ -71,7 +71,7 @@ namespace Vocal.Business.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{{\"aps\" : {{\'alert\' : \'{0}\',  \'userId\' : \'{1}\', \'action\': \'{2}\' }}}}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("{{\"aps\" : {{\"alert\": \"{0}\",  \"userId\" : \"{1}\", \"action\": \"{2}\" }}}}")]
         public string AddFriendsiOs {
             get {
                 return ((string)(this["AddFriendsiOs"]));
@@ -90,8 +90,8 @@ namespace Vocal.Business.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{{\'data\' : {{\'message\' : \'{0}\', \'title\' : \'{1}\', \'talkId\' : \'{2}\', \'action\': \'{3}" +
-            "\' }}}}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("{{\"data\" : {{\"message\" : \"{0}\", \"title\" : \"{1}\", \"talkId\" : \"{2}\", \"action\": \"{3}" +
+            "\" }}}}")]
         public string TalkAndroid {
             get {
                 return ((string)(this["TalkAndroid"]));
@@ -100,7 +100,7 @@ namespace Vocal.Business.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("{{\"aps\" : {{\'alert\' : \'{0}\', \'title\' : \'{1}\', \'talkId\' : \'{2}\', \'action\': \'{3}\' }" +
+        [global::System.Configuration.DefaultSettingValueAttribute("{{\"aps\" : {{\"alert\" : \"{0}\", \"title\" : \"{1}\", \"talkId\" : \"{2}\", \"action\": \"{3}\" }" +
             "}}}")]
         public string TalkiOs {
             get {
