@@ -1,11 +1,11 @@
 {
-  "prepare_queue": {
-    "installed": [],
-    "uninstalled": []
-  },
-  "config_munge": {
-    "files": {}
-  },
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
     "installed_plugins": {
         "cordova-plugin-datepicker": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
@@ -75,30 +75,12 @@
             "PACKAGE_NAME": "fr.vocal.Vocal"
         }
     },
-    "cordova-plugin-datepicker": {
-        "PACKAGE_NAME": "fr.vocal.Vocal"
-    },
-    "cordova-plugin-device": {
-        "PACKAGE_NAME": "fr.vocal.Vocal"
-    },
-    "cordova-plugin-file": {
-        "PACKAGE_NAME": "fr.vocal.Vocal"
-    },
-    "cordova-plugin-globalization": {
-        "PACKAGE_NAME": "fr.vocal.Vocal"
-    },
-    "cordova-plugin-inappbrowser": {
-        "PACKAGE_NAME": "fr.vocal.Vocal"
-    },
-    "cordova-plugin-media": {
-        "PACKAGE_NAME": "fr.vocal.Vocal"
-    },
-  "dependent_plugins": {
-    "cordova-plugin-compat": {
-      "PACKAGE_NAME": "fr.vocal.Vocal"
-    },
-    "cordova-sqlite-storage": {
-      "PACKAGE_NAME": "fr.vocal.Vocal"
+    "dependent_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        }
     }
-  }
 }

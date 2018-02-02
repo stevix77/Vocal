@@ -10,16 +10,10 @@
         "com-badrit-base64": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
-        "cordova-plugin-camera": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
         "cordova-plugin-contacts": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
         "cordova-plugin-datepicker": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
-        "cordova-plugin-device": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
         "cordova-plugin-file": {
@@ -43,9 +37,6 @@
         "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "fr.vocal.Vocal"
-        },
         "info.protonet.imageresizer": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
@@ -58,18 +49,30 @@
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
         "phonegap-plugin-push": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
-        "cordova-plugin-nativeaudio": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "cordova-plugin-camera": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         }
     },
     "dependent_plugins": {
-        "cordova-plugin-compat": {
+        "cordova-sqlite-storage": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         },
-        "cordova-sqlite-storage": {
+        "cordova-plugin-nativeaudio": {
+            "PACKAGE_NAME": "fr.vocal.Vocal"
+        },
+        "msopentech.azure.NotificationHub": {
             "PACKAGE_NAME": "fr.vocal.Vocal"
         }
     }

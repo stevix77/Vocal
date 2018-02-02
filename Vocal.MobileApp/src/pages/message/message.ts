@@ -4,6 +4,7 @@ import { MessageResponse } from './../../models/response/messageResponse';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, Events, Config } from 'ionic-angular';
 import { params } from '../../services/params';
+import { functions } from '../../services/functions';
 import { Response } from '../../models/Response';
 import { SendMessageRequest } from '../../models/request/sendMessageRequest';
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
@@ -12,7 +13,7 @@ import { HttpService } from '../../services/httpService';
 import { CookieService } from '../../services/cookieService';
 import { TalkService } from "../../services/talkService";
 import { HubService } from "../../services/hubService";
-import { functions } from "../../services/functions";
+import {DomSanitizer} from '@angular/platform-browser';
 import { Timer } from '../../services/timer';
 import { GetMessagesRequest } from "../../models/request/getMessagesRequest";
 import { Media, MediaObject } from '@ionic-native/media';
@@ -50,7 +51,8 @@ export class MessagePage {
               private cookieService: CookieService,
               private events: Events,
               private talkService: TalkService,
-              private hubService: HubService) {
+              private hubService: HubService,
+              private domSanitizer: DomSanitizer) {
 
     this.model.talkId = this.navParams.get("TalkId");
     this.model.userId = this.navParams.get("UserId");
@@ -150,7 +152,7 @@ export class MessagePage {
   }
 
   loadMessages() {
-    this.Messages = this.talkService.GetMessages(this.model.talkId);
+    this.Messages = this.talkService.GetMessages(this.model.talkId)
     this.talkService.Talks.find(x => x.Id == this.model.talkId).Users.forEach(x => {
       if(x.Id != params.User.Id){
         this.VocalName += x.Username + " ";
@@ -181,7 +183,6 @@ export class MessagePage {
           if(!response.HasError) {
             response.Data.forEach(item => {
               let mess = this.Messages.find(x => x.Id == item.Id);
-              item.IsPlaying = false;
               if(mess == null)
                 this.Messages.push(item);
             });
@@ -202,7 +203,6 @@ export class MessagePage {
     let index = 0;
     messages.forEach(element => {
       let mess = this.Messages.find(x => x.Id == element.Id);
-      mess.IsPlaying = false;
       if(mess == null) {
         this.Messages.splice(index, 0, element);
       }
@@ -221,9 +221,8 @@ export class MessagePage {
     this.httpService.Post<MessageRequest>(urlMessage, request, cookie).subscribe(
       resp => {
         let response = resp.json() as Response<string>;
-        if(response.HasError){
+        if(response.HasError)
           this.showToast(response.ErrorMessage);
-        }
         else {
           this.Messages.find(x => x.Id == messId).Content = response.Data;
           this.talkService.SaveMessages(this.model.talkId, this.Messages);          

@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Config, AlertController, Platform } from 'ionic-angular';
 import { Timer } from './timer';
+import { params } from './params';
+import { Store } from '../models/enums';
 import { Media, MediaObject } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
+import { swipeShouldReset } from 'ionic-angular/util/util';
+
 
 @Injectable()
 export class AudioRecorder {
@@ -28,7 +32,7 @@ export class AudioRecorder {
     let contexteAudio = this.contexteAudio;
     var that = this;
     //this.file.readAsArrayBuffer(this.file.dataDirectory, this.filename).then((compressedBuffer) => {
-    this.file.readAsArrayBuffer(this.getFilePath(), this.filename).then((compressedBuffer) => {
+    this.file.readAsArrayBuffer('../Library/NoCloud/', this.filename).then((compressedBuffer) => {
       contexteAudio.decodeAudioData(compressedBuffer, function(buffer){
         var source = contexteAudio.createBufferSource();
         source.buffer = buffer;
@@ -67,15 +71,15 @@ export class AudioRecorder {
 
   getFilePath() {
     let path = '';
-    if(this.plt.is('ios')) path = this.file.tempDirectory;
-    if(this.plt.is('android')) path = this.file.cacheDirectory;
+    if(this.plt.is('ios')) path = '../Library/NoCloud/';
+    if(this.plt.is('android')) path = this.file.externalDataDirectory;
     
     return path;
   }
 
   getExtension() {
     let extension = '';
-    if(this.plt.is('ios')) extension = 'm4a';
+    if(this.plt.is('ios')) extension = 'wav';
     if(this.plt.is('android')) extension = '3gp';
     
     return extension;
@@ -83,7 +87,22 @@ export class AudioRecorder {
 
   // Used in send-vocal.ts
   getFile() : Promise<string>{
-    return this.file.readAsDataURL(this.getFilePath(), this.filename);
+    let path = '';
+    if(this.plt.is('ios')) path = this.file.dataDirectory;
+    if(this.plt.is('android')) path = this.file.externalDataDirectory;
+    return this.file.readAsDataURL(path, this.filename);
+  }
+
+  getMediaDuration() : number {
+    return this.mediaObject.getDuration();
+  }
+
+  getMedia() {
+    if(this.mediaObject == null) {
+      this.mediaObject = this.media.create(this.getFilePath() + this.filename);
+    } else {
+    }
+    return this.mediaObject;
   }
 
   initEffects(){
@@ -121,31 +140,30 @@ export class AudioRecorder {
     this.mediaObject.release();
   }
 
-  createFile() {
-    this.file = new File();
-    this.file.createFile(this.getFilePath(), this.filename, true).then(() => {
-      let path = this.getFilePath().replace(/^file:\/\//, '');
-      this.mediaObject = this.media.create(path + this.filename);
-      this.mediaObject.startRecord();
-    });
-  }
-
   startRecording() {
+    //this.timer = new Timer();
+    //this.timer.startTimer();
     if(this.isApp) {
-      this.createFile();
+      console.log('start recording');
+      if(this.mediaObject != null) {
+        this.mediaObject.release();
+        this.mediaObject = null;
+      }
+      console.log(this.mediaObject);
+      this.getMedia().startRecord();
     }
   }
 
   stopRecording() {
-    if(this.isApp) this.mediaObject.stopRecord();
+    if(this.isApp) this.getMedia().stopRecord();
   }
 
   startPlayback() {
-    if(this.isApp) this.mediaObject.play();
+    if(this.isApp) this.getMedia().play();
   }
 
   stopPlayback() {
-    if(this.isApp) this.mediaObject.stop();
+    if(this.isApp) this.getMedia().stop();
   }
 
   showAlert(message) {

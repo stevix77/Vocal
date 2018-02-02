@@ -112,6 +112,7 @@ export class ModalProfilePage {
     this.options.sourceType = ('camera' == srcType) ? this.camera.PictureSourceType.CAMERA : this.camera.PictureSourceType.PHOTOLIBRARY;
     try
     {
+      console.log('go to profile pic');
       this.camera.getPicture(this.options).then((imageData) => {
       // imageData is either a base64 encoded string or a file URI
       // If it's base64:

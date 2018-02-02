@@ -2,7 +2,7 @@
     "cordova-plugin-splashscreen": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-splashscreen@^4.1.0"
+            "id": "cordova-plugin-splashscreen@^4.0.3"
         },
         "is_top_level": true,
         "variables": {}
@@ -10,7 +10,7 @@
     "cordova-plugin-statusbar": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-statusbar@^2.4.1"
+            "id": "cordova-plugin-statusbar@^2.2.2"
         },
         "is_top_level": true,
         "variables": {}
@@ -34,7 +34,7 @@
     "cordova-plugin-globalization": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-globalization@^1.0.9"
+            "id": "cordova-plugin-globalization"
         },
         "is_top_level": true,
         "variables": {}
@@ -45,12 +45,14 @@
             "id": "cordova-plugin-contacts@^2.3.1"
         },
         "is_top_level": true,
-        "variables": {}
+        "variables": {
+            "CONTACTS_USAGE_DESCRIPTION": " "
+        }
     },
     "cordova-plugin-file": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-file@6.0.1"
+            "id": "cordova-plugin-file@^4.3.3"
         },
         "is_top_level": true,
         "variables": {}
@@ -78,6 +80,16 @@
         },
         "is_top_level": false,
         "variables": {}
+    },
+    "cordova-plugin-media": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-media@^3.0.1"
+        },
+        "is_top_level": true,
+        "variables": {
+            "MICROPHONE_USAGE_DESCRIPTION": " "
+        }
     },
     "com-badrit-base64": {
         "source": {
@@ -160,22 +172,6 @@
             "id": "cordova-plugin-compat@^1.1.0"
         },
         "is_top_level": false,
-        "variables": {}
-    },
-    "cordova-plugin-nativeaudio": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-nativeaudio@^3.0.9"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-media": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-media@5.0.1"
-        },
-        "is_top_level": true,
         "variables": {}
     }
 }

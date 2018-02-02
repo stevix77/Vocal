@@ -57,6 +57,7 @@ export class SendVocalPage {
       this.isSending = true;
       let users = [];
       this.audioRecorder.getFile().then(fileValue => {
+        console.log(fileValue);
         this.FileValue = fileValue;
         this.Friends.forEach(elt => {
         if(elt.Checked)
@@ -79,6 +80,7 @@ export class SendVocalPage {
           resp => {
             let response = resp.json() as Response<SendMessageResponse>;
             if(!response.HasError && response.Data.IsSent) {
+              console.log(response);
               this.talkService.LoadList().then(() => {
                 this.talkService.UpdateList(response.Data.Talk);
                 this.talkService.SaveList();

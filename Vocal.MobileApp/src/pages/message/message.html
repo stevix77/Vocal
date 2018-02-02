@@ -1,32 +1,26 @@
 <ion-header [class]="isRecording ? 'anime-hide' : ''">
-  <ion-navbar hideBackButton="true" color="primary">
-    <!-- <ion-avatar>
-      <img [src]="Picture" alt="">
-    </ion-avatar> -->
-    <ion-item no-margin no-padding no-lines color="primary">
-      <ion-avatar item-start>
-        <img src="assets/default-picture-80x80.jpg" alt="">
+  <ion-navbar hideBackButton="true">
+    <ion-item>
+      <ion-avatar start>
+        <img [src]="Picture" alt="">
       </ion-avatar>
-      <div class="name">
-        {{VocalName}}
-      </div>
-      <div class="total-vocal">
-        12h de vocal
-      </div>
     </ion-item>
+    <ion-title>
+      {{VocalName}}
+    </ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="goToVocalList()"><ion-icon name="arrow-forward"></ion-icon></button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content>
-  <ion-list class="message-list" [hidden]="isRecording" no-lines>
+<ion-content padding>
+  <ion-list [hidden]="isRecording">
     <ion-list-header>
       Conversation
     </ion-list-header>
-    <ion-item-sliding *ngFor="let mess of Messages; let i = index" class="send">
-      <ion-item no-margin no-padding no-lines>
+    <ion-item-sliding *ngFor="let mess of Messages">
+      <ion-item>
         <p *ngIf="mess.ContentType == 2">{{mess.Content}}</p>
         <p *ngIf="mess.ContentType == 1">
           <button *ngIf="!mess.IsPlaying" class="cta" ion-button clear large icon-only (click)="playVocal(mess.Id, i)"><ion-icon name="play"></ion-icon></button>
@@ -54,32 +48,30 @@
   </div>
 
   <div>
+    <form #form="ngForm" (ngSubmit)="sendMessage(form)" [hidden]="isRecording">
+      <ion-grid>
+        <ion-row>
+          <ion-col col-10>
+            <ion-item>
+              <input type="hidden" ng-model="model.talkId" value="{{model.talkId}}" ng-init="model.talkId=model.talkId"/>
+              <ion-input type="text" name="Message" (ionInput)="change()" [(ngModel)]="model.Message" placeholder="Say something..." required></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col col-2>
+            <button ion-button icon-only round color="secondary" type="submit" [disabled]="!form.valid">
+                <ion-icon name="arrow-round-up"></ion-icon>
+            </button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
   </div>
 
 </ion-content>
 
 
 <ion-footer>
-  <ion-toolbar text-center>
-    <form #form="ngForm" (ngSubmit)="sendMessage(form)" [hidden]="isRecording">
-      <!-- <ion-grid>
-        <ion-row>
-          <ion-col col-10> -->
-            <ion-item no-lines>
-              <input type="hidden" ng-model="model.talkId" value="{{model.talkId}}" ng-init="model.talkId=model.talkId"/>
-              <ion-input type="text" name="Message" (ionInput)="change()" [(ngModel)]="model.Message" placeholder="Envoyer un chat" required></ion-input>
-            </ion-item>
-          <!-- </ion-col> -->
-          <!-- <ion-col col-2>
-            <button ion-button icon-only round color="secondary" type="submit" [disabled]="!form.valid">
-                <ion-icon name="arrow-round-up"></ion-icon>
-            </button>
-          </ion-col> -->
-        <!-- </ion-row>
-      </ion-grid> -->
-    </form>
-    <audio-recorder></audio-recorder>
-  </ion-toolbar>
+  <audio-recorder></audio-recorder>
 </ion-footer>
 
 <div class="wrapper-record" [hidden]="!isTiming">
