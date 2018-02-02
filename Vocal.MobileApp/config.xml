@@ -134,4 +134,5 @@
     </plugin>
     <allow-navigation href="http://192.168.1.13:8100" />
     <allow-navigation href="http://192.168.0.31:8100" />
+    <allow-navigation href="http://10.103.148.13:8100" />
 </widget>
