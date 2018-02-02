@@ -154,15 +154,17 @@ namespace Vocal.Business.Binder
 
         internal static SettingsResponse Bind_UserSettings(User user)
         {
-            var settings = new SettingsResponse();
-            settings.BirthdayDate = user.BirthdayDate;
-            settings.Blocked = Bind_Users(user.Settings.Blocked);
-            settings.Contacts = GetChoices(user.Settings.Contact);
-            settings.Email = user.Email;
-            settings.Genders = GetChoices(user.Settings.Gender);
-            settings.Notifs = GetChoices(user.Settings.IsNotifiable);
-            settings.Name = $"{user.Firstname} {user.Lastname} @{user.Username}";
-            settings.TotalDuration = 0;
+            var settings = new SettingsResponse
+            {
+                BirthdayDate = user.BirthdayDate,
+                Blocked = Bind_Users(user.Settings.Blocked),
+                Contacts = GetChoices(user.Settings.Contact),
+                Email = user.Email,
+                Genders = GetChoices(user.Settings.Gender),
+                Notifs = GetChoices(user.Settings.IsNotifiable),
+                Name = $"{user.Firstname} {user.Lastname} @{user.Username}",
+                TotalDuration = 0
+            };
             return settings;
         }
 
@@ -177,15 +179,16 @@ namespace Vocal.Business.Binder
 
         internal static MessageResponse Bind_Message(Message m)
         {
-           return new MessageResponse
+            return new MessageResponse
             {
                 ArrivedTime = m.ArrivedTime,
-                Content = m.Content,
+                Content = m.ContentType == MessageType.Text ? m.Content : null,
                 ContentType = (int)m.ContentType,
                 Id = m.Id.ToString(),
                 User = Bind_People(m.Sender),
                 Users = Bind_UsersListen(m.Users),
-                SentTime = m.SentTime
+                SentTime = m.SentTime,
+                Duration = m.Duration
             };
         }
 
@@ -243,7 +246,7 @@ namespace Vocal.Business.Binder
             {
                 DateLastMessage = talk.LastMessage,
                 Id = talk.Id,
-                Name = !string.IsNullOrEmpty(talk.Name) ? string.Join(",", talk.Users.Where(x => x.Id != userId).Select(x => x.Username).ToList()) : talk.Name,
+                Name = string.Join(",", talk.Users.Where(x => x.Id != userId).Select(x => x.Username).ToList()),
                 Duration = talk.Duration,
                 Users = Bind_Users(talk.Users),
                 Picture = talk.Users.Count == 2 ? talk.Users.SingleOrDefault(x => x.Id != userId).Pictures.SingleOrDefault(x => x.Type == PictureType.Talk)?.Value : string.Empty

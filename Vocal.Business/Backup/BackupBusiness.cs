@@ -44,7 +44,7 @@ namespace Vocal.Business.Backup
             }
             catch (Exception ex)
             {
-                
+                Console.WriteLine(ex.ToString());
             }
         }
     }

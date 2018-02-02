@@ -242,7 +242,7 @@ export class MessagePage {
     this.Messages[index].IsPlaying = true;
     this.talkService.SaveMessages(this.model.talkId, this.Messages);
     console.log(message);
-    let uniqId = functions.Crypt(message.Id + params.Salt) + ".mp3";
+    let uniqId = functions.Crypt(message.Id + params.Salt);
     let my_media = new Media();
     let file = my_media.create(`http://vocal.westeurope.cloudapp.azure.com/docs/vocal/${uniqId}.mp3`);
     file.play();

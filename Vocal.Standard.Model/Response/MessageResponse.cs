@@ -12,5 +12,6 @@ namespace Vocal.Model.Response
         public DateTime ArrivedTime { get; set; }
         public UserResponse User { get; set; }
         public List<UserListenResponse> Users { get; set; }
+        public int? Duration { get; set; }
     }
 }
