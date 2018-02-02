@@ -283,5 +283,14 @@ namespace Vocal.Business.Properties {
                 return ((string)(this["BackupPath"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Projects\\Vocal\\Vocal.WebApi\\docs")]
+        public string DocsPath {
+            get {
+                return ((string)(this["DocsPath"]));
+            }
+        }
     }
 }

@@ -161,13 +161,16 @@ namespace Vocal.Business.Business
             {
                 LogManager.LogDebug(request);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(request.Lang);
+                var guid = Guid.NewGuid();
                 if ((MessageType)request.MessageType == MessageType.Vocal)  // si mess vocal alors convertir
                 {
                     var bs64 = request.Content.Split(',').LastOrDefault();
-                    var file = Converter.ConvertToWav(bs64);
-                    if (file == null)
-                        throw new Exception();
-                    request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
+                    //var file = Converter.ConvertToWav(bs64);
+                    //if (file == null)
+                    //    throw new Exception();
+                    //request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
+                    var filename = Security.Hash.getHash(guid.ToString() + Properties.Settings.Default.Salt);
+                    Converter.ConvertToFileAndSave(bs64, $"{Properties.Settings.Default.DocsPath}/{filename}.mp3");
                 }
                 if (string.IsNullOrEmpty(request.IdTalk))
                 {
@@ -176,17 +179,17 @@ namespace Vocal.Business.Business
                     if(talk == null) // aucun message entre ces idsRecipient
                     {
                         if (_repository.CheckIfAllUsersExist(request.IdsRecipient)) // vérifier si les ids existent en base
-                            CreateNewTalk(request, response);
+                            CreateNewTalk(request, response, guid);
                         else
                             throw new Exception("AllUsers not exist");
                     }
                     else
-                        AddMessageToTalk(request, response, talk);
+                        AddMessageToTalk(request, response, talk, guid);
                 }
                 else
                 {
                     var talk = _repository.GetTalkById(request.IdTalk);
-                    AddMessageToTalk(request, response, talk);
+                    AddMessageToTalk(request, response, talk, guid);
                 }
                 if (response.Data.IsSent)
                     SendNotif(response.Data, request.IdSender);
@@ -209,7 +212,7 @@ namespace Vocal.Business.Business
             return response;
         }
 
-        private void CreateNewTalk(SendMessageRequest request, Response<SendMessageResponse> response)
+        private void CreateNewTalk(SendMessageRequest request, Response<SendMessageResponse> response, Guid guid)
         {
             var allUsers = _repository.GetUsersById(request.IdsRecipient);
             var sender = allUsers.SingleOrDefault(x => x.Id == request.IdSender);
@@ -224,16 +227,17 @@ namespace Vocal.Business.Business
             };
             talk.Recipients.ForEach(x => { talk.ListArchive.Add(x, false); talk.ListDelete.Add(x, false); });
             allUsers.ForEach(x => talk.ListPictures.Add(x.Id, x.Pictures.SingleOrDefault(y => y.Type == PictureType.Talk)?.Value));
+            var messType = (MessageType)request.MessageType;
             var m = new Message
             {
-                Id = Guid.NewGuid(),
+                Id = guid,
                 SentTime = request.SentTime,
                 ArrivedTime = dt,
-                Content = request.Content,
-                ContentType = (MessageType)request.MessageType,
+                Content = messType == MessageType.Text ? request.Content : null,
+                ContentType = messType,
                 Sender = sender.ToPeople(),
-                Users = allUsers.Where(x => x.Id != sender.Id).Select(x => new UserListen() { Recipient = x.ToPeople()/*, ListenDate = x == user.Id ? DateTime.Now : new DateTime?()*/ }).ToList(),
-                Duration = (MessageType)request.MessageType == MessageType.Vocal ? talk.Duration : 0,
+                Users = allUsers.Where(x => x.Id != sender.Id).Select(x => new UserListen() { Recipient = x.ToPeople() }).ToList(),
+                Duration = messType == MessageType.Vocal ? talk.Duration : new int?(),
                 TalkId = talk.Id
             };
             _repository.AddTalk(talk);
@@ -243,18 +247,19 @@ namespace Vocal.Business.Business
             response.Data.IsSent = true;
         }
 
-        private void AddMessageToTalk(SendMessageRequest request, Response<SendMessageResponse> response, Talk talk)
+        private void AddMessageToTalk(SendMessageRequest request, Response<SendMessageResponse> response, Talk talk, Guid guid)
         {
+            var messType = (MessageType)request.MessageType;
             var m = new Message
             {
-                Id = Guid.NewGuid(),
+                Id = guid,
                 SentTime = request.SentTime,
                 ArrivedTime = DateTime.Now,
-                Content = request.Content,
-                ContentType = (MessageType)request.MessageType,
+                Content = messType == MessageType.Text ? request.Content : null,
+                ContentType = messType,
                 Sender = talk.Users.SingleOrDefault(x => x.Id == request.IdSender),
                 Users = talk.Users.Select(x => new UserListen { Recipient = x }).ToList(),
-                Duration = (MessageType)request.MessageType == MessageType.Vocal && request.Duration.HasValue && request.Duration.Value >= 0 ? request.Duration.Value : new int?(), 
+                Duration = messType == MessageType.Vocal ? talk.Duration : new int?(),
                 TalkId = talk.Id
             };
             talk.Duration += m.ContentType == MessageType.Vocal && m.Duration.HasValue ? m.Duration.Value : 0;
