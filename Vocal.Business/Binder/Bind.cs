@@ -146,7 +146,8 @@ namespace Vocal.Business.Binder
                     Id = item.Id.ToString(),
                     SentTime = item.SentTime,
                     User = Bind_People(item.Sender),
-                    Users = Bind_UsersListen(item.Users)
+                    Users = Bind_UsersListen(item.Users),
+                    Duration = item.Duration
                 });
             }
             return response;
