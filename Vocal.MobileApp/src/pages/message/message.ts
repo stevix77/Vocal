@@ -179,7 +179,6 @@ export class MessagePage {
         resp => {
           let response = resp.json() as Response<Array<MessageResponse>>;
           if(!response.HasError) {
-            //this.sortMessages(response.Data);
             response.Data.forEach(item => {
               let mess = this.Messages.find(x => x.Id == item.Id);
               item.IsPlaying = false;
@@ -236,7 +235,6 @@ export class MessagePage {
 
   playVocal(messId: string, index: number) {
     let message = this.Messages[index];
-    console.log(message);
     this.Messages[index].IsPlaying = true;
     this.talkService.SaveMessages(this.model.talkId, this.Messages);
     
@@ -256,7 +254,9 @@ export class MessagePage {
   }
 
   pauseVocal(messId: string, index: number) {
-    console.log('pauseVocal');
+    this.file.pause();
+    this.Messages[index].IsPlaying = false;
+    this.talkService.SaveMessages(this.model.talkId, this.Messages);
   }
 
   showToast(message: string) :any {
