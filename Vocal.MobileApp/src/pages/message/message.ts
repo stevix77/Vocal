@@ -1,5 +1,5 @@
 import { MessageRequest } from './../../models/request/messageRequest';
-import { HubMethod, PictureType, MessageType, KeyStore } from '../../models/enums';
+import { HubMethod, PictureType, MessageType } from '../../models/enums';
 import { MessageResponse } from './../../models/response/messageResponse';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, Events, Config } from 'ionic-angular';
@@ -15,10 +15,7 @@ import { HubService } from "../../services/hubService";
 import { functions } from "../../services/functions";
 import { Timer } from '../../services/timer';
 import { GetMessagesRequest } from "../../models/request/getMessagesRequest";
-
-import { Media } from '@ionic-native/media';
-
-import { StoreService } from '../../services/storeService';
+import { Media, MediaObject } from '@ionic-native/media';
 
 /**
  * Generated class for the MessagePage page.
@@ -43,11 +40,11 @@ export class MessagePage {
   timer: Timer;
   time: String = '0:00';
   messUser: string;
+  file: MediaObject;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
               public config: Config,
-              private storeService: StoreService,
               private httpService: HttpService, 
               private toastCtrl: ToastController, 
               private cookieService: CookieService,
@@ -239,13 +236,27 @@ export class MessagePage {
 
   playVocal(messId: string, index: number) {
     let message = this.Messages[index];
+    console.log(message);
     this.Messages[index].IsPlaying = true;
     this.talkService.SaveMessages(this.model.talkId, this.Messages);
-    console.log(message);
+    
     let uniqId = functions.Crypt(message.Id + params.Salt);
     let my_media = new Media();
-    let file = my_media.create(`http://vocal.westeurope.cloudapp.azure.com/docs/vocal/${uniqId}.mp3`);
-    file.play();
+    this.file = my_media.create(`http://vocal.westeurope.cloudapp.azure.com/docs/vocal/${uniqId}.mp3`);
+    this.file.play();
+    this.file.onStatusUpdate.subscribe(status => {
+      if(status == 2) { //PLAYING
+        
+      }
+      if(status == 4) { //STOP
+        this.Messages[index].IsPlaying = false;
+        this.talkService.SaveMessages(this.model.talkId, this.Messages);
+      }
+    }); // fires when file status changes
+  }
+
+  pauseVocal(messId: string, index: number) {
+    console.log('pauseVocal');
   }
 
   showToast(message: string) :any {
