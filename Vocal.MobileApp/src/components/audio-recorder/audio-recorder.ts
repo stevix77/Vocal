@@ -40,7 +40,6 @@ export class AudioRecorderComponent {
   }
 
   startRecording() {
-    console.log('start recording');
     this.events.publish('record:start');
     this.time = 0;
     this.timer = setInterval(() => {
@@ -55,11 +54,9 @@ export class AudioRecorderComponent {
   }
 
   stopRecording() {
-    console.log('stop recording');
     this.events.publish('record:stop');
     clearInterval(this.timer);
     this.presentEditVocalModal();
-    //document.querySelector('.ion-page ion-content .wrapper-record').remove();
     try {
       this.audioRecorder.stopRecording();
     }
