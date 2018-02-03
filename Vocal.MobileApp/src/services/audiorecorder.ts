@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Config, AlertController, Platform } from 'ionic-angular';
 import { Timer } from './timer';
-import { params } from './params';
-import { Store } from '../models/enums';
 import { Media, MediaObject } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
-import { swipeShouldReset } from 'ionic-angular/util/util';
 
 
 @Injectable()

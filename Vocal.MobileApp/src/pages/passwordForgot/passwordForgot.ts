@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { NavParams, NavController } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
 import {url} from '../../services/url';
 import {HttpService} from '../../services/httpService';
 import {params} from '../../services/params';
@@ -21,7 +21,7 @@ export class PasswordForgotPage implements OnInit {
     ErrorEmail: ""
   }
 
-  constructor(private navCtrl: NavController, private navParams: NavParams, private httpService: HttpService, private toastCtrl: ToastController) { 
+  constructor(private navCtrl: NavController, private httpService: HttpService, private toastCtrl: ToastController) { 
   }
 
   ngOnInit() {

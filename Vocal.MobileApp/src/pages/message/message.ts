@@ -13,7 +13,6 @@ import { HttpService } from '../../services/httpService';
 import { CookieService } from '../../services/cookieService';
 import { TalkService } from "../../services/talkService";
 import { HubService } from "../../services/hubService";
-import {DomSanitizer} from '@angular/platform-browser';
 import { Timer } from '../../services/timer';
 import { GetMessagesRequest } from "../../models/request/getMessagesRequest";
 import { Media, MediaObject } from '@ionic-native/media';
@@ -51,8 +50,7 @@ export class MessagePage {
               private cookieService: CookieService,
               private events: Events,
               private talkService: TalkService,
-              private hubService: HubService,
-              private domSanitizer: DomSanitizer) {
+              private hubService: HubService) {
 
     this.model.talkId = this.navParams.get("TalkId");
     this.model.userId = this.navParams.get("UserId");

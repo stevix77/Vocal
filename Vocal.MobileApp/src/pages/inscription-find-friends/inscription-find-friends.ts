@@ -9,7 +9,6 @@ import { UserResponse } from '../../models/response/userResponse';
 import { Response } from '../../models/response';
 import { url } from '../../services/url';
 import { CookieService } from '../../services/cookieService';
-import { StoreService } from '../../services/storeService';
 import { FriendsService } from '../../services/friendsService';
 
 /**
@@ -35,7 +34,6 @@ export class InscriptionFindFriendsPage {
     private contacts: Contacts, 
     private httpService: HttpService, 
     private cookieService: CookieService, 
-    private storeService: StoreService,
     private friendsService: FriendsService
     ) {
   }
