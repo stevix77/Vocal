@@ -25,10 +25,9 @@
     <ion-list-header>
       Conversation
     </ion-list-header>
-    <ion-item-sliding *ngFor="let mess of Messages; let i = index" class="send">
-      <ion-item no-margin no-padding no-lines>
-        <p *ngIf="mess.ContentType == 2">{{mess.Content}}</p>
-        <p *ngIf="mess.ContentType == 1">
+    <ion-item-sliding *ngFor="let mess of Messages; let i = index">
+      <ion-item no-margin no-padding no-lines class="send" *ngIf="mess.ContentType == 1">
+        <p>
           <button *ngIf="!mess.IsPlaying" class="cta" ion-button clear large icon-only (click)="playVocal(mess.Id, i)"><ion-icon name="play"></ion-icon></button>
           <button *ngIf="mess.IsPlaying" class="cta" ion-button clear large icon-only (click)="pauseVocal(mess.Id, i)"><ion-icon name="pause"></ion-icon></button>
         </p>
@@ -36,6 +35,9 @@
           00:0{{mess.Duration}}
           <small class="time">{{ mess.SentTime | date: 'HH:ss' }}</small>
         </p>
+      </ion-item>
+      <ion-item no-margin no-padding no-lines class="send" *ngIf="mess.ContentType == 2">
+        <p >{{mess.Content}}</p>
       </ion-item>
       <ion-item-options side="right">
         <button ion-button icon-only><ion-icon name="closed-captioning"></ion-icon></button>
