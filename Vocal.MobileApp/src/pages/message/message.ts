@@ -12,9 +12,10 @@ import { HttpService } from '../../services/httpService';
 import { CookieService } from '../../services/cookieService';
 import { TalkService } from "../../services/talkService";
 import { HubService } from "../../services/hubService";
-import {DomSanitizer} from '@angular/platform-browser';
+import { functions } from "../../services/functions";
 import { Timer } from '../../services/timer';
 import { GetMessagesRequest } from "../../models/request/getMessagesRequest";
+import { Media, MediaObject } from '@ionic-native/media';
 
 /**
  * Generated class for the MessagePage page.
@@ -39,6 +40,8 @@ export class MessagePage {
   timer: Timer;
   time: String = '0:00';
   messUser: string;
+  file: MediaObject;
+  uid: String;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
@@ -48,11 +51,12 @@ export class MessagePage {
               private cookieService: CookieService,
               private events: Events,
               private talkService: TalkService,
-              private hubService: HubService,
-              private domSanitizer: DomSanitizer) {
+              private hubService: HubService) {
 
     this.model.talkId = this.navParams.get("TalkId");
     this.model.userId = this.navParams.get("UserId");
+    this.uid = params.User.Id;
+    console.log(this.uid);
     this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj.Message))
     events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.beginTalk(obj))
     events.subscribe(HubMethod[HubMethod.EndTalk], (obj) => this.endTalk())
@@ -149,7 +153,7 @@ export class MessagePage {
   }
 
   loadMessages() {
-    this.Messages = this.talkService.GetMessages(this.model.talkId)
+    this.Messages = this.talkService.GetMessages(this.model.talkId);
     this.talkService.Talks.find(x => x.Id == this.model.talkId).Users.forEach(x => {
       if(x.Id != params.User.Id){
         this.VocalName += x.Username + " ";
@@ -178,9 +182,9 @@ export class MessagePage {
         resp => {
           let response = resp.json() as Response<Array<MessageResponse>>;
           if(!response.HasError) {
-            //this.sortMessages(response.Data);
             response.Data.forEach(item => {
               let mess = this.Messages.find(x => x.Id == item.Id);
+              item.IsPlaying = false;
               if(mess == null)
                 this.Messages.push(item);
             });
@@ -201,6 +205,7 @@ export class MessagePage {
     let index = 0;
     messages.forEach(element => {
       let mess = this.Messages.find(x => x.Id == element.Id);
+      mess.IsPlaying = false;
       if(mess == null) {
         this.Messages.splice(index, 0, element);
       }
@@ -219,8 +224,9 @@ export class MessagePage {
     this.httpService.Post<MessageRequest>(urlMessage, request, cookie).subscribe(
       resp => {
         let response = resp.json() as Response<string>;
-        if(response.HasError)
+        if(response.HasError){
           this.showToast(response.ErrorMessage);
+        }
         else {
           this.Messages.find(x => x.Id == messId).Content = response.Data;
           this.talkService.SaveMessages(this.model.talkId, this.Messages);          
@@ -228,6 +234,35 @@ export class MessagePage {
       }
     )
     // this.Messages.find(x => x.Id == messId).Content = mess;
+  }
+
+  playVocal(messId: string, index: number) {
+    let message = this.Messages[index];
+    console.log(message);
+    console.log(message.User);
+    console.log(params.User);
+    this.Messages[index].IsPlaying = true;
+    this.talkService.SaveMessages(this.model.talkId, this.Messages);
+    
+    let uniqId = functions.Crypt(message.Id + params.Salt);
+    let my_media = new Media();
+    this.file = my_media.create(`http://vocal.westeurope.cloudapp.azure.com/docs/vocal/${uniqId}.mp3`);
+    this.file.play();
+    this.file.onStatusUpdate.subscribe(status => {
+      if(status == 2) { //PLAYING
+        
+      }
+      if(status == 4) { //STOP
+        this.Messages[index].IsPlaying = false;
+        this.talkService.SaveMessages(this.model.talkId, this.Messages);
+      }
+    }); // fires when file status changes
+  }
+
+  pauseVocal(messId: string, index: number) {
+    this.file.pause();
+    this.Messages[index].IsPlaying = false;
+    this.talkService.SaveMessages(this.model.talkId, this.Messages);
   }
 
   showToast(message: string) :any {

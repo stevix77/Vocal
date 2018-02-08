@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { InscriptionUsernamePage } from '../inscription-username/inscription-username'
-import { StoreService } from '../../services/storeService';
 import { RegisterRequest } from '../../models/request/registerRequest';
 
 /**
@@ -24,7 +23,7 @@ export class InscriptionBirthdayPage {
   }
   registerRequest: RegisterRequest;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   submit(){

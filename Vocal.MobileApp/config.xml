@@ -130,4 +130,20 @@
     <plugin name="phonegap-plugin-push" spec="^2.0.0">
         <variable name="SENDER_ID" value="1054724390279" />
     </plugin>
+    <allow-navigation href="http://192.168.0.32:8100" />
+    <allow-navigation href="http://192.168.1.21:8100" />
+    <plugin name="cordova-plugin-file" spec="^4.3.3" />
+    <plugin name="cordova-plugin-datepicker" spec="^0.9.3" />
+    <plugin name="cordova-plugin-contacts" spec="^2.3.1">
+        <variable name="CONTACTS_USAGE_DESCRIPTION" value=" " />
+    </plugin>
+    <plugin name="cordova-plugin-globalization" spec="^1.0.9" />
+    <plugin name="cordova-plugin-media" spec="^3.0.1">
+        <variable name="MICROPHONE_USAGE_DESCRIPTION" value=" " />
+    </plugin>
+    <engine name="browser" spec="~4.1.0" />
+    <plugin name="cordova-plugin-nativeaudio" spec="^3.0.9" />
+    <allow-navigation href="http://192.168.1.13:8100" />
+    <allow-navigation href="http://192.168.0.31:8100" />
+    <allow-navigation href="http://10.103.148.13:8100" />
 </widget>

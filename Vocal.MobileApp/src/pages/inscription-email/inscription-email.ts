@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { InscriptionPasswordPage } from '../inscription-password/inscription-password'
-import { StoreService } from '../../services/storeService';
 import {url} from '../../services/url';
 import {HttpService} from '../../services/httpService';
 import { params } from '../../services/params';
@@ -29,7 +28,7 @@ export class InscriptionEmailPage {
     ErrorEmail: ""
   }
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService, private httpService: HttpService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpService) {
   }
 
   submit(){

@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Events, ViewController, ModalController, Config } from 'ionic-angular';
 import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
-import { StoreService } from "../../services/storeService";
 import { TalkResponse } from '../../models/response/talkResponse';
 import { ActionResponse } from '../../models/response/actionResponse';
 import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
@@ -15,7 +14,6 @@ import { url } from '../../services/url';
 import { Timer } from '../../services/timer';
 import { DeleteTalkRequest } from '../../models/request/deleteTalkRequest';
 import { ArchiveTalkRequest } from '../../models/request/archiveTalkRequest';
-import { HubService } from "../../services/hubService";
 
 
 /**
@@ -48,9 +46,7 @@ export class VocalListPage {
     public config: Config,
     private httpService: HttpService, 
     private cookieService: CookieService, 
-    private storeService: StoreService,
-    private talkService: TalkService,
-    private hubService: HubService) {
+    private talkService: TalkService) {
 
     events.subscribe(HubMethod[HubMethod.Receive], () => this.initialize())
     this.isApp = this.config.get('isApp');
@@ -59,6 +55,11 @@ export class VocalListPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad VocalListPage');
+    if(this.navCtrl.length() > 1) {
+      this.navCtrl.remove(0, this.navCtrl.length() - 1).then(() => {
+        this.navCtrl.setRoot(VocalListPage);
+      });
+    } 
 
     this.events.subscribe('record:start', () => {
       this.toggleRecording();

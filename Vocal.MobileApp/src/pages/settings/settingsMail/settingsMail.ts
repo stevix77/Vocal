@@ -6,7 +6,6 @@ import { url } from "../../../services/url";
 import { UpdateRequest } from "../../../models/request/updateRequest";
 import { HttpService } from "../../../services/httpService";
 import { CookieService } from "../../../services/cookieService";
-import { StoreService } from "../../../services/storeService";
 import { SettingsService } from "../../../services/settingsService";
 import { UpdateType } from "../../../models/enums";
 
@@ -20,7 +19,7 @@ export class SettingsMail implements OnInit {
   Email: string;
   PageTitle: string;
   PageLabel: string;
-  constructor(private navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, private cookieService: CookieService, private storeService: StoreService, private settingsService: SettingsService) { 
+  constructor(private navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, private cookieService: CookieService, private settingsService: SettingsService) { 
     this.PageLabel = "Modifier mon adresse e-mail";
     this.PageTitle = "Réglages";
   }

@@ -9,4 +9,6 @@ export class MessageResponse {
     ArrivedTime: Date;
     User: UserResponse;
     Users: Array<any>;
+    IsPlaying: boolean = false;
+    Duration?: number;
 }

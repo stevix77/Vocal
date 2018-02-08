@@ -67,7 +67,9 @@ export class SettingsPage implements OnInit {
             params.User = null;
             this.friendsService.clear();
             this.settingsService.clear();
-            this.navCtrl.setRoot(HomePage);
+            this.navCtrl.remove(0, this.navCtrl.length()).then(() => {             
+              this.navCtrl.setRoot(HomePage);
+            })
           }
         }
       ]

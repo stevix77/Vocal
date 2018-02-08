@@ -16,5 +16,6 @@ namespace Vocal.Model.Response
         public UserResponse User { get; set; }
         public List<UserListenResponse> Users { get; set; }
         public boolean IsPlaying { get; set; }
+        public number Duration { get; set; }
     }
 }

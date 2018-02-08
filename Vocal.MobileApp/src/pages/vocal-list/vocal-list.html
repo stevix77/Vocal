@@ -31,7 +31,7 @@
         </ion-avatar>
         
         <h3>{{ item.Name }}</h3>
-        <p *ngIf="item.DateLastMessage.isToday === true">{{ item.DateLastMessage.date | date: 'HH:ss' }}</p>
+        <p *ngIf="item.DateLastMessage.isToday === true">{{ item.DateLastMessage.date | date: 'HH:mm' }}</p>
         <p *ngIf="item.DateLastMessage.isYesterday === true">Hier</p>
         <p *ngIf="item.DateLastMessage.isWeek === true">{{ item.DateLastMessage.date | date: 'EEEE' }}</p>
         <p *ngIf="item.DateLastMessage.isToday === false && item.DateLastMessage.isYesterday === false && item.DateLastMessage.isWeek === false">{{ item.DateLastMessage.date | date: 'dd/MM/yy' }}</p>
@@ -49,7 +49,9 @@
 </ion-content>
 
 <ion-footer>
-  <audio-recorder></audio-recorder>
+  <ion-toolbar text-center>
+    <audio-recorder></audio-recorder>
+  </ion-toolbar>
 </ion-footer>
 
 <div class="wrapper-record" [hidden]="!isTiming">
