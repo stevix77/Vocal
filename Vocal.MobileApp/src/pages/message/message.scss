@@ -36,13 +36,25 @@ page-message {
     margin-bottom: 60px;
   }
   .message-list{
-    ion-item.send{
-      background: #aee;
-      border-radius : 0 35px 35px 0;
+    ion-item{
+      margin-bottom: 1em;
+      &:last-child{
+        margin-bottom: 0;
+      }
+      &.send{
+        background: #aee;
+        border-radius : 0 35px 35px 0;
+      }
+      &.received{
+        background: rgb(155, 224, 176);
+        border-radius : 35px 0 0 35px;
+      }
     }
-    ion-item.received{
-      background: rgb(155, 224, 176);
-      border-radius : 35px 0 0 35px;
+    ion-item.type-txt{
+      padding-left:1em;
+      p{
+        color:black;
+      }
     }
     .cta{
       color: white;
