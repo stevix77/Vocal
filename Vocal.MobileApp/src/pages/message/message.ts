@@ -41,6 +41,7 @@ export class MessagePage {
   time: String = '0:00';
   messUser: string;
   file: MediaObject;
+  uid: String;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
@@ -54,6 +55,8 @@ export class MessagePage {
 
     this.model.talkId = this.navParams.get("TalkId");
     this.model.userId = this.navParams.get("UserId");
+    this.uid = params.User.Id;
+    console.log(this.uid);
     this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj.Message))
     events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.beginTalk(obj))
     events.subscribe(HubMethod[HubMethod.EndTalk], (obj) => this.endTalk())
@@ -235,6 +238,9 @@ export class MessagePage {
 
   playVocal(messId: string, index: number) {
     let message = this.Messages[index];
+    console.log(message);
+    console.log(message.User);
+    console.log(params.User);
     this.Messages[index].IsPlaying = true;
     this.talkService.SaveMessages(this.model.talkId, this.Messages);
     
