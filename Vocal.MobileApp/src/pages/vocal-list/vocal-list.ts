@@ -55,6 +55,11 @@ export class VocalListPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad VocalListPage');
+    if(this.navCtrl.length() > 1) {
+      this.navCtrl.remove(0, this.navCtrl.length() - 1).then(() => {
+        this.navCtrl.setRoot(VocalListPage);
+      });
+    } 
 
     this.events.subscribe('record:start', () => {
       this.toggleRecording();
