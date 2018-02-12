@@ -37,4 +37,12 @@ namespace Vocal.Model.DB
         Profil,
         Talk
     }
+
+    public enum Platform
+    {
+        APNS = 0,
+        GCM = 2,
+        WNS = 1,
+        Browser = 3
+    }
 }

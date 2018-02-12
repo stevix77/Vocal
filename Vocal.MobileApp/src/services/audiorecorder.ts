@@ -3,6 +3,7 @@ import { Config, AlertController, Platform } from 'ionic-angular';
 import { Timer } from './timer';
 import { Media, MediaObject } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
+import { ExceptionService } from './exceptionService';
 
 @Injectable()
 export class AudioRecorder {
@@ -18,7 +19,8 @@ export class AudioRecorder {
     public alertCtrl: AlertController,
     public plt: Platform,
     private media: Media, 
-    private file: File) {
+    private file: File,
+    private exceptionService: ExceptionService) {
     this.filename = 'recording.' + this.getExtension();
     this.isApp = this.config.get('isApp');
     //this.initEffects();
@@ -68,15 +70,15 @@ export class AudioRecorder {
   getFilePath() {
     let path = '';
     if(this.plt.is('ios')) path = this.file.tempDirectory;
-    if(this.plt.is('android')) path = this.file.cacheDirectory;
-    
+    if(this.plt.is('android')) path = this.file.externalCacheDirectory;
+
     return path;
   }
 
   getExtension() {
     let extension = '';
     if(this.plt.is('ios')) extension = 'm4a';
-    if(this.plt.is('android')) extension = '3gp';
+    if(this.plt.is('android')) extension = 'aac';
     
     return extension;
   }
@@ -129,6 +131,8 @@ export class AudioRecorder {
       let path = this.getFilePath().replace(/^file:\/\//, '');
       this.mediaObject = this.media.create(path + this.filename);
       this.mediaObject.startRecord();
+    }).catch(err => {
+        this.exceptionService.Add(err);
     });
   }
 

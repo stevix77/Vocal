@@ -13,5 +13,6 @@ namespace Vocal.Model.Request
         public List<string> IdsRecipient { get; set; }
         public string IdMessageParent { get; set; }
         public int? Duration { get; set; }
+        public int Platform { get; set; }
     }
 }

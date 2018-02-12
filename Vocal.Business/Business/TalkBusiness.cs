@@ -170,7 +170,11 @@ namespace Vocal.Business.Business
                     //    throw new Exception();
                     //request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
                     var filename = Security.Hash.getHash(guid.ToString() + Properties.Settings.Default.Salt);
-                    Converter.ConvertToFileAndSave(bs64, $"{Properties.Settings.Default.DocsPath}/{filename}.mp3");
+                    filename = $"{Properties.Settings.Default.DocsPath}/{filename}.mp3";
+                    if (request.Platform == (int)Platform.APNS)
+                        Converter.ConvertToFileAndSave(bs64, filename);
+                    else
+                        Converter.SaveAudioFile(bs64, filename);
                 }
                 if (string.IsNullOrEmpty(request.IdTalk))
                 {
@@ -330,15 +334,13 @@ namespace Vocal.Business.Business
         
         private void SendNotif(SendMessageResponse response, string senderId)
         {
-            Task.Run(async () => {
-                var users = response.Talk.Users.Where(x => x.Id != senderId);
-                await HubService.Instance.SendMessage(response, response.Talk.Users.Select(x => x.Id).ToList()); // envoi message via signalr
-                //var titleNotif = GenerateTitleNotif(response.Message, );
-                var messNotif = GenerateMessageNotif(response.Message);
-                var vocalName = string.Join(",", users.Select(x => x.Username)); 
-
-                await _notificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), (int)NotifType.Talk, response.Talk.Id, vocalName, response.Message.User.Username, response.Message.ContentType == (int)MessageType.Text ? response.Message.Content : string.Empty);
-            });
+            var users = response.Talk.Users.Where(x => x.Id != senderId);
+            var messNotif = GenerateMessageNotif(response.Message);
+            var vocalName = string.Join(",", users.Select(x => x.Username));
+            Parallel.Invoke(
+                async () => await HubService.Instance.SendMessage(response, response.Talk.Users.Select(x => x.Id).ToList()),
+                async () => await _notificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), (int)NotifType.Talk, response.Talk.Id, vocalName, response.Message.User.Username, response.Message.ContentType == (int)MessageType.Text ? response.Message.Content : string.Empty) // envoi message via signalr)
+            );
         }
 
         private static string GenerateTitleNotif(MessageResponse m, string vocalName)

@@ -48,5 +48,11 @@ namespace Vocal.Business.Tools
                 }
             }
         }
+
+        public static void SaveAudioFile(string base64File, string filename)
+        {
+            byte[] imageBytes = Convert.FromBase64String(base64File);
+            File.WriteAllBytes(filename, imageBytes);
+        }
     }
 }

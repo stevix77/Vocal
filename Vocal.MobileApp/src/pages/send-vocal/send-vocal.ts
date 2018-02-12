@@ -72,7 +72,8 @@ export class SendVocalPage {
           messageType: MessageType.Vocal,
           Lang: params.Lang,
           idSender: params.User.Id,
-          IdTalk: null
+          IdTalk: null,
+          platform: params.Platform
         };
         let urlSendVocal = url.SendMessage();
         let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
