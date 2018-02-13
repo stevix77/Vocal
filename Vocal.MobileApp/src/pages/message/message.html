@@ -32,7 +32,7 @@
           <button *ngIf="mess.IsPlaying" class="cta" ion-button clear large icon-only (click)="pauseVocal(mess.Id, i)"><ion-icon name="pause"></ion-icon></button>
         </p>
         <p class="duration" no-margin item-end>
-          {{mess.Duration}}
+          {{getDuration(mess.Duration)}}
           <small class="time">{{ mess.SentTime | date: 'HH:mm' }}</small>
         </p>
       </ion-item>
