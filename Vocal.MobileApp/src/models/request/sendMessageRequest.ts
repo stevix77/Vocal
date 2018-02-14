@@ -5,7 +5,7 @@ export class SendMessageRequest extends Request {
     content : string;
     sentTime: Date;
     duration: number;
-    platform: number;
+    platform: string;
     IdTalk: string;
     messageType : number;
     idSender : string;

@@ -171,7 +171,7 @@ namespace Vocal.Business.Business
                     //request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
                     var filename = Security.Hash.getHash(guid.ToString() + Properties.Settings.Default.Salt);
                     filename = $"{Properties.Settings.Default.DocsPath}/{filename}.mp3";
-                    if (request.Platform == (int)Platform.APNS)
+                    if (request.Platform.ToUpper() == Platform.APNS.ToString().ToUpper())
                         Converter.ConvertToFileAndSave(bs64, filename);
                     else
                         Converter.SaveAudioFile(bs64, filename);
@@ -338,8 +338,8 @@ namespace Vocal.Business.Business
             var messNotif = GenerateMessageNotif(response.Message);
             var vocalName = string.Join(",", users.Select(x => x.Username));
             Parallel.Invoke(
-                async () => await HubService.Instance.SendMessage(response, response.Talk.Users.Select(x => x.Id).ToList()),
-                async () => await _notificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), (int)NotifType.Talk, response.Talk.Id, vocalName, response.Message.User.Username, response.Message.ContentType == (int)MessageType.Text ? response.Message.Content : string.Empty) // envoi message via signalr)
+                 () => HubService.Instance.SendMessage(response, response.Talk.Users.Select(x => x.Id).ToList()),
+                 () => _notificationBusiness.SendNotification(users.Select(x => x.Id).ToList(), (int)NotifType.Talk, response.Talk.Id, vocalName, response.Message.User.Username, response.Message.ContentType == (int)MessageType.Text ? response.Message.Content : string.Empty) // envoi message via signalr)
             );
         }
 
