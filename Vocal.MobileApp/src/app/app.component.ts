@@ -400,13 +400,10 @@ export class VocalApp {
     });
 
     this.hubService.hubProxy.on(HubMethod[HubMethod.Receive], (obj) => {
-      console.log(obj);
-      // if(obj.Message.User.Id != params.User.Id) {
-      //   let mess = 'Nouveau message de ' + obj.Message.User.Username;
-      //   this.showToast(mess);
-      // }
-      let mess = 'Nouveau message de ' + obj.Message.User.Username;
-      this.showToast(mess);
+      if(obj.Message.User.Id != params.User.Id) {
+        let mess = 'Nouveau message de ' + obj.Message.User.Username;
+        this.showToast(mess);
+      }
       this.talkService.LoadList().then(() => {
         obj.Talk.DateLastMessage = obj.Message.SentTime;
         this.talkService.UpdateList(obj.Talk);
