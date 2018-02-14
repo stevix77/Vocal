@@ -122,6 +122,10 @@ export class VocalApp {
       this.storeService.Get("registration").then((r) => {
         if(r == null || r != data.registrationId)
           this.RegisterToNH(data.registrationId);
+      }).catch(error => {
+        console.log(error);
+        this.showToast(error.message);
+        this.exceptionService.Add(error);
       })
     });
     
@@ -168,7 +172,7 @@ export class VocalApp {
 
     pushObject.on('error').subscribe(error => {
       this.showToast(error.message);
-      this.exceptionService.Add(error.message)
+      this.exceptionService.Add(error.message);
       // this.exceptionService.Add("push error")
       console.log('Error with Push plugin' + error);
     });
