@@ -32,12 +32,12 @@ namespace Vocal.Business.Business
                 var user = _repository.GetUserById(userId);
                 if(user != null)
                 {
-                    if(true)
-                    //if (!user.Devices.Exists(x => x.Channel == channel))
+                    if (!user.Devices.Exists(x => x.Channel == channel))
                     {
                         var registrationId = await _notificationHub.GetRegistrationId(channel);
-                        var tag = $"{Properties.Settings.Default.TagUser}:{userId}";
-                        user.Devices.Add(new Vocal.Model.DB.Device
+                        var tag = $"{Settings.Default.TagUser}:{userId}";
+                        await _notificationHub.RegistrationUser(registrationId, channel, platform, tag);
+                        user.Devices.Add(new Model.DB.Device
                         {
                             RegistrationId = registrationId,
                             Platform = platform,
@@ -46,7 +46,6 @@ namespace Vocal.Business.Business
                             Lang = lang
                         });
                         _repository.UpdateUser(user);
-                        await _notificationHub.RegistrationUser(registrationId, channel, platform, tag);
                         response.Data = registrationId;
                     }
                 }
