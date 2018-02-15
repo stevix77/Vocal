@@ -118,7 +118,7 @@ export class VocalApp {
   initPushNotification() {
     const pushOptions = {
       android: {senderID: "1054724390279"},
-      ios: { alert: 'true', badge: true, sound: 'true', test: "" },
+      ios: { fcmSandbox: 'true', alert: 'true', badge: true, sound: 'true', test: "" },
       windows: {}
     };
     const pushObject: PushObject = this.push.init(pushOptions);
