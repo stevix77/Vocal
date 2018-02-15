@@ -52,7 +52,7 @@ namespace Vocal.DAL
             else
                 description.Tags.Add(tag);
             description.RegistrationId = registrationId;
-            var toto = await Hub.CreateOrUpdateRegistrationAsync(description);
+            await Hub.CreateOrUpdateRegistrationAsync(description);
         }
         
         private async Task DeleteRegistrations(string channel)
