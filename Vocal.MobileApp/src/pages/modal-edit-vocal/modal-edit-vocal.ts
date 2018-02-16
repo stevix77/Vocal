@@ -62,7 +62,11 @@ export class ModalEditVocalPage {
   }
 
   goToSendVocal() {
-    this.navCtrl.push(SendVocalPage, {duration:this.navParams.get('duration')});
+    if(this.navParams.get('isDM')) {
+      console.log('direct message');
+    } else {
+      this.navCtrl.push(SendVocalPage, {duration:this.navParams.get('duration')});
+    }
   }
 
   showAlert(message) {

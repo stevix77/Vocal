@@ -36,6 +36,7 @@ export class VocalListPage {
   isTiming: boolean = false;
   timer: Timer;
   time: String = '';
+  isDirectMessage: boolean = false;
   
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 

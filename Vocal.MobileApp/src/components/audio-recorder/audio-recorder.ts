@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Events, AlertController, ModalController, Config, ViewController } from 'ionic-angular';
 import { AudioRecorder } from '../../services/audiorecorder';
 import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-vocal';
@@ -11,13 +11,17 @@ import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-voca
  */
 @Component({
   selector: 'audio-recorder',
-  templateUrl: 'audio-recorder.html'
+  templateUrl: 'audio-recorder.html',
+  inputs: ['isDirectMessage']
 })
 export class AudioRecorderComponent {
+
+  @Input('isDirectMessage') masterName: boolean;
 
   isApp: boolean;
   time: number;
   timer: number;
+  isDM: boolean;
 
   constructor(public events: Events,
     public audioRecorder: AudioRecorder,
@@ -26,20 +30,20 @@ export class AudioRecorderComponent {
     public config: Config,
     public viewCtrl: ViewController
     ) {
-
   }
 
-  ngOnInit() {
+  ngOnInit(e) {
     console.log('ngOnInit AudioRecorderComponent');
     this.isApp = this.config.get('isApp');
   }
 
   presentEditVocalModal() {
-    let editVocalModal = this.modalCtrl.create(ModalEditVocalPage, {duration: this.time});
+    let editVocalModal = this.modalCtrl.create(ModalEditVocalPage, {duration: this.time, isDM:this.isDM});
     editVocalModal.present();
   }
 
-  startRecording() {
+  startRecording(isDM:boolean) {
+    this.isDM = isDM;
     this.events.publish('record:start');
     this.time = 0;
     this.timer = setInterval(() => {

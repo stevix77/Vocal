@@ -42,6 +42,7 @@ export class MessagePage {
   messUser: string;
   file: MediaObject;
   uid: String;
+  isDirectMessage: boolean = true;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
