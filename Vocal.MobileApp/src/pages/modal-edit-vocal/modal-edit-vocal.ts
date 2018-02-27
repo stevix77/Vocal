@@ -18,6 +18,9 @@ import { AudioFiltersPage } from '../../pages/audio-filters/audio-filters';
 export class ModalEditVocalPage {
 
   tab1Filters = AudioFiltersPage;
+  isSending: Boolean = false;
+  FileValue: string;
+  Friends: Array<any>;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
@@ -63,9 +66,57 @@ export class ModalEditVocalPage {
 
   goToSendVocal() {
     if(this.navParams.get('isDM')) {
-      console.log('direct message');
+      this.sendVocal();
     } else {
       this.navCtrl.push(SendVocalPage, {duration:this.navParams.get('duration')});
+    }
+  }
+
+  sendVocal() {
+    if(!this.isSending) {
+      this.isSending = true;
+      let users = [];
+      this.audioRecorder.getFile().then(fileValue => {
+        console.log(fileValue);
+        this.FileValue = fileValue;
+        this.Friends.forEach(elt => {
+        if(elt.Checked)
+          users.push(elt.Id);
+        });
+        let date = new Date();
+        let request: SendMessageRequest = {
+          content: this.FileValue,
+          duration: this.navParams.get('duration'),
+          sentTime: date,
+          idsRecipient: users,
+          messageType: MessageType.Vocal,
+          Lang: params.Lang,
+          idSender: params.User.Id,
+          IdTalk: null,
+          platform: params.Platform
+        };
+        let urlSendVocal = url.SendMessage();
+        let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
+        this.httpService.Post(urlSendVocal, request, cookie).subscribe(
+          resp => {
+            let response = resp.json() as Response<SendMessageResponse>;
+            if(!response.HasError && response.Data.IsSent) {
+              console.log(response);
+              this.talkService.LoadList().then(() => {
+                this.talkService.UpdateList(response.Data.Talk);
+                this.talkService.SaveList();
+                this.navCtrl.remove(0,1).then(() => this.navCtrl.pop());
+              })
+            }
+            else {
+              console.log(response);
+            }
+          }
+        );
+      }).catch(err => {
+        console.log(err);
+        this.exceptionService.Add(err);
+      });
     }
   }
 

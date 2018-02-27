@@ -31,18 +31,19 @@ import { Media, MediaObject } from '@ionic-native/media';
 export class MessagePage {
   
   model = { Message: "", talkId: null, userId: null }
-  VocalName: string = "";
-  Picture: string = "";
+  VocalName: String = "";
+  Picture: String = "";
   Messages: Array<MessageResponse> = new Array<MessageResponse>();
-  isApp: boolean;
-  isRecording: boolean = false;
-  isTiming: boolean = false;
+  isApp: Boolean;
+  isRecording: Boolean = false;
+  isTiming: Boolean = false;
   timer: Timer;
   time: String = '0:00';
-  messUser: string;
+  messUser: String;
   file: MediaObject;
   uid: String;
-  isDirectMessage: boolean = true;
+  isDirectMessage: Boolean = true;
+  userDMid: String;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
