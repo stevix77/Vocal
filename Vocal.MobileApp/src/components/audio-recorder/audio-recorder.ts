@@ -12,16 +12,18 @@ import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-voca
 @Component({
   selector: 'audio-recorder',
   templateUrl: 'audio-recorder.html',
-  inputs: ['isDirectMessage']
+  inputs: ['isDirectMessage', 'recipients']
 })
 export class AudioRecorderComponent {
 
-  @Input('isDirectMessage') masterName: boolean;
+  @Input('isDirectMessage') dmName: boolean;
+  @Input('recipients') recipientsName: boolean;
 
   isApp: boolean;
   time: number;
   timer: number;
   isDM: boolean;
+  recipients: boolean;
 
   constructor(public events: Events,
     public audioRecorder: AudioRecorder,
@@ -38,12 +40,11 @@ export class AudioRecorderComponent {
   }
 
   presentEditVocalModal() {
-    let editVocalModal = this.modalCtrl.create(ModalEditVocalPage, {duration: this.time, isDM:this.isDM});
+    let editVocalModal = this.modalCtrl.create(ModalEditVocalPage, {duration: this.time, isDM:this.dmName, recipients: this.recipientsName});
     editVocalModal.present();
   }
 
-  startRecording(isDM:boolean) {
-    this.isDM = isDM;
+  startRecording() {
     this.events.publish('record:start');
     this.time = 0;
     this.timer = setInterval(() => {

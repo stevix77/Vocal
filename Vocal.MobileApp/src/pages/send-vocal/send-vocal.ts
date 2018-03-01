@@ -59,8 +59,9 @@ export class SendVocalPage {
       this.audioRecorder.getFile().then(fileValue => {
         this.FileValue = fileValue;
         this.Friends.forEach(elt => {
-        if(elt.Checked)
-          users.push(elt.Id);
+          if(elt.Checked) {
+            users.push(elt.Id);
+          }
         });
         let date = new Date();
         let request: SendMessageRequest = {

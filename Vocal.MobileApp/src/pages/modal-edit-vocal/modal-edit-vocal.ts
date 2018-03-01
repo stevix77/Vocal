@@ -3,6 +3,16 @@ import { IonicPage, NavController, NavParams, ViewController, AlertController, E
 import { AudioRecorder } from '../../services/audiorecorder';
 import { SendVocalPage } from '../../pages/send-vocal/send-vocal';
 import { AudioFiltersPage } from '../../pages/audio-filters/audio-filters';
+import { SendMessageRequest } from '../../models/request/sendMessageRequest';
+import { MessageType } from '../../models/enums';
+import { params } from "../../services/params";
+import { url } from "../../services/url";
+import { CookieService } from "../../services/cookieService";
+import { HttpService } from "../../services/httpService";
+import { TalkService } from "../../services/talkService";
+import { ExceptionService } from "../../services/exceptionService";
+import { SendMessageResponse } from '../../models/response/sendMessageResponse';
+import { Response } from '../../models/response';
 
 /**
  * Generated class for the ModalEditVocalPage page.
@@ -27,7 +37,11 @@ export class ModalEditVocalPage {
     public viewCtrl: ViewController,
     public audioRecorder: AudioRecorder,
     public alertCtrl: AlertController,
-    public events: Events
+    public events: Events,
+    private cookieService: CookieService,
+    private httpService: HttpService,
+    private talkService: TalkService,
+    private exceptionService: ExceptionService
     ) {
     this.viewCtrl.onDidDismiss( () => this.events.publish('edit-vocal:close') );
   }
@@ -73,50 +87,50 @@ export class ModalEditVocalPage {
   }
 
   sendVocal() {
+    console.log('send vocal');
     if(!this.isSending) {
       this.isSending = true;
-      let users = [];
-      this.audioRecorder.getFile().then(fileValue => {
-        console.log(fileValue);
-        this.FileValue = fileValue;
-        this.Friends.forEach(elt => {
-        if(elt.Checked)
-          users.push(elt.Id);
-        });
-        let date = new Date();
-        let request: SendMessageRequest = {
-          content: this.FileValue,
-          duration: this.navParams.get('duration'),
-          sentTime: date,
-          idsRecipient: users,
-          messageType: MessageType.Vocal,
-          Lang: params.Lang,
-          idSender: params.User.Id,
-          IdTalk: null,
-          platform: params.Platform
-        };
-        let urlSendVocal = url.SendMessage();
-        let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
-        this.httpService.Post(urlSendVocal, request, cookie).subscribe(
-          resp => {
-            let response = resp.json() as Response<SendMessageResponse>;
-            if(!response.HasError && response.Data.IsSent) {
-              console.log(response);
-              this.talkService.LoadList().then(() => {
-                this.talkService.UpdateList(response.Data.Talk);
-                this.talkService.SaveList();
-                this.navCtrl.remove(0,1).then(() => this.navCtrl.pop());
-              })
-            }
-            else {
-              console.log(response);
-            }
-          }
-        );
-      }).catch(err => {
-        console.log(err);
-        this.exceptionService.Add(err);
-      });
+      // let users = [];
+      // this.audioRecorder.getFile().then(fileValue => {
+      //   this.FileValue = fileValue;
+      //   this.Friends.forEach(elt => {
+      //   if(elt.Checked)
+      //     users.push(elt.Id);
+      //   });
+      //   let date = new Date();
+      //   let request: SendMessageRequest = {
+      //     content: this.FileValue,
+      //     duration: this.navParams.get('duration'),
+      //     sentTime: date,
+      //     idsRecipient: users,
+      //     messageType: MessageType.Vocal,
+      //     Lang: params.Lang,
+      //     idSender: params.User.Id,
+      //     IdTalk: null,
+      //     platform: params.Platform
+      //   };
+      //   let urlSendVocal = url.SendMessage();
+      //   let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
+      //   this.httpService.Post(urlSendVocal, request, cookie).subscribe(
+      //     resp => {
+      //       let response = resp.json() as Response<SendMessageResponse>;
+      //       if(!response.HasError && response.Data.IsSent) {
+      //         console.log(response);
+      //         this.talkService.LoadList().then(() => {
+      //           this.talkService.UpdateList(response.Data.Talk);
+      //           this.talkService.SaveList();
+      //           this.navCtrl.remove(0,1).then(() => this.navCtrl.pop());
+      //         })
+      //       }
+      //       else {
+      //         console.log(response);
+      //       }
+      //     }
+      //   );
+      // }).catch(err => {
+      //   console.log(err);
+      //   this.exceptionService.Add(err);
+      // });
     }
   }
 

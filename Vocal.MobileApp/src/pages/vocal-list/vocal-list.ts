@@ -37,6 +37,7 @@ export class VocalListPage {
   timer: Timer;
   time: String = '';
   isDirectMessage: boolean = false;
+  uRecipients: Array<string>;
   
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -241,8 +242,8 @@ export class VocalListPage {
     );
   }
 
-  goToMessage(id) {
-    this.navCtrl.push(MessagePage, {TalkId: id}, {'direction':'back'});
+  goToMessage(id, users) {
+    this.navCtrl.push(MessagePage, {TalkId: id, Users:users}, {'direction':'back'});
   }
   
 }

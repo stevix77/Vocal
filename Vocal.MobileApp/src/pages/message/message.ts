@@ -31,19 +31,19 @@ import { Media, MediaObject } from '@ionic-native/media';
 export class MessagePage {
   
   model = { Message: "", talkId: null, userId: null }
-  VocalName: String = "";
-  Picture: String = "";
+  VocalName: string = "";
+  Picture: string = "";
   Messages: Array<MessageResponse> = new Array<MessageResponse>();
-  isApp: Boolean;
-  isRecording: Boolean = false;
-  isTiming: Boolean = false;
+  isApp: boolean;
+  isRecording: boolean = false;
+  isTiming: boolean = false;
   timer: Timer;
-  time: String = '0:00';
-  messUser: String;
+  time: string = '0:00';
+  messUser: string;
   file: MediaObject;
-  uid: String;
-  isDirectMessage: Boolean = true;
-  userDMid: String;
+  uid: string;
+  isDirectMessage: boolean = true;
+  uRecipients: Array<string> = [];
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
@@ -59,6 +59,9 @@ export class MessagePage {
     this.model.userId = this.navParams.get("UserId");
     this.uid = params.User.Id;
     
+    let users = this.navParams.get("Users");
+    this.uRecipients = users.filter(user => user.Id != this.uid);
+
     this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj.Message))
     events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.beginTalk(obj))
     events.subscribe(HubMethod[HubMethod.EndTalk], (obj) => this.endTalk())
