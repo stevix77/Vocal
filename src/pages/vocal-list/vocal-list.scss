@@ -1,0 +1,6 @@
+page-vocal-list ion-header{
+  transition: transform 0.5s;
+  &.anime-hide{
+    transform: translateY(-100%);
+  }
+}

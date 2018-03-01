@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="settings"></ion-icon>
+    </button>
+    <ion-title>{{pageTitle}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-label item-center>
+    {{pageLabel}}
+  </ion-label>
+  <ion-list inset>
+    <button ion-item [color]="item.IsChecked ? 'secondary': ''" *ngFor="let item of list" (click)="ItemSelected(item)">
+    {{ item.Label }}
+    </button>
+</ion-list>
+</ion-content>

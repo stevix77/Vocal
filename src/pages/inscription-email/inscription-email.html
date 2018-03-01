@@ -1,0 +1,34 @@
+<!--
+  Generated template for the InscriptionEmailPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+    <ion-navbar color="primary">
+      <ion-title>Inscription</ion-title>
+    </ion-navbar>
+  </ion-header>
+
+<div *ngIf="model">{{model.ErrorEmail}}</div>
+<ion-content no-padding text-center>
+  <div class="header-form">
+    <h2>Quelle est votre adresse e-mail ?</h2>
+  </div>
+<form #form="ngForm" (ngSubmit)="submit(form)" novalidate >
+  <ion-list>
+
+    <ion-item no-padding>
+      <ion-label stacked>Adresse e-mail</ion-label>
+      <ion-input type="email" required name="Email" [(ngModel)]="model.Email" ngControl="Email"></ion-input>
+    </ion-item>
+
+  </ion-list>
+
+  <div margin>
+    <button round ion-button type="submit" [disabled]="!form.valid">Continuer</button>
+  </div>
+
+</form>
+
+</ion-content>

@@ -1,0 +1,17 @@
+.wrapper-record{
+  text-align: center;
+  
+  .timer{
+    margin-top: 38vh;
+    transform: translateY(-50%);
+    span{
+      font-size: 22vw;
+      color: #99999A;
+    }
+  }
+
+  .subtitle{
+    font-size: 3.6vw;
+    color: $grey;
+  }
+}

@@ -1,0 +1,249 @@
+import { TalkService } from './../../services/talkService';
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams, AlertController, Events, ViewController, ModalController, Config } from 'ionic-angular';
+import { HttpService } from "../../services/httpService";
+import { CookieService } from "../../services/cookieService";
+import { TalkResponse } from '../../models/response/talkResponse';
+import { ActionResponse } from '../../models/response/actionResponse';
+import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
+import { HubMethod } from '../../models/enums';
+import { MessagePage } from '../message/message';
+import { params } from '../../services/params';
+import { Response } from '../../models/Response';
+import { url } from '../../services/url';
+import { Timer } from '../../services/timer';
+import { DeleteTalkRequest } from '../../models/request/deleteTalkRequest';
+import { ArchiveTalkRequest } from '../../models/request/archiveTalkRequest';
+
+
+/**
+ * Generated class for the VocalListPage page.
+ *
+ * See http://ionicframework.com/docs/components/#navigation for more info
+ * on Ionic pages and navigation.
+ */
+@IonicPage()
+@Component({
+  selector: 'page-vocal-list',
+  templateUrl: 'vocal-list.html'
+})
+export class VocalListPage {
+  notificationHub : any;
+  messagePage = MessagePage;
+  vocalList: Array<TalkResponse> = new Array<TalkResponse>();
+  isApp: boolean;
+  isRecording: boolean = false;
+  isTiming: boolean = false;
+  timer: Timer;
+  time: String = '';
+  isDirectMessage: boolean = false;
+  uRecipients: Array<string>;
+  
+  constructor(public navCtrl: NavController, 
+    public navParams: NavParams, 
+    public alertCtrl: AlertController, 
+    public viewCtrl: ViewController,
+    public modalCtrl: ModalController,
+    public events: Events,
+    public config: Config,
+    private httpService: HttpService, 
+    private cookieService: CookieService, 
+    private talkService: TalkService) {
+
+    events.subscribe(HubMethod[HubMethod.Receive], () => this.initialize())
+    this.isApp = this.config.get('isApp');
+    
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad VocalListPage');
+    if(this.navCtrl.length() > 1) {
+      this.navCtrl.remove(0, this.navCtrl.length() - 1).then(() => {
+        this.navCtrl.setRoot(VocalListPage);
+      });
+    } 
+
+    this.events.subscribe('record:start', () => {
+      this.toggleRecording();
+      this.toggleTiming();
+    });
+    this.events.subscribe('edit-vocal:open', () => this.toggleTiming());
+    this.events.subscribe('edit-vocal:close', () => this.toggleRecording());
+
+  }
+
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter VocalListPage');
+    this.initialize();
+  }
+
+  toggleRecording() {
+    this.isRecording = !this.isRecording;
+    if(!this.isRecording) this.initialize();
+  }
+  
+  toggleTiming() {
+    this.isTiming = !this.isTiming;
+    if(this.isTiming) this.startTimer();
+  }
+
+  startTimer() {
+    this.time = '0:00';
+    this.timer = new Timer(this.events);
+    this.events.subscribe('update:timer', timeFromTimer => {
+      this.time = timeFromTimer;
+    });
+    this.events.subscribe('record:stop', () => this.stopTimer());
+  }
+
+  stopTimer() {
+    this.timer.stopTimer();
+  }
+
+  showProfile() {
+    let profileModal = this.modalCtrl.create(ModalProfilePage);
+    profileModal.present();
+  }
+
+  showAlert(message) {
+    let alert = this.alertCtrl.create({
+      title: 'Error',
+      subTitle: message,
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+
+  getVocalList() {
+    let request = {Lang: params.Lang, UserId: params.User.Id}
+    let urlTalks = url.GetTalkList();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlTalks, params.User);
+    this.httpService.Post(urlTalks, request, cookie).subscribe(
+      resp => {
+        let response = resp.json() as Response<Array<TalkResponse>>;
+        if(response.HasError)
+          this.showAlert(response.ErrorMessage)
+        else {
+          if(response.Data.length > 0) {
+            this.vocalList = this.talkService.Talks = response.Data;
+            this.formatDateMessage(this.vocalList);
+            this.talkService.SaveList();
+          }
+        }
+      }
+    );
+  }
+
+  formatDateMessage(items){
+    items.forEach(item => {
+      if(item.DateLastMessage && typeof(item.DateLastMessage) != 'object') {
+        item.DateLastMessage = this.getFormattedDateLastMessage(item.DateLastMessage);
+      }
+      if(item.Users.length == 2) {
+        item.Users.forEach(user => {
+          if(user.Id != params.User.Id) item.Picture = user.Picture;
+        });
+      }
+    });
+  }
+
+  getFormattedDateLastMessage(msgTime) {
+    let msgDate = new Date(msgTime);
+    let now = new Date();
+    let isToday = false;
+    let isYesterday = false;
+    let isWeek = false;
+
+    // If today, we display HH:ss
+    if(msgDate.getDate() == now.getDate()) {
+      isToday = true;
+    }
+    // If yesterday, we display "Yesterday"
+    if(msgDate.getDate() != now.getDate() && msgDate < now) {
+      let tmp = new Date(msgDate);
+      tmp.setDate(tmp.getDate() + 1);
+      if(tmp.getDate() == now.getDate()) {
+        isYesterday = true;
+      }
+    }
+    // If less than a week, we display the day, like "Monday"
+    if(msgDate.getDate() != now.getDate() && msgDate < now) {
+      for(let i = 2; i < 7; i++) {
+        let tmp = new Date(msgDate);
+        tmp.setDate(tmp.getDate() + i);
+        if(tmp.getDate() == now.getDate()) {
+          isWeek = true;
+        }
+      }
+    }
+
+    return {isToday: isToday, isYesterday: isYesterday, isWeek: isWeek, date:msgTime};
+  }
+
+  initialize() {
+    this.talkService.LoadList().then(() => {
+      if(this.talkService.Talks != null) {
+        this.vocalList = this.talkService.Talks;
+        if(this.vocalList.length > 0) {
+          this.formatDateMessage(this.vocalList);
+        }
+      }
+      else {  
+        this.getVocalList();
+      }
+    });
+  }
+
+  deleteMessage(id, index){
+    let itemIndex = index;
+    let request: DeleteTalkRequest = {
+      Lang: params.Lang,
+      IdSender: params.User.Id,
+      IdTalk: id,
+      SentTime: new Date()
+    };
+    let urlDelete = url.DeleteTalk();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlDelete, params.User);
+    this.httpService.Post<DeleteTalkRequest>(urlDelete, request, cookie).subscribe(
+      resp => {
+        let response = resp.json() as Response<ActionResponse>;
+        if(!response.HasError && response.Data.IsDone){
+          this.talkService.DeleteTalk(this.vocalList[itemIndex]);
+          this.vocalList.splice(itemIndex, 1);
+        }
+        else {
+          this.showAlert(response.ErrorMessage);
+        }
+      }
+    );
+  }
+
+  archiveMessage(id, index){
+    let itemIndex = index;
+    let request: ArchiveTalkRequest = {
+      Lang: params.Lang,
+      IdSender: params.User.Id,
+      IdTalk: id,
+      SentTime: new Date()
+    };
+    let urlArchive = url.ArchiveTalk();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlArchive, params.User);
+    this.httpService.Post<ArchiveTalkRequest>(urlArchive, request, cookie).subscribe(
+      resp => {
+        let response = resp.json() as Response<ActionResponse>;
+        if(!response.HasError && response.Data.IsDone){
+          this.talkService.DeleteTalk(this.vocalList[itemIndex]);
+          this.vocalList.splice(itemIndex, 1);
+        }
+        else {
+          this.showAlert(response.ErrorMessage);
+        }
+      }
+    );
+  }
+
+  goToMessage(id, users) {
+    this.navCtrl.push(MessagePage, {TalkId: id, Users:users}, {'direction':'back'});
+  }
+  
+}

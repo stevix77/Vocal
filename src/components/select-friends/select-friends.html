@@ -1,0 +1,11 @@
+<!-- Generated template for the SelectFriendsComponent component -->
+<div>
+  <!-- {{text}} -->
+  <h2>Best friends</h2>
+  <ion-list inset>
+    <ion-item *ngFor="let item of Friends">
+      <ion-label>{{item.Username}}</ion-label>
+      <ion-checkbox item-end [(ngModel)]="item.Checked"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+</div>

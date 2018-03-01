@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="settings"></ion-icon>
+    </button>
+    <ion-title>Réglages</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+
+    <ion-item>
+      <ion-label>Name</ion-label>
+      <ion-label pull-right>{{ model.Settings.Name }}</ion-label>
+    </ion-item>
+    <a ion-item (click)="SettingsChoices(0, model.Settings.Genders)">
+      Je suis
+    </a>
+    <!-- <ion-item>
+      <ion-label>Mail</ion-label>
+      <ion-label item-right>{{ model.Settings.Email }}</ion-label>
+    </ion-item> -->
+    <a ion-item (click)="SettingsMail()">
+      Mail <span pull-right>{{model.Settings.Email}}</span>
+    </a>
+    <ion-item>
+      <ion-label>BirthdayDate</ion-label>
+      <ion-label pull-right>{{ model.Settings.BirthdayDate | date : 'dd/MM/yyyy' }}</ion-label>
+    </ion-item>
+    <a ion-item (click)="SettingsChoices(3, model.Settings.Contacts)">
+      Contact me
+    </a>
+    <a ion-item (click)="SettingsChoices(4, model.Settings.Notifs)">
+      Notifications
+    </a>
+
+    <a ion-item (click)="showConfirmLogout()">
+      Déconnexion
+    </a>
+
+    </ion-list>
+</ion-content>

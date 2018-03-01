@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "crypto-js": "registry:dt/crypto-js#3.1.4+20170125080350"
+  },
+  "globalDependencies": {
+    "jquery": "registry:dt/jquery#1.10.0+20170310222111"
+  }
+}
