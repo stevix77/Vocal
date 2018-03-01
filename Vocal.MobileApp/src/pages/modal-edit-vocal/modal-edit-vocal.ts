@@ -90,47 +90,48 @@ export class ModalEditVocalPage {
     console.log('send vocal');
     if(!this.isSending) {
       this.isSending = true;
-      // let users = [];
-      // this.audioRecorder.getFile().then(fileValue => {
-      //   this.FileValue = fileValue;
-      //   this.Friends.forEach(elt => {
-      //   if(elt.Checked)
-      //     users.push(elt.Id);
-      //   });
-      //   let date = new Date();
-      //   let request: SendMessageRequest = {
-      //     content: this.FileValue,
-      //     duration: this.navParams.get('duration'),
-      //     sentTime: date,
-      //     idsRecipient: users,
-      //     messageType: MessageType.Vocal,
-      //     Lang: params.Lang,
-      //     idSender: params.User.Id,
-      //     IdTalk: null,
-      //     platform: params.Platform
-      //   };
-      //   let urlSendVocal = url.SendMessage();
-      //   let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
-      //   this.httpService.Post(urlSendVocal, request, cookie).subscribe(
-      //     resp => {
-      //       let response = resp.json() as Response<SendMessageResponse>;
-      //       if(!response.HasError && response.Data.IsSent) {
-      //         console.log(response);
-      //         this.talkService.LoadList().then(() => {
-      //           this.talkService.UpdateList(response.Data.Talk);
-      //           this.talkService.SaveList();
-      //           this.navCtrl.remove(0,1).then(() => this.navCtrl.pop());
-      //         })
-      //       }
-      //       else {
-      //         console.log(response);
-      //       }
-      //     }
-      //   );
-      // }).catch(err => {
-      //   console.log(err);
-      //   this.exceptionService.Add(err);
-      // });
+      console.table(this.navParams.get('recipients'));
+      let users = [];
+      this.audioRecorder.getFile().then(fileValue => {
+        this.FileValue = fileValue;
+        this.navParams.get('recipients').forEach(elt => {
+          users.push(elt.Id);
+        });
+        let date = new Date();
+        let request: SendMessageRequest = {
+          content: this.FileValue,
+          duration: this.navParams.get('duration'),
+          sentTime: date,
+          idsRecipient: users,
+          messageType: MessageType.Vocal,
+          Lang: params.Lang,
+          idSender: params.User.Id,
+          IdTalk: null,
+          platform: params.Platform
+        };
+        let urlSendVocal = url.SendMessage();
+        let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
+        this.httpService.Post(urlSendVocal, request, cookie).subscribe(
+          resp => {
+            let response = resp.json() as Response<SendMessageResponse>;
+            if(!response.HasError && response.Data.IsSent) {
+              console.log(response);
+              this.talkService.LoadList().then(() => {
+                this.talkService.UpdateList(response.Data.Talk);
+                this.talkService.SaveList();
+                this.navCtrl.pop()
+                //this.navCtrl.remove(0,1).then(() => this.navCtrl.pop());
+              })
+            }
+            else {
+              console.log(response);
+            }
+          }
+        );
+      }).catch(err => {
+        console.log(err);
+        this.exceptionService.Add(err);
+      });
     }
   }
 
