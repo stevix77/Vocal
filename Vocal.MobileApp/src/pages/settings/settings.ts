@@ -9,7 +9,7 @@ import { TalkService } from "../../services/talkService";
 import { SettingsResponse } from '../../models/response/settingsResponse';
 import { KeyStore } from '../../models/enums'; 
 import { Response } from '../../models/response';
-import { Request } from "../../models/request/Request";
+import { Request } from "../../models/request/request";
 import { SettingsChoices } from './settingsChoices/settingsChoices';
 import { SettingsMail } from './settingsMail/settingsMail';
 import { HomePage } from "../home/home";

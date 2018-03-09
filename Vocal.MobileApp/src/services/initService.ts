@@ -8,7 +8,7 @@ import { url } from "./url";
 import { CookieService } from "./cookieService";
 import { HttpService } from "./httpService";
 import { Response } from "../models/response";
-import { InitResponse } from "../models/response/initResponse";
+import { InitResponse } from "../models/response/InitResponse";
 import { ExceptionService } from "./exceptionService";
 import { Events } from "ionic-angular";
 

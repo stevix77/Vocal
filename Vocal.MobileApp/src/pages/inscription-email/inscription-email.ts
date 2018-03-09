@@ -5,7 +5,7 @@ import {url} from '../../services/url';
 import {HttpService} from '../../services/httpService';
 import { params } from '../../services/params';
 import { RegisterRequest } from '../../models/request/registerRequest';
-import { UserExistsRequest } from '../../models/request/userExistsRequest';
+import { UserExistsRequest } from '../../models/request/UserExistsRequest';
 import { Response } from '../../models/response';
 
 /**
