@@ -15,7 +15,7 @@ import { PasswordForgotPage } from '../passwordForgot/passwordForgot';
 import { ExceptionService } from "../../services/exceptionService";
 import { KeyStore } from "../../models/enums";
 import { InitService } from "../../services/initService";
-import { InitResponse } from "../../models/response/initResponse";
+import { InitResponse } from "../../models/response/InitResponse";
 
 @Component({
   selector: 'page-connexion',
