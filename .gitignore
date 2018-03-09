@@ -261,14 +261,14 @@ __pycache__/
 *.pyc
 
 # App build
-/Vocal.MobileApp/www
-/Vocal.MobileApp/platforms
-/Vocal.MobileApp/plugins
+Vocal.MobileApp/www
+Vocal.MobileApp/platforms
+Vocal.MobileApp/plugins
 
 
 
 # File System Mac
 *.DS_Store
-/Vocal.MobileApp/package-lock.json
+Vocal.MobileApp/package-lock.json
 
-/Vocal.MobileApp/.sourcemaps
+Vocal.MobileApp/.sourcemaps
