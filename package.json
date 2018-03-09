@@ -5,7 +5,6 @@
     "homepage": "http://ionicframework.com/",
     "private": true,
     "scripts": {
-        "install": "cd ./ && npm install",
         "clean": "ionic-app-scripts clean",
         "build": "ionic-app-scripts build --prod",
         "lint": "ionic-app-scripts lint",
