@@ -1,0 +1,6 @@
+{
+  "scripts": {
+      "install": "cd ./Vocal.MobileApp && npm install",
+      "build": "cd ./Vocal.MobileApp && ./node_modules/.bin/ionic-app-scripts build --prod --wwwDir ./../../www"
+  }
+}
