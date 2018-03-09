@@ -1,5 +1,5 @@
 import {AppUser} from '../models/appUser'
-import {KeyValueResponse} from '../models/response/KeyValueResponse'
+import {KeyValueResponse} from '../models/response/keyValueResponse'
 export 
 var params = {
     Salt: "Z4YQN?K/%.7",

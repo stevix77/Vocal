@@ -1,14 +1,14 @@
 import { StoreService } from './storeService';
 import { Injectable } from "@angular/core";
 import { KeyStore } from "../models/enums";
-import { KeyValueResponse } from "../models/response/KeyValueResponse";
-import { Request } from "../models/request/Request";
+import { KeyValueResponse } from "../models/response/keyValueResponse";
+import { Request } from "../models/request/request";
 import { params } from "./params";
 import { url } from "./url";
 import { CookieService } from "./cookieService";
 import { HttpService } from "./httpService";
-import { Response } from "../models/Response";
-import { InitResponse } from "../models/response/InitResponse";
+import { Response } from "../models/response";
+import { InitResponse } from "../models/response/initResponse";
 import { ExceptionService } from "./exceptionService";
 import { Events } from "ionic-angular";
 

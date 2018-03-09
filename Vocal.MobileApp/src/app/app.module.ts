@@ -16,8 +16,8 @@ import { InscriptionFindFriendsPage } from '../pages/inscription-find-friends/in
 import { VocalListPage } from '../pages/vocal-list/vocal-list';
 import { SettingsPage } from '../pages/settings/settings';
 
-import { SettingsChoices } from '../pages/settings/settingsChoices/SettingsChoices';
-import { SettingsMail } from '../pages/settings/settingsMail/SettingsMail';
+import { SettingsChoices } from '../pages/settings/settingsChoices/settingsChoices';
+import { SettingsMail } from '../pages/settings/settingsMail/settingsMail';
 
 import { AudioRecorderComponent } from '../components/audio-recorder/audio-recorder';
 import { ModalEditVocalPage } from '../pages/modal-edit-vocal/modal-edit-vocal';

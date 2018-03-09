@@ -4,7 +4,7 @@ import { MessageResponse } from './../../models/response/messageResponse';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, Events, Config } from 'ionic-angular';
 import { params } from '../../services/params';
-import { Response } from '../../models/Response';
+import { Response } from '../../models/response';
 import { SendMessageRequest } from '../../models/request/sendMessageRequest';
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
 import { url } from '../../services/url';

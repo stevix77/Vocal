@@ -1,8 +1,9 @@
-import {Request} from './Request';
+import {Request} from './request';
 
 export class MessageRequest extends Request {
     TalkId: string;
-    MessageId: string
+    MessageId: string;
+    Lang:string;
 
     constructor(talkId: string, messageId : string, lang: string) {
         super();

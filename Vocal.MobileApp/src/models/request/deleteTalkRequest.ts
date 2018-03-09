@@ -1,10 +1,11 @@
-import {Request} from './Request';
+import {Request} from './request';
 
 export class DeleteTalkRequest extends Request {
 
     SentTime: Date;
     IdTalk: string;
     IdSender : string;
+    Lang: string;
 
     constructor(idSender, idTalk) {
         super();

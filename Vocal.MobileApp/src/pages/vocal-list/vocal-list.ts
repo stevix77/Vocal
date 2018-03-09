@@ -9,7 +9,7 @@ import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
 import { HubMethod } from '../../models/enums';
 import { MessagePage } from '../message/message';
 import { params } from '../../services/params';
-import { Response } from '../../models/Response';
+import { Response } from '../../models/response';
 import { url } from '../../services/url';
 import { Timer } from '../../services/timer';
 import { DeleteTalkRequest } from '../../models/request/deleteTalkRequest';

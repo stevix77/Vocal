@@ -2,7 +2,7 @@ import { TalkResponse } from './../models/response/talkResponse';
 import { StoreService } from './storeService';
 import { Injectable } from "@angular/core";
 import { KeyStore } from "../models/enums";
-import { KeyValueResponse } from "../models/response/KeyValueResponse";
+import { KeyValueResponse } from "../models/response/keyValueResponse";
 import { MessageResponse } from "../models/response/messageResponse";
   
 /**

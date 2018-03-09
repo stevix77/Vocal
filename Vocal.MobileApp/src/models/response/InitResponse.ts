@@ -1,7 +1,7 @@
-import {SettingsResponse} from './SettingsResponse';
-import {UserResponse} from './UserResponse';
-import {TalkResponse} from './TalkResponse';
-import {KeyValueResponse} from './KeyValueResponse';
+import {SettingsResponse} from './settingsResponse';
+import {UserResponse} from './userResponse';
+import {TalkResponse} from './talkResponse';
+import {KeyValueResponse} from './keyValueResponse';
 
 export class InitResponse{
     Settings: SettingsResponse;

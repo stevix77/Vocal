@@ -1,4 +1,4 @@
-import {Request} from './Request';
+import {Request} from './request';
 
 export class SendMessageRequest extends Request {
 
@@ -10,6 +10,7 @@ export class SendMessageRequest extends Request {
     messageType : number;
     idSender : string;
     idsRecipient : Array<string> = [];
+    Lang: string;
 
     constructor(idSender, IdTalk, content, messageType, idsRecipient) {
         super();

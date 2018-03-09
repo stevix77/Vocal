@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { NavController, ToastController, Events } from 'ionic-angular';
 import { StoreService } from '../../services/storeService';
 import {params} from '../../services/params';
-import { Response } from '../../models/Response';
-import { UserResponse } from '../../models/response/UserResponse';
-import { LoginRequest } from '../../models/request/LoginRequest';
+import { Response } from '../../models/response';
+import { UserResponse } from '../../models/response/userResponse';
+import { LoginRequest } from '../../models/request/loginRequest';
 import { AppUser } from '../../models/appUser';
 import {functions} from '../../services/functions';
 import {url} from '../../services/url';
@@ -15,7 +15,7 @@ import { PasswordForgotPage } from '../passwordForgot/passwordForgot';
 import { ExceptionService } from "../../services/exceptionService";
 import { KeyStore } from "../../models/enums";
 import { InitService } from "../../services/initService";
-import { InitResponse } from "../../models/response/InitResponse";
+import { InitResponse } from "../../models/response/initResponse";
 
 @Component({
   selector: 'page-connexion',

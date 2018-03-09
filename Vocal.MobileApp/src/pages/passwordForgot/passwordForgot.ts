@@ -3,7 +3,7 @@ import { NavController } from 'ionic-angular';
 import {url} from '../../services/url';
 import {HttpService} from '../../services/httpService';
 import {params} from '../../services/params';
-import { Response } from '../../models/Response';
+import { Response } from '../../models/response';
 import { PasswordRequest } from '../../models/request/passwordRequest';
 import { PasswordForgotValidationPage } from '../password-forgot-validation/password-forgot-validation';
 import { ToastController } from 'ionic-angular';
