@@ -31,7 +31,7 @@ namespace Vocal.DAL
 
         public static Repository Init(DbContext config)
         {
-            if(_instance != null)
+            if (_instance != null)
             {
                 return _instance;
             }
@@ -132,7 +132,7 @@ namespace Vocal.DAL
         public User GetUserByUsername(string username)
         {
             var db = _db.GetCollection<User>(_config.CollectionUser);
-            var user = db.Find(x => x.Username.ToLower() == username).SingleOrDefault();
+            var user = db.Find(x => x.Username.ToLower() == username.ToLower()).SingleOrDefault();
             return user;
         }
 

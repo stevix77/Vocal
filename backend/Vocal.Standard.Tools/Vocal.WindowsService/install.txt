@@ -1,5 +1,0 @@
-installutil D:\Projets\Sporganisation\Sporganizer.WindowsService\Sporganizer.WindowsService\bin\Debug\Sporganizer.WindowsService.exe
-installutil -u D:\Projets\Sporganisation\Sporganizer.WindowsService\Sporganizer.WindowsService\bin\Debug\Sporganizer.WindowsService.exe
-cd C:\Windows\Microsoft.NET\Framework\v4.0.30319
-
-cd C:\Windows\Microsoft.NET\Framework\v2.0.50727

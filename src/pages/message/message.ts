@@ -224,8 +224,10 @@ export class MessagePage {
   }
 
   updateRoom(message) {
-    this.Messages.push(message);
-    //this.hubService.Invoke(HubMethod[HubMethod.UpdateListenUser], this.model.talkId)
+    if(!this.Messages.some(x => x.Id == message.Id)) {
+      this.Messages.push(message);
+      this.hubService.Invoke(HubMethod[HubMethod.UpdateListenUser], this.model.talkId, [message])
+    }
   }
 
   getMessage(messId: string) {

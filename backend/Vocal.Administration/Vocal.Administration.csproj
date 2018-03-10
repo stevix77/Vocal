@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vocal.Business\Vocal.Business.csproj" />
-    <ProjectReference Include="..\Vocal.Model\Vocal.Model.csproj" />
-    <ProjectReference Include="..\Vocal.Tools\Vocal.Tools.csproj" />
+    <ProjectReference Include="..\Vocal.Standard.Model\Vocal.Standard.Model.csproj" />
+    <ProjectReference Include="..\Vocal.Standard.Tools\Vocal.Standard.Tools.csproj" />
   </ItemGroup>
 </Project>

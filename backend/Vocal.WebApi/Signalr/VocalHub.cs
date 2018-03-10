@@ -50,15 +50,15 @@ namespace Vocal.WebApi.Signalr
         public void JoinTalk(string userId, string talkId)
         {
             var connectionsId = GetConnectionsId(userId);
-            if(connectionsId!=null)
-                foreach(var item in connectionsId)
+            if (connectionsId != null)
+                foreach (var item in connectionsId)
                     Groups.Add(item, talkId);
         }
 
         public void LeaveTalk(string userId, string talkId)
         {
             var connectionsId = _users[userId];
-            foreach(var item in connectionsId)
+            foreach (var item in connectionsId)
                 Groups.Remove(item, talkId);
         }
 
@@ -66,21 +66,21 @@ namespace Vocal.WebApi.Signalr
 
         public void Send(List<string> usersId, SendMessageResponse obj)
         {
-            foreach(var item in usersId)
+            foreach (var item in usersId)
                 JoinTalk(item, obj.Talk.Id);
             JoinTalk(obj.Message.User.Id, obj.Talk.Id);
             this.Clients.Group(obj.Talk.Id).Receive(obj);
         }
 
-        public void AddFriend(dynamic obj)
+        public void AddFriend(List<string> ids, string username)
         {
-            LogManager.LogDebug(obj);
-            foreach(var id in obj.list as List<string>)
+            LogManager.LogDebug(ids, username);
+            foreach (var id in ids)
             {
                 var connections = GetConnectionsId(id);
                 if (connections != null)
                     foreach (var item in connections)
-                        Clients.Client(item).AddFriend(obj.username);
+                        Clients.Client(item).AddFriend(username);
             }
         }
 
@@ -96,7 +96,7 @@ namespace Vocal.WebApi.Signalr
 
         public void UpdateListenUser(string talkId, List<MessageResponse> obj)
         {
-            Clients.Group(talkId).UpdateListenUser(obj);
+            Clients.Group(talkId, Context.ConnectionId).UpdateListenUser(obj);
         }
 
         #endregion
