@@ -70,11 +70,11 @@ export class VocalListPage {
     this.events.subscribe('edit-vocal:open', () => this.toggleTiming());
     this.events.subscribe('edit-vocal:close', () => this.toggleRecording());
 
+    this.initialize();
   }
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter VocalListPage');
-    this.initialize();
   }
 
   toggleRecording() {
