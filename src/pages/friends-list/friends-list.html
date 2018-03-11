@@ -27,7 +27,7 @@
         <h3>{{ friend.Username }}</h3>
       </ion-item>
       <ion-item-options side="right">
-        <button (click)="sendMessage(friend.Id)" ion-button icon-only><ion-icon name="chatboxes"></ion-icon></button>
+        <button (click)="goToMessage(friend.Id)" ion-button icon-only><ion-icon name="chatboxes"></ion-icon></button>
         <button (click)="showConfirm(friend.Id)" ion-button icon-only color="danger"><ion-icon name="trash"></ion-icon></button>
       </ion-item-options>
     </ion-item-sliding>

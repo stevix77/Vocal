@@ -96,8 +96,8 @@ export class FriendsListPage {
     );
   }
 
-  sendMessage(userId) {
-    this.navCtrl.push(MessagePage, {TalkId: null, UserId: userId})
+  goToMessage(userId) {
+    this.navCtrl.push(MessagePage, {TalkId: null, Users: [userId]})
   }
 
   showConfirm(userId) {
