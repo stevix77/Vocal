@@ -284,7 +284,9 @@ export class VocalApp {
     this.platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      this.statusBar.styleDefault();
+      this.statusBar.styleLightContent();
+      this.statusBar.backgroundColorByHexString('#4ecb63');
+      this.statusBar.overlaysWebView(false);
       this.splashScreen.hide();
       this.GetAllResources();
       this.SetLanguage();
