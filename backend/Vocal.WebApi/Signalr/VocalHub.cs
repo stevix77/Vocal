@@ -96,7 +96,7 @@ namespace Vocal.WebApi.Signalr
 
         public void UpdateListenUser(string talkId, List<MessageResponse> obj)
         {
-            Clients.Group(talkId, Context.ConnectionId).UpdateListenUser(obj);
+            Clients.Group(talkId, Context.ConnectionId).UpdateListenUser(obj); 
         }
 
         #endregion
