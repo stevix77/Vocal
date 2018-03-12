@@ -24,6 +24,7 @@ export class AudioRecorderComponent {
   timer: number;
   isDM: boolean;
   recipients: boolean;
+  isRecording: boolean = false;
 
   constructor(public events: Events,
     public audioRecorder: AudioRecorder,
@@ -46,6 +47,7 @@ export class AudioRecorderComponent {
 
   startRecording() {
     this.events.publish('record:start');
+    this.isRecording = true;
     this.time = 0;
     this.timer = setInterval(() => {
       this.time++;
@@ -60,6 +62,7 @@ export class AudioRecorderComponent {
 
   stopRecording() {
     this.events.publish('record:stop');
+    this.isRecording = false;
     clearInterval(this.timer);
     this.presentEditVocalModal();
     try {
