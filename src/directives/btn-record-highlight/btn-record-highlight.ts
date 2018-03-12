@@ -15,4 +15,16 @@ export class BtnRecordHighlightDirective {
     console.log('Hello BtnRecordHighlightDirective Directive');
   }
 
+  @HostListener('touchstart') onTouchStart() {
+    this.highlight('red');
+  }
+
+  @HostListener('touchend') onTouchEnd() {
+    this.highlight(null);
+  }
+
+  private highlight(color: string) {
+    this.el.nativeElement.style.backgroundColor = color;
+  }
+
 }

@@ -51,6 +51,8 @@ import { InitService } from "../services/initService";
 import { ScanContactsPage } from "../pages/scan-contacts/scan-contacts";
 import { AudioRecorder } from "../services/audiorecorder";
 import { SettingsService } from "../services/settingsService";
+import { DirectivesModule } from '../directives/directives.module';
+
 
 import { Pro } from '@ionic/pro';
 
@@ -121,6 +123,7 @@ let components = [
   imports: [
     BrowserModule,
     HttpModule,
+    DirectivesModule,
     IonicModule.forRoot(VocalApp, {
       backButtonText: ''
     }),
