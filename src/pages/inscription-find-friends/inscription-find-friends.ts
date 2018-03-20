@@ -20,8 +20,7 @@ import { FriendsService } from '../../services/friendsService';
 @IonicPage()
 @Component({
   selector: 'page-inscription-find-friends',
-  templateUrl: 'inscription-find-friends.html',
-  providers: [Contacts, HttpService, CookieService, FriendsService]
+  templateUrl: 'inscription-find-friends.html'
 })
 export class InscriptionFindFriendsPage {
 

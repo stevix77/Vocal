@@ -13,8 +13,7 @@ import { FriendsService } from '../../services/friendsService';
 @IonicPage()
 @Component({
   selector: 'page-search-mail',
-  templateUrl: 'search-mail.html',
-  providers: [FriendsService]
+  templateUrl: 'search-mail.html'
 })
 export class SearchMailPage {
 
