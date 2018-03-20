@@ -38,7 +38,7 @@ export class VocalApp {
   @ViewChild(Nav) nav: Nav;
   rootPage: any;
   client : any;
-  pages: Array<{title: string, component: any}>;
+  //pages: Array<{title: string, component: any}>;
 
   constructor(public platform: Platform, 
               public statusBar: StatusBar, 
@@ -62,10 +62,9 @@ export class VocalApp {
     events.subscribe("ErrorInit", (error) => this.showToast(error));
     events.subscribe("Error", (error) => this.showToast(error));
     // used for an example of ngFor and navigation
-    this.pages = [
-      { title: 'Home', component: HomePage }
-    ];
-
+    // this.pages = [
+    //   { title: 'Home', component: HomePage }
+    // ];
   }
 
   SetLanguage() {
