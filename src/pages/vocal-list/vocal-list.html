@@ -25,9 +25,9 @@
       Mes vocals
     </ion-list-header>
     <ion-item-sliding *ngFor="let item of vocalList;let i = index">
-      <ion-item (click)="goToMessage(item.Id, item.Users)">
+      <ion-item (click)="goToMessage(item.Id)">
         <ion-avatar item-start>
-          <img alt="" [src]="item.Picture ? item.Picture : 'assets/default-picture-80x80.jpg'">
+          <img alt="" [src]="getPicture(item.Picture)">
         </ion-avatar>
         
         <h3>{{ item.Name }}</h3>

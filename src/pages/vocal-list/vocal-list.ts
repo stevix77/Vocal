@@ -139,11 +139,11 @@ export class VocalListPage {
       if(item.DateLastMessage && typeof(item.DateLastMessage) != 'object') {
         item.DateLastMessage = this.getFormattedDateLastMessage(item.DateLastMessage);
       }
-      if(item.Users.length == 2) {
-        item.Users.forEach(user => {
-          if(user.Id != params.User.Id) item.Picture = user.Picture;
-        });
-      }
+      // if(item.Users.length == 2) {
+      //   item.Users.forEach(user => {
+      //     if(user.Id != params.User.Id) item.Picture = user.Picture;
+      //   });
+      // }
     });
   }
 
@@ -242,8 +242,15 @@ export class VocalListPage {
     );
   }
 
-  goToMessage(id, users) {
-    this.navCtrl.push(MessagePage, {TalkId: id, Users:users}, {'direction':'back'});
+  goToMessage(id) {
+    this.navCtrl.push(MessagePage, {TalkId: id}, {'direction':'back'});
+  }
+
+  getPicture(picture: string) {
+    if(picture != null && picture.length > 0)
+      return picture;
+    else
+      return 'assets/default-picture-80x80.jpg';
   }
   
 }
