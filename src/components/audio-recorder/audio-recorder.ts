@@ -17,7 +17,8 @@ import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-voca
 export class AudioRecorderComponent {
 
   @Input('isDirectMessage') dmName: boolean;
-  @Input('recipients') recipientsName: boolean;
+  // @Input('recipients') recipientsName: boolean;
+  @Input('talkId') talkId: string;
 
   isApp: boolean;
   time: number;
@@ -40,7 +41,7 @@ export class AudioRecorderComponent {
   }
 
   presentEditVocalModal() {
-    let editVocalModal = this.modalCtrl.create(ModalEditVocalPage, {duration: this.time, isDM:this.dmName, recipients: this.recipientsName});
+    let editVocalModal = this.modalCtrl.create(ModalEditVocalPage, {duration: this.time, isDM:this.dmName, talkId: this.talkId});
     editVocalModal.present();
   }
 

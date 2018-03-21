@@ -57,10 +57,10 @@ export class MessagePage {
 
     this.model.talkId = this.navParams.get("TalkId");
     this.model.userId = this.navParams.get("UserId");
-    this.uid = params.User.Id;
+    // this.uid = params.User.Id;
     
-    let users = this.navParams.get("Users");
-    this.uRecipients = users.filter(user => user.Id != this.uid);
+    //let users = this.navParams.get("Users");
+    //this.uRecipients = users.filter(user => user.Id != this.uid);
 
     this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj.Message))
     events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.beginTalk(obj))
