@@ -67,6 +67,7 @@ export class Connexion {
               resp => {
                 let response = resp.json() as Response<InitResponse>;
                 this.initService.manageData(response);
+                this.events.publish("subscribeHub");
                 this.navCtrl.push(VocalListPage);
               },
               error => {
