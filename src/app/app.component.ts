@@ -414,7 +414,6 @@ export class VocalApp {
       this.talkService.LoadList().then(() => {
         obj.Talk.DateLastMessage = obj.Message.SentTime;
         this.talkService.UpdateList(obj.Talk);
-        this.talkService.SaveList();
       }).then(() => this.events.publish(HubMethod[HubMethod.Receive], obj));
     })
     

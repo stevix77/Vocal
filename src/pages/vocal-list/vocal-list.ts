@@ -6,7 +6,7 @@ import { CookieService } from "../../services/cookieService";
 import { TalkResponse } from '../../models/response/talkResponse';
 import { ActionResponse } from '../../models/response/actionResponse';
 import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
-import { HubMethod } from '../../models/enums';
+import { HubMethod, PictureType } from '../../models/enums';
 import { MessagePage } from '../message/message';
 import { params } from '../../services/params';
 import { Response } from '../../models/response';
@@ -246,11 +246,16 @@ export class VocalListPage {
     this.navCtrl.push(MessagePage, {TalkId: id}, {'direction':'back'});
   }
 
-  getPicture(picture: string) {
-    if(picture != null && picture.length > 0)
-      return picture;
-    else
-      return 'assets/default-picture-80x80.jpg';
+  getPicture(talk) {
+    let picture = 'assets/default-picture-80x80.jpg';
+    if(talk.Users.length == 2) {
+      let user = talk.Users.find(x => x.Id != params.User.Id)
+      let pict = user.Pictures.find(x => x.Type == PictureType.Talk)
+      picture = pict.Value;
+    } else {
+      picture = talk.Picture != null && talk.Picture > 0 ? talk.Picture : picture;
+    }
+    return picture;
   }
   
 }

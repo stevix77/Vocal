@@ -27,7 +27,7 @@
     <ion-item-sliding *ngFor="let item of vocalList;let i = index">
       <ion-item (click)="goToMessage(item.Id)">
         <ion-avatar item-start>
-          <img alt="" [src]="getPicture(item.Picture)">
+          <img alt="" [src]="getPicture(item)">
         </ion-avatar>
         
         <h3>{{ item.Name }}</h3>

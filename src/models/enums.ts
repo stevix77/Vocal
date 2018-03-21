@@ -30,8 +30,8 @@ export enum MessageType {
 }
 
 export enum PictureType {
-    Profil = 1,
-    Talk = 2
+    Profil = 0,
+    Talk = 1
 }
 
 export enum HubMethod {
