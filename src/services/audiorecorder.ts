@@ -33,11 +33,21 @@ export class AudioRecorder {
       // Make a source node for the sample.
       let source = this.context.createBufferSource();
       let context = this.context;
-      this.file.readAsArrayBuffer(this.getFilePath(), this.filename).then(arrayBuffer => {
+      let file = this.file;
+
+      file.readAsArrayBuffer(this.getFilePath(), this.filename).then(arrayBuffer => {
         context.decodeAudioData(arrayBuffer, function(buffer){
           source.buffer = buffer;
-          source.connect(context.destination);
-          source.start();
+
+          let convolver = context.createConvolver();
+          file.checkDir(file.applicationDirectory + 'www/assets/', 'effects').then(() => console.log('directory fonts exists')).catch(err => console.log('directory fonts doesnt exists'));
+          file.readAsArrayBuffer(file.applicationDirectory + 'www/assets/effects/', 'spring.wav').then(arrayBuffer => {
+            console.log('type : ' + typeof(arrayBuffer));
+            //convolver.buffer = this.impulseResponseBuffer;
+          }).catch(err => console.log('err : ' + err));
+
+          //source.connect(context.destination);
+          //source.start();
           // Si le son est coupé sur l'iPhone, l'audio ne se joue pas
         });
       }).catch(err => console.log('error readAsArrayBuffer : ' + err));
