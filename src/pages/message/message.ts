@@ -1,8 +1,8 @@
 import { MessageRequest } from './../../models/request/messageRequest';
 import { HubMethod, PictureType, MessageType } from '../../models/enums';
 import { MessageResponse } from './../../models/response/messageResponse';
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, Events, Config } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, ToastController, Events, Config, Content } from 'ionic-angular';
 import { params } from '../../services/params';
 import { Response } from '../../models/response';
 import { SendMessageRequest } from '../../models/request/sendMessageRequest';
@@ -26,10 +26,10 @@ import { Media, MediaObject } from '@ionic-native/media';
 @IonicPage()
 @Component({
   selector: 'page-message',
-  templateUrl: 'message.html'
+  templateUrl: 'message.html',
 })
 export class MessagePage {
-  
+  @ViewChild(Content) content: Content
   model = { Message: "", talkId: null, userId: null }
   VocalName: string = "";
   Picture: string = "";
@@ -65,6 +65,7 @@ export class MessagePage {
     this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj.Message))
     events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.beginTalk(obj))
     events.subscribe(HubMethod[HubMethod.EndTalk], (obj) => this.endTalk())
+    events.subscribe("scrollBottom", () => this.scrollToBottom());
 
     this.isApp = this.config.get('isApp');
   }
@@ -103,6 +104,7 @@ export class MessagePage {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter MessagePage');
+    this.scrollToBottom();
   }
 
   ionViewWillEnter() {
@@ -116,6 +118,10 @@ export class MessagePage {
 
   ionViewWillLeave() {
     this.talkService.SaveMessages(this.model.talkId, this.Messages);
+  }
+
+  scrollToBottom() {
+    this.content.scrollToBottom(0);
   }
 
   getDuration(duration:number) {
@@ -137,16 +143,22 @@ export class MessagePage {
         } else {
           if(response.Data.IsSent){
             //Must be set in a template.html but sorry guys I don't know how to do that yet
-            document.getElementById("message-room").innerHTML += "<ion-col class='col' col-6></ion-col><ion-col class='col' col-6><div class='msg msg-current-user'>" + this.model.Message + "</div></ion-col>";
+            //document.getElementById("message-room").innerHTML += "<ion-col class='col' col-6></ion-col><ion-col class='col' col-6><div class='msg msg-current-user'>" + this.model.Message + "</div></ion-col>";
             this.model.Message =  "";
-            this.Messages.push(response.Data.Message);
+            //this.Messages.push(response.Data.Message);
+            //this.scrollToBottom();
             this.talkService.UpdateList(response.Data.Talk);
+            //this.events.publish("scrollBottom");
           }else{
              //Must be set in a template.html but sorry guys I don't know how to do that yet
-            document.getElementById("message-room").innerHTML += "<ion-col class='col' col-6></ion-col><ion-col class='col' col-6><div class='msg msg-current-user-not-sent'>" + this.model.Message + "</div></ion-col>";
+            //document.getElementById("message-room").innerHTML += "<ion-col class='col' col-6></ion-col><ion-col class='col' col-6><div class='msg msg-current-user-not-sent'>" + this.model.Message + "</div></ion-col>";
             this.model.Message = "";
           }
         }
+      },
+      err => this.events.publish("Error", err),
+      () => {
+        
       }
     );
   }
@@ -227,6 +239,7 @@ export class MessagePage {
     if(!this.Messages.some(x => x.Id == message.Id)) {
       this.Messages.push(message);
       this.hubService.Invoke(HubMethod[HubMethod.UpdateListenUser], this.model.talkId, [message])
+      this.events.publish("scrollBottom");
     }
   }
 

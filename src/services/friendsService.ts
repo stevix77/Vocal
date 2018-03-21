@@ -8,13 +8,12 @@ import { SearchFriendsRequest } from '../models/request/searchFriendsRequest';
 import { StoreService } from "./storeService";
 import { KeyStore } from "../models/enums";
 import { UserResponse } from "../models/response/userResponse";
+import { PeopleResponse } from "../models/response/peopleResponse";
 
 @Injectable()
 export class FriendsService {
-  public model = {
-    Friends: [] as Array<UserResponse>,
-    ErrorFriends: ""
-  }
+  public Friends: Array<UserResponse>;
+
   constructor(private httpService: HttpService, 
     private cookieService: CookieService,
     private storeService: StoreService
@@ -30,6 +29,10 @@ export class FriendsService {
     let urlAddFriends = url.AddFriends();
     let cookie = this.cookieService.GetAuthorizeCookie(urlAddFriends, params.User)
     return this.httpService.Post<ManageFriendsRequest>(urlAddFriends, obj, cookie);
+  }
+
+  insertFriends(friend: PeopleResponse) {
+    this.Friends.push(friend);
   }
 
   search(val) {
@@ -54,17 +57,16 @@ export class FriendsService {
   getList() {
     this.storeService.Get(KeyStore[KeyStore.Friends]).then(f => {
       if(f!= null &&  f.length > 0)
-        this.model.Friends = f;
+        this.Friends = f;
     })
   }
 
   saveList() {
-    this.storeService.Set(KeyStore[KeyStore.Friends], this.model.Friends);
+    this.storeService.Set(KeyStore[KeyStore.Friends], this.Friends);
   }
 
   clear() {
-    this.model.Friends = new Array();
-    this.model.ErrorFriends = "";
+    this.Friends = new Array();
   }
 
   // searchByMail(val) {

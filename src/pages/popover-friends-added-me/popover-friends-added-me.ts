@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FriendsService } from '../../services/friendsService';
 import { Response } from '../../models/response';
 import { PeopleResponse } from "../../models/response/peopleResponse";
@@ -15,8 +15,7 @@ import { KeyStore } from "../../models/enums";
 @IonicPage()
 @Component({
   selector: 'page-popover-friends-added-me',
-  templateUrl: 'popover-friends-added-me.html',
-  providers: [FriendsService]
+  templateUrl: 'popover-friends-added-me.html'
 })
 export class PopoverFriendsAddedMePage {
 
@@ -24,6 +23,7 @@ export class PopoverFriendsAddedMePage {
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
+    public events: Events,
     public friendsService: FriendsService,
     public storeService: StoreService
     ) {
@@ -44,7 +44,7 @@ export class PopoverFriendsAddedMePage {
         if(!response.HasError) {
           this.friends[indexItem].IsFriend = true;
         } else {
-          //this.model.ErrorFriends = response.ErrorMessage;
+          this.events.publish(response.ErrorMessage);
         }
       }
     );

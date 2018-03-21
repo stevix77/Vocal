@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { Contacts } from '@ionic-native/contacts';
 import { FriendsService } from '../../services/friendsService';
 import { Response } from '../../models/response';
@@ -14,18 +14,15 @@ import { PeopleResponse } from "../../models/response/peopleResponse";
 @IonicPage()
 @Component({
   selector: 'page-scan-contacts',
-  templateUrl: 'scan-contacts.html',
-  providers: [Contacts, FriendsService]
+  templateUrl: 'scan-contacts.html'
 })
 export class ScanContactsPage {
 
-  private model = {
-    Friends: [],
-    ErrorFriends: ""
-  }
+  Friends: Array<any>;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
+    public events: Events,
     private contacts: Contacts,
     private friendsService: FriendsService
     ) {
@@ -44,7 +41,7 @@ export class ScanContactsPage {
       resp => {
         let response = resp.json() as Response<boolean>;
         if(!response.HasError) {
-          this.model.Friends[indexItem].IsFriend = true;
+          this.Friends[indexItem].IsFriend = true;
         } else {
           //this.model.ErrorFriends = response.ErrorMessage;
         }
@@ -58,7 +55,7 @@ export class ScanContactsPage {
         let listEmails: Array<string> = [];
         c.forEach(item => {
           if(item.emails !== null) {
-            if(!this.friendsService.model.Friends.some(x => item.emails.find(y => y.value == x.Email) != null)) {
+            if(!this.friendsService.Friends.some(x => item.emails.find(y => y.value == x.Email) != null)) {
               item.emails.forEach(elt => {
                 listEmails.push(elt.value);
               });
@@ -70,14 +67,14 @@ export class ScanContactsPage {
           resp => { 
             let response = resp.json() as Response<Array<PeopleResponse>>;
             if(!response.HasError) {
-              this.model.Friends = response.Data;
+              this.Friends = response.Data;
             } else {
-              this.model.ErrorFriends = response.ErrorMessage;
+              this.events.publish(response.ErrorMessage);
             }
           }
         );
       }
-    }).catch((e) => this.model.ErrorFriends = "")
+    }).catch((e) => this.events.publish(e))
   }
 
 }
