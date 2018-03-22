@@ -31,6 +31,7 @@ export class ModalEditVocalPage {
   isSending: Boolean = false;
   FileValue: string;
   Friends: Array<any>;
+  talkId: string;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
@@ -43,6 +44,7 @@ export class ModalEditVocalPage {
     private talkService: TalkService,
     private exceptionService: ExceptionService
     ) {
+      this.talkId = this.navParams.get("talkId");
     this.viewCtrl.onDidDismiss( () => this.events.publish('edit-vocal:close') );
   }
 
@@ -90,13 +92,16 @@ export class ModalEditVocalPage {
     console.log('send vocal');
     if(!this.isSending) {
       this.isSending = true;
-      console.table(this.navParams.get('recipients'));
+      //console.table(this.navParams.get('recipients'));
       let users = [];
       this.audioRecorder.getFile().then(fileValue => {
         this.FileValue = fileValue;
-        this.navParams.get('recipients').forEach(elt => {
+        // this.navParams.get('recipients').forEach(elt => {
+        //   users.push(elt.Id);
+        // });
+        this.talkService.Talks.find(x => x.Id == this.talkId).Users.forEach(elt => {
           users.push(elt.Id);
-        });
+        })
         let date = new Date();
         let request: SendMessageRequest = {
           content: this.FileValue,
@@ -106,7 +111,7 @@ export class ModalEditVocalPage {
           messageType: MessageType.Vocal,
           Lang: params.Lang,
           idSender: params.User.Id,
-          IdTalk: null,
+          IdTalk: this.talkId,
           platform: params.Platform
         };
         let urlSendVocal = url.SendMessage();

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FriendsService } from '../../services/friendsService';
 import { Response } from '../../models/response';
 import { PeopleResponse } from "../../models/response/peopleResponse";
@@ -17,13 +17,11 @@ import { PeopleResponse } from "../../models/response/peopleResponse";
 })
 export class SearchUsernamePage {
 
-  public model = {
-    Friends: [] as Array<PeopleResponse>,
-    ErrorFriends: ""
-  }
+  Friends: Array<PeopleResponse>;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
+    public events: Events,
     private friendsService: FriendsService
     ) {
   }
@@ -35,11 +33,12 @@ export class SearchUsernamePage {
       resp => {
         let response = resp.json() as Response<boolean>;
         if(!response.HasError) {
-          this.model.Friends.splice(indexItem, 1);
-          this.friendsService.model.Friends.push(this.model.Friends[indexItem]);
+          let friend = this.Friends[indexItem];
+          this.Friends.splice(indexItem, 1);
+          this.friendsService.insertFriends(friend);
           this.friendsService.saveList();
         } else {
-          this.model.ErrorFriends = response.ErrorMessage;
+          this.events.publish("Error", response.ErrorMessage);
         }
       }
     );
@@ -55,10 +54,10 @@ export class SearchUsernamePage {
       resp => { 
         let response = resp.json() as Response<Array<PeopleResponse>>;
         if(!response.HasError) {
-          this.model.Friends = response.Data;
-          console.log(this.model.Friends);
+          this.Friends = response.Data;
+          console.log(this.Friends);
         } else {
-          this.model.ErrorFriends = response.ErrorMessage;
+          this.events.publish("Error", response.ErrorMessage);
         }
       }
     );

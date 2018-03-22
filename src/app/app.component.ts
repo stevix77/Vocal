@@ -38,7 +38,7 @@ export class VocalApp {
   @ViewChild(Nav) nav: Nav;
   rootPage: any;
   client : any;
-  pages: Array<{title: string, component: any}>;
+  //pages: Array<{title: string, component: any}>;
 
   constructor(public platform: Platform, 
               public statusBar: StatusBar, 
@@ -61,11 +61,11 @@ export class VocalApp {
     this.initializeApp();
     events.subscribe("ErrorInit", (error) => this.showToast(error));
     events.subscribe("Error", (error) => this.showToast(error));
+    events.subscribe("subscribeHub", () => this.SubscribeHub());
     // used for an example of ngFor and navigation
-    this.pages = [
-      { title: 'Home', component: HomePage }
-    ];
-
+    // this.pages = [
+    //   { title: 'Home', component: HomePage }
+    // ];
   }
 
   SetLanguage() {
@@ -413,9 +413,9 @@ export class VocalApp {
         this.showToast(mess);
       }
       this.talkService.LoadList().then(() => {
-        obj.Talk.DateLastMessage = obj.Message.SentTime;
-        this.talkService.UpdateList(obj.Talk);
-        this.talkService.SaveList();
+        let talk = this.talkService.Talks.find(x => x.Id == obj.Talk.Id);
+        talk.DateLastMessage = obj.Message.SentTime;
+        this.talkService.UpdateList(talk);
       }).then(() => this.events.publish(HubMethod[HubMethod.Receive], obj));
     })
     
