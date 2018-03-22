@@ -16,7 +16,12 @@ namespace Vocal.Business.Signalr
                 Connection = new HubConnection(Properties.Settings.Default.HostHub);
                 Proxy = Connection.CreateHubProxy(Properties.Settings.Default.Hubname);
                 await Connection.Start();
-                Connection.StateChanged += async (e) => { if (e.NewState == ConnectionState.Disconnected) await Connection.Start(); };
+                Connection.StateChanged += async (e) => 
+                {
+                    LogManager.LogDebug($"Connection.StateChanged - {e.NewState.ToString()}");
+                    if (e.NewState == ConnectionState.Disconnected)
+                        await Connection.Start();
+                };
             })
             { IsBackground = true };
 
@@ -42,17 +47,19 @@ namespace Vocal.Business.Signalr
         internal async Task SendMessage(SendMessageResponse data, List<string> idsRecipient)
         {
             await Proxy.Invoke(HubMethod.Send.ToString(), idsRecipient, data);
+            LogManager.LogDebug(data, idsRecipient);
         }
 
         internal async Task UpdateTalk(string talkId, List<MessageResponse> list)
         {
             await Proxy.Invoke(HubMethod.UpdateListenUser.ToString(), talkId, list);
+            LogManager.LogDebug(talkId, list);
         }
 
         internal async Task AddFriends(List<string> ids, string username)
         {
             await Proxy.Invoke(HubMethod.AddFriend.ToString(), ids, username);
-            LogManager.LogDebug("Hub AddFriends END");
+            LogManager.LogDebug(ids, username);
         }
     }
 }

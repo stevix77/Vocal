@@ -155,7 +155,7 @@ namespace Vocal.DAL
             var db = _db.GetCollection<User>(_config.CollectionUser);
             var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, userIds);
             users = db.Find(filter).ToList();
-            return users;
+            return users.OrderBy(x => x.Username).ToList(); ;
         }
 
         public List<People> GetUsersByIdInPeole(List<string> userIds)
@@ -206,7 +206,7 @@ namespace Vocal.DAL
         {
             var users = new List<User>();
             var db = _db.GetCollection<User>(_config.CollectionUser);
-            users = db.AsQueryable().ToList();
+            users = db.AsQueryable().OrderBy(x => x.Username).ToList();
             return users;
         }
 
@@ -220,7 +220,7 @@ namespace Vocal.DAL
             var db = _db.GetCollection<User>(_config.CollectionUser);
             var filter = new FilterDefinitionBuilder<User>().In(x => x.Email, emails);
             users = db.Find(filter).ToList();
-            return users;
+            return users.OrderBy(x => x.Username).ToList();
         }
 
         public List<User> SearchFriendsByIds(List<string> ids)
@@ -229,7 +229,7 @@ namespace Vocal.DAL
             var db = _db.GetCollection<User>(_config.CollectionUser);
             var filter = new FilterDefinitionBuilder<User>().In(x => x.Id, ids);
             users = db.Find(filter).ToList();
-            return users;
+            return users.OrderBy(x => x.Username).ToList();
         }
 
         public bool AddFriends(string userId, List<string> ids)
@@ -274,7 +274,7 @@ namespace Vocal.DAL
             var user = db.Find(x => x.Id == userId).SingleOrDefault();
             if (user != null)
             {
-                var friends = Bind_UsersToFriends(users); // traitement pas utile je pense ?
+                //var friends = Bind_UsersToFriends(users); // traitement pas utile je pense ?
                 user.Friends.RemoveAll(x => users.Select(y => y.Id).Contains(x.Id));
                 var replace = db.ReplaceOne(x => x.Id == userId, user);
                 success = replace.ModifiedCount > 0;
@@ -291,7 +291,7 @@ namespace Vocal.DAL
                 var list = pageSize == 0 || pageNumber == 0
                     ? currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x))
                     : currentUser.Friends.Where(x => !currentUser.Settings.Blocked.Contains(x)).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-                return list.ToList();
+                return list.OrderBy(x => x.Username).ToList();
             }
             return null;
         }
@@ -300,7 +300,7 @@ namespace Vocal.DAL
         {
             var db = _db.GetCollection<User>(_config.CollectionUser);
             var list = db.Find(x => x.Friends.Any(y => y.Id == userId && y.DateAdded > DateTime.Now.AddDays(-7))).ToList();
-            return list;
+            return list.OrderBy(x => x.Username).ToList(); ;
         }
 
 
@@ -318,7 +318,7 @@ namespace Vocal.DAL
                 var list = pageSize == 0 || pageNumber == 0
                     ? currentUser.Followers
                     : currentUser.Followers.Skip((pageNumber - 1) * pageSize).Take(pageSize);
-                return list.ToList();
+                return list.OrderBy(x => x.Username).ToList();
             }
             return null;
         }
@@ -339,7 +339,7 @@ namespace Vocal.DAL
                 var list = pageSize == 0 || pageNumber == 0
                     ? currentUser.Following
                     : currentUser.Following.Skip((pageNumber - 1) * pageSize).Take(pageSize);
-                return list.ToList();
+                return list.OrderBy(x => x.Username).ToList();
             }
             return null;
         }

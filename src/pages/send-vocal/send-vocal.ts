@@ -1,12 +1,8 @@
-import { UserResponse } from '../../models/response/userResponse';
 import { TalkService } from './../../services/talkService';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, Events } from 'ionic-angular';
-import { StoreService } from "../../services/storeService";
-import { KeyStore } from '../../models/enums';
 import { MessageType } from '../../models/enums';
 import { SendMessageRequest } from '../../models/request/sendMessageRequest';
-import { GetFriendsRequest } from '../../models/request/getFriendsRequest';
 import { params } from "../../services/params";
 import { url } from "../../services/url";
 import { HttpService } from "../../services/httpService";
@@ -16,6 +12,7 @@ import { TalkResponse } from '../../models/response/talkResponse';
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
 import { AudioRecorder } from '../../services/audiorecorder';
 import { ExceptionService } from "../../services/exceptionService";
+import { FriendsService } from "../../services/friendsService";
 
 /**
  * Generated class for the SendVocalPage page.
@@ -38,31 +35,35 @@ export class SendVocalPage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
               public viewCtrl: ViewController,
-              public events: Events,
-              private storeService: StoreService, 
+              public events: Events, 
               private audioRecorder: AudioRecorder, 
               private cookieService: CookieService, 
               private httpService: HttpService,
               private talkService: TalkService,
+              private friendsService: FriendsService,
               private exceptionService: ExceptionService) {
   }
 
-  ionViewDidLoad() {
+  ionViewWillEnter() {
     console.log('ionViewDidLoad SendVocalPage');
     this.GetFriends();
+  }
+
+  getCheckedUsers() {
+    return this.Friends.map(x => { 
+        if(x.Checked)
+          return x.Id;
+        else
+          return;
+      });
   }
 
   sendVocal() {
     if(!this.isSending) {
       this.isSending = true;
-      let users = [];
       this.audioRecorder.getFile().then(fileValue => {
         this.FileValue = fileValue;
-        this.Friends.forEach(elt => {
-          if(elt.Checked) {
-            users.push(elt.Id);
-          }
-        });
+        let users = this.getCheckedUsers();
         let date = new Date();
         let request: SendMessageRequest = {
           content: this.FileValue,
@@ -90,6 +91,7 @@ export class SendVocalPage {
             }
             else {
               console.log(response);
+              this.isSending = false;
             }
           }
         );
@@ -101,52 +103,6 @@ export class SendVocalPage {
   }
 
   GetFriends() {
-    this.storeService.Get(KeyStore[KeyStore.Friends]).then(
-      friends => {
-        if(friends != null)
-          this.Friends = friends;
-        else
-          this.loadFriends();
-      }
-    ).catch(error => {
-      console.log(error);
-    });
+    this.Friends = this.friendsService.Friends;
   }
-
-  loadFriends() {
-    var request = new GetFriendsRequest();
-    request.Lang = params.Lang;
-    request.UserId = params.User.Id;
-    request.PageSize = 0;
-    request.PageNumber = 0;
-    let urlFriends = url.GetFriends();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlFriends, params.User)
-    this.httpService.Post<GetFriendsRequest>(urlFriends, request, cookie).subscribe(
-      resp => { 
-        let response = resp.json() as Response<Array<UserResponse>>;
-        if(!response.HasError) {
-          this.Friends = response.Data;
-          this.storeService.Set(KeyStore[KeyStore.Friends], this.Friends)
-        } else {
-          
-        }
-      }
-    );
-  }
-
-  GetTalkList() {
-    return this.storeService.Get(KeyStore[KeyStore.Talks]).then(
-      talks => {
-        this.Talks = talks;
-      }
-    ).catch(error => {
-      console.log(error);
-      
-    });
-  }
-
-  SaveTalks() {
-    this.storeService.Set(KeyStore[KeyStore.Talks], this.Talks);
-  }
-
 }
