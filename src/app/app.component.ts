@@ -414,8 +414,14 @@ export class VocalApp {
       }
       this.talkService.LoadList().then(() => {
         let talk = this.talkService.Talks.find(x => x.Id == obj.Talk.Id);
-        talk.DateLastMessage = obj.Message.SentTime;
-        this.talkService.UpdateList(talk);
+        if(talk != null) {
+          talk.DateLastMessage = obj.Message.SentTime;
+          this.talkService.UpdateList(talk);
+        } else {
+          obj.Talk.DateLastMessage = obj.Message.SentTime;
+          this.talkService.Talks.push(obj.Talk);
+          this.talkService.SaveList();
+        }
       }).then(() => this.events.publish(HubMethod[HubMethod.Receive], obj));
     })
     

@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { FriendsService } from '../../services/friendsService';
 import { Response } from '../../models/response';
 import { PeopleResponse } from "../../models/response/peopleResponse";
+import { ExceptionService } from "../../services/exceptionService";
 
 /**
  * Generated class for the SearchUsernamePage page.
@@ -18,30 +19,43 @@ import { PeopleResponse } from "../../models/response/peopleResponse";
 export class SearchUsernamePage {
 
   Friends: Array<PeopleResponse>;
+  isReady: boolean = true;
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
     public events: Events,
-    private friendsService: FriendsService
+    private friendsService: FriendsService,
+    private exceptionService: ExceptionService
     ) {
   }
 
   addFriend(id, index){
-    let friends = [id];
-    let indexItem = index;
-    this.friendsService.add(friends).subscribe(
-      resp => {
-        let response = resp.json() as Response<boolean>;
-        if(!response.HasError) {
-          let friend = this.Friends[indexItem];
-          this.Friends.splice(indexItem, 1);
-          this.friendsService.insertFriends(friend);
-          this.friendsService.saveList();
-        } else {
-          this.events.publish("Error", response.ErrorMessage);
+    try {
+      let friends = [id];
+      let indexItem = index;
+      this.friendsService.add(friends).subscribe(
+        resp => {
+          try {
+            let response = resp.json() as Response<boolean>;
+            if(!response.HasError) {
+              let friend = this.Friends[indexItem];
+              this.Friends.splice(indexItem, 1);
+              this.friendsService.insertFriends(friend);
+              this.friendsService.saveList();
+            } else {
+              this.events.publish("Error", response.ErrorMessage);
+            }
+          } catch (err) {
+            this.exceptionService.Add(err);
+            this.events.publish("Error", err.message);      
+          }
         }
-      }
-    );
+      );
+    } catch(err) {
+      this.exceptionService.Add(err);
+      this.events.publish("Error", err.message);
+    }
+    
   }
 
   ionViewDidLoad() {
@@ -50,17 +64,30 @@ export class SearchUsernamePage {
 
 
   viewUsersByName(val) {
-    if(val.length > 2) this.friendsService.search(val).subscribe(
-      resp => { 
-        let response = resp.json() as Response<Array<PeopleResponse>>;
-        if(!response.HasError) {
-          this.Friends = response.Data;
-          console.log(this.Friends);
-        } else {
-          this.events.publish("Error", response.ErrorMessage);
-        }
+    try {
+      if(val.length > 2 && this.isReady) {
+        this.isReady = false;
+        this.friendsService.search(val).subscribe(
+          resp => { 
+            this.isReady = true;
+            try {
+              let response = resp.json() as Response<Array<PeopleResponse>>;
+              if(!response.HasError) {
+                this.Friends = response.Data;
+              } else {
+                this.events.publish("Error", response.ErrorMessage);
+              }
+            } catch(err) {
+              this.events.publish("Error", err.message);
+              this.exceptionService.Add(err);
+            }
+          }
+        );
       }
-    );
+    } catch(err) {
+      this.events.publish("Error", err.message);
+      this.exceptionService.Add(err);
+    }
   }
 
 }

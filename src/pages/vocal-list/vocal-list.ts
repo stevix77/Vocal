@@ -251,7 +251,7 @@ export class VocalListPage {
     if(talk.Users.length == 2) {
       let user = talk.Users.find(x => x.Id != params.User.Id)
       let pict = user.Pictures.find(x => x.Type == PictureType.Talk)
-      picture = pict.Value;
+      picture = pict != null ? pict.Value : picture;
     } else {
       picture = talk.Picture != null && talk.Picture > 0 ? talk.Picture : picture;
     }
