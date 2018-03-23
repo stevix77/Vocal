@@ -97,6 +97,10 @@ export class FriendsService {
     })
   }
 
+  getFriendById(userId: string) {
+    return this.Friends.find(x => x.Id == userId);
+  }
+
   saveList() {
     this.storeService.Set(KeyStore[KeyStore.Friends], this.Friends);
   }

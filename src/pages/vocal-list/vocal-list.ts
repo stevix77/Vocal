@@ -54,6 +54,8 @@ export class VocalListPage {
     private exceptionService: ExceptionService) {
 
     events.subscribe(HubMethod[HubMethod.Receive], () => this.initialize())
+    this.events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.beginTalk(obj))
+    this.events.subscribe(HubMethod[HubMethod.EndTalk], (obj) => this.endTalk(obj))
     this.isApp = this.config.get('isApp');
     
   }
@@ -261,4 +263,18 @@ export class VocalListPage {
     return picture;
   }
   
+  beginTalk(obj) {
+    let talk = this.vocalList.find(x => x.Id == obj.TalkId);
+    if(talk != null){
+      let t = this.talkService.getTalk(obj.TalkId);
+      talk.IsWriting = t.IsWriting = true;
+      talk.TextWriting = obj.Username + " se prépare à envoyer un message";
+    }
+  }
+
+  endTalk(obj) {
+    let talk = this.vocalList.find(x => x.Id == obj.TalkId);
+    if(talk != null)
+      talk.IsWriting = false;
+  }
 }

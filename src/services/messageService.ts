@@ -1,7 +1,4 @@
-import { TalkResponse } from './../models/response/talkResponse';
 import { Injectable } from "@angular/core";
-import { KeyValueResponse } from "../models/response/keyValueResponse";
-import { MessageResponse } from "../models/response/messageResponse";
 import { CookieService } from "./cookieService";
 import { HttpService } from "./httpService";
 import { params } from "../services/params";

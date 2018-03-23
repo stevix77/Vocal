@@ -28,8 +28,14 @@ export class TalkService {
   LoadList() {
     return this.storeService.Get(KeyStore[KeyStore.Talks]).then(
       talks => {
-        if(talks != null)
-          this.Talks = talks;
+        if(talks != null) {
+          let t = talks as Array<TalkResponse>
+          t.forEach(x => {
+            x.IsWriting = false;
+            x.TextWriting = "";
+          });
+          this.Talks = t;
+        }
       }
     ).catch(error => {
       console.log(error);

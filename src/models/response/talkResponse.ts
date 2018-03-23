@@ -1,5 +1,4 @@
 import {UserResponse} from './userResponse';
-import {MessageResponse} from './messageResponse'
 export class TalkResponse {
     Id: string;
     Name: string;
@@ -8,4 +7,6 @@ export class TalkResponse {
     Users: Array<UserResponse>;
     Duration: number;
     Picture: string;
+    IsWriting: boolean;
+    TextWriting: string;
 }

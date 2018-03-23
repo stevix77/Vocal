@@ -396,8 +396,8 @@ export class VocalApp {
       this.events.publish(HubMethod[HubMethod.BeginTalk], obj);
     });
 
-    this.hubService.hubProxy.on(HubMethod[HubMethod.EndTalk], () => {
-      this.events.publish(HubMethod[HubMethod.EndTalk]);
+    this.hubService.hubProxy.on(HubMethod[HubMethod.EndTalk], (obj) => {
+      this.events.publish(HubMethod[HubMethod.EndTalk], obj);
     });
 
     this.hubService.hubProxy.on(HubMethod[HubMethod.AddFriend], (obj) => {

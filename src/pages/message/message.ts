@@ -1,24 +1,19 @@
-import { MessageRequest } from './../../models/request/messageRequest';
 import { HubMethod, PictureType, MessageType } from '../../models/enums';
 import { MessageResponse } from './../../models/response/messageResponse';
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, Events, Config, Content } from 'ionic-angular';
 import { params } from '../../services/params';
 import { Response } from '../../models/response';
-import { SendMessageRequest } from '../../models/request/sendMessageRequest';
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
-import { url } from '../../services/url';
-import { HttpService } from '../../services/httpService';
-import { CookieService } from '../../services/cookieService';
 import { TalkService } from "../../services/talkService";
 import { HubService } from "../../services/hubService";
 import { functions } from "../../services/functions";
 import { Timer } from '../../services/timer';
-import { GetMessagesRequest } from "../../models/request/getMessagesRequest";
 import { Media, MediaObject } from '@ionic-native/media';
 import { TalkResponse } from "../../models/response/talkResponse";
 import { MessageService } from "../../services/messageService";
 import { ExceptionService } from "../../services/exceptionService";
+import { FriendsService } from "../../services/friendsService";
 
 /**
  * Generated class for the MessagePage page.
@@ -50,13 +45,12 @@ export class MessagePage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
               public config: Config,
-              private httpService: HttpService, 
               private toastCtrl: ToastController, 
-              private cookieService: CookieService,
               private events: Events,
               private talkService: TalkService,
               private hubService: HubService,
               private messageService: MessageService,
+              private friendService: FriendsService,
               private exceptionService: ExceptionService) {
 
     this.model.talkId = this.navParams.get("TalkId");
@@ -64,7 +58,7 @@ export class MessagePage {
 
     this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj.Message))
     this.events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.beginTalk(obj))
-    this.events.subscribe(HubMethod[HubMethod.EndTalk], (obj) => this.endTalk())
+    this.events.subscribe(HubMethod[HubMethod.EndTalk], (obj) => this.endTalk(obj))
 
     this.isApp = this.config.get('isApp');
   }
@@ -104,6 +98,8 @@ export class MessagePage {
   ionViewDidEnter() {
     console.log('ionViewDidEnter MessagePage');
     this.scrollToBottom();
+    if(this.Talk.IsWriting)
+      this.beginTalk(null);
   }
 
   ionViewWillEnter() {
@@ -113,10 +109,6 @@ export class MessagePage {
       this.loadMessagesByUser(this.model.userId);
     }
     this.getMessages();
-  }
-
-  ionViewWillLeave() {
-    // this.talkService.SaveMessages(this.model.talkId, this.Messages);
   }
 
   scrollToBottom() {
@@ -131,44 +123,40 @@ export class MessagePage {
   }
 
   sendMessage(){
-    var obj = new SendMessageRequest(params.User.Id, this.model.talkId, this.model.Message, MessageType.Text, this.model.talkId == null ? [this.model.userId] : []);
-    obj.Lang = params.Lang;
-    let urlSearch = url.SendMessage();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlSearch, params.User)
-    this.httpService.Post<SendMessageRequest>(url.SendMessage(), obj, cookie).subscribe(
-      resp => {
-        var response = resp.json() as Response<SendMessageResponse>;
-        if(response.HasError) {
-          this.showToast(response.ErrorMessage);
-        } else {
-          if(response.Data.IsSent){
-            //Must be set in a template.html but sorry guys I don't know how to do that yet
-            //document.getElementById("message-room").innerHTML += "<ion-col class='col' col-6></ion-col><ion-col class='col' col-6><div class='msg msg-current-user'>" + this.model.Message + "</div></ion-col>";
-            this.model.Message =  "";
-            //this.Messages.push(response.Data.Message);
-            //this.scrollToBottom();
-            this.talkService.UpdateList(response.Data.Talk);
-            //this.events.publish("scrollBottom");
-          }else{
-             //Must be set in a template.html but sorry guys I don't know how to do that yet
-            //document.getElementById("message-room").innerHTML += "<ion-col class='col' col-6></ion-col><ion-col class='col' col-6><div class='msg msg-current-user-not-sent'>" + this.model.Message + "</div></ion-col>";
-            this.model.Message = "";
+    try {
+      this.messageService.sendMessage(this.model.talkId, MessageType.Text, this.model.talkId == null ? [this.model.userId] : [], 0, this.model.Message).subscribe(
+        resp => {
+          try {
+            var response = resp.json() as Response<SendMessageResponse>;
+            if(response.HasError) {
+              this.events.publish("Error", response.ErrorMessage);
+            } else {
+              if(response.Data.IsSent){
+                this.model.Message =  "";
+                this.talkService.UpdateList(response.Data.Talk);
+              }
+            }
+          } catch(err) {
+            this.events.publish("Error", err.message);
+            this.exceptionService.Add(err);
           }
+        },
+        err => {
+          this.events.publish("Error", err.message)
+          this.exceptionService.Add(err);
         }
-      },
-      err => this.events.publish("Error", err),
-      () => {
-        
-      }
-    );
+      );
+    } catch(err) {
+      this.events.publish("Error", err.message);
+      this.exceptionService.Add(err);
+    }
   }
 
-  beginTalk(username) {
-    this.messUser = username + " est en train d'écrire";
-    this.showToast(this.messUser);
+  beginTalk(obj) {
+    this.messUser = " se prépare à envoyer un message";
   }
     
-  endTalk() {
+  endTalk(obj) {
     this.messUser = null;
   }
   
@@ -195,6 +183,11 @@ export class MessagePage {
       this.Talk = talk;
       this.model.talkId = talk.Id;
       this.Messages = this.talkService.GetMessages(talk.Id);
+    } else {
+      let friend = this.friendService.getFriendById(userId);
+      let picture = friend.Pictures.find(x => x.Type == PictureType.Talk);
+      this.Talk.Name = friend.Username;
+      this.Talk.Picture = picture != null ? picture.Value : "assets/default-picture-80x80.jpg";
     }
   }
 

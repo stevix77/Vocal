@@ -8,7 +8,7 @@
         <img [src]="Talk.Picture" alt="">
       </ion-avatar>
       <div class="name">
-        {{Talk.Name}}
+        {{Talk.Name}} <span *ngIf="messUser != null">{{messUser}}</span>
       </div>
       <div class="total-vocal">
         12h de vocal
