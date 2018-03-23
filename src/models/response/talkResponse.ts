@@ -6,5 +6,6 @@ export class TalkResponse {
     HasNewMessage: boolean;
     DateLastMessage: Date;
     Users: Array<UserResponse>;
-    Messages: Array<MessageResponse>;
+    Duration: number;
+    Picture: string;
 }

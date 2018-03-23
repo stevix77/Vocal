@@ -87,6 +87,7 @@ namespace Vocal.WebApi.Signalr
         public void BeginTalk(string talkId, string username)
         {
             Clients.OthersInGroup(talkId).BeginTalk(username);
+            LogManager.LogDebug(talkId, username);
         }
 
         public void EndTalk(string talkId)

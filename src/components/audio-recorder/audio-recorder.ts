@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Events, AlertController, ModalController, Config, ViewController } from 'ionic-angular';
 import { AudioRecorder } from '../../services/audiorecorder';
 import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-vocal';
+import { ExceptionService } from "../../services/exceptionService";
 
 /**
  * Generated class for the AudioRecorderComponent component.
@@ -12,26 +13,24 @@ import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-voca
 @Component({
   selector: 'audio-recorder',
   templateUrl: 'audio-recorder.html',
-  inputs: ['isDirectMessage', 'recipients']
+  inputs: ['isDirectMessage', 'talkId']
 })
 export class AudioRecorderComponent {
 
   @Input('isDirectMessage') dmName: boolean;
-  // @Input('recipients') recipientsName: boolean;
   @Input('talkId') talkId: string;
 
   isApp: boolean;
   time: number;
   timer: number;
-  isDM: boolean;
-  recipients: boolean;
 
   constructor(public events: Events,
     public audioRecorder: AudioRecorder,
     public alertCtrl: AlertController,
     public modalCtrl: ModalController,
     public config: Config,
-    public viewCtrl: ViewController
+    public viewCtrl: ViewController,
+    private exceptionService: ExceptionService
     ) {
   }
 
@@ -55,6 +54,7 @@ export class AudioRecorderComponent {
       this.audioRecorder.startRecording();
     }
     catch (e) {
+      this.exceptionService.Add(e);
       this.showAlert('Could not start recording.');
     }
   }
@@ -67,6 +67,7 @@ export class AudioRecorderComponent {
       this.audioRecorder.stopRecording();
     }
     catch (e) {
+      this.exceptionService.Add(e);
       this.showAlert('Could not stop recording.');
     }
   }
@@ -76,6 +77,7 @@ export class AudioRecorderComponent {
       this.audioRecorder.startPlayback();
     }
     catch (e) {
+      this.exceptionService.Add(e);
       this.showAlert('Could not play recording.');
     }
   }
@@ -85,6 +87,7 @@ export class AudioRecorderComponent {
       this.audioRecorder.stopPlayback();
     }
     catch (e) {
+      this.exceptionService.Add(e);
       this.showAlert('Could not stop playing recording.');
     }
   }

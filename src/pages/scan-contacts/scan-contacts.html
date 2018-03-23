@@ -16,7 +16,7 @@
 <ion-content padding>
 
 <ion-list>
-  <ion-item *ngFor="let friend of model.Friends;">
+  <ion-item *ngFor="let friend of Friends; let i = index">
     <h3 item-start>{{ friend.Username }}</h3>
     <div item-end *ngIf="!friend.IsFriend">
       <button default ion-button icon-start (click)="addFriend(friend.Id, i)">

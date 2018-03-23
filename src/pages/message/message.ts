@@ -16,6 +16,9 @@ import { functions } from "../../services/functions";
 import { Timer } from '../../services/timer';
 import { GetMessagesRequest } from "../../models/request/getMessagesRequest";
 import { Media, MediaObject } from '@ionic-native/media';
+import { TalkResponse } from "../../models/response/talkResponse";
+import { MessageService } from "../../services/messageService";
+import { ExceptionService } from "../../services/exceptionService";
 
 /**
  * Generated class for the MessagePage page.
@@ -31,9 +34,9 @@ import { Media, MediaObject } from '@ionic-native/media';
 export class MessagePage {
   @ViewChild(Content) content: Content
   model = { Message: "", talkId: null, userId: null }
-  VocalName: string = "";
   Picture: string = "";
   Messages: Array<MessageResponse> = new Array<MessageResponse>();
+  Talk: TalkResponse = new TalkResponse();
   isApp: boolean;
   isRecording: boolean = false;
   isTiming: boolean = false;
@@ -41,9 +44,8 @@ export class MessagePage {
   time: string = '0:00';
   messUser: string;
   file: MediaObject;
-  uid: string;
   isDirectMessage: boolean = true;
-  uRecipients: Array<string> = [];
+  isWriting: boolean = false;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
@@ -53,19 +55,16 @@ export class MessagePage {
               private cookieService: CookieService,
               private events: Events,
               private talkService: TalkService,
-              private hubService: HubService) {
+              private hubService: HubService,
+              private messageService: MessageService,
+              private exceptionService: ExceptionService) {
 
     this.model.talkId = this.navParams.get("TalkId");
     this.model.userId = this.navParams.get("UserId");
-    // this.uid = params.User.Id;
-    
-    //let users = this.navParams.get("Users");
-    //this.uRecipients = users.filter(user => user.Id != this.uid);
 
     this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj.Message))
-    events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.beginTalk(obj))
-    events.subscribe(HubMethod[HubMethod.EndTalk], (obj) => this.endTalk())
-    events.subscribe("scrollBottom", () => this.scrollToBottom());
+    this.events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.beginTalk(obj))
+    this.events.subscribe(HubMethod[HubMethod.EndTalk], (obj) => this.endTalk())
 
     this.isApp = this.config.get('isApp');
   }
@@ -117,11 +116,12 @@ export class MessagePage {
   }
 
   ionViewWillLeave() {
-    this.talkService.SaveMessages(this.model.talkId, this.Messages);
+    // this.talkService.SaveMessages(this.model.talkId, this.Messages);
   }
 
   scrollToBottom() {
-    this.content.scrollToBottom(0);
+    if(this.content != null)
+      this.content.scrollToBottom(0);
   }
 
   getDuration(duration:number) {
@@ -165,121 +165,110 @@ export class MessagePage {
 
   beginTalk(username) {
     this.messUser = username + " est en train d'écrire";
+    this.showToast(this.messUser);
   }
     
   endTalk() {
     this.messUser = null;
   }
   
-  change() {
-    this.hubService.Invoke(HubMethod[HubMethod.BeginTalk], this.model.talkId, params.User.Username);
+  change(val) {
+    if(this.model.Message.length > 0) {
+      if(!this.isWriting) {
+        this.isWriting = true;
+        this.hubService.Invoke(HubMethod[HubMethod.BeginTalk], this.model.talkId, params.User.Username);
+      }
+    } else {
+      if(this.isWriting) this.isWriting = false;
+      this.hubService.Invoke(HubMethod[HubMethod.EndTalk], this.model.talkId);
+    }
   }
 
   loadMessages() {
+    this.Talk = this.talkService.getTalk(this.model.talkId);
     this.Messages = this.talkService.GetMessages(this.model.talkId);
-    this.talkService.Talks.find(x => x.Id == this.model.talkId).Users.forEach(x => {
-      if(x.Id != params.User.Id){
-        this.VocalName += x.Username + " ";
-        let pict = x.Pictures.find(x => x.Type == PictureType.Talk);
-        if(pict != null)
-          this.Picture = pict.Value;
-      }
-    });
   }
 
   loadMessagesByUser(userId) {
     let talk = this.talkService.Talks.find(talk => talk.Users.some(x => x.Id == userId) && talk.Users.length == 2);
     if(talk != null) {
-      this.Messages = talk.Messages != null ? talk.Messages : new Array<MessageResponse>()
+      this.Talk = talk;
       this.model.talkId = talk.Id;
+      this.Messages = this.talkService.GetMessages(talk.Id);
     }
   }
 
   getMessages() {
     try {
-      let urlMessages = url.GetMessages();
-      let cookie = this.cookieService.GetAuthorizeCookie(urlMessages, params.User);
       let dt = this.Messages.length > 0 ? this.Messages[this.Messages.length -1].ArrivedTime : null;
-      let request: GetMessagesRequest = {Lang: params.Lang, LastMessage: dt, TalkId: this.model.talkId};
-      this.httpService.Post(urlMessages, request, cookie).subscribe(
+      this.messageService.getMessages(this.model.talkId, dt).subscribe(
         resp => {
-          let response = resp.json() as Response<Array<MessageResponse>>;
-          if(!response.HasError) {
-            response.Data.forEach(item => {
-              let mess = this.Messages.find(x => x.Id == item.Id);
-              item.IsPlaying = false;
-              if(mess == null)
-                this.Messages.push(item);
-            });
-            this.talkService.SaveMessages(this.model.talkId, this.Messages);
-          } else {
-            this.showToast(response.ErrorMessage);
-            //this.loadMessages();
+          try {
+            let response = resp.json() as Response<Array<MessageResponse>>;
+            if(!response.HasError) {
+              if(response.Data.length>0) {
+                response.Data.forEach(item => {
+                  let mess = this.Messages.find(x => x.Id == item.Id);
+                  item.IsPlaying = false;
+                  if(mess == null)
+                    this.Messages.push(item);
+                });
+                this.talkService.SaveMessages(this.model.talkId, this.Messages);
+              }
+            } else {
+              this.events.publish("Error", response.ErrorMessage);
+            }
+          } catch(err) {
+            this.events.publish("Error", err.message)
+            this.exceptionService.Add(err);
           }
         }
       )
     } catch(err) {
-      console.log(err);
-      // this.loadMessages();
+      this.events.publish("Error", err.message)
+      this.exceptionService.Add(err);
     }
   }
 
-  sortMessages(messages: Array<MessageResponse>) {
-    let index = 0;
-    messages.forEach(element => {
-      let mess = this.Messages.find(x => x.Id == element.Id);
-      mess.IsPlaying = false;
-      if(mess == null) {
-        this.Messages.splice(index, 0, element);
-      }
-    });
+  ngAfterViewChecked() {
+    this.scrollToBottom();
   }
 
   updateRoom(message) {
-    if(!this.Messages.some(x => x.Id == message.Id)) {
-      this.Messages.push(message);
-      this.hubService.Invoke(HubMethod[HubMethod.UpdateListenUser], this.model.talkId, [message])
-      this.events.publish("scrollBottom");
+    try {
+      if(!this.Messages.some(x => x.Id == message.Id)) {
+        this.Messages.push(message);
+        this.hubService.Invoke(HubMethod[HubMethod.UpdateListenUser], this.model.talkId, [message])
+      }
+    } catch(err) {
+      this.events.publish("Error", err.message)
+      this.exceptionService.Add(err);
     }
   }
 
-  getMessage(messId: string) {
-    let urlMessage = url.GetMessageById();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlMessage, params.User);
-    let request = new MessageRequest(this.model.talkId, messId, params.Lang);
-    this.httpService.Post<MessageRequest>(urlMessage, request, cookie).subscribe(
-      resp => {
-        let response = resp.json() as Response<string>;
-        if(response.HasError){
-          this.showToast(response.ErrorMessage);
-        }
-        else {
-          this.Messages.find(x => x.Id == messId).Content = response.Data;
-          this.talkService.SaveMessages(this.model.talkId, this.Messages);          
-        }
-      }
-    )
-    // this.Messages.find(x => x.Id == messId).Content = mess;
-  }
-
   playVocal(messId: string, index: number) {
-    let message = this.Messages[index];
-    this.Messages[index].IsPlaying = true;
-    this.talkService.SaveMessages(this.model.talkId, this.Messages);
-    
-    let uniqId = functions.Crypt(message.Id + params.Salt);
-    let my_media = new Media();
-    this.file = my_media.create(`http://vocal.westeurope.cloudapp.azure.com/docs/vocal/${uniqId}.mp3`);
-    this.file.play();
-    this.file.onStatusUpdate.subscribe(status => {
-      if(status == 2) { //PLAYING
-        
-      }
-      if(status == 4) { //STOP
-        this.Messages[index].IsPlaying = false;
-        this.talkService.SaveMessages(this.model.talkId, this.Messages);
-      }
-    }); // fires when file status changes
+    try {
+      let message = this.Messages[index];
+      this.Messages[index].IsPlaying = true;
+      this.talkService.SaveMessages(this.model.talkId, this.Messages);
+      
+      let uniqId = functions.Crypt(message.Id + params.Salt);
+      let my_media = new Media();
+      this.file = my_media.create(`http://vocal.westeurope.cloudapp.azure.com/docs/vocal/${uniqId}.mp3`);
+      this.file.play();
+      this.file.onStatusUpdate.subscribe(status => {
+        if(status == 2) { //PLAYING
+          
+        }
+        if(status == 4) { //STOP
+          this.Messages[index].IsPlaying = false;
+          this.talkService.SaveMessages(this.model.talkId, this.Messages);
+        }
+      }); // fires when file status changes
+    } catch (err) {
+      this.events.publish("Error", err.message)
+      this.exceptionService.Add(err);
+    }
   }
 
   pauseVocal(messId: string, index: number) {

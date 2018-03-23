@@ -5,10 +5,10 @@
     </ion-avatar> -->
     <ion-item no-margin no-padding no-lines color="primary">
       <ion-avatar item-start>
-        <img src="assets/default-picture-80x80.jpg" alt="">
+        <img [src]="Talk.Picture" alt="">
       </ion-avatar>
       <div class="name">
-        {{VocalName}}
+        {{Talk.Name}}
       </div>
       <div class="total-vocal">
         12h de vocal
@@ -69,7 +69,7 @@
           <ion-col col-10> -->
             <ion-item no-lines>
               <input type="hidden" ng-model="model.talkId" value="{{model.talkId}}" ng-init="model.talkId=model.talkId"/>
-              <ion-input type="text" name="Message" (ionInput)="change()" [(ngModel)]="model.Message" placeholder="Envoyer un chat" required></ion-input>
+              <ion-input type="text" name="Message" (ionChange)="change()" [(ngModel)]="model.Message" placeholder="Envoyer un chat" required></ion-input>
             </ion-item>
           <!-- </ion-col> -->
           <!-- <ion-col col-2>

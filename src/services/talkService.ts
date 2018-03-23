@@ -18,6 +18,7 @@ export class TalkService {
 
   constructor(private storeService: StoreService) {
     this.LoadList();
+    this.loadListMessages();
   }
 
   SaveList() {
@@ -32,12 +33,22 @@ export class TalkService {
       }
     ).catch(error => {
       console.log(error);
-      
     });
   }
 
-  DeleteTalk(talk: TalkResponse) {
-    let tIndex = this.Talks.findIndex(x => x.Id == talk.Id);
+  loadListMessages() {
+    this.storeService.Get(KeyStore[KeyStore.Messages]).then(
+      mess => {
+        if(mess != null)
+          this.Messages = mess;
+      }
+    ).catch(error => {
+      console.log(error);
+    });
+  }
+
+  DeleteTalk(talkId: string) {
+    let tIndex = this.Talks.findIndex(x => x.Id == talkId);
     if(tIndex >= 0){
       this.Talks.splice(tIndex, 1);
       this.SaveList();
@@ -46,12 +57,19 @@ export class TalkService {
     }
   }
 
+  DeleteMessages(talkId) {
+    let index = this.Messages.findIndex(x => x.Key == talkId);
+    if(index >= 0) {
+      this.Messages.splice(index, 1);
+      this.saveMessages();
+    }
+  }
+
   UpdateList(talk: TalkResponse) {
-    let t = this.Talks.find(x => x.Id == talk.Id);
-    if(t == null) {
+    let index = this.Talks.findIndex(x => x.Id == talk.Id);
+    if(index == -1) {
       this.Talks.unshift(talk);
     } else {
-      let index = this.Talks.indexOf(t);
       this.Talks[index] = talk;
       this.Talks = this.SortTalks();
     }
@@ -66,18 +84,64 @@ export class TalkService {
   }
 
   GetMessages(talkId: string) : Array<MessageResponse> {
-    let talk = this.Talks.find(x => x.Id == talkId);
-    return talk != null && talk.Messages != null ? talk.Messages : new Array<MessageResponse>();
+    let obj = this.Messages.find(x => x.Key == talkId);
+    if(obj != null)
+      return obj.Value;
+    else
+      return new Array<MessageResponse>();
   }
 
   SaveMessages(talkId: string, messages: Array<MessageResponse>) {
     let talk = this.Talks.findIndex(x => x.Id == talkId);
     if(talk != -1)
     {
-      this.Talks[talk].Messages = messages;
-      this.storeService.Set(KeyStore[KeyStore.Talks], this.Talks)
+      let obj = this.Messages.find(x => x.Key == talkId);
+      if(obj == null) {
+        obj = new KeyValueResponse<string, Array<MessageResponse>>();
+        obj.Key = talkId;
+        obj.Value = messages;
+        this.Messages.push(obj);
+      } else {
+        obj.Value = messages;
+        this.Messages.find(x => x.Key == talkId).Value = messages;
+      }
+      this.storeService.Set(KeyStore[KeyStore.Messages], this.Messages)
     }  
     
+  }
+
+  saveMessages() {
+    this.storeService.Set(KeyStore[KeyStore.Talks], this.Messages);
+  }
+
+  getTalk(talkId: string) {
+    return this.Talks.find(x => x.Id == talkId);
+  }
+
+  insertTalk(talk: TalkResponse) {
+    this.Talks.unshift(talk);
+    this.SaveList();
+  }
+
+  updateTalk(talk: TalkResponse) {
+    let index = this.Talks.findIndex(x => x.Id == talk.Id);
+    this.Talks[index] = talk;
+    this.Talks = this.SortTalks();
+    this.SaveList();
+  }
+  
+  insertMessage(talkId: string, message: MessageResponse){
+    if(this.Messages.some(x => x.Key == talkId)) {
+      let m = this.Messages.find(x => x.Key == talkId);
+      m.Value.push(message);
+    } else {
+      let m = new KeyValueResponse<string, Array<MessageResponse>>();
+      m.Key = talkId;
+      m.Value = new Array<MessageResponse>();
+      m.Value.push(message);
+      this.Messages.push(m);
+    }
+    this.saveMessages();
   }
 
   Clear(){

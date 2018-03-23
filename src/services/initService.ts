@@ -11,8 +11,11 @@ import { Response } from "../models/response";
 import { InitResponse } from "../models/response/InitResponse";
 import { ExceptionService } from "./exceptionService";
 import { Events } from "ionic-angular";
+import { LoginRequest } from "../models/request/loginRequest";
+import { AppUser } from "../models/appUser";
+import { functions } from "./functions";
 
-  
+
 /**
  * @description
  * @class
@@ -41,6 +44,26 @@ export class InitService {
       this.events.publish("ErrorInit", error);
       this.exceptionService.Add(error);
     }
+  }
+
+  connexion(username: string, password: string) {
+    var obj = new LoginRequest(username, password);
+    obj.Lang = params.Lang;
+    let urlConnect = url.Login();
+    return this.httpService.Post<LoginRequest>(urlConnect, obj);
+  }
+
+  getAppUser(appUser, password) {
+    let user = new AppUser();
+    user.Email = appUser.Email;
+    user.Id = appUser.Id;
+    user.Firstname = appUser.Firstname;
+    user.Lastname = appUser.Lastname;
+    user.Username = appUser.Username;
+    user.Pictures = appUser.Pictures;
+    user.Token = functions.GenerateToken(appUser.Username, password);
+    this.storeService.Set(KeyStore[KeyStore.User], user);
+    return user;
   }
 
   manageData(response: Response<InitResponse>) {

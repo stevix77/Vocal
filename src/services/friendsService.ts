@@ -28,6 +28,10 @@ export class FriendsService {
       this.getList();
   }
 
+  getFriends() {
+    return this.Friends;
+  }
+
   add(ids: Array<string>) {
     let obj = new ManageFriendsRequest();
     obj.Lang = params.Lang;

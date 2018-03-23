@@ -13,6 +13,7 @@ import { TalkService } from "../../services/talkService";
 import { ExceptionService } from "../../services/exceptionService";
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
 import { Response } from '../../models/response';
+import { MessageService } from "../../services/messageService";
 
 /**
  * Generated class for the ModalEditVocalPage page.
@@ -30,7 +31,6 @@ export class ModalEditVocalPage {
   tab1Filters = AudioFiltersPage;
   isSending: Boolean = false;
   FileValue: string;
-  Friends: Array<any>;
   talkId: string;
 
   constructor(public navCtrl: NavController, 
@@ -42,6 +42,7 @@ export class ModalEditVocalPage {
     private cookieService: CookieService,
     private httpService: HttpService,
     private talkService: TalkService,
+    private messageService: MessageService,
     private exceptionService: ExceptionService
     ) {
       this.talkId = this.navParams.get("talkId");
@@ -89,57 +90,48 @@ export class ModalEditVocalPage {
   }
 
   sendVocal() {
-    console.log('send vocal');
-    if(!this.isSending) {
-      this.isSending = true;
-      //console.table(this.navParams.get('recipients'));
-      let users = [];
-      this.audioRecorder.getFile().then(fileValue => {
-        this.FileValue = fileValue;
-        // this.navParams.get('recipients').forEach(elt => {
-        //   users.push(elt.Id);
-        // });
-        this.talkService.Talks.find(x => x.Id == this.talkId).Users.forEach(elt => {
-          users.push(elt.Id);
-        })
-        let date = new Date();
-        let request: SendMessageRequest = {
-          content: this.FileValue,
-          duration: this.navParams.get('duration'),
-          sentTime: date,
-          idsRecipient: users,
-          messageType: MessageType.Vocal,
-          Lang: params.Lang,
-          idSender: params.User.Id,
-          IdTalk: this.talkId,
-          platform: params.Platform
-        };
-        let urlSendVocal = url.SendMessage();
-        let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)
-        this.httpService.Post(urlSendVocal, request, cookie).subscribe(
-          resp => {
-            let response = resp.json() as Response<SendMessageResponse>;
-            if(!response.HasError && response.Data.IsSent) {
-              console.log(response);
-              this.talkService.LoadList().then(() => {
-                this.talkService.UpdateList(response.Data.Talk);
-                this.talkService.SaveList();
-                this.navCtrl.pop()
-                //this.navCtrl.remove(0,1).then(() => this.navCtrl.pop());
-              })
+    try {
+      if(!this.isSending) {
+        this.isSending = true;
+        this.audioRecorder.getFile().then(fileValue => {
+          this.FileValue = fileValue;
+          let duration = this.navParams.get('duration');
+          this.messageService.sendMessage(this.talkId, MessageType.Vocal, null, duration, this.FileValue).subscribe(
+            resp => {
+              try {
+                let response = resp.json() as Response<SendMessageResponse>;
+                if(!response.HasError && response.Data.IsSent) {
+                  console.log(response);
+                  this.talkService.LoadList().then(() => {
+                    this.talkService.UpdateList(response.Data.Talk);
+                    this.talkService.SaveList();
+                    this.navCtrl.remove(0,1).then(() => this.navCtrl.pop());
+                  })
+                }
+                else {
+                  console.log(response);
+                  this.events.publish("Error", response.ErrorMessage);
+                }
+              } catch(err) {
+                this.events.publish("Error", err.message);
+                this.exceptionService.Add(err);
+              }
+              this.isSending = false;
             }
-            else {
-              console.log(response);
-            }
-          }
-        );
-      }).catch(err => {
-        console.log(err);
-        this.exceptionService.Add(err);
-      });
+          )
+        }).catch(err => {
+          console.log(err);
+          this.isSending = false;
+          this.events.publish("Error", err.message);
+          this.exceptionService.Add(err);
+        });
+      }
+    } catch(err) {
+      this.events.publish("Error", err.message);
+      this.exceptionService.Add(err);
     }
   }
-
+  
   showAlert(message) {
     let alert = this.alertCtrl.create({
       title: 'Error',

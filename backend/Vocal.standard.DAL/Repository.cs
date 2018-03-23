@@ -323,12 +323,6 @@ namespace Vocal.DAL
             return null;
         }
 
-        public void UpdateTalk(Talk talk)
-        {
-            var db = _db.GetCollection<Talk>(_config.CollectionTalk);
-            var req = db.ReplaceOne(x => x.Id == talk.Id, talk);
-        }
-
         //people i follow
         public List<People> GetFollowing(string userId, int pageSize, int pageNumber)
         {
@@ -506,6 +500,22 @@ namespace Vocal.DAL
                 return true;
             }
             return false;
+        }
+
+        public void UpdateTalk(Talk talk)
+        {
+            var db = _db.GetCollection<Talk>(_config.CollectionTalk);
+            var req = db.ReplaceOne(x => x.Id == talk.Id, talk);
+        }
+
+        public void ActiveTalk(string talkId)
+        {
+            var talk = GetTalkById(talkId);
+            if(talk != null)
+            {
+                talk.ListDelete.Where(x => x.Value).ToList().ForEach(x => talk.ListDelete[x.Key] = false);
+                UpdateTalk(talk);
+            }
         }
 
         public Talk GetTalkById(string talkId)
