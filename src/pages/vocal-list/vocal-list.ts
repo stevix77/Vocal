@@ -12,8 +12,9 @@ import { params } from '../../services/params';
 import { Response } from '../../models/response';
 import { url } from '../../services/url';
 import { Timer } from '../../services/timer';
-import { DeleteTalkRequest } from '../../models/request/deleteTalkRequest';
 import { ArchiveTalkRequest } from '../../models/request/archiveTalkRequest';
+import { MessageService } from "../../services/messageService";
+import { ExceptionService } from "../../services/exceptionService";
 
 
 /**
@@ -37,7 +38,7 @@ export class VocalListPage {
   timer: Timer;
   time: String = '';
   isDirectMessage: boolean = false;
-  uRecipients: Array<string>;
+  talkId: string = "";
   
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -48,14 +49,20 @@ export class VocalListPage {
     public config: Config,
     private httpService: HttpService, 
     private cookieService: CookieService, 
-    private talkService: TalkService) {
+    private talkService: TalkService,
+    private messageService: MessageService,
+    private exceptionService: ExceptionService) {
 
     events.subscribe(HubMethod[HubMethod.Receive], () => this.initialize())
+    this.events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.beginTalk(obj))
+    this.events.subscribe(HubMethod[HubMethod.EndTalk], (obj) => this.endTalk(obj))
     this.isApp = this.config.get('isApp');
     
   }
 
   ionViewDidLoad() {
+    if(this.talkService.Talks.length == 0)
+      this.talkService.LoadList();
     console.log('ionViewDidLoad VocalListPage');
     if(this.navCtrl.length() > 1) {
       this.navCtrl.remove(0, this.navCtrl.length() - 1).then(() => {
@@ -181,45 +188,44 @@ export class VocalListPage {
   }
 
   initialize() {
-    this.talkService.LoadList().then(() => {
-      if(this.talkService.Talks != null) {
-        this.vocalList = this.talkService.Talks;
-        if(this.vocalList.length > 0) {
-          this.formatDateMessage(this.vocalList);
-        }
+    if(this.talkService.Talks != null) {
+      this.vocalList = this.talkService.Talks;
+      if(this.vocalList.length > 0) {
+        this.formatDateMessage(this.vocalList);
       }
-      else {  
-        this.getVocalList();
-      }
-    });
+    }
+    else {  
+      this.getVocalList();
+    }
   }
 
   deleteMessage(id, index){
-    let itemIndex = index;
-    let request: DeleteTalkRequest = {
-      Lang: params.Lang,
-      IdSender: params.User.Id,
-      IdTalk: id,
-      SentTime: new Date()
-    };
-    let urlDelete = url.DeleteTalk();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlDelete, params.User);
-    this.httpService.Post<DeleteTalkRequest>(urlDelete, request, cookie).subscribe(
-      resp => {
-        let response = resp.json() as Response<ActionResponse>;
-        if(!response.HasError && response.Data.IsDone){
-          this.talkService.DeleteTalk(this.vocalList[itemIndex]);
-          this.vocalList.splice(itemIndex, 1);
+    try {
+      this.messageService.deleteTalk(id).subscribe(
+        resp => {
+          try {
+            let response = resp.json() as Response<ActionResponse>;
+            if(!response.HasError && response.Data.IsDone){
+              this.talkService.DeleteTalk(id);
+              this.talkService.DeleteMessages(id);
+              this.vocalList = this.talkService.Talks;
+            }
+            else {
+              this.events.publish("Error", response.ErrorMessage);
+            }
+          } catch(err) {
+            this.events.publish("Error", err.message);
+            this.exceptionService.Add(err);
+          }
         }
-        else {
-          this.showAlert(response.ErrorMessage);
-        }
-      }
-    );
+      );
+    } catch(err) {
+      this.events.publish("Error", err.message);
+      this.exceptionService.Add(err);
+    }
   }
 
   archiveMessage(id, index){
-    let itemIndex = index;
     let request: ArchiveTalkRequest = {
       Lang: params.Lang,
       IdSender: params.User.Id,
@@ -232,8 +238,7 @@ export class VocalListPage {
       resp => {
         let response = resp.json() as Response<ActionResponse>;
         if(!response.HasError && response.Data.IsDone){
-          this.talkService.DeleteTalk(this.vocalList[itemIndex]);
-          this.vocalList.splice(itemIndex, 1);
+          this.talkService.DeleteTalk(id);
         }
         else {
           this.showAlert(response.ErrorMessage);
@@ -258,4 +263,18 @@ export class VocalListPage {
     return picture;
   }
   
+  beginTalk(obj) {
+    let talk = this.vocalList.find(x => x.Id == obj.TalkId);
+    if(talk != null){
+      let t = this.talkService.getTalk(obj.TalkId);
+      talk.IsWriting = t.IsWriting = true;
+      talk.TextWriting = obj.Username + " se prépare à envoyer un message";
+    }
+  }
+
+  endTalk(obj) {
+    let talk = this.vocalList.find(x => x.Id == obj.TalkId);
+    if(talk != null)
+      talk.IsWriting = false;
+  }
 }

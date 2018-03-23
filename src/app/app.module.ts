@@ -53,6 +53,7 @@ import { AudioRecorder } from "../services/audiorecorder";
 import { SettingsService } from "../services/settingsService";
 
 import { Pro } from '@ionic/pro';
+import { MessageService } from "../services/messageService";
 
 Pro.init('6a79ec67', {
   appVersion: '0.0.1'
@@ -143,6 +144,7 @@ let components = [
     FriendsService,
     SettingsService,
     InitService,
+    MessageService,
     AudioRecorder,
     IonicErrorHandler,
     {provide: ErrorHandler, useClass: MyErrorHandler}

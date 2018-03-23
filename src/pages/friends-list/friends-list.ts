@@ -52,7 +52,7 @@ export class FriendsListPage {
   }
 
   ionViewWillEnter() {
-    this.Friends = this.friendsService.Friends;
+    this.Friends = this.friendsService.getFriends();
   }
 
   ionViewDidLoad() {

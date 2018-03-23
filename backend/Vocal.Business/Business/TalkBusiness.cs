@@ -270,6 +270,7 @@ namespace Vocal.Business.Business
             talk.LastMessage = m.ArrivedTime;
             _repository.UpdateTalk(talk);
             _repository.AddMessage(m);
+            _repository.ActiveTalk(talk.Id);
             response.Data.Talk = Bind.Bind_Talks(talk, m, request.IdSender);
             response.Data.Message = Bind.Bind_Message(m);
             response.Data.IsSent = true;

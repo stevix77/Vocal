@@ -28,6 +28,10 @@ export class FriendsService {
       this.getList();
   }
 
+  getFriends() {
+    return this.Friends;
+  }
+
   add(ids: Array<string>) {
     let obj = new ManageFriendsRequest();
     obj.Lang = params.Lang;
@@ -91,6 +95,10 @@ export class FriendsService {
       else
         this.loadFriends();
     })
+  }
+
+  getFriendById(userId: string) {
+    return this.Friends.find(x => x.Id == userId);
   }
 
   saveList() {
