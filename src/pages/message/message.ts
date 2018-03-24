@@ -56,7 +56,7 @@ export class MessagePage {
     this.model.talkId = this.navParams.get("TalkId");
     this.model.userId = this.navParams.get("UserId");
 
-    this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj.Message))
+    this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj))
     this.events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.beginTalk(obj))
     this.events.subscribe(HubMethod[HubMethod.EndTalk], (obj) => this.endTalk(obj))
 
@@ -227,11 +227,11 @@ export class MessagePage {
     this.scrollToBottom();
   }
 
-  updateRoom(message) {
+  updateRoom(obj) {
     try {
-      if(!this.Messages.some(x => x.Id == message.Id)) {
-        this.Messages.push(message);
-        this.hubService.Invoke(HubMethod[HubMethod.UpdateListenUser], this.model.talkId, [message])
+      if(obj.Talk.id == this.model.talkId && !this.Messages.some(x => x.Id == obj.Message.Id)) {
+        this.Messages.push(obj.Message);
+        this.hubService.Invoke(HubMethod[HubMethod.UpdateListenUser], this.model.talkId, [obj.Message])
       }
     } catch(err) {
       this.events.publish("Error", err.message)

@@ -40,6 +40,8 @@
     "base64js": "^1.0.1",
     "com-badrit-base64": "^0.2.0",
     "cookie-storage": "^3.1.0",
+    "cordova-android": "~6.2.3",
+    "cordova-browser": "~5.0.3",
     "cordova-ios": "^4.5.4",
     "cordova-plugin-camera": "^2.4.1",
     "cordova-plugin-compat": "^1.1.0",
@@ -69,16 +71,14 @@
     "jquery-deferred": "^0.3.1",
     "jquery-param": "^0.2.0",
     "node-latest-version": "^1.0.16",
-    "phonegap-plugin-push": "^2.1.3",
+    "phonegap-plugin-push": "^2.0.0",
     "rxjs": "^5.5.6",
     "signalr-no-jquery": "^0.1.8",
     "sw-toolbox": "3.6.0",
     "text-encoder-lite": "^1.0.1",
     "tunajs": "^1.0.0",
     "whitelist": "^1.0.2",
-    "zone.js": "0.8.10",
-    "cordova-android": "~7.0.0",
-    "cordova-browser": "~5.0.3"
+    "zone.js": "0.8.10"
   },
   "devDependencies": {
     "@ionic/app-scripts": "^3.1.8",
@@ -115,15 +115,13 @@
       "cordova-plugin-ms-azure-mobile-apps": {},
       "info.protonet.imageresizer": {},
       "ionic-plugin-keyboard": {},
-      "phonegap-plugin-push": {
-        "FCM_VERSION": "11.6.2"
-      }
+      "phonegap-plugin-push": {}
     },
     "platforms": [
       "ios",
       "windows",
-      "android",
-      "browser"
+      "browser",
+      "android"
     ]
   }
 }

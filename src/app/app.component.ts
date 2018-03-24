@@ -299,9 +299,9 @@ export class VocalApp {
       user => {
         if(user != null) {
           params.User = user;
-          this.SubscribeHub();
-          this.initPushNotification();
           this.init();
+          this.initPushNotification();
+          this.SubscribeHub();
           this.rootPage = VocalListPage;
         }
         else

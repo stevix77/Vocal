@@ -61,8 +61,6 @@ export class VocalListPage {
   }
 
   ionViewDidLoad() {
-    if(this.talkService.Talks.length == 0)
-      this.talkService.LoadList();
     console.log('ionViewDidLoad VocalListPage');
     if(this.navCtrl.length() > 1) {
       this.navCtrl.remove(0, this.navCtrl.length() - 1).then(() => {
@@ -82,6 +80,11 @@ export class VocalListPage {
   ionViewDidEnter() {
     console.log('ionViewDidEnter VocalListPage');
     this.initialize();
+  }
+
+  ionViewWillEnter() {
+    if(this.talkService.Talks.length == 0)
+      this.talkService.LoadList();
   }
 
   toggleRecording() {
