@@ -24,7 +24,7 @@
     <ion-list-header>
       Mes vocals
     </ion-list-header>
-    <ion-item-sliding *ngFor="let item of vocalList;let i = index">
+    <ion-item-sliding *ngFor="let item of talkService.Talks;let i = index">
       <ion-item (click)="goToMessage(item.Id)">
         <ion-avatar item-start>
           <img alt="" [src]="getPicture(item)">

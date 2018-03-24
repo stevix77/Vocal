@@ -31,7 +31,6 @@ import { ExceptionService } from "../../services/exceptionService";
 export class VocalListPage {
   notificationHub : any;
   messagePage = MessagePage;
-  vocalList: Array<TalkResponse> = new Array<TalkResponse>();
   isApp: boolean;
   isRecording: boolean = false;
   isTiming: boolean = false;
@@ -135,8 +134,8 @@ export class VocalListPage {
           this.showAlert(response.ErrorMessage)
         else {
           if(response.Data.length > 0) {
-            this.vocalList = this.talkService.Talks = response.Data;
-            this.formatDateMessage(this.vocalList);
+            this.talkService.Talks = response.Data;
+            this.formatDateMessage(this.talkService.Talks);
             this.talkService.SaveList();
           }
         }
@@ -191,11 +190,8 @@ export class VocalListPage {
   }
 
   initialize() {
-    if(this.talkService.Talks != null) {
-      this.vocalList = this.talkService.Talks;
-      if(this.vocalList.length > 0) {
-        this.formatDateMessage(this.vocalList);
-      }
+    if(this.talkService.Talks.length > 0) {
+      this.formatDateMessage(this.talkService.Talks);
     }
     else {  
       this.getVocalList();
@@ -211,7 +207,6 @@ export class VocalListPage {
             if(!response.HasError && response.Data.IsDone){
               this.talkService.DeleteTalk(id);
               this.talkService.DeleteMessages(id);
-              this.vocalList = this.talkService.Talks;
             }
             else {
               this.events.publish("Error", response.ErrorMessage);
@@ -267,16 +262,15 @@ export class VocalListPage {
   }
   
   beginTalk(obj) {
-    let talk = this.vocalList.find(x => x.Id == obj.TalkId);
+    let talk = this.talkService.getTalk(obj.TalkId);
     if(talk != null){
-      let t = this.talkService.getTalk(obj.TalkId);
-      talk.IsWriting = t.IsWriting = true;
+      talk.IsWriting = true;
       talk.TextWriting = obj.Username + " se prépare à envoyer un message";
     }
   }
 
   endTalk(obj) {
-    let talk = this.vocalList.find(x => x.Id == obj.TalkId);
+    let talk = this.talkService.getTalk(obj.TalkId);
     if(talk != null)
       talk.IsWriting = false;
   }

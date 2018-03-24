@@ -76,10 +76,21 @@ export class TalkService {
     if(index == -1) {
       this.Talks.unshift(talk);
     } else {
-      this.Talks[index] = talk;
+      // this.Talks[index] = talk;
+      this.UpdateTalk(talk, index);
       this.Talks = this.SortTalks();
     }
     this.SaveList();
+  }
+
+  UpdateTalk(talk: TalkResponse, index: number) {
+    let t = this.Talks[index];
+    t.DateLastMessage = talk.DateLastMessage;
+    t.Duration = talk.Duration;
+    t.HasNewMessage = talk.HasNewMessage;
+    t.Name = talk.Name;
+    t.Picture = talk.Picture;
+    t.Users = talk.Users;
   }
 
   SortTalks() {
