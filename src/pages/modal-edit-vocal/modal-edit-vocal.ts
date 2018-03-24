@@ -3,10 +3,7 @@ import { IonicPage, NavController, NavParams, ViewController, AlertController, E
 import { AudioRecorder } from '../../services/audiorecorder';
 import { SendVocalPage } from '../../pages/send-vocal/send-vocal';
 import { AudioFiltersPage } from '../../pages/audio-filters/audio-filters';
-import { SendMessageRequest } from '../../models/request/sendMessageRequest';
 import { MessageType } from '../../models/enums';
-import { params } from "../../services/params";
-import { url } from "../../services/url";
 import { CookieService } from "../../services/cookieService";
 import { HttpService } from "../../services/httpService";
 import { TalkService } from "../../services/talkService";
@@ -39,8 +36,6 @@ export class ModalEditVocalPage {
     public audioRecorder: AudioRecorder,
     public alertCtrl: AlertController,
     public events: Events,
-    private cookieService: CookieService,
-    private httpService: HttpService,
     private talkService: TalkService,
     private messageService: MessageService,
     private exceptionService: ExceptionService

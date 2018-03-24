@@ -50,12 +50,9 @@ export class SendVocalPage {
   }
 
   getCheckedUsers() {
-    return this.Friends.map(x => { 
-        if(x.Checked)
-          return x.Id;
-        else
-          return;
-      });
+    let users = [];
+    users = this.Friends.filter(x => x.Checked).map(x => x.Id)
+    return users;
   }
 
   sendVocal() {
