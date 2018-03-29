@@ -24,17 +24,21 @@
     <ion-list-header>
       Mes vocals
     </ion-list-header>
-    <ion-item-sliding *ngFor="let item of vocalList;let i = index">
-      <ion-item (click)="goToMessage(item.Id, item.Users)">
+    <ion-item-sliding *ngFor="let item of talkService.Talks;let i = index">
+      <ion-item (click)="goToMessage(item.Id)">
         <ion-avatar item-start>
-          <img alt="" [src]="item.Picture ? item.Picture : 'assets/default-picture-80x80.jpg'">
+          <img alt="" [src]="getPicture(item)">
         </ion-avatar>
-        
-        <h3>{{ item.Name }}</h3>
-        <p *ngIf="item.DateLastMessage.isToday === true">{{ item.DateLastMessage.date | date: 'HH:mm' }}</p>
-        <p *ngIf="item.DateLastMessage.isYesterday === true">Hier</p>
-        <p *ngIf="item.DateLastMessage.isWeek === true">{{ item.DateLastMessage.date | date: 'EEEE' }}</p>
-        <p *ngIf="item.DateLastMessage.isToday === false && item.DateLastMessage.isYesterday === false && item.DateLastMessage.isWeek === false">{{ item.DateLastMessage.date | date: 'dd/MM/yy' }}</p>
+        <div *ngIf="item.IsWriting === true">
+          <p>{{ item.TextWriting }}
+        </div>
+        <div *ngIf="item.IsWriting === false">
+          <h3>{{ item.Name }}</h3>
+          <p *ngIf="item.DateLastMessage.isToday === true">{{ item.DateLastMessage.date | date: 'HH:mm' }}</p>
+          <p *ngIf="item.DateLastMessage.isYesterday === true">Hier</p>
+          <p *ngIf="item.DateLastMessage.isWeek === true">{{ item.DateLastMessage.date | date: 'EEEE' }}</p>
+          <p *ngIf="item.DateLastMessage.isToday === false && item.DateLastMessage.isYesterday === false && item.DateLastMessage.isWeek === false">{{ item.DateLastMessage.date | date: 'dd/MM/yy' }}</p>
+        </div>
       </ion-item>
       <ion-item-options side="right">
         <button ion-button icon-only color="danger" (click)="deleteMessage(item.Id, i)">
@@ -50,7 +54,7 @@
 
 <ion-footer>
   <ion-toolbar text-center>
-    <audio-recorder [isDirectMessage]="isDirectMessage" [recipients]="uRecipients"></audio-recorder>
+    <audio-recorder [isDirectMessage]="isDirectMessage" [talkId]="talkId"></audio-recorder>
   </ion-toolbar>
 </ion-footer>
 

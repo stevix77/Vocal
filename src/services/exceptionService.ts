@@ -14,7 +14,7 @@ export class ExceptionService {
   }
 
   Add(error) {
-    this.httpService.Post(url.AddException(), error, null).subscribe();
+    this.httpService.Post(url.AddException(), JSON.stringify(error), null).subscribe();
   }
 
 }

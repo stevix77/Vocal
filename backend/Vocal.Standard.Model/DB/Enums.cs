@@ -34,8 +34,8 @@ namespace Vocal.Model.DB
 
     public enum PictureType
     {
-        Profil,
-        Talk
+        Profil = 0,
+        Talk = 1
     }
 
     public enum Platform

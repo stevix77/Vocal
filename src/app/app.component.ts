@@ -60,7 +60,12 @@ export class VocalApp {
               private initService: InitService, ) {
     this.initializeApp();
     events.subscribe("ErrorInit", (error) => this.showToast(error));
-    events.subscribe("Error", (error) => this.showToast(error));
+    events.subscribe("Error", (error) => this.showToast('Une erreur est survenue'));
+    events.subscribe("subscribeHub", () => this.SubscribeHub());
+    events.subscribe("Init", () => {
+      this.init();
+      this.initPushNotification();
+    });
     // used for an example of ngFor and navigation
     // this.pages = [
     //   { title: 'Home', component: HomePage }
@@ -296,9 +301,9 @@ export class VocalApp {
       user => {
         if(user != null) {
           params.User = user;
-          this.SubscribeHub();
-          this.initPushNotification();
           this.init();
+          this.initPushNotification();
+          this.SubscribeHub();
           this.rootPage = VocalListPage;
         }
         else
@@ -393,8 +398,8 @@ export class VocalApp {
       this.events.publish(HubMethod[HubMethod.BeginTalk], obj);
     });
 
-    this.hubService.hubProxy.on(HubMethod[HubMethod.EndTalk], () => {
-      this.events.publish(HubMethod[HubMethod.EndTalk]);
+    this.hubService.hubProxy.on(HubMethod[HubMethod.EndTalk], (obj) => {
+      this.events.publish(HubMethod[HubMethod.EndTalk], obj);
     });
 
     this.hubService.hubProxy.on(HubMethod[HubMethod.AddFriend], (obj) => {
@@ -413,11 +418,17 @@ export class VocalApp {
         let mess = 'Nouveau message de ' + obj.Message.User.Username;
         this.showToast(mess);
       }
-      this.talkService.LoadList().then(() => {
+      let talk = this.talkService.Talks.find(x => x.Id == obj.Talk.Id);
+      if(talk != null) {
+        talk.DateLastMessage = obj.Message.SentTime;
+        this.talkService.updateTalk(talk);
+        this.talkService.insertMessage(obj.Talk.Id, obj.Message);
+      } else {
         obj.Talk.DateLastMessage = obj.Message.SentTime;
-        this.talkService.UpdateList(obj.Talk);
-        this.talkService.SaveList();
-      }).then(() => this.events.publish(HubMethod[HubMethod.Receive], obj));
+        this.talkService.insertTalk(obj.Talk);
+        this.talkService.insertMessage(obj.Talk.Id, obj.Message);
+      }
+      this.events.publish(HubMethod[HubMethod.Receive], obj);
     })
     
   }

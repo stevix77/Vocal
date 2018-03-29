@@ -1,18 +1,12 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, Events } from 'ionic-angular';
 import { UserResponse } from "../../models/response/userResponse";
-import { KeyStore, PictureType } from "../../models/enums";
-import { StoreService } from "../../services/storeService";
-import { CookieService } from "../../services/cookieService";
-import { HttpService } from "../../services/httpService";
-import { GetFriendsRequest } from "../../models/request/getFriendsRequest";
-import { params } from "../../services/params";
-import { url } from "../../services/url";
+import { PictureType } from "../../models/enums";
 import { Response } from '../../models/response';
-import { ManageFriendsRequest } from "../../models/request/manageFriendsRequest";
-import { PeopleResponse } from "../../models/response/peopleResponse";
 import { MessagePage } from "../message/message";
 import { PictureResponse } from "../../models/response/pictureResponse";
+import { FriendsService } from "../../services/friendsService";
+import { ExceptionService } from "../../services/exceptionService";
 
 /**
  * Generated class for the FriendsListPage page.
@@ -29,44 +23,36 @@ export class FriendsListPage {
   Friends: Array<UserResponse>;
   constructor(public navCtrl: NavController, 
     public alertCtrl: AlertController,
-    public navParams: NavParams,
-    private storeService: StoreService, 
-    private httpService: HttpService, 
-    private cookieService: CookieService) {
+    public events: Events,
+    public navParams: NavParams, 
+    private friendsService: FriendsService,
+    private exceptionService: ExceptionService) {
   }
 
   deleteContact(userId) {
-    let obj = new ManageFriendsRequest();
-    obj.Lang = params.Lang;
-    obj.UserId = params.User.Id;
-    obj.Ids = [userId];
-    let urlFriends = url.RemoveFriends();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlFriends, params.User)
-    this.httpService.Post<ManageFriendsRequest>(urlFriends, obj, cookie).subscribe(
-      resp => { 
-        let response = resp.json() as Response<boolean>;
-        if(!response.HasError) {
-          let index = this.Friends.findIndex(x => x.Id == userId);
-          this.Friends.splice(index, 1);
-          this.storeService.Set(KeyStore[KeyStore.Friends], this.Friends)
-        } else {
-          console.log("error ->" + response.ErrorMessage);
+    try {
+      this.friendsService.delete([userId]).subscribe(
+        resp => { 
+          try {
+            let response = resp.json() as Response<boolean>;
+            if(!response.HasError) {
+              this.friendsService.remove([userId]);
+            } else {
+              this.events.publish("Error", response.ErrorMessage);
+            }
+          } catch(err) {
+            this.events.publish("Error", err.message);    
+          }
         }
-      }
-    );
+      );
+    } catch (err) {
+      this.exceptionService.Add(err);
+      this.events.publish("Error", err.message);
+    }
   }
 
   ionViewWillEnter() {
-    this.storeService.Get(KeyStore[KeyStore.Friends]).then(
-      store => {
-        if(store != null){
-          this.Friends = store;
-          console.log(this.Friends);
-        } else {
-          this.LoadFriends();
-        }
-      }
-    )
+    this.Friends = this.friendsService.getFriends();
   }
 
   ionViewDidLoad() {
@@ -77,27 +63,8 @@ export class FriendsListPage {
     return pictures.find(x => x.Type == PictureType.Talk).Value;
   }
 
-  LoadFriends() {
-    let obj = new GetFriendsRequest();
-    obj.Lang = params.Lang;
-    obj.UserId = params.User.Id;
-    let urlFriends = url.GetFriends();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlFriends, params.User)
-    this.httpService.Post<GetFriendsRequest>(urlFriends, obj, cookie).subscribe(
-      resp => { 
-        let response = resp.json() as Response<Array<PeopleResponse>>;
-        if(!response.HasError) {
-          this.Friends = response.Data;
-          this.storeService.Set(KeyStore[KeyStore.Friends], response.Data);
-        } else {
-          console.log(response);
-        }
-      }
-    );
-  }
-
-  goToMessage(userId) {
-    this.navCtrl.push(MessagePage, {TalkId: null, Users: [userId]})
+  sendMessage(userId) {
+    this.navCtrl.push(MessagePage, {TalkId: null, UserId: userId})
   }
 
   showConfirm(userId) {
