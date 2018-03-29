@@ -34,18 +34,30 @@ export class AudioRecorder {
       let source = this.context.createBufferSource();
       let context = this.context;
       let file = this.file;
+      let exceptionService = this.exceptionService;
 
       file.readAsArrayBuffer(this.getFilePath(), this.filename).then(arrayBuffer => {
         context.decodeAudioData(arrayBuffer, function(buffer){
           source.buffer = buffer;
 
           let convolver = context.createConvolver();
-          file.checkDir(file.applicationDirectory + 'www/assets/', 'effects').then(() => console.log('directory fonts exists')).catch(err => console.log('directory fonts doesnt exists'));
-          file.readAsArrayBuffer(file.applicationDirectory + 'www/assets/effects/', 'spring.wav').then(arrayBuffer => {
-            console.log('type : ' + typeof(arrayBuffer));
-            //convolver.buffer = this.impulseResponseBuffer;
-          }).catch(err => console.log('err : ' + err));
+          file.listDir(file.applicationDirectory + 'www/', 'assets').then(response => {
+            exceptionService.Add(response);
+          }).catch(err => {
+            exceptionService.Add(err);
+          });
+          /*
+          file.readAsArrayBuffer('../assets/effects/', 'spring.wav').then(arrayBuffer => {
+            context.decodeAudioData(arrayBuffer, function(buffer){
+              convolver.buffer = buffer;
+              source.connect(convolver);
+              convolver.connect(context.destination);
 
+              source.start();
+            });
+          }).catch(err => {
+            exceptionService.Add(err);
+          });*/
           //source.connect(context.destination);
           //source.start();
           // Si le son est coupé sur l'iPhone, l'audio ne se joue pas
