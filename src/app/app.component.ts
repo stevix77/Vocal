@@ -61,11 +61,8 @@ export class VocalApp {
     this.initializeApp();
     events.subscribe("ErrorInit", (error) => this.showToast(error));
     events.subscribe("Error", (error) => this.showToast('Une erreur est survenue'));
-    events.subscribe("subscribeHub", () => this.SubscribeHub());
-    events.subscribe("Init", () => {
-      this.init();
-      this.initPushNotification();
-    });
+    events.subscribe("SubscribeHub", () => this.SubscribeHub());
+    events.subscribe("Init", () => this.init());
     // used for an example of ngFor and navigation
     // this.pages = [
     //   { title: 'Home', component: HomePage }
@@ -300,9 +297,6 @@ export class VocalApp {
         if(user != null) {
           params.User = user;
           this.init();
-          this.initPushNotification();
-          this.SubscribeHub();
-          this.rootPage = VocalListPage;
         }
         else
           this.rootPage = HomePage;
@@ -348,23 +342,22 @@ export class VocalApp {
     params.Platform = platform;
   }
 
-  openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component);
-  }
-
   init() {
     this.initService.init().subscribe(
       resp => {
         let response = resp.json() as Response<InitResponse>;
         this.initService.manageData(response);
-        this.events.publish("InitDone");
+        this.rootPage = VocalListPage;
+        //this.events.publish("InitDone");
       },
       error => {
         this.events.publish("ErrorInit", error);
         this.exceptionService.Add(error);
         // this.exceptionService.Add("init error");
+      },
+      () => {
+        this.initPushNotification();
+        //this.SubscribeHub();
       }
     );
   }
@@ -388,9 +381,8 @@ export class VocalApp {
   }
 
   SubscribeHub() {
-    this.talkService.LoadList();
     this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
-
+    
     this.hubService.hubProxy.on(HubMethod[HubMethod.BeginTalk], (obj) => {
       console.log(obj);
       this.events.publish(HubMethod[HubMethod.BeginTalk], obj);

@@ -46,7 +46,8 @@ export class Connexion {
               } else {
                 var appUser = this.initService.getAppUser(response.Data, this.model.Password); 
                 params.User = appUser;
-                //this.events.publish("Init");
+                this.events.publish("Init");
+                //this.navCtrl.push(VocalListPage);  
               }
             } catch(err) {
               this.events.publish("Error", err.message);

@@ -17,18 +17,20 @@ export class TalkService {
   public Messages: Array<KeyValueResponse<string, Array<MessageResponse>>> = new Array<KeyValueResponse<string, Array<MessageResponse>>>();
 
   constructor(private storeService: StoreService) {
+    //this.init();
+  }
+
+  init() {
     this.LoadList();
     this.loadListMessages();
   }
-
-  init() {}
 
   SaveList() {
     this.storeService.Set(KeyStore[KeyStore.Talks], this.Talks);
   }
 
   LoadList() {
-    this.storeService.Get(KeyStore[KeyStore.Talks]).then(
+    return this.storeService.Get(KeyStore[KeyStore.Talks]).then(
       talks => {
         if(talks != null) {
           let t = talks as Array<TalkResponse>;
