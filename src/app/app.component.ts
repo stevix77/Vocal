@@ -359,6 +359,7 @@ export class VocalApp {
       resp => {
         let response = resp.json() as Response<InitResponse>;
         this.initService.manageData(response);
+        this.events.publish("InitDone");
       },
       error => {
         this.events.publish("ErrorInit", error);
@@ -387,9 +388,8 @@ export class VocalApp {
   }
 
   SubscribeHub() {
-    this.talkService.LoadList().then(() => {
-      this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
-    })
+    this.talkService.LoadList();
+    this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
 
     this.hubService.hubProxy.on(HubMethod[HubMethod.BeginTalk], (obj) => {
       console.log(obj);

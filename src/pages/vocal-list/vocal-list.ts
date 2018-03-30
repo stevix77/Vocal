@@ -77,14 +77,21 @@ export class VocalListPage {
   }
 
   ionViewDidEnter() {
-    console.log('ionViewDidEnter VocalListPage');
-    this.initialize();
+    // this.initialize();
+    // console.log('ionViewDidEnter VocalListPage');
+    // if(this.talkService.Talks.length == 0)
+    //   this.talkService.LoadList().then(() => {
+    //     this.initialize();
+    //   });
   }
 
-  ionViewWillEnter() {
-    if(this.talkService.Talks.length == 0)
-      this.talkService.LoadList();
-  }
+  // ionViewWillEnter() {
+  //   this.talkService.init();
+  //   if(this.talkService.Talks.length == 0)
+  //     this.talkService.LoadList().then(() => {
+  //       this.initialize();
+  //     });
+  // }
 
   toggleRecording() {
     this.isRecording = !this.isRecording;

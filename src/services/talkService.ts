@@ -21,15 +21,17 @@ export class TalkService {
     this.loadListMessages();
   }
 
+  init() {}
+
   SaveList() {
     this.storeService.Set(KeyStore[KeyStore.Talks], this.Talks);
   }
 
   LoadList() {
-    return this.storeService.Get(KeyStore[KeyStore.Talks]).then(
+    this.storeService.Get(KeyStore[KeyStore.Talks]).then(
       talks => {
         if(talks != null) {
-          let t = talks as Array<TalkResponse>
+          let t = talks as Array<TalkResponse>;
           t.forEach(x => {
             x.IsWriting = false;
             x.TextWriting = "";

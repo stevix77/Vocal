@@ -69,11 +69,10 @@ export class SendVocalPage {
                 let response = resp.json() as Response<SendMessageResponse>;
                 if(!response.HasError && response.Data.IsSent) {
                   console.log(response);
-                  this.talkService.LoadList().then(() => {
-                    this.talkService.UpdateList(response.Data.Talk);
-                    this.talkService.SaveList();
-                    this.navCtrl.remove(0,1).then(() => this.navCtrl.pop());
-                  })
+                  this.talkService.LoadList();
+                  this.talkService.UpdateList(response.Data.Talk);
+                  this.talkService.SaveList();
+                  this.navCtrl.remove(0,1).then(() => this.navCtrl.pop());
                 }
                 else {
                   console.log(response);

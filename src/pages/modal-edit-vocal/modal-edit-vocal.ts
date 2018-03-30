@@ -4,8 +4,6 @@ import { AudioRecorder } from '../../services/audiorecorder';
 import { SendVocalPage } from '../../pages/send-vocal/send-vocal';
 import { AudioFiltersPage } from '../../pages/audio-filters/audio-filters';
 import { MessageType } from '../../models/enums';
-import { CookieService } from "../../services/cookieService";
-import { HttpService } from "../../services/httpService";
 import { TalkService } from "../../services/talkService";
 import { ExceptionService } from "../../services/exceptionService";
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
@@ -97,11 +95,10 @@ export class ModalEditVocalPage {
                 let response = resp.json() as Response<SendMessageResponse>;
                 if(!response.HasError && response.Data.IsSent) {
                   console.log(response);
-                  this.talkService.LoadList().then(() => {
-                    this.talkService.UpdateList(response.Data.Talk);
-                    this.talkService.SaveList();
-                    this.navCtrl.remove(0,1).then(() => this.navCtrl.pop());
-                  })
+                  this.talkService.LoadList();
+                  this.talkService.UpdateList(response.Data.Talk);
+                  this.talkService.SaveList();
+                  this.navCtrl.remove(0,1).then(() => this.navCtrl.pop());
                 }
                 else {
                   console.log(response);

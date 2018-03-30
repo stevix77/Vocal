@@ -292,5 +292,14 @@ namespace Vocal.Business.Properties {
                 return ((string)(this["DocsPath"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6486858a75b244759a4697c0a2420188;a2a1f315a94f46c7894868bf6e704989")]
+        public string CognitiveServiceKey {
+            get {
+                return ((string)(this["CognitiveServiceKey"]));
+            }
+        }
     }
 }

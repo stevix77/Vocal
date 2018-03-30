@@ -28,6 +28,8 @@ export class Connexion {
               private toastCtrl: ToastController, 
               private exceptionService: ExceptionService,
               private events: Events) {
+
+                this.events.subscribe("InitDone", () => this.goToVocalListPage())
     
   }
 
@@ -44,8 +46,7 @@ export class Connexion {
               } else {
                 var appUser = this.initService.getAppUser(response.Data, this.model.Password); 
                 params.User = appUser;
-                this.events.publish("Init");
-                this.navCtrl.push(VocalListPage);
+                //this.events.publish("Init");
               }
             } catch(err) {
               this.events.publish("Error", err.message);
@@ -65,6 +66,10 @@ export class Connexion {
       this.events.publish("Error", err.message);
       this.exceptionService.Add(err);
     }
+  }
+
+  goToVocalListPage() {
+    this.navCtrl.push(VocalListPage);    
   }
 
   goToForgotPassword() {
