@@ -273,3 +273,11 @@ package-lock.json
 
 .angulardoc.json
 .vscode
+
+# Generated ngc files
+src/**/*.js
+src/**/*.js.map
+src/**/*.metadata.json
+
+#Generated icons
+resources/ios
