@@ -63,6 +63,7 @@ export class VocalApp {
     events.subscribe("Error", (error) => this.showToast('Une erreur est survenue'));
     events.subscribe("SubscribeHub", () => this.SubscribeHub());
     events.subscribe("Init", () => this.init());
+    events.subscribe("alert", (e) => this.showAlert(e));
     // used for an example of ngFor and navigation
     // this.pages = [
     //   { title: 'Home', component: HomePage }

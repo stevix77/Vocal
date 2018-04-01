@@ -1,5 +1,6 @@
 ﻿using Vocal.Model.Context;
 using Vocal.DAL;
+using Vocal.Business.Properties;
 
 namespace Vocal.Business
 {
@@ -7,6 +8,7 @@ namespace Vocal.Business
     {
         protected Repository _repository; 
         protected NotificationHub _notificationHub;
+        protected CognitiveService _cognitiveService;
 
         public BaseBusiness(DbContext dbContext)
         {
@@ -17,6 +19,7 @@ namespace Vocal.Business
         {   
             _repository = Repository.Init(dbContext);
             _notificationHub = NotificationHub.Init(hubContext);
+            _cognitiveService = CognitiveService.Init(Settings.Default.CognitiveServiceKey, Settings.Default.CognitiveServiceUrlLongAudio, _repository);
         }
 
         internal BaseBusiness(Repository repository)

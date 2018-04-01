@@ -88,6 +88,17 @@ namespace Vocal.DAL
             return user;
         }
 
+        public void AddTranslator(string messId, string displayText)
+        {
+            var collection = _db.GetCollection<Message>(_config.CollectionMessage);
+            var mess = collection.Find(x => x.Id == Guid.Parse(messId)).SingleOrDefault();
+            if (mess != null)
+            {
+                mess.Translate = displayText;
+                UpdateMessage(mess);
+            }
+        }
+
         public void SaveSign(string userId, string sign)
         {
             var collection = _db.GetCollection<User>(_config.CollectionUser);
