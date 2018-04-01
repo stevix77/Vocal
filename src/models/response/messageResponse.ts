@@ -11,4 +11,5 @@ export class MessageResponse {
     Users: Array<any>;
     IsPlaying: boolean = false;
     Duration?: number;
+    Translation: string = "";
 }

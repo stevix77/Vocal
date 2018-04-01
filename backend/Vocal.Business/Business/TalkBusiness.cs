@@ -156,12 +156,14 @@ namespace Vocal.Business.Business
 
         public Response<SendMessageResponse> SendMessage(SendMessageRequest request)
         {
-            var response = new Response<SendMessageResponse> { Data = new SendMessageResponse { IsSent = false } };
+            var response = new Response<SendMessageResponse> { Data = new SendMessageResponse()};
             try
             {
                 LogManager.LogDebug(request);
                 Resources_Language.Culture = new System.Globalization.CultureInfo(request.Lang);
                 var guid = Guid.NewGuid();
+                var filename = Security.Hash.getHash(guid.ToString() + Properties.Settings.Default.Salt);
+                var file = $"{Properties.Settings.Default.DocsPath}/{filename}.mp3";
                 if ((MessageType)request.MessageType == MessageType.Vocal)  // si mess vocal alors convertir
                 {
                     var bs64 = request.Content.Split(',').LastOrDefault();
@@ -169,12 +171,11 @@ namespace Vocal.Business.Business
                     //if (file == null)
                     //    throw new Exception();
                     //request.Content = "data:audio/wav;base64," + Convert.ToBase64String(file);
-                    var filename = Security.Hash.getHash(guid.ToString() + Properties.Settings.Default.Salt);
-                    filename = $"{Properties.Settings.Default.DocsPath}/{filename}.mp3";
+                    
                     if (request.Platform.ToUpper() == Platform.APNS.ToString().ToUpper())
-                        Converter.ConvertToFileAndSave(bs64, filename);
+                        Converter.ConvertToFileAndSave(bs64, file);
                     else
-                        Converter.SaveAudioFile(bs64, filename);
+                        Converter.SaveAudioFile(bs64, file);
                 }
                 if (string.IsNullOrEmpty(request.IdTalk))
                 {
@@ -196,7 +197,23 @@ namespace Vocal.Business.Business
                     AddMessageToTalk(request, response, talk, guid);
                 }
                 if (response.Data.IsSent)
+                {
                     SendNotif(response.Data, request.IdSender);
+                    Task.Run(() =>
+                    {
+                        try
+                        {
+                            var filenameOutput = $"{Properties.Settings.Default.DocsPath}/HQ/{filename}.wav";
+                            Converter.ConvertAudioToWAV(file, filenameOutput);
+                            LogManager.LogDebug($"Lang: {request.Lang} - filenameOutPut: {filenameOutput} - messId: {response.Data.Message.Id}");
+                            Translator.Translate(request.Lang, filenameOutput, response.Data.Message.Id, _repository).Wait();
+                        }
+                        catch(Exception ex)
+                        {
+                            LogManager.LogError(ex);
+                        }
+                    });
+                }
             }
             catch (TimeoutException tex)
             {

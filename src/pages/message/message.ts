@@ -41,6 +41,7 @@ export class MessagePage {
   file: MediaObject;
   isDirectMessage: boolean = true;
   isWriting: boolean = false;
+  uid: string = params.User.Id;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
@@ -276,6 +277,10 @@ export class MessagePage {
       duration: 3000,
       position: 'top'
     }).present();
+  }
+
+  trad(trad) {
+    this.events.publish("alert", trad);
   }
 
   goToVocalList() {
