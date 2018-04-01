@@ -273,3 +273,4 @@ package-lock.json
 
 .angulardoc.json
 .vscode
+/backend/Vocal.WebApi/docs
