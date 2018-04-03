@@ -42,6 +42,7 @@ export class MessagePage {
   isDirectMessage: boolean = true;
   isWriting: boolean = false;
   uid: string = params.User.Id;
+  hasScrolled = true;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
@@ -57,9 +58,9 @@ export class MessagePage {
     this.model.talkId = this.navParams.get("TalkId");
     this.model.userId = this.navParams.get("UserId");
 
-    this.events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj))
-    this.events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.beginTalk(obj))
-    this.events.subscribe(HubMethod[HubMethod.EndTalk], (obj) => this.endTalk(obj))
+    events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj))
+    events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.beginTalk(obj))
+    events.subscribe(HubMethod[HubMethod.EndTalk], (obj) => this.endTalk(obj))
 
     this.isApp = this.config.get('isApp');
   }
@@ -113,8 +114,10 @@ export class MessagePage {
   }
 
   scrollToBottom() {
-    if(this.content != null)
+    if(this.content != null) {
       this.content.scrollToBottom(0);
+      this.hasScrolled = true;
+    }
   }
 
   getDuration(duration:number) {
@@ -224,15 +227,15 @@ export class MessagePage {
     }
   }
 
-  ngAfterViewChecked() {
-    this.scrollToBottom();
+  ngAfterContentChecked() {
+    if(!this.hasScrolled)
+      this.scrollToBottom();
   }
 
   updateRoom(obj) {
     try {
-      if(obj.Talk.id == this.model.talkId && !this.Messages.some(x => x.Id == obj.Message.Id)) {
-        this.Messages.push(obj.Message);
-        this.hubService.Invoke(HubMethod[HubMethod.UpdateListenUser], this.model.talkId, [obj.Message])
+      if(obj.Talk.Id == this.model.talkId) {
+        this.hasScrolled = false;
       }
     } catch(err) {
       this.events.publish("Error", err.message)

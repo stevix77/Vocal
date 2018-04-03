@@ -63,7 +63,7 @@ export class FriendsListPage {
     return pictures.find(x => x.Type == PictureType.Talk).Value;
   }
 
-  sendMessage(userId) {
+  goToMessage(userId) {
     this.navCtrl.push(MessagePage, {TalkId: null, UserId: userId})
   }
 

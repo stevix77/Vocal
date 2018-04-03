@@ -416,6 +416,7 @@ export class VocalApp {
         talk.DateLastMessage = obj.Message.SentTime;
         this.talkService.updateTalk(talk);
         this.talkService.insertMessage(obj.Talk.Id, obj.Message);
+        this.events.publish('ActiveScroll');
       } else {
         obj.Talk.DateLastMessage = obj.Message.SentTime;
         this.talkService.insertTalk(obj.Talk);
