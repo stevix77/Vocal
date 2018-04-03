@@ -414,6 +414,7 @@ export class VocalApp {
       let talk = this.talkService.Talks.find(x => x.Id == obj.Talk.Id);
       if(talk != null) {
         talk.DateLastMessage = obj.Message.SentTime;
+        talk.Duration = obj.Talk.Duration;
         this.talkService.updateTalk(talk);
         this.talkService.insertMessage(obj.Talk.Id, obj.Message);
         this.events.publish('ActiveScroll');

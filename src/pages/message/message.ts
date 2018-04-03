@@ -43,6 +43,7 @@ export class MessagePage {
   isWriting: boolean = false;
   uid: string = params.User.Id;
   hasScrolled = true;
+  TalkDuration: any;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
@@ -179,6 +180,7 @@ export class MessagePage {
   loadMessages() {
     this.Talk = this.talkService.getTalk(this.model.talkId);
     this.Messages = this.talkService.GetMessages(this.model.talkId);
+    this.TalkDuration = this.getDuration(this.Talk.Duration);
   }
 
   loadMessagesByUser(userId) {
@@ -193,6 +195,7 @@ export class MessagePage {
       this.Talk.Name = friend.Username;
       this.Talk.Picture = picture != null ? picture.Value : "assets/default-picture-80x80.jpg";
     }
+    this.TalkDuration = this.getDuration(this.Talk.Duration);
   }
 
   getMessages() {
@@ -234,6 +237,8 @@ export class MessagePage {
 
   updateRoom(obj) {
     try {
+      this.TalkDuration = this.getDuration(obj.Talk.Duration);
+      this.Talk = obj.Talk;
       if(obj.Talk.Id == this.model.talkId) {
         this.hasScrolled = false;
       }
