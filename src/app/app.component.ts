@@ -62,7 +62,6 @@ export class VocalApp {
     events.subscribe("ErrorInit", (error) => this.showToast(error));
     events.subscribe("Error", (error) => this.showToast('Une erreur est survenue'));
     events.subscribe("SubscribeHub", () => this.SubscribeHub());
-    events.subscribe("Init", () => this.init());
     events.subscribe("alert", (e) => this.showAlert(e));
     // used for an example of ngFor and navigation
     // this.pages = [
@@ -300,6 +299,9 @@ export class VocalApp {
         if(user != null) {
           params.User = user;
           this.init();
+          this.initPushNotification();
+          this.SubscribeHub();
+          this.rootPage = VocalListPage;
         }
         else
           this.rootPage = HomePage;
@@ -350,7 +352,6 @@ export class VocalApp {
       resp => {
         let response = resp.json() as Response<InitResponse>;
         this.initService.manageData(response);
-        this.rootPage = VocalListPage;
         //this.events.publish("InitDone");
       },
       error => {
