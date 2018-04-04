@@ -8,6 +8,7 @@ import { VocalListPage } from '../vocal-list/vocal-list';
 import { PasswordForgotPage } from '../passwordForgot/passwordForgot';
 import { ExceptionService } from "../../services/exceptionService";
 import { InitService } from "../../services/initService";
+import { InitResponse } from "../../models/response/InitResponse";
 
 @Component({
   selector: 'page-connexion',
@@ -46,8 +47,18 @@ export class Connexion {
               } else {
                 var appUser = this.initService.getAppUser(response.Data, this.model.Password); 
                 params.User = appUser;
-                this.events.publish("Init");
-                //this.navCtrl.push(VocalListPage);  
+                this.initService.init().subscribe(
+                  resp => {
+                    let response = resp.json() as Response<InitResponse>;
+                    this.initService.manageData(response);
+                    this.events.publish("subscribeHub");
+                    this.navCtrl.push(VocalListPage);
+                  },
+                  error => {
+                    this.events.publish("ErrorInit", error);
+                    this.exceptionService.Add(error);
+                  }
+                ); 
               }
             } catch(err) {
               this.events.publish("Error", err.message);
