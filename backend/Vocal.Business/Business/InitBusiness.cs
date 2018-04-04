@@ -6,6 +6,7 @@ using Vocal.Model.Business;
 using Vocal.Model.Context;
 using Vocal.Model.Response;
 using Vocal.DAL;
+using System.Linq;
 
 namespace Vocal.Business.Business
 {
@@ -62,6 +63,7 @@ namespace Vocal.Business.Business
                         response.Data.Errors.Add(new KeyValueResponse<string, string>(KeyStore.Friends.ToString(), resp.ErrorMessage));
                 });
                 Parallel.Invoke(actionFriends, actionSettings, actionTalks);
+                response.Data.Settings.TotalDuration = response.Data.Talks.Sum(x => x.Duration);
             }
             catch (TimeoutException tex)
             {
