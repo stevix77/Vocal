@@ -9,4 +9,5 @@ export class TalkResponse {
     Picture: string;
     IsWriting: boolean;
     TextWriting: string;
+    FormatedDateLastMessage: any;
 }

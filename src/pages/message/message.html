@@ -11,7 +11,7 @@
         {{Talk.Name}} <span *ngIf="messUser != null">{{messUser}}</span>
       </div>
       <div class="total-vocal">
-        12h de vocal
+        <span *ngIf="Talk != null">{{TalkDuration}}</span>
       </div>
     </ion-item>
     <ion-buttons end>
@@ -40,6 +40,7 @@
         <p >{{mess.Content}}</p>
       </ion-item>
       <ion-item-options side="right">
+        <button ion-button icon-only (click)="trad(mess.Translation)">Trad</button>
         <button ion-button icon-only><ion-icon name="closed-captioning"></ion-icon></button>
         <button ion-button icon-only><ion-icon name="share-alt"></ion-icon></button>
         <button ion-button icon-only><ion-icon name="download"></ion-icon></button>

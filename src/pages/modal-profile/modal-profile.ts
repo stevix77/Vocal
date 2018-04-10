@@ -76,6 +76,12 @@ export class ModalProfilePage {
     this.viewCtrl.dismiss();
   }
 
+  getDuration(duration:number) {
+    var date = new Date(null);
+    date.setSeconds(duration);
+    return date.toISOString().substr(14, 5);
+  }
+  
   getPicture() {
     let picture = this.User.Pictures.find(x => x.Type == PictureType.Profil);
     return picture != null ? picture.Value : "";

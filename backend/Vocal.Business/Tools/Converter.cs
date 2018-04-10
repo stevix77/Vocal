@@ -24,6 +24,14 @@ namespace Vocal.Business.Tools
             return stream;
         }
 
+        public static void ConvertAudioToWAV(string filenameInput, string filenameOutput)
+        {
+            using (var reader = new MediaFoundationReader(filenameInput))
+            {
+                WaveFileWriter.CreateWaveFile(filenameOutput, reader);
+            }
+        }
+
         public static void ConvertToImageAndSave(string base64File, string filename, int width, int height)
         {
             byte[] imageBytes = Convert.FromBase64String(base64File);

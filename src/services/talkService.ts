@@ -17,6 +17,10 @@ export class TalkService {
   public Messages: Array<KeyValueResponse<string, Array<MessageResponse>>> = new Array<KeyValueResponse<string, Array<MessageResponse>>>();
 
   constructor(private storeService: StoreService) {
+    //this.init();
+  }
+
+  init() {
     this.LoadList();
     this.loadListMessages();
   }
@@ -29,7 +33,7 @@ export class TalkService {
     return this.storeService.Get(KeyStore[KeyStore.Talks]).then(
       talks => {
         if(talks != null) {
-          let t = talks as Array<TalkResponse>
+          let t = talks as Array<TalkResponse>;
           t.forEach(x => {
             x.IsWriting = false;
             x.TextWriting = "";

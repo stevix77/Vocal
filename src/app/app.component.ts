@@ -61,11 +61,8 @@ export class VocalApp {
     this.initializeApp();
     events.subscribe("ErrorInit", (error) => this.showToast(error));
     events.subscribe("Error", (error) => this.showToast('Une erreur est survenue'));
-    events.subscribe("subscribeHub", () => this.SubscribeHub());
-    events.subscribe("Init", () => {
-      this.init();
-      this.initPushNotification();
-    });
+    events.subscribe("SubscribeHub", () => this.SubscribeHub());
+    events.subscribe("alert", (e) => this.showAlert(e));
     // used for an example of ngFor and navigation
     // this.pages = [
     //   { title: 'Home', component: HomePage }
@@ -350,22 +347,21 @@ export class VocalApp {
     params.Platform = platform;
   }
 
-  openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component);
-  }
-
   init() {
     this.initService.init().subscribe(
       resp => {
         let response = resp.json() as Response<InitResponse>;
         this.initService.manageData(response);
+        //this.events.publish("InitDone");
       },
       error => {
         this.events.publish("ErrorInit", error);
         this.exceptionService.Add(error);
         // this.exceptionService.Add("init error");
+      },
+      () => {
+        this.initPushNotification();
+        //this.SubscribeHub();
       }
     );
   }
@@ -389,10 +385,8 @@ export class VocalApp {
   }
 
   SubscribeHub() {
-    this.talkService.LoadList().then(() => {
-      this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
-    })
-
+    this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
+    
     this.hubService.hubProxy.on(HubMethod[HubMethod.BeginTalk], (obj) => {
       console.log(obj);
       this.events.publish(HubMethod[HubMethod.BeginTalk], obj);
@@ -421,8 +415,10 @@ export class VocalApp {
       let talk = this.talkService.Talks.find(x => x.Id == obj.Talk.Id);
       if(talk != null) {
         talk.DateLastMessage = obj.Message.SentTime;
+        talk.Duration = obj.Talk.Duration;
         this.talkService.updateTalk(talk);
         this.talkService.insertMessage(obj.Talk.Id, obj.Message);
+        this.events.publish('ActiveScroll');
       } else {
         obj.Talk.DateLastMessage = obj.Message.SentTime;
         this.talkService.insertTalk(obj.Talk);
