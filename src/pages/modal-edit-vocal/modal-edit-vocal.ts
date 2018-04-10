@@ -4,6 +4,8 @@ import { AudioRecorder } from '../../services/audiorecorder';
 import { SendVocalPage } from '../../pages/send-vocal/send-vocal';
 import { AudioFiltersPage } from '../../pages/audio-filters/audio-filters';
 import { MessageType } from '../../models/enums';
+import { CookieService } from "../../services/cookieService";
+import { HttpService } from "../../services/httpService";
 import { TalkService } from "../../services/talkService";
 import { ExceptionService } from "../../services/exceptionService";
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
