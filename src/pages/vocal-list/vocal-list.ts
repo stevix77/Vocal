@@ -61,11 +61,11 @@ export class VocalListPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad VocalListPage');
-    if(this.navCtrl.length() > 1) {
-      this.navCtrl.remove(0, this.navCtrl.length() - 1).then(() => {
-        this.navCtrl.setRoot(VocalListPage);
-      });
-    } 
+    // if(this.navCtrl.length() > 1) {
+    //   this.navCtrl.remove(0, this.navCtrl.length() - 1).then(() => {
+    //     this.navCtrl.setRoot(VocalListPage);
+    //   });
+    // } 
 
     this.events.subscribe('record:start', () => {
       this.toggleRecording();
@@ -82,8 +82,14 @@ export class VocalListPage {
   }
 
   ionViewWillEnter() {
+    // this.talkService.init();
     if(this.talkService.Talks.length == 0)
-      this.talkService.LoadList();
+      this.talkService.LoadList().then(() => {
+        this.events.publish("SubscribeHub");
+        this.initialize();
+      });
+    else
+      this.initialize();
   }
 
   toggleRecording() {
@@ -146,7 +152,7 @@ export class VocalListPage {
   formatDateMessage(items){
     items.forEach(item => {
       if(item.DateLastMessage && typeof(item.DateLastMessage) != 'object') {
-        item.DateLastMessage = this.getFormattedDateLastMessage(item.DateLastMessage);
+        item.FormatedDateLastMessage = this.getFormattedDateLastMessage(item.DateLastMessage);
       }
       // if(item.Users.length == 2) {
       //   item.Users.forEach(user => {
@@ -194,7 +200,7 @@ export class VocalListPage {
       this.formatDateMessage(this.talkService.Talks);
     }
     else {  
-      this.getVocalList();
+      //this.getVocalList();
     }
   }
 

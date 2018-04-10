@@ -1,4 +1,8 @@
-﻿namespace Vocal.Console
+﻿using System.Threading.Tasks;
+using Vocal.Business;
+using Vocal.Business.Tools;
+
+namespace Vocal.Console
 {
     class Program
     {
@@ -6,6 +10,8 @@
         static void Main(string[] args)
         {
             //BackupBusiness.ExportCollections();
+            //Task.Run(async () => await Translator.Translate("fr", @"D:\\Projects\\Vocal\\backend\\Vocal.WebApi\\docs\\vocal\\HQ\\3d14f7dbefd91c30a48a4eab925a747bfe0960a34284f0e392790b8ef2503b63.wav", null, null));
+            Translator.Translate("fr-FR", @"D:\\Projects\\Vocal\\backend\\Vocal.WebApi\\docs\\vocal\\HQ\\3d14f7dbefd91c30a48a4eab925a747bfe0960a34284f0e392790b8ef2503b63.wav", null, null).Wait();
         }
         
     }
