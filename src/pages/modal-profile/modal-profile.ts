@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, ToastController, ActionSheetController, PopoverController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, ActionSheetController, PopoverController, Events } from 'ionic-angular';
 import { SettingsPage } from '../../pages/settings/settings';
 import { FriendsListPage } from '../../pages/friends-list/friends-list';
 import { AddFriendPage } from '../../pages/add-friend/add-friend';
@@ -13,10 +13,10 @@ import { HttpService } from "../../services/httpService";
 import { CookieService } from "../../services/cookieService";
 import { url } from "../../services/url";
 import { UpdateRequest } from "../../models/request/updateRequest";
-import { Request } from "../../models/request/request";
 import { Response } from '../../models/response';
 import { ExceptionService } from "../../services/exceptionService";
 import { PeopleResponse } from "../../models/response/peopleResponse";
+import { FriendsService } from "../../services/friendsService";
 
 /**
  * Generated class for the ModalProfilePage page.
@@ -48,12 +48,13 @@ export class ModalProfilePage {
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
     public viewCtrl: ViewController,
+    public events: Events,
     public popoverCtrl: PopoverController,
     private storeService: StoreService,
     private httpService: HttpService,
     private cookieService: CookieService,
-    private toastCtrl: ToastController,
     private exceptionService: ExceptionService,
+    private friendsService: FriendsService,
     private camera: Camera,
     public actionSheetCtrl: ActionSheetController,
     ) {
@@ -62,15 +63,6 @@ export class ModalProfilePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ModalProfilePage');
-
-    this.storeService.Get(KeyStore[KeyStore.FriendsAddedMe]).then(
-      friends => {
-        if(friends != null) {
-          this.friendsAddedMe = friends;
-          this.CountFriendsAddedMe = friends.length;
-        }
-      }
-    );
     this.storeService.Get(KeyStore[KeyStore.Settings]).then(settings => {
         if(settings.TotalDuration) this.totalDuration = settings.TotalDuration;
     });
@@ -84,28 +76,39 @@ export class ModalProfilePage {
     this.viewCtrl.dismiss();
   }
 
+  getDuration(duration:number) {
+    var date = new Date(null);
+    date.setSeconds(duration);
+    return date.toISOString().substr(14, 5);
+  }
+  
   getPicture() {
     let picture = this.User.Pictures.find(x => x.Type == PictureType.Profil);
     return picture != null ? picture.Value : "";
   }
 
   getContactAddedMe() {
-    let urlServ = url.GetContactAddedMe();
-    let obj: Request = {
-      Lang: params.Lang
-    };
-    let cookie = this.cookieService.GetAuthorizeCookie(urlServ, params.User)
-    this.httpService.Post<Request>(urlServ, obj, cookie).subscribe(
-      resp => {
-        let response = resp.json() as Response<Array<PeopleResponse>>;
-        if(response.HasError) {
-          console.log(response.ErrorMessage);
-          this.showToast(response.ErrorMessage);
-        } else {
-          this.friendsAddedMe = response.Data;
+    try {
+      this.friendsService.getContactAddedMe().subscribe(
+        resp => {
+          try {
+            let response = resp.json() as Response<Array<PeopleResponse>>;
+            if(response.HasError) {
+              this.events.publish("Error", response.ErrorMessage);
+            } else {
+              this.friendsAddedMe = response.Data;
+              this.CountFriendsAddedMe = this.friendsAddedMe.length;
+            }
+          } catch(err) {
+            this.events.publish("Error", err.message);
+            this.exceptionService.Add(err);
+          }
         }
-      }
-    )
+      );
+    } catch(err) {
+      this.events.publish("Error", err.message);
+      this.exceptionService.Add(err);
+    }
   }
 
   takePic(srcType) {
@@ -120,36 +123,46 @@ export class ModalProfilePage {
         this.UpdateUser(base64Image);
       }, (err) => {
         console.log(err);
-        this.showToast(err);
+        this.events.publish("Error", err.message);
         this.exceptionService.Add(err);
       });
     }
     catch(err) {
-      this.showToast(err);
+      this.events.publish("Error", err.message);
       this.exceptionService.Add(err);
     }
   }
 
   UpdateUser(picture: string) {
-    let urlUpdate = url.UpdateUser();
-    let obj: UpdateRequest = {
-      Lang: params.Lang,
-      UpdateType: UpdateType.Picture,
-      Value: picture
-    };
-    let cookie = this.cookieService.GetAuthorizeCookie(urlUpdate, params.User)
-    this.httpService.Post<UpdateRequest>(urlUpdate, obj, cookie).subscribe(
-      resp => {
-        let response = resp.json() as Response<Boolean>;
-        if(response.HasError) {
-          console.log(response.ErrorMessage);
-          this.showToast(response.ErrorMessage);
-        } else {
-          this.User.Pictures.find(x => x.Type == PictureType.Profil).Value = params.User.Pictures.find(x => x.Type == PictureType.Profil).Value = picture;
-          this.storeService.Set(KeyStore[KeyStore.User], params.User);
+    try {
+      let urlUpdate = url.UpdateUser();
+      let obj: UpdateRequest = {
+        Lang: params.Lang,
+        UpdateType: UpdateType.Picture,
+        Value: picture
+      };
+      let cookie = this.cookieService.GetAuthorizeCookie(urlUpdate, params.User)
+      this.httpService.Post<UpdateRequest>(urlUpdate, obj, cookie).subscribe(
+        resp => {
+          try {
+            let response = resp.json() as Response<Boolean>;
+            if(response.HasError) {
+              console.log(response.ErrorMessage);
+              this.events.publish("Error", response.ErrorMessage);
+            } else {
+              this.User.Pictures.find(x => x.Type == PictureType.Profil).Value = params.User.Pictures.find(x => x.Type == PictureType.Profil).Value = picture;
+              this.storeService.Set(KeyStore[KeyStore.User], params.User);
+            }
+          } catch(err) {
+            this.events.publish("Error", err.message);
+            this.exceptionService.Add(err);
+          }
         }
-      }
-    )
+      )
+    } catch(err) {
+      this.events.publish("Error", err.message);
+      this.exceptionService.Add(err);
+    }
   }
 
   goToAddFriend() {
@@ -197,13 +210,4 @@ export class ModalProfilePage {
     });
     actionSheet.present();
   }
-
-  showToast(message: string) :any {
-    this.toastCtrl.create({
-      message: message,
-      duration: 3000,
-      position: 'top'
-    }).present();
-  }
-
 }

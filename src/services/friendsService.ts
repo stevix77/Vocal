@@ -9,16 +9,27 @@ import { StoreService } from "./storeService";
 import { KeyStore } from "../models/enums";
 import { UserResponse } from "../models/response/userResponse";
 import { PeopleResponse } from "../models/response/peopleResponse";
+import { GetFriendsRequest } from "../models/request/getFriendsRequest";
+import { Response } from '../models/response';
+import { ExceptionService } from "./exceptionService";
+import { Events } from "ionic-angular";
+import { Request } from "../models/request/request";
 
 @Injectable()
 export class FriendsService {
-  public Friends: Array<UserResponse>;
+  public Friends: Array<UserResponse> = [];
 
   constructor(private httpService: HttpService, 
+    private events: Events,
     private cookieService: CookieService,
+    private exceptionService: ExceptionService,
     private storeService: StoreService
     ){
       this.getList();
+  }
+
+  getFriends() {
+    return this.Friends;
   }
 
   add(ids: Array<string>) {
@@ -31,8 +42,31 @@ export class FriendsService {
     return this.httpService.Post<ManageFriendsRequest>(urlAddFriends, obj, cookie);
   }
 
+  delete(ids: Array<string>) {
+    let obj = new ManageFriendsRequest();
+    obj.Lang = params.Lang;
+    obj.UserId = params.User.Id;
+    obj.Ids = ids;
+    let urlFriends = url.RemoveFriends();
+    let cookie = this.cookieService.GetAuthorizeCookie(urlFriends, params.User)
+    return this.httpService.Post<ManageFriendsRequest>(urlFriends, obj, cookie);
+  }
+
   insertFriends(friend: PeopleResponse) {
     this.Friends.push(friend);
+    this.sortList();
+    this.saveList();
+  }
+
+  sortList() {
+    let lst = this.Friends.sort(function(a,b) {
+      if(a.Username < b.Username)
+        return -1;
+      if(a.Username > b.Username)
+        return 1;
+      return 0;
+    });
+    this.Friends = lst;
   }
 
   search(val) {
@@ -58,7 +92,13 @@ export class FriendsService {
     this.storeService.Get(KeyStore[KeyStore.Friends]).then(f => {
       if(f!= null &&  f.length > 0)
         this.Friends = f;
+      else
+        this.loadFriends();
     })
+  }
+
+  getFriendById(userId: string) {
+    return this.Friends.find(x => x.Id == userId);
   }
 
   saveList() {
@@ -67,6 +107,50 @@ export class FriendsService {
 
   clear() {
     this.Friends = new Array();
+  }
+
+  loadFriends() {
+    try {
+      let obj = new GetFriendsRequest();
+      obj.Lang = params.Lang;
+      obj.UserId = params.User.Id;
+      let urlFriends = url.GetFriends();
+      let cookie = this.cookieService.GetAuthorizeCookie(urlFriends, params.User)
+      this.httpService.Post<GetFriendsRequest>(urlFriends, obj, cookie).subscribe(
+        resp => { 
+          try {
+            let response = resp.json() as Response<Array<PeopleResponse>>;
+            if(!response.HasError) {
+              this.Friends = response.Data;
+              this.storeService.Set(KeyStore[KeyStore.Friends], response.Data);
+            } else {
+              this.events.publish("Error", response.ErrorMessage);
+            }
+          } catch(err) {
+            this.exceptionService.Add(err);
+          }
+        }
+      );
+    } catch(err) {
+      this.exceptionService.Add(err);
+    }
+  }
+
+  remove(ids: Array<string>) {
+    ids.forEach(element => {
+      let index = this.Friends.findIndex(x => x.Id == element);
+      this.Friends.splice(index, 1);
+    });
+    this.saveList();
+  }
+
+  getContactAddedMe() {
+    let urlServ = url.GetContactAddedMe();
+    let obj: Request = {
+      Lang: params.Lang
+    };
+    let cookie = this.cookieService.GetAuthorizeCookie(urlServ, params.User);
+    return this.httpService.Post<Request>(urlServ, obj, cookie);
   }
 
   // searchByMail(val) {

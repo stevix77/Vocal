@@ -18,5 +18,6 @@ namespace Vocal.Model.DB
         public int? Duration { get; set; }
         public string TalkId { get; set; }
         public Message Parent { get; set; }
+        public string Translate { get; set; }
     }
 }

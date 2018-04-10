@@ -5,13 +5,13 @@
     </ion-avatar> -->
     <ion-item no-margin no-padding no-lines color="primary">
       <ion-avatar item-start>
-        <img src="assets/default-picture-80x80.jpg" alt="">
+        <img [src]="Talk.Picture" alt="">
       </ion-avatar>
       <div class="name">
-        {{VocalName}}
+        {{Talk.Name}} <span *ngIf="messUser != null">{{messUser}}</span>
       </div>
       <div class="total-vocal">
-        12h de vocal
+        <span *ngIf="Talk != null">{{TalkDuration}}</span>
       </div>
     </ion-item>
     <ion-buttons end>
@@ -40,6 +40,7 @@
         <p >{{mess.Content}}</p>
       </ion-item>
       <ion-item-options side="right">
+        <button ion-button icon-only (click)="trad(mess.Translation)">Trad</button>
         <button ion-button icon-only><ion-icon name="closed-captioning"></ion-icon></button>
         <button ion-button icon-only><ion-icon name="share-alt"></ion-icon></button>
         <button ion-button icon-only><ion-icon name="download"></ion-icon></button>
@@ -69,7 +70,7 @@
           <ion-col col-10> -->
             <ion-item no-lines>
               <input type="hidden" ng-model="model.talkId" value="{{model.talkId}}" ng-init="model.talkId=model.talkId"/>
-              <ion-input type="text" name="Message" (ionInput)="change()" [(ngModel)]="model.Message" placeholder="Envoyer un chat" required></ion-input>
+              <ion-input type="text" name="Message" (ionChange)="change()" [(ngModel)]="model.Message" placeholder="Envoyer un chat" required></ion-input>
             </ion-item>
           <!-- </ion-col> -->
           <!-- <ion-col col-2>
@@ -80,7 +81,7 @@
         <!-- </ion-row>
       </ion-grid> -->
     </form>
-    <audio-recorder [isDirectMessage]="isDirectMessage" [recipients]="uRecipients"></audio-recorder>
+    <audio-recorder [isDirectMessage]="isDirectMessage" [talkId]="model.talkId"></audio-recorder>
   </ion-toolbar>
 </ion-footer>
 

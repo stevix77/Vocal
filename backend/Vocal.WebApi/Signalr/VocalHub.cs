@@ -86,12 +86,14 @@ namespace Vocal.WebApi.Signalr
 
         public void BeginTalk(string talkId, string username)
         {
-            Clients.OthersInGroup(talkId).BeginTalk(username);
+            Clients.OthersInGroup(talkId).BeginTalk(new { TalkId = talkId, Username = username });
+            LogManager.LogDebug(talkId, username);
         }
 
         public void EndTalk(string talkId)
         {
-            Clients.OthersInGroup(talkId).EndTalk();
+            Clients.OthersInGroup(talkId).EndTalk(new { TalkId = talkId });
+            LogManager.LogDebug(talkId);
         }
 
         public void UpdateListenUser(string talkId, List<MessageResponse> obj)

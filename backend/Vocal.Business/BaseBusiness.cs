@@ -1,5 +1,6 @@
 ﻿using Vocal.Model.Context;
 using Vocal.DAL;
+using Vocal.Business.Properties;
 
 namespace Vocal.Business
 {

@@ -6,14 +6,15 @@ import { CookieService } from "../../services/cookieService";
 import { TalkResponse } from '../../models/response/talkResponse';
 import { ActionResponse } from '../../models/response/actionResponse';
 import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
-import { HubMethod } from '../../models/enums';
+import { HubMethod, PictureType } from '../../models/enums';
 import { MessagePage } from '../message/message';
 import { params } from '../../services/params';
 import { Response } from '../../models/response';
 import { url } from '../../services/url';
 import { Timer } from '../../services/timer';
-import { DeleteTalkRequest } from '../../models/request/deleteTalkRequest';
 import { ArchiveTalkRequest } from '../../models/request/archiveTalkRequest';
+import { MessageService } from "../../services/messageService";
+import { ExceptionService } from "../../services/exceptionService";
 
 
 /**
@@ -30,14 +31,13 @@ import { ArchiveTalkRequest } from '../../models/request/archiveTalkRequest';
 export class VocalListPage {
   notificationHub : any;
   messagePage = MessagePage;
-  vocalList: Array<TalkResponse> = new Array<TalkResponse>();
   isApp: boolean;
   isRecording: boolean = false;
   isTiming: boolean = false;
   timer: Timer;
   time: String = '';
   isDirectMessage: boolean = false;
-  uRecipients: Array<string>;
+  talkId: string = "";
   
   constructor(public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -48,20 +48,24 @@ export class VocalListPage {
     public config: Config,
     private httpService: HttpService, 
     private cookieService: CookieService, 
-    private talkService: TalkService) {
+    private talkService: TalkService,
+    private messageService: MessageService,
+    private exceptionService: ExceptionService) {
 
     events.subscribe(HubMethod[HubMethod.Receive], () => this.initialize())
+    this.events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.beginTalk(obj))
+    this.events.subscribe(HubMethod[HubMethod.EndTalk], (obj) => this.endTalk(obj))
     this.isApp = this.config.get('isApp');
     
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad VocalListPage');
-    if(this.navCtrl.length() > 1) {
-      this.navCtrl.remove(0, this.navCtrl.length() - 1).then(() => {
-        this.navCtrl.setRoot(VocalListPage);
-      });
-    } 
+    // if(this.navCtrl.length() > 1) {
+    //   this.navCtrl.remove(0, this.navCtrl.length() - 1).then(() => {
+    //     this.navCtrl.setRoot(VocalListPage);
+    //   });
+    // } 
 
     this.events.subscribe('record:start', () => {
       this.toggleRecording();
@@ -75,6 +79,17 @@ export class VocalListPage {
 
   ionViewDidEnter() {
     console.log('ionViewDidEnter VocalListPage');
+  }
+
+  ionViewWillEnter() {
+    // this.talkService.init();
+    if(this.talkService.Talks.length == 0)
+      this.talkService.LoadList().then(() => {
+        this.events.publish("SubscribeHub");
+        this.initialize();
+      });
+    else
+      this.initialize();
   }
 
   toggleRecording() {
@@ -125,8 +140,8 @@ export class VocalListPage {
           this.showAlert(response.ErrorMessage)
         else {
           if(response.Data.length > 0) {
-            this.vocalList = this.talkService.Talks = response.Data;
-            this.formatDateMessage(this.vocalList);
+            this.talkService.Talks = response.Data;
+            this.formatDateMessage(this.talkService.Talks);
             this.talkService.SaveList();
           }
         }
@@ -137,13 +152,13 @@ export class VocalListPage {
   formatDateMessage(items){
     items.forEach(item => {
       if(item.DateLastMessage && typeof(item.DateLastMessage) != 'object') {
-        item.DateLastMessage = this.getFormattedDateLastMessage(item.DateLastMessage);
+        item.FormatedDateLastMessage = this.getFormattedDateLastMessage(item.DateLastMessage);
       }
-      if(item.Users.length == 2) {
-        item.Users.forEach(user => {
-          if(user.Id != params.User.Id) item.Picture = user.Picture;
-        });
-      }
+      // if(item.Users.length == 2) {
+      //   item.Users.forEach(user => {
+      //     if(user.Id != params.User.Id) item.Picture = user.Picture;
+      //   });
+      // }
     });
   }
 
@@ -181,45 +196,40 @@ export class VocalListPage {
   }
 
   initialize() {
-    this.talkService.LoadList().then(() => {
-      if(this.talkService.Talks != null) {
-        this.vocalList = this.talkService.Talks;
-        if(this.vocalList.length > 0) {
-          this.formatDateMessage(this.vocalList);
-        }
-      }
-      else {  
-        this.getVocalList();
-      }
-    });
+    if(this.talkService.Talks.length > 0) {
+      this.formatDateMessage(this.talkService.Talks);
+    }
+    else {  
+      //this.getVocalList();
+    }
   }
 
   deleteMessage(id, index){
-    let itemIndex = index;
-    let request: DeleteTalkRequest = {
-      Lang: params.Lang,
-      IdSender: params.User.Id,
-      IdTalk: id,
-      SentTime: new Date()
-    };
-    let urlDelete = url.DeleteTalk();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlDelete, params.User);
-    this.httpService.Post<DeleteTalkRequest>(urlDelete, request, cookie).subscribe(
-      resp => {
-        let response = resp.json() as Response<ActionResponse>;
-        if(!response.HasError && response.Data.IsDone){
-          this.talkService.DeleteTalk(this.vocalList[itemIndex]);
-          this.vocalList.splice(itemIndex, 1);
+    try {
+      this.messageService.deleteTalk(id).subscribe(
+        resp => {
+          try {
+            let response = resp.json() as Response<ActionResponse>;
+            if(!response.HasError && response.Data.IsDone){
+              this.talkService.DeleteTalk(id);
+              this.talkService.DeleteMessages(id);
+            }
+            else {
+              this.events.publish("Error", response.ErrorMessage);
+            }
+          } catch(err) {
+            this.events.publish("Error", err.message);
+            this.exceptionService.Add(err);
+          }
         }
-        else {
-          this.showAlert(response.ErrorMessage);
-        }
-      }
-    );
+      );
+    } catch(err) {
+      this.events.publish("Error", err.message);
+      this.exceptionService.Add(err);
+    }
   }
 
   archiveMessage(id, index){
-    let itemIndex = index;
     let request: ArchiveTalkRequest = {
       Lang: params.Lang,
       IdSender: params.User.Id,
@@ -232,8 +242,7 @@ export class VocalListPage {
       resp => {
         let response = resp.json() as Response<ActionResponse>;
         if(!response.HasError && response.Data.IsDone){
-          this.talkService.DeleteTalk(this.vocalList[itemIndex]);
-          this.vocalList.splice(itemIndex, 1);
+          this.talkService.DeleteTalk(id);
         }
         else {
           this.showAlert(response.ErrorMessage);
@@ -242,8 +251,33 @@ export class VocalListPage {
     );
   }
 
-  goToMessage(id, users) {
-    this.navCtrl.push(MessagePage, {TalkId: id, Users:users}, {'direction':'back'});
+  goToMessage(id) {
+    this.navCtrl.push(MessagePage, {TalkId: id}, {'direction':'back'});
+  }
+
+  getPicture(talk) {
+    let picture = 'assets/default-picture-80x80.jpg';
+    if(talk.Users.length == 2) {
+      let user = talk.Users.find(x => x.Id != params.User.Id)
+      let pict = user.Pictures.find(x => x.Type == PictureType.Talk)
+      picture = pict != null ? pict.Value : picture;
+    } else {
+      picture = talk.Picture != null && talk.Picture > 0 ? talk.Picture : picture;
+    }
+    return picture;
   }
   
+  beginTalk(obj) {
+    let talk = this.talkService.getTalk(obj.TalkId);
+    if(talk != null){
+      talk.IsWriting = true;
+      talk.TextWriting = obj.Username + " se prépare à envoyer un message";
+    }
+  }
+
+  endTalk(obj) {
+    let talk = this.talkService.getTalk(obj.TalkId);
+    if(talk != null)
+      talk.IsWriting = false;
+  }
 }

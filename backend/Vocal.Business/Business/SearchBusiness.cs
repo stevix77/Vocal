@@ -47,7 +47,7 @@ namespace Vocal.Business.Business
                 }
                 listStart.AddRange(listContains);
                 listStart.AddRange(listEnd);
-                response.Data = Binder.Bind.Bind_SearchPeople(user, listStart);
+                response.Data = Binder.Bind.Bind_SearchPeople(user, listStart.OrderBy(x => x.Username).ToList());
                 Task.Run(() =>
                 {
                     var search = new Search

@@ -5,6 +5,7 @@ import { Response } from '../../models/response';
 import { PeopleResponse } from "../../models/response/peopleResponse";
 import { StoreService } from "../../services/storeService";
 import { KeyStore } from "../../models/enums";
+import { ExceptionService } from "../../services/exceptionService";
 
 /**
  * Generated class for the PopoverFriendsAddedMePage page.
@@ -25,7 +26,8 @@ export class PopoverFriendsAddedMePage {
     public navParams: NavParams,
     public events: Events,
     public friendsService: FriendsService,
-    public storeService: StoreService
+    public storeService: StoreService,
+    private exceptionService: ExceptionService
     ) {
     this.friends = navParams.data.friends;
   }
@@ -35,19 +37,31 @@ export class PopoverFriendsAddedMePage {
   }
 
   addFriend(id, index){
-    let friends = [id];
-    let indexItem = index;
-    this.friendsService.add(friends).subscribe(
-      resp => {
-        let response = resp.json() as Response<boolean>;
-        console.log(response);
-        if(!response.HasError) {
-          this.friends[indexItem].IsFriend = true;
-        } else {
-          this.events.publish(response.ErrorMessage);
+    try {
+      let friends = [id];
+      let indexItem = index;
+      this.friendsService.add(friends).subscribe(
+        resp => {
+          try {
+            let response = resp.json() as Response<boolean>;
+            if(!response.HasError) {
+              let friend = this.friends[indexItem];
+              this.friends.splice(indexItem, 1);
+              this.friendsService.insertFriends(friend);
+              this.friendsService.saveList();
+            } else {
+              this.events.publish("Error", response.ErrorMessage);
+            }
+          } catch (err) {
+            this.exceptionService.Add(err);
+            this.events.publish("Error", err.message);      
+          }
         }
-      }
-    );
+      );
+    } catch(err) {
+      this.exceptionService.Add(err);
+      this.events.publish("Error", err.message);
+    }
   }
 
   ionViewWillLeave() {
