@@ -138,10 +138,8 @@ export class VocalApp {
       console.log('data -> ' + data);
       switch(params.Platform) {
         case "gcm":
-          this.androidNotification(data);
-          break;
         case "apns":
-          this.iosNotification(data);
+          this.genericNotification(data);
           break;
         case "wns":
           this.windowsNotification(data);
@@ -149,30 +147,6 @@ export class VocalApp {
         default:
           break;
       }
-      //if user using app and push notification comes
-      // if (data.additionalData.foreground) {
-      //   // if application open, show popup
-      //   let confirmAlert = this.alertCtrl.create({
-      //     title: 'New Notification',
-      //     message: data.message,
-      //     buttons: [{
-      //       text: 'Ignore',
-      //       role: 'cancel'
-      //     }, {
-      //       text: 'View',
-      //       handler: () => {
-      //         //TODO: Your logic here
-      //         this.nav.push(DetailsPage, { message: data.message });
-      //       }
-      //     }]
-      //   });
-      //   confirmAlert.present();
-      // } else {
-      //   //if user NOT using app and push notification comes
-      //   //TODO: Your logic on click of push notification directly
-      //   this.nav.push(DetailsPage, { message: data.message });
-      //   console.log('Push notification clicked');
-      // }
     });
 
     pushObject.on('error').subscribe(error => {
@@ -184,10 +158,11 @@ export class VocalApp {
   }
 
   goNotifAction(data) {
+    let action = Number.parseInt(data.action);
     switch (params.Platform) {
       case "gcm":
       case "apns":
-        switch (data.action) {
+        switch (action) {
           case NotifType.Talk:
             this.nav.push(MessagePage, { TalkId: data.talkId });
             break;
@@ -200,9 +175,9 @@ export class VocalApp {
       case "wns": //talkId={2}&amp;action={3}
         let args = data.pushNotificationReceivedEventArgs.toastNotification.content.getElementsByTagName('toast')[0].getAttribute('launch') as string;
         let param = args.split('&');
-        let action = param[1].split('=')[1];
+        action = Number.parseInt(param[1].split('=')[1]);
         let value = param[0].split('=')[1];
-        switch (Number.parseInt(action)) {
+        switch (action) {
           case NotifType.Talk:
             this.nav.push(MessagePage, { TalkId: value });
             break;
@@ -238,29 +213,7 @@ export class VocalApp {
     }
   }
 
-  iosNotification(notification) {
-    if(notification.additionalData.coldstart) {
-      this.goNotifAction(notification.additionalData);
-    } else {
-      let confirmAlert = this.alertCtrl.create({
-        title: notification.title,
-        message: notification.message,
-        buttons: [{
-          text: 'Ignore',
-          role: 'cancel'
-        }, {
-          text: 'View',
-          handler: () => {
-            //TODO: Your logic here
-            this.goNotifAction(notification.additionalData);
-          }
-        }]
-      });
-      confirmAlert.present();
-    }
-  }
-
-  androidNotification(notification) {
+  genericNotification(notification) {
     if(notification.additionalData.coldstart) {
       this.goNotifAction(notification.additionalData);
     } else {
@@ -300,7 +253,6 @@ export class VocalApp {
           params.User = user;
           this.init();
           this.initPushNotification();
-          this.SubscribeHub();
           this.rootPage = VocalListPage;
         }
         else
