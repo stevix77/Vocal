@@ -264,6 +264,7 @@ __pycache__/
 www
 platforms
 plugins
+resources/ios
 
 
 # File System Mac
@@ -274,3 +275,4 @@ package-lock.json
 .angulardoc.json
 .vscode
 /backend/Vocal.WebApi/docs
+
