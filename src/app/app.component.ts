@@ -300,7 +300,6 @@ export class VocalApp {
           params.User = user;
           this.init();
           this.initPushNotification();
-          this.SubscribeHub();
           this.rootPage = VocalListPage;
         }
         else
