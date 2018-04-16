@@ -14,6 +14,7 @@ import { TalkResponse } from "../../models/response/talkResponse";
 import { MessageService } from "../../services/messageService";
 import { ExceptionService } from "../../services/exceptionService";
 import { FriendsService } from "../../services/friendsService";
+import { url } from "../../services/url";
 
 /**
  * Generated class for the MessagePage page.
@@ -256,7 +257,7 @@ export class MessagePage {
       
       let uniqId = functions.Crypt(message.Id + params.Salt);
       let my_media = new Media();
-      this.file = my_media.create(`http://vocal.westeurope.cloudapp.azure.com/docs/vocal/${uniqId}.mp3`);
+      this.file = my_media.create(`${url.BaseUri}/docs/vocal/${uniqId}.mp3`);
       this.file.play();
       this.file.onStatusUpdate.subscribe(status => {
         if(status == 2) { //PLAYING
