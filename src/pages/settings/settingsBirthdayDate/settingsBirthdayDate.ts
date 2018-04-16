@@ -22,8 +22,8 @@ export class SettingsBirthdayDate implements OnInit {
               public events: Events,
               private userService: UserService,
               private settingsService: SettingsService) { 
-    this.model.BirthdayDate = this.navParams.get('BirthdayDate');
-    this.model.BirthdayDateString = this.navParams.get('BirthdayDate');
+    this.model.BirthdayDate = new Date(this.navParams.get('BirthdayDate'));
+    this.model.BirthdayDateString = new Date(this.model.BirthdayDate.getTime() + 3600000).toISOString();
   }
 
   ngOnInit() {
