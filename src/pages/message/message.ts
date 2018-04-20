@@ -1,7 +1,7 @@
 import { HubMethod, PictureType, MessageType } from '../../models/enums';
 import { MessageResponse } from './../../models/response/messageResponse';
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, Events, Config, Content } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, Events, Config, Content, AlertController } from 'ionic-angular';
 import { params } from '../../services/params';
 import { Response } from '../../models/response';
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
@@ -15,6 +15,8 @@ import { MessageService } from "../../services/messageService";
 import { ExceptionService } from "../../services/exceptionService";
 import { FriendsService } from "../../services/friendsService";
 import { url } from "../../services/url";
+import { ActionResponse } from "../../models/response/actionResponse";
+import { DraftService } from "../../services/draftService";
 
 /**
  * Generated class for the MessagePage page.
@@ -50,11 +52,13 @@ export class MessagePage {
               public navParams: NavParams, 
               public config: Config,
               private toastCtrl: ToastController, 
+              public alertCtrl: AlertController,
               private events: Events,
               private talkService: TalkService,
               private hubService: HubService,
               private messageService: MessageService,
               private friendService: FriendsService,
+              private draftService: DraftService,
               private exceptionService: ExceptionService) {
 
     this.model.talkId = this.navParams.get("TalkId");
@@ -63,7 +67,6 @@ export class MessagePage {
     events.subscribe(HubMethod[HubMethod.Receive], (obj) => this.updateRoom(obj))
     events.subscribe(HubMethod[HubMethod.BeginTalk], (obj) => this.beginTalk(obj))
     events.subscribe(HubMethod[HubMethod.EndTalk], (obj) => this.endTalk(obj))
-
     this.isApp = this.config.get('isApp');
   }
 
@@ -75,6 +78,38 @@ export class MessagePage {
     });
     this.events.subscribe('edit-vocal:open', () => this.toggleTiming());
     this.events.subscribe('edit-vocal:close', () => this.toggleRecording());
+  }
+
+  ionViewDidEnter() {
+    console.log('ionViewDidEnter MessagePage');
+    this.scrollToBottom();
+    if(this.Talk.IsWriting)
+      this.beginTalk(null);
+  }
+
+  ionViewWillEnter() {
+    if(this.model.talkId != null) {
+      this.loadMessages();
+    } else {
+      this.loadMessagesByUser(this.model.userId);
+    }
+    this.getMessages();
+    this.getDraft();
+  }
+
+  ionViewWillLeave() {
+    if(this.model.Message != "" && (this.model.talkId != null || this.model.userId != null)) {
+      this.draftService.setDraft(this.model.talkId, this.model.userId, this.model.Message);
+    } else {
+      this.draftService.removeDraft(this.model.talkId, this.model.userId);
+    }
+  }
+
+  getDraft() {
+    let draft = this.draftService.getDraft(this.model.talkId, this.model.userId);
+    if(draft != null) {
+      this.model.Message = draft.Value;
+    }
   }
 
   toggleRecording() {
@@ -97,22 +132,6 @@ export class MessagePage {
   stopTimer() {
     this.timer.stopTimer();
     this.time = '0:00';
-  }
-
-  ionViewDidEnter() {
-    console.log('ionViewDidEnter MessagePage');
-    this.scrollToBottom();
-    if(this.Talk.IsWriting)
-      this.beginTalk(null);
-  }
-
-  ionViewWillEnter() {
-    if(this.model.talkId != null) {
-      this.loadMessages();
-    } else {
-      this.loadMessagesByUser(this.model.userId);
-    }
-    this.getMessages();
   }
 
   scrollToBottom() {
@@ -140,6 +159,10 @@ export class MessagePage {
               if(response.Data.IsSent){
                 this.model.Message =  "";
                 this.talkService.UpdateList(response.Data.Talk);
+                if(this.model.talkId == null) {
+                  this.model.talkId = response.Data.Talk.Id
+                  this.loadMessages();
+                }
               }
             }
           } catch(err) {
@@ -150,6 +173,45 @@ export class MessagePage {
         err => {
           this.events.publish("Error", err.message)
           this.exceptionService.Add(err);
+        }
+      );
+    } catch(err) {
+      this.events.publish("Error", err.message);
+      this.exceptionService.Add(err);
+    }
+  }
+
+  showConfirmDelete(idMessage, index) {
+    let confirm = this.alertCtrl.create({
+      title: 'Êtes-vous sûr de vouloir supprimer ce message ?',
+      buttons: [
+        {
+          text: 'Annuler',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Supprimer',
+          handler: () => {
+            this.delete(idMessage, index);
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+
+  delete(idMessage, index) {
+    try {
+      this.messageService.deleteMessage([idMessage]).subscribe(
+        resp => {
+          let response = resp.json() as Response<ActionResponse>;
+          if(!response.HasError && response.Data.IsDone) {
+            this.Messages.splice(index, 1);
+            this.talkService.SaveMessages(this.model.talkId, this.Messages);
+          } else {
+            this.events.publish("Error", response.ErrorMessage);
+          }
         }
       );
     } catch(err) {
@@ -190,13 +252,13 @@ export class MessagePage {
       this.Talk = talk;
       this.model.talkId = talk.Id;
       this.Messages = this.talkService.GetMessages(talk.Id);
+      this.TalkDuration = this.getDuration(this.Talk.Duration);
     } else {
       let friend = this.friendService.getFriendById(userId);
       let picture = friend.Pictures.find(x => x.Type == PictureType.Talk);
       this.Talk.Name = friend.Username;
       this.Talk.Picture = picture != null ? picture.Value : "assets/default-picture-80x80.jpg";
     }
-    this.TalkDuration = this.getDuration(this.Talk.Duration);
   }
 
   getMessages() {

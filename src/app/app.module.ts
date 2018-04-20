@@ -58,6 +58,7 @@ import { DirectivesModule } from '../directives/directives.module';
 import { Pro } from '@ionic/pro';
 import { MessageService } from "../services/messageService";
 import { UserService } from "../services/userService";
+import { DraftService } from "../services/draftService";
 
 Pro.init('6a79ec67', {
   appVersion: '0.0.1'
@@ -152,6 +153,7 @@ let components = [
     InitService,
     UserService,
     MessageService,
+    DraftService,
     AudioRecorder,
     IonicErrorHandler,
     {provide: ErrorHandler, useClass: MyErrorHandler}

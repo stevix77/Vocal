@@ -1,8 +1,8 @@
 export
 var url = {
 
-    //  BaseUri: "http://192.168.1.14:8017",
-    BaseUri: "http://vocal.westeurope.cloudapp.azure.com",
+     BaseUri: "http://192.168.1.14:8017",
+    // BaseUri: "http://vocal.westeurope.cloudapp.azure.com",
     //BaseUri: "http://wsvocal.azurewebsites.net",
     //BaseUri: "http://localhost/Vocal.WebApi/api/",
     Login() : string {
@@ -85,6 +85,9 @@ var url = {
     },
     UnarchiveTalk() : string {
         return this.BaseUri + "/api/talk/unarchiveTalk";
+    },
+    DeleteMessage() {
+        return this.BaseUri + "/api/talk/DeleteMessage";
     },
     GetProfil() : string {
         return this.BaseUri + "/api/user/profil";

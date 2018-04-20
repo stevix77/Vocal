@@ -8,6 +8,7 @@ import {HubMethod} from '../models/enums';
 export class HubService {
 
   private connection: any;
+  hasStarted: boolean = false;
   hubProxy: any;
   constructor() {
     this.connection = hubConnection(url.BaseUri, null);
@@ -19,6 +20,7 @@ export class HubService {
     this.connection.start()
     .done(() => { 
       console.log('Now connected, connection ID=' + this.connection.id); 
+      this.hasStarted = true;
       this.hubProxy.invoke(HubMethod[HubMethod.Connect], params.User.Id);
       this.hubProxy.invoke(HubMethod[HubMethod.SubscribeToTalks], talks);
     })
