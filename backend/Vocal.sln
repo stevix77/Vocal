@@ -1,17 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocal.DAL", "Vocal.DAL\Vocal.DAL.csproj", "{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocal.Business", "Vocal.Business\Vocal.Business.csproj", "{FED2004A-41AC-43EF-B43F-C01900103999}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocal.WebApi", "Vocal.WebApi\Vocal.WebApi.csproj", "{3B42FB73-EAF7-4911-B788-940FE3F97C2A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocal.Model", "Vocal.Model\Vocal.Model.csproj", "{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocal.Tools", "Vocal.Tools\Vocal.Tools.csproj", "{9198F034-6876-4E86-A84A-50624D6C7742}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocal.Console", "Vocal.Console\Vocal.Console.csproj", "{5A5F6EEC-108C-4A13-BE62-0D164CC3748A}"
 EndProject
@@ -19,11 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocal.WindowsService", "Voc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocal.Administration", "Vocal.Administration\Vocal.Administration.csproj", "{15FD4FE2-34B9-4E79-90E7-160C95D41B80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocal.Standard.Model", "Vocal.Standard.Model\Vocal.Standard.Model.csproj", "{3E9D3641-AAC3-4A42-AA6F-1C3F1FF3E521}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vocal.Standard.Model", "Vocal.Standard.Model\Vocal.Standard.Model.csproj", "{3E9D3641-AAC3-4A42-AA6F-1C3F1FF3E521}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocal.Standard.Tools", "Vocal.Standard.Tools\Vocal.Standard.Tools.csproj", "{F8E70DB5-2150-4BDB-BA16-5FB1DDA0E144}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vocal.Standard.Tools", "Vocal.Standard.Tools\Vocal.Standard.Tools.csproj", "{F8E70DB5-2150-4BDB-BA16-5FB1DDA0E144}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vocal.Standard.DAL", "Vocal.standard.DAL\Vocal.standard.DAL.csproj", "{D48D2322-258B-454B-9D09-391C8ABC2CF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vocal.standard.DAL", "Vocal.standard.DAL\Vocal.standard.DAL.csproj", "{D48D2322-258B-454B-9D09-391C8ABC2CF1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,22 +31,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}.Debug|ARM.Build.0 = Debug|Any CPU
-		{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}.Debug|x64.Build.0 = Debug|Any CPU
-		{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}.Debug|x86.Build.0 = Debug|Any CPU
-		{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}.Release|ARM.ActiveCfg = Release|Any CPU
-		{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}.Release|ARM.Build.0 = Release|Any CPU
-		{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}.Release|x64.ActiveCfg = Release|Any CPU
-		{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}.Release|x64.Build.0 = Release|Any CPU
-		{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}.Release|x86.ActiveCfg = Release|Any CPU
-		{41FC38BE-AE82-4F89-8E81-DC57F6B610B3}.Release|x86.Build.0 = Release|Any CPU
 		{FED2004A-41AC-43EF-B43F-C01900103999}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FED2004A-41AC-43EF-B43F-C01900103999}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FED2004A-41AC-43EF-B43F-C01900103999}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -85,38 +63,6 @@ Global
 		{3B42FB73-EAF7-4911-B788-940FE3F97C2A}.Release|x64.Build.0 = Release|Any CPU
 		{3B42FB73-EAF7-4911-B788-940FE3F97C2A}.Release|x86.ActiveCfg = Release|Any CPU
 		{3B42FB73-EAF7-4911-B788-940FE3F97C2A}.Release|x86.Build.0 = Release|Any CPU
-		{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}.Debug|ARM.Build.0 = Debug|Any CPU
-		{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}.Debug|x64.Build.0 = Debug|Any CPU
-		{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}.Debug|x86.Build.0 = Debug|Any CPU
-		{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}.Release|ARM.ActiveCfg = Release|Any CPU
-		{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}.Release|ARM.Build.0 = Release|Any CPU
-		{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}.Release|x64.ActiveCfg = Release|Any CPU
-		{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}.Release|x64.Build.0 = Release|Any CPU
-		{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}.Release|x86.ActiveCfg = Release|Any CPU
-		{B76D6CE5-B158-4EB9-8A35-54DA7CEE32EA}.Release|x86.Build.0 = Release|Any CPU
-		{9198F034-6876-4E86-A84A-50624D6C7742}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9198F034-6876-4E86-A84A-50624D6C7742}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9198F034-6876-4E86-A84A-50624D6C7742}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{9198F034-6876-4E86-A84A-50624D6C7742}.Debug|ARM.Build.0 = Debug|Any CPU
-		{9198F034-6876-4E86-A84A-50624D6C7742}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{9198F034-6876-4E86-A84A-50624D6C7742}.Debug|x64.Build.0 = Debug|Any CPU
-		{9198F034-6876-4E86-A84A-50624D6C7742}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9198F034-6876-4E86-A84A-50624D6C7742}.Debug|x86.Build.0 = Debug|Any CPU
-		{9198F034-6876-4E86-A84A-50624D6C7742}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9198F034-6876-4E86-A84A-50624D6C7742}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9198F034-6876-4E86-A84A-50624D6C7742}.Release|ARM.ActiveCfg = Release|Any CPU
-		{9198F034-6876-4E86-A84A-50624D6C7742}.Release|ARM.Build.0 = Release|Any CPU
-		{9198F034-6876-4E86-A84A-50624D6C7742}.Release|x64.ActiveCfg = Release|Any CPU
-		{9198F034-6876-4E86-A84A-50624D6C7742}.Release|x64.Build.0 = Release|Any CPU
-		{9198F034-6876-4E86-A84A-50624D6C7742}.Release|x86.ActiveCfg = Release|Any CPU
-		{9198F034-6876-4E86-A84A-50624D6C7742}.Release|x86.Build.0 = Release|Any CPU
 		{5A5F6EEC-108C-4A13-BE62-0D164CC3748A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5A5F6EEC-108C-4A13-BE62-0D164CC3748A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A5F6EEC-108C-4A13-BE62-0D164CC3748A}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -216,5 +162,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E87F4ADA-6D3B-4F9C-B909-FFA0DFCD56A7}
 	EndGlobalSection
 EndGlobal

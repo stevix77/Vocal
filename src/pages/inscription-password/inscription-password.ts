@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { InscriptionFindFriendsPage } from '../inscription-find-friends/inscription-find-friends';
 import { StoreService } from '../../services/storeService';
 import {url} from '../../services/url';
@@ -32,7 +32,7 @@ export class InscriptionPasswordPage {
     ErrorPassword: ""
   }
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private storeService: StoreService, private httpService: HttpService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public events: Events, private storeService: StoreService, private httpService: HttpService) {
     
   }
 
@@ -45,7 +45,7 @@ export class InscriptionPasswordPage {
          resp => {
            let response = resp.json() as Response<UserResponse>;
            if(response.HasError) {
-
+              this.events.publish("Error", response.ErrorMessage);
            } else {
             var appUser = new AppUser();
             appUser.Email = response.Data.Email;

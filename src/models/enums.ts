@@ -15,7 +15,8 @@ export enum KeyStore {
     Friends = 2,
     Talks = 3,
     Messages = 4,
-    FriendsAddedMe = 5
+    FriendsAddedMe = 5,
+    Draft = 6
 }
 
 export enum Store {

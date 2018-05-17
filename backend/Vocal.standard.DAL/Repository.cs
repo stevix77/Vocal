@@ -565,7 +565,7 @@ namespace Vocal.DAL
         public Talk GetTalk(List<string> users)
         {
             var db = _db.GetCollection<Talk>(_config.CollectionTalk);
-            var query = db.Aggregate().Match(Builders<Talk>.Filter.All("Recipients", users)).SingleOrDefault();
+            var query = db.Aggregate().Match(Builders<Talk>.Filter.And(Builders<Talk>.Filter.All(x => x.Recipients, users), Builders<Talk>.Filter.Size(x => x.Recipients, users.Count))).SingleOrDefault(); //Builders<Talk>.Filter.All(x => x.Recipients, users)
             //var query = db.Find(filter).SingleOrDefault();
             //var mess = db.Find(x => users.All(y => x.Users.Select(z => z.Recipient.Id).ToList().Contains(y))).ToList();
             if (query != null)
