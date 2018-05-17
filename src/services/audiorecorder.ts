@@ -41,7 +41,7 @@ export class AudioRecorder {
           source.buffer = buffer;
 
           let convolver = context.createConvolver();
-          file.listDir(file.applicationDirectory + 'www/', 'assets').then(response => {
+          file.listDir(file.applicationDirectory, 'www/assets/effects').then(response => {
             exceptionService.Add(response);
           }).catch(err => {
             exceptionService.Add(err);
