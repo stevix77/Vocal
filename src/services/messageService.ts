@@ -27,7 +27,7 @@ export class MessageService {
     return this.httpService.Post(urlTalks, request, cookie);
   }
 
-  sendMessage(idTalk: string, messageType: number, recipients: Array<string>, duration: number, content: string) {
+  sendMessage(idTalk: string, messageType: number, recipients: Array<string>, duration: number, content: string, activeFilter: string) {
     let date = new Date();
     let request: SendMessageRequest = {
       content: content,
@@ -38,7 +38,8 @@ export class MessageService {
       Lang: params.Lang,
       idSender: params.User.Id,
       IdTalk: idTalk,
-      platform: params.Platform
+      platform: params.Platform,
+      activeFilter: activeFilter
     };
     let urlSendVocal = url.SendMessage();
     let cookie = this.cookieService.GetAuthorizeCookie(urlSendVocal, params.User)

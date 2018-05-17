@@ -41,6 +41,7 @@ export class SendVocalPage {
 
   ionViewWillEnter() {
     console.log('ionViewDidLoad SendVocalPage');
+    console.log(this.navParams.get('activeFilter'));
     if(this.friendsService.Friends == null)
       this.friendsService.getList();
   }
@@ -63,7 +64,7 @@ export class SendVocalPage {
           this.FileValue = fileValue;
           let users = this.getCheckedUsers();
           let duration = this.navParams.get('duration');
-          this.messageService.sendMessage(null, MessageType.Vocal, users, duration, this.FileValue).subscribe(
+          this.messageService.sendMessage(null, MessageType.Vocal, users, duration, this.FileValue, this.navParams.get('activeFilter')).subscribe(
             resp => {
               try {
                 let response = resp.json() as Response<SendMessageResponse>;

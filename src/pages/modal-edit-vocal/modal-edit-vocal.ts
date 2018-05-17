@@ -27,6 +27,7 @@ export class ModalEditVocalPage {
   isSending: Boolean = false;
   FileValue: string;
   talkId: string;
+  activeFilter: string = '';
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
@@ -52,6 +53,7 @@ export class ModalEditVocalPage {
   }
 
   editVocalWithFilter(filter) {
+    this.activeFilter = filter;
     this.audioRecorder.editPlayback(filter);
   }
 
@@ -78,7 +80,7 @@ export class ModalEditVocalPage {
     if(this.navParams.get('isDM')) {
       this.sendVocal();
     } else {
-      this.navCtrl.push(SendVocalPage, {duration:this.navParams.get('duration')});
+      this.navCtrl.push(SendVocalPage, {duration:this.navParams.get('duration'), activeFilter: this.activeFilter});
     }
   }
 

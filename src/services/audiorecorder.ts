@@ -28,85 +28,24 @@ export class AudioRecorder {
   }
 
   applyEffect(filter) {
-    console.log('apply effect')
     if (!this.isPlaying) {
-      // Make a source node for the sample.
       let source = this.context.createBufferSource();
       let context = this.context;
       let file = this.file;
-      let exceptionService = this.exceptionService;
 
       file.readAsArrayBuffer(this.getFilePath(), this.filename).then(arrayBuffer => {
         context.decodeAudioData(arrayBuffer, function(buffer){
-          source.buffer = buffer;
+            source.buffer = buffer;
+            source.playbackRate.value = 1.5;
+            source.connect(context.destination);
 
-          let convolver = context.createConvolver();
-          file.listDir(file.applicationDirectory, 'www/assets/effects').then(response => {
-            exceptionService.Add(response);
-          }).catch(err => {
-            exceptionService.Add(err);
-          });
-          /*
-          file.readAsArrayBuffer('../assets/effects/', 'spring.wav').then(arrayBuffer => {
-            context.decodeAudioData(arrayBuffer, function(buffer){
-              convolver.buffer = buffer;
-              source.connect(convolver);
-              convolver.connect(context.destination);
-
-              source.start();
-            });
-          }).catch(err => {
-            exceptionService.Add(err);
-          });*/
-          //source.connect(context.destination);
-          //source.start();
-          // Si le son est coupé sur l'iPhone, l'audio ne se joue pas
+            source.start(0);
         });
-      }).catch(err => console.log('error readAsArrayBuffer : ' + err));
-      //source.buffer = this.buffer;
-      // // Make a convolver node for the impulse response.
-      // var convolver = context.createConvolver();
-      // convolver.buffer = this.impulseResponseBuffer;
-      // // Connect the graph.
-      // source.connect(convolver);
-      // convolver.connect(context.destination);
-      // // Save references to important nodes.
-      // this.source = source;
-      // this.convolver = convolver;
-      // // Start playback.
-      // this.source[this.source.start ? 'start': 'noteOn'](0);
+      });
+
     } else {
       console.log('else');
-      //this.source[this.source.stop ? 'stop': 'noteOff'](0);
     }
-    //this.isPlaying = !this.isPlaying;
-
-    // let contexteAudio = this.contexteAudio;
-    // var that = this;
-    // //this.file.readAsArrayBuffer(this.file.dataDirectory, this.filename).then((compressedBuffer) => {
-    // this.file.readAsArrayBuffer(this.getFilePath(), this.filename).then((compressedBuffer) => {
-    //   contexteAudio.decodeAudioData(compressedBuffer, function(buffer){
-    //     var source = contexteAudio.createBufferSource();
-    //     source.buffer = buffer;
-
-    //     //var effect = that.getEffectFromFilter(filter);
-    //     var effect = new that.tuna.Phaser({
-    //         rate: 1.2,                     //0.01 to 8 is a decent range, but higher values are possible
-    //         depth: 0.3,                    //0 to 1
-    //         feedback: 0.2,                 //0 to 1+
-    //         stereoPhase: 30,               //0 to 180
-    //         baseModulationFrequency: 700,  //500 to 1500
-    //         bypass: 0
-    //     });
-
-    //     var output = contexteAudio.createGain();
-    //     source.connect(effect);
-    //     effect.connect(output);
-
-    //     output.connect(contexteAudio.destination);
-    //     source.start();
-    //   }).catch(err => console.log(err));
-    // }).catch(err => console.log(err));
   }
 
   editPlayback(filter) {
@@ -211,6 +150,7 @@ export class AudioRecorder {
 
   startPlayback() {
     if(this.isApp) {
+      console.log('start playback success');
       this.mediaObject.play();
     }
   }
