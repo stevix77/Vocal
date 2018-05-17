@@ -91,7 +91,7 @@ export class ModalEditVocalPage {
         this.audioRecorder.getFile().then(fileValue => {
           this.FileValue = fileValue;
           let duration = this.navParams.get('duration');
-          this.messageService.sendMessage(this.talkId, MessageType.Vocal, null, duration, this.FileValue).subscribe(
+          this.messageService.sendMessage(this.talkId, MessageType.Vocal, null, duration, this.FileValue, this.activeFilter).subscribe(
             resp => {
               try {
                 let response = resp.json() as Response<SendMessageResponse>;

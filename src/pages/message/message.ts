@@ -149,7 +149,7 @@ export class MessagePage {
 
   sendMessage(){
     try {
-      this.messageService.sendMessage(this.model.talkId, MessageType.Text, this.model.talkId == null ? [this.model.userId] : [], 0, this.model.Message).subscribe(
+      this.messageService.sendMessage(this.model.talkId, MessageType.Text, this.model.talkId == null ? [this.model.userId] : [], 0, this.model.Message, '').subscribe(
         resp => {
           try {
             var response = resp.json() as Response<SendMessageResponse>;

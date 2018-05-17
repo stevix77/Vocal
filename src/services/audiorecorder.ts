@@ -28,6 +28,7 @@ export class AudioRecorder {
   }
 
   applyEffect(filter) {
+    console.log('apply effect')
     if (!this.isPlaying) {
       let source = this.context.createBufferSource();
       let context = this.context;

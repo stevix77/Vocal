@@ -12,4 +12,5 @@ export class MessageResponse {
     IsPlaying: boolean = false;
     Duration?: number;
     Translation: string = "";
+    ActiveFilter: string = "";
 }
