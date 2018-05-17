@@ -14,5 +14,6 @@ namespace Vocal.Model.Request
         public string IdMessageParent { get; set; }
         public int? Duration { get; set; }
         public string Platform { get; set; }
+        public string ActiveFilter { get; set; }
     }
 }
