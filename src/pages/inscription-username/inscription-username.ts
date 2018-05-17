@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { InscriptionEmailPage } from '../inscription-email/inscription-email'
 import {url} from '../../services/url';
 import {HttpService} from '../../services/httpService';
@@ -27,7 +27,7 @@ export class InscriptionUsernamePage {
     ErrorUsername: ""
   }
   
-  constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private httpService: HttpService, private events: Events) {
     
   }
 
@@ -41,8 +41,9 @@ export class InscriptionUsernamePage {
           let response = resp.json() as Response<boolean>;
           if(response.HasError && response.Data) {
             this.model.ErrorUsername = response.ErrorMessage;
+            // this.events.publish("Error", response.ErrorMessage);
           } else if(response.HasError && !response.Data) {
-
+            this.events.publish("Error", response.ErrorMessage);
           } else {
             this.registerRequest = this.navParams.get('registerRequest');
             this.registerRequest.Username = this.model.Username;

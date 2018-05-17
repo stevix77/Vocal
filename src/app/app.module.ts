@@ -18,6 +18,7 @@ import { SettingsPage } from '../pages/settings/settings';
 
 import { SettingsChoices } from '../pages/settings/settingsChoices/settingsChoices';
 import { SettingsMail } from '../pages/settings/settingsMail/settingsMail';
+import { SettingsBirthdayDate } from '../pages/settings/settingsBirthdayDate/settingsBirthdayDate';
 
 import { AudioRecorderComponent } from '../components/audio-recorder/audio-recorder';
 import { ModalEditVocalPage } from '../pages/modal-edit-vocal/modal-edit-vocal';
@@ -56,6 +57,8 @@ import { DirectivesModule } from '../directives/directives.module';
 
 import { Pro } from '@ionic/pro';
 import { MessageService } from "../services/messageService";
+import { UserService } from "../services/userService";
+import { DraftService } from "../services/draftService";
 
 Pro.init('6a79ec67', {
   appVersion: '0.0.1'
@@ -101,6 +104,7 @@ let components = [
   SettingsChoices,
   SettingsMail,
   SettingsChoices,
+  SettingsBirthdayDate,
 
   AudioRecorderComponent,
   ModalEditVocalPage,
@@ -147,7 +151,9 @@ let components = [
     FriendsService,
     SettingsService,
     InitService,
+    UserService,
     MessageService,
+    DraftService,
     AudioRecorder,
     IonicErrorHandler,
     {provide: ErrorHandler, useClass: MyErrorHandler}

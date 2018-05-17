@@ -24,10 +24,10 @@
     <a ion-item (click)="SettingsMail()">
       Mail <span pull-right>{{model.Settings.Email}}</span>
     </a>
-    <ion-item>
+    <a ion-item (click)="SettingsBirthdayDate()">
       <ion-label>BirthdayDate</ion-label>
       <ion-label pull-right>{{ model.Settings.BirthdayDate | date : 'dd/MM/yyyy' }}</ion-label>
-    </ion-item>
+    </a>
     <a ion-item (click)="SettingsChoices(3, model.Settings.Contacts)">
       Contact me
     </a>

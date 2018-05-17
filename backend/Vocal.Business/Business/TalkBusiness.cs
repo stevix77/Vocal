@@ -232,7 +232,7 @@ namespace Vocal.Business.Business
                 Content = messType == MessageType.Text ? request.Content : null,
                 ContentType = messType,
                 Sender = sender.ToPeople(),
-                Users = allUsers.Where(x => x.Id != sender.Id).Select(x => new UserListen() { Recipient = x.ToPeople() }).ToList(),
+                Users = allUsers.Select(x => new UserListen() { Recipient = x.ToPeople() }).ToList(),
                 Duration = messType == MessageType.Vocal ? request.Duration : new int?(),
                 TalkId = talk.Id,
                 Translate = messType == MessageType.Vocal ? translation : null

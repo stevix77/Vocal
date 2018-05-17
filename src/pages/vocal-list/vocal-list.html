@@ -41,10 +41,10 @@
         </div>
       </ion-item>
       <ion-item-options side="right">
-        <button ion-button icon-only color="danger" (click)="deleteMessage(item.Id, i)">
+        <button ion-button icon-only color="danger" (click)="showConfirm(0, item.Id, i)">
           <ion-icon name="trash"></ion-icon>
         </button>
-        <button ion-button icon-only (click)="archiveMessage(item.Id, i)">
+        <button ion-button icon-only (click)="showConfirm(1, item.Id, i)">
           <ion-icon name="archive"></ion-icon>
         </button>
       </ion-item-options>
