@@ -148,7 +148,8 @@ namespace Vocal.Business.Binder
                     User = Bind_People(item.Sender),
                     Users = Bind_UsersListen(item.Users),
                     Duration = item.Duration,
-                    Translation = item.Translate
+                    Translation = item.Translate,
+                    ActiveFilter = item.ActiveFilter
                 });
             }
             return response;
@@ -191,7 +192,8 @@ namespace Vocal.Business.Binder
                 Users = Bind_UsersListen(m.Users),
                 SentTime = m.SentTime,
                 Duration = m.Duration,
-                Translation = m.Translate
+                Translation = m.Translate,
+                ActiveFilter = m.ActiveFilter
             };
         }
 
