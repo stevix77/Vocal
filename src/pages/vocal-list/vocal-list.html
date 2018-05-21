@@ -36,8 +36,8 @@
           <h3>{{ item.Name }}</h3>
           <p *ngIf="item.FormatedDateLastMessage.isToday === true">{{ item.FormatedDateLastMessage.date | date: 'HH:mm' }}</p>
           <p *ngIf="item.FormatedDateLastMessage.isYesterday === true">Hier</p>
-          <p *ngIf="item.FormatedDateLastMessage.isWeek === true">{{ item.FormatedDateLastMessage.date | date: 'EEEE' }}</p>
-          <p *ngIf="item.FormatedDateLastMessage.isToday === false && item.FormatedDateLastMessage.isYesterday === false && item.DateLastMessage.isWeek === false">{{ item.DateLastMessage.date | date: 'dd/MM/yy' }}</p>
+          <p *ngIf="item.FormatedDateLastMessage.isWeek === true">{{ item.FormatedDateLastMessage.date | date: 'EEEE' }}</p> 
+          <p *ngIf="item.FormatedDateLastMessage.isToday === false && item.FormatedDateLastMessage.isYesterday === false && item.FormatedDateLastMessage.isWeek === false">{{ item.FormatedDateLastMessage.date | date: 'dd/MM/yy' }}</p>
         </div>
       </ion-item>
       <ion-item-options side="right">

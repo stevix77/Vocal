@@ -28,16 +28,18 @@ export class AudioRecorder {
   }
 
   applyEffect(filter) {
-    console.log('apply effect')
     if (!this.isPlaying) {
       let source = this.context.createBufferSource();
       let context = this.context;
       let file = this.file;
 
+      let playbackRate = 1;
+      if( filter == 'alien' ) playbackRate = 1.5;
+      if( filter == 'giant' ) playbackRate = 0.75;
       file.readAsArrayBuffer(this.getFilePath(), this.filename).then(arrayBuffer => {
         context.decodeAudioData(arrayBuffer, function(buffer){
             source.buffer = buffer;
-            source.playbackRate.value = 1.5;
+            source.playbackRate.value = playbackRate;
             source.connect(context.destination);
 
             source.start(0);
@@ -45,7 +47,6 @@ export class AudioRecorder {
       });
 
     } else {
-      console.log('else');
     }
   }
 
@@ -53,7 +54,6 @@ export class AudioRecorder {
     if(this.isApp) {
       this.applyEffect(filter);
     } else {
-      console.log('apply effect ' + filter);
     }
   }
 
@@ -135,7 +135,6 @@ export class AudioRecorder {
   onMediaStatusUpdate(status) {
     if(status == 2) this.isPlaying = true;
     if(status == 4) this.isPlaying = false;
-    console.log('isPlaying : ' + this.isPlaying);
   }
 
   startRecording() {
@@ -151,7 +150,6 @@ export class AudioRecorder {
 
   startPlayback() {
     if(this.isApp) {
-      console.log('start playback success');
       this.mediaObject.play();
     }
   }

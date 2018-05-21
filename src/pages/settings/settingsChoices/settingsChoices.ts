@@ -28,7 +28,6 @@ export class SettingsChoices implements OnInit {
   }
 
   ItemSelected(choice) {
-    console.log(choice);
     for(let item of this.list) {
       if(item.Id == choice.Id) {
         item.IsChecked = true;

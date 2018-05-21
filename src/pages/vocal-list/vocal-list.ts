@@ -143,6 +143,7 @@ export class VocalListPage {
     items.forEach(item => {
       if(item.DateLastMessage && typeof(item.DateLastMessage) != 'object') {
         item.FormatedDateLastMessage = this.getFormattedDateLastMessage(item.DateLastMessage);
+        console.log(item.FormatedDateLastMessage);
       }
       // if(item.Users.length == 2) {
       //   item.Users.forEach(user => {

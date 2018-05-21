@@ -41,7 +41,6 @@ export class SendVocalPage {
 
   ionViewWillEnter() {
     console.log('ionViewDidLoad SendVocalPage');
-    console.log(this.navParams.get('activeFilter'));
     if(this.friendsService.Friends == null)
       this.friendsService.getList();
   }
@@ -69,7 +68,6 @@ export class SendVocalPage {
               try {
                 let response = resp.json() as Response<SendMessageResponse>;
                 if(!response.HasError && response.Data.IsSent) {
-                  console.log(response);
                   this.talkService.LoadList().then(() => {
                     this.talkService.UpdateList(response.Data.Talk);
                     this.talkService.SaveList();
@@ -77,10 +75,11 @@ export class SendVocalPage {
                   })
                 }
                 else {
-                  console.log(response);
+                  console.log(response.ErrorMessage);
                   this.events.publish("Error", response.ErrorMessage);
                 }
               } catch(err) {
+                console.log(err);
                 this.events.publish("Error", err.message);
                 this.exceptionService.Add(err);
               }
