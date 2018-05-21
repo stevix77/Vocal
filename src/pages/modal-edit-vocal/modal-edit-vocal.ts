@@ -96,7 +96,6 @@ export class ModalEditVocalPage {
               try {
                 let response = resp.json() as Response<SendMessageResponse>;
                 if(!response.HasError && response.Data.IsSent) {
-                  console.log(response);
                   this.talkService.LoadList().then(() => {
                     this.talkService.UpdateList(response.Data.Talk);
                     this.talkService.SaveList();
@@ -104,7 +103,6 @@ export class ModalEditVocalPage {
                   })
                 }
                 else {
-                  console.log(response);
                   this.events.publish("Error", response.ErrorMessage);
                 }
               } catch(err) {

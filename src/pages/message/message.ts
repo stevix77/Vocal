@@ -320,6 +320,7 @@ export class MessagePage {
       let uniqId = functions.Crypt(message.Id + params.Salt);
       let my_media = new Media();
       this.file = my_media.create(`${url.BaseUri}/docs/vocal/${uniqId}.mp3`);
+      
       this.file.play();
       this.file.onStatusUpdate.subscribe(status => {
         if(status == 2) { //PLAYING

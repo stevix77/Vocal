@@ -32,7 +32,6 @@ export class SearchMailPage {
     this.friendsService.searchByMail(mail).subscribe(
       resp => { 
         let response = resp.json() as Response<Array<UserResponse>>;
-        console.log(response);
         if(!response.HasError) {
           this.model.Friends = response.Data;
         } else {
