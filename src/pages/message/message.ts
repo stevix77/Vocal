@@ -41,12 +41,12 @@ export class MessagePage {
   timer: Timer;
   time: string = '0:00';
   messUser: string;
-  file: MediaObject;
+  mediaObject: MediaObject;
   isDirectMessage: boolean = true;
   isWriting: boolean = false;
   uid: string = params.User.Id;
   hasScrolled = true;
-  TalkDuration: any;
+  TalkDuration: any; 
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
@@ -243,6 +243,7 @@ export class MessagePage {
   loadMessages() {
     this.Talk = this.talkService.getTalk(this.model.talkId);
     this.Messages = this.talkService.GetMessages(this.model.talkId);
+    console.log(this.Messages);
     this.TalkDuration = this.getDuration(this.Talk.Duration);
   }
 
@@ -316,13 +317,15 @@ export class MessagePage {
       let message = this.Messages[index];
       this.Messages[index].IsPlaying = true;
       this.talkService.SaveMessages(this.model.talkId, this.Messages);
+
+      console.log(message.ActiveFilter);
       
       let uniqId = functions.Crypt(message.Id + params.Salt);
       let my_media = new Media();
-      this.file = my_media.create(`${url.BaseUri}/docs/vocal/${uniqId}.mp3`);
+      this.mediaObject = my_media.create(`${url.BaseUri}/docs/vocal/${uniqId}.mp3`);
       
-      this.file.play();
-      this.file.onStatusUpdate.subscribe(status => {
+      this.mediaObject.play();
+      this.mediaObject.onStatusUpdate.subscribe(status => {
         if(status == 2) { //PLAYING
           
         }
@@ -331,6 +334,7 @@ export class MessagePage {
           this.talkService.SaveMessages(this.model.talkId, this.Messages);
         }
       }); // fires when file status changes
+
     } catch (err) {
       this.events.publish("Error", err.message)
       this.exceptionService.Add(err);
@@ -338,7 +342,7 @@ export class MessagePage {
   }
 
   pauseVocal(messId: string, index: number) {
-    this.file.pause();
+    this.mediaObject.pause();
     this.Messages[index].IsPlaying = false;
     this.talkService.SaveMessages(this.model.talkId, this.Messages);
   }

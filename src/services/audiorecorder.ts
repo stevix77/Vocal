@@ -5,6 +5,7 @@ import { Media, MediaObject } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
 import { ExceptionService } from './exceptionService';
 import { typeSourceSpan } from '@angular/compiler';
+import { AudioPlayer } from './audioplayer';
 
 @Injectable()
 export class AudioRecorder {
@@ -12,14 +13,13 @@ export class AudioRecorder {
   mediaObject: MediaObject;
   filename: string;
   isApp: boolean;
-  effects: Array<Object> = new Array();
-  tuna: any;
   context: any;
   isPlaying: boolean = false;
   constructor(
     public config:Config,
     public alertCtrl: AlertController,
     public plt: Platform,
+    public audioplayer: AudioPlayer,
     private media: Media, 
     private file: File,
     private exceptionService: ExceptionService) {
@@ -29,36 +29,14 @@ export class AudioRecorder {
 
   applyEffect(filter) {
     if (!this.isPlaying) {
-      let source = this.context.createBufferSource();
-      let context = this.context;
-      let file = this.file;
-
-      let playbackRate = 1;
-      if( filter == 'alien' ) playbackRate = 1.5;
-      if( filter == 'giant' ) playbackRate = 0.75;
-      file.readAsArrayBuffer(this.getFilePath(), this.filename).then(arrayBuffer => {
-        context.decodeAudioData(arrayBuffer, function(buffer){
-            source.buffer = buffer;
-            source.playbackRate.value = playbackRate;
-            source.connect(context.destination);
-
-            source.start(0);
-        });
-      });
-
-    } else {
+      this.audioplayer.playWithFilter(filter, this.file, this.getFilePath(), this.filename);
     }
   }
 
   editPlayback(filter) {
     if(this.isApp) {
       this.applyEffect(filter);
-    } else {
     }
-  }
-
-  getEffectFromFilter(filter){
-    return this.effects[filter];
   }
 
   getFilePath() {
@@ -82,39 +60,6 @@ export class AudioRecorder {
     return this.file.readAsDataURL(this.getFilePath(), this.filename);
   }
 
-  /*
-  initEffects(){
-    this.contexteAudio = new (window["AudioContext"] || window["webkitAudioContext"])();
-    this.tuna = new window["Tuna"](this.contexteAudio);
-    this.effects['chaton'] = new this.tuna.Phaser({
-        rate: 1.2,                     //0.01 to 8 is a decent range, but higher values are possible
-        depth: 0.3,                    //0 to 1
-        feedback: 0.2,                 //0 to 1+
-        stereoPhase: 30,               //0 to 180
-        baseModulationFrequency: 700,  //500 to 1500
-        bypass: 0
-    });
-    this.effects['alien'] = new this.tuna.Chorus({
-        rate: 1.5,
-        feedback: 0.2,
-        delay: 0.0045,
-        bypass: 0
-    });
-    this.effects['robot'] = new this.tuna.Chorus({
-        rate: 1.5,
-        feedback: 0.2,
-        delay: 0.0045,
-        bypass: 0
-    });
-    this.effects['thug'] = new this.tuna.Chorus({
-        rate: 1.5,
-        feedback: 0.2,
-        delay: 0.0045,
-        bypass: 0
-    });
-  }
-  */
-
   release() {
     this.mediaObject.release();
   }
@@ -125,7 +70,6 @@ export class AudioRecorder {
       let path = this.getFilePath().replace(/^file:\/\//, '');
       this.mediaObject = this.media.create(path + this.filename);
       this.mediaObject.onStatusUpdate.subscribe(this.onMediaStatusUpdate);
-      this.context = new (window["AudioContext"] || window["webkitAudioContext"])();
       this.mediaObject.startRecord();
     }).catch(err => {
         this.exceptionService.Add(err);

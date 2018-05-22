@@ -51,6 +51,8 @@ import { FriendsService } from "../services/friendsService";
 import { InitService } from "../services/initService";
 import { ScanContactsPage } from "../pages/scan-contacts/scan-contacts";
 import { AudioRecorder } from "../services/audiorecorder";
+import { AudioPlayer } from "../services/audioplayer";
+import { FileService } from "../services/fileService";
 import { SettingsService } from "../services/settingsService";
 import { DirectivesModule } from '../directives/directives.module';
 
@@ -155,6 +157,8 @@ let components = [
     MessageService,
     DraftService,
     AudioRecorder,
+    AudioPlayer,
+    FileService,
     IonicErrorHandler,
     {provide: ErrorHandler, useClass: MyErrorHandler}
   ]
