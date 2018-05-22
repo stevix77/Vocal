@@ -10,6 +10,7 @@ import { HubService } from "../../services/hubService";
 import { functions } from "../../services/functions";
 import { Timer } from '../../services/timer';
 import { Media, MediaObject } from '@ionic-native/media';
+import { File } from '@ionic-native/file';
 import { TalkResponse } from "../../models/response/talkResponse";
 import { MessageService } from "../../services/messageService";
 import { ExceptionService } from "../../services/exceptionService";
@@ -17,6 +18,7 @@ import { FriendsService } from "../../services/friendsService";
 import { url } from "../../services/url";
 import { ActionResponse } from "../../models/response/actionResponse";
 import { DraftService } from "../../services/draftService";
+import { AudioPlayer } from '../../services/audioplayer';
 
 /**
  * Generated class for the MessagePage page.
@@ -53,6 +55,8 @@ export class MessagePage {
               public config: Config,
               private toastCtrl: ToastController, 
               public alertCtrl: AlertController,
+              public audioplayer: AudioPlayer,
+              private file: File,
               private events: Events,
               private talkService: TalkService,
               private hubService: HubService,
@@ -318,11 +322,14 @@ export class MessagePage {
       this.Messages[index].IsPlaying = true;
       this.talkService.SaveMessages(this.model.talkId, this.Messages);
 
-      console.log(message.ActiveFilter);
-      
       let uniqId = functions.Crypt(message.Id + params.Salt);
       let my_media = new Media();
       this.mediaObject = my_media.create(`${url.BaseUri}/docs/vocal/${uniqId}.mp3`);
+
+      if(message.ActiveFilter !== undefined && message.ActiveFilter != ""){
+        
+        //this.audioplayer.playWithFilter(message.ActiveFilter, )
+      }
       
       this.mediaObject.play();
       this.mediaObject.onStatusUpdate.subscribe(status => {
