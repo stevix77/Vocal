@@ -27,24 +27,16 @@ namespace Vocal.Business.Backup
                     foreach (var item in collections)
                     {
                         var name = item.GetElement("name").Value.ToString();
-                        //if (!name.ToLower().Equals("monitoring"))
-                        //{
-                        //    var docs = _repository.GetDocuments(name);
-                        //    if (docs.Count > 0)
-                        //    {
-                        //        var json = JsonConvert.SerializeObject(docs);
-                        //        if (!Directory.Exists($"{Settings.Default.BackupPath}/export"))
-                        //            Directory.CreateDirectory($"{Settings.Default.BackupPath}/export");
-                        //        File.WriteAllText($"{Settings.Default.BackupPath}/export/{name}.json", json);
-                        //    }
-                        //}
-                        var docs = _repository.GetDocuments(name);
-                        if (docs.Count > 0)
+                        if (!name.ToLower().Equals("monitoring"))
                         {
-                            var json = JsonConvert.SerializeObject(docs);
-                            if (!Directory.Exists($"{Settings.Default.BackupPath}/export"))
-                                Directory.CreateDirectory($"{Settings.Default.BackupPath}/export");
-                            File.WriteAllText($"{Settings.Default.BackupPath}/export/{name}.json", json);
+                            var docs = _repository.GetDocuments(name);
+                            if (docs.Count > 0)
+                            {
+                                var json = JsonConvert.SerializeObject(docs);
+                                if (!Directory.Exists($"{Settings.Default.BackupPath}/export"))
+                                    Directory.CreateDirectory($"{Settings.Default.BackupPath}/export");
+                                File.WriteAllText($"{Settings.Default.BackupPath}/export/{name}.json", json);
+                            }
                         }
                     }
                     Thread.Sleep(1000 * 3600 * 6);
