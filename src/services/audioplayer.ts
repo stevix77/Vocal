@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { File } from '@ionic-native/file';
+import { Events } from 'ionic-angular';
 
 @Injectable()
 export class AudioPlayer {
 
   context: any;
-  constructor(){
+  constructor(public events:Events){
 
   }
 
@@ -14,6 +15,10 @@ export class AudioPlayer {
     let source = this.context.createBufferSource();
     let context = this.context;
     let file = _file;
+
+    source.onended = () => {
+      this.events.publish('audioplayer:ended');
+    }
 
     let playbackRate = 1;
     if( filter == 'alien' ) playbackRate = 1.5;

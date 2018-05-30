@@ -11,6 +11,7 @@ import { functions } from "../../services/functions";
 import { Timer } from '../../services/timer';
 import { Media, MediaObject } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
 import { TalkResponse } from "../../models/response/talkResponse";
 import { MessageService } from "../../services/messageService";
 import { ExceptionService } from "../../services/exceptionService";
@@ -48,7 +49,8 @@ export class MessagePage {
   isWriting: boolean = false;
   uid: string = params.User.Id;
   hasScrolled = true;
-  TalkDuration: any; 
+  TalkDuration: any;
+  
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
@@ -56,6 +58,7 @@ export class MessagePage {
               private toastCtrl: ToastController, 
               public alertCtrl: AlertController,
               public audioplayer: AudioPlayer,
+              private transfer: FileTransfer,
               private file: File,
               private events: Events,
               private talkService: TalkService,
@@ -323,24 +326,36 @@ export class MessagePage {
       this.talkService.SaveMessages(this.model.talkId, this.Messages);
 
       let uniqId = functions.Crypt(message.Id + params.Salt);
+      
       let my_media = new Media();
       this.mediaObject = my_media.create(`${url.BaseUri}/docs/vocal/${uniqId}.mp3`);
-
+      
       if(message.ActiveFilter !== undefined && message.ActiveFilter != ""){
-        
-        //this.audioplayer.playWithFilter(message.ActiveFilter, )
+        console.log('play with filter');
+        const fileTransfer: FileTransferObject = this.transfer.create();
+        fileTransfer.download(`${url.BaseUri}/docs/vocal/${uniqId}.mp3`, `${this.file.tempDirectory}${uniqId}.mp3`).then((entry) => {
+          this.audioplayer.playWithFilter(message.ActiveFilter, this.file, `${this.file.tempDirectory}`, `${uniqId}.mp3`);
+          this.events.subscribe('audioplayer:ended', () => {
+            this.Messages[index].IsPlaying = false;
+            this.talkService.SaveMessages(this.model.talkId, this.Messages);
+          });
+        }, (error) => {
+          // handle error
+        });
+      } else {
+        console.log('play no filter');
+        this.mediaObject.play();
+        this.mediaObject.onStatusUpdate.subscribe(status => {
+          if(status == 2) { //PLAYING
+            
+          }
+          if(status == 4) { //STOP
+            this.Messages[index].IsPlaying = false;
+            this.talkService.SaveMessages(this.model.talkId, this.Messages);
+          }
+        }); // fires when file status changes
       }
       
-      this.mediaObject.play();
-      this.mediaObject.onStatusUpdate.subscribe(status => {
-        if(status == 2) { //PLAYING
-          
-        }
-        if(status == 4) { //STOP
-          this.Messages[index].IsPlaying = false;
-          this.talkService.SaveMessages(this.model.talkId, this.Messages);
-        }
-      }); // fires when file status changes
 
     } catch (err) {
       this.events.publish("Error", err.message)
