@@ -63,12 +63,11 @@ export class SendVocalPage {
           this.FileValue = fileValue;
           let users = this.getCheckedUsers();
           let duration = this.navParams.get('duration');
-          this.messageService.sendMessage(null, MessageType.Vocal, users, duration, this.FileValue).subscribe(
+          this.messageService.sendMessage(null, MessageType.Vocal, users, duration, this.FileValue, this.navParams.get('activeFilter')).subscribe(
             resp => {
               try {
                 let response = resp.json() as Response<SendMessageResponse>;
                 if(!response.HasError && response.Data.IsSent) {
-                  console.log(response);
                   this.talkService.LoadList().then(() => {
                     this.talkService.UpdateList(response.Data.Talk);
                     this.talkService.SaveList();
@@ -76,10 +75,11 @@ export class SendVocalPage {
                   })
                 }
                 else {
-                  console.log(response);
+                  console.log(response.ErrorMessage);
                   this.events.publish("Error", response.ErrorMessage);
                 }
               } catch(err) {
+                console.log(err);
                 this.events.publish("Error", err.message);
                 this.exceptionService.Add(err);
               }

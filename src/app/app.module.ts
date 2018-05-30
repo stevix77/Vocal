@@ -18,6 +18,7 @@ import { SettingsPage } from '../pages/settings/settings';
 
 import { SettingsChoices } from '../pages/settings/settingsChoices/settingsChoices';
 import { SettingsMail } from '../pages/settings/settingsMail/settingsMail';
+import { SettingsBirthdayDate } from '../pages/settings/settingsBirthdayDate/settingsBirthdayDate';
 
 import { AudioRecorderComponent } from '../components/audio-recorder/audio-recorder';
 import { ModalEditVocalPage } from '../pages/modal-edit-vocal/modal-edit-vocal';
@@ -50,12 +51,16 @@ import { FriendsService } from "../services/friendsService";
 import { InitService } from "../services/initService";
 import { ScanContactsPage } from "../pages/scan-contacts/scan-contacts";
 import { AudioRecorder } from "../services/audiorecorder";
+import { AudioPlayer } from "../services/audioplayer";
 import { SettingsService } from "../services/settingsService";
 import { DirectivesModule } from '../directives/directives.module';
 
 
 import { Pro } from '@ionic/pro';
 import { MessageService } from "../services/messageService";
+import { UserService } from "../services/userService";
+import { DraftService } from "../services/draftService";
+import { FileTransfer } from '@ionic-native/file-transfer';
 
 Pro.init('6a79ec67', {
   appVersion: '0.0.1'
@@ -101,6 +106,7 @@ let components = [
   SettingsChoices,
   SettingsMail,
   SettingsChoices,
+  SettingsBirthdayDate,
 
   AudioRecorderComponent,
   ModalEditVocalPage,
@@ -147,8 +153,12 @@ let components = [
     FriendsService,
     SettingsService,
     InitService,
+    UserService,
     MessageService,
+    DraftService,
     AudioRecorder,
+    AudioPlayer,
+    FileTransfer,
     IonicErrorHandler,
     {provide: ErrorHandler, useClass: MyErrorHandler}
   ]

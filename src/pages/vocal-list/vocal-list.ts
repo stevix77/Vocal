@@ -1,8 +1,6 @@
 import { TalkService } from './../../services/talkService';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Events, ViewController, ModalController, Config } from 'ionic-angular';
-import { HttpService } from "../../services/httpService";
-import { CookieService } from "../../services/cookieService";
 import { TalkResponse } from '../../models/response/talkResponse';
 import { ActionResponse } from '../../models/response/actionResponse';
 import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
@@ -10,9 +8,7 @@ import { HubMethod, PictureType } from '../../models/enums';
 import { MessagePage } from '../message/message';
 import { params } from '../../services/params';
 import { Response } from '../../models/response';
-import { url } from '../../services/url';
 import { Timer } from '../../services/timer';
-import { ArchiveTalkRequest } from '../../models/request/archiveTalkRequest';
 import { MessageService } from "../../services/messageService";
 import { ExceptionService } from "../../services/exceptionService";
 
@@ -46,8 +42,6 @@ export class VocalListPage {
     public modalCtrl: ModalController,
     public events: Events,
     public config: Config,
-    private httpService: HttpService, 
-    private cookieService: CookieService, 
     private talkService: TalkService,
     private messageService: MessageService,
     private exceptionService: ExceptionService) {
@@ -74,7 +68,6 @@ export class VocalListPage {
     this.events.subscribe('edit-vocal:open', () => this.toggleTiming());
     this.events.subscribe('edit-vocal:close', () => this.toggleRecording());
 
-    this.initialize();
   }
 
   ionViewDidEnter() {
@@ -130,10 +123,7 @@ export class VocalListPage {
   }
 
   getVocalList() {
-    let request = {Lang: params.Lang, UserId: params.User.Id}
-    let urlTalks = url.GetTalkList();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlTalks, params.User);
-    this.httpService.Post(urlTalks, request, cookie).subscribe(
+    this.messageService.getTalkList().subscribe(
       resp => {
         let response = resp.json() as Response<Array<TalkResponse>>;
         if(response.HasError)
@@ -153,6 +143,7 @@ export class VocalListPage {
     items.forEach(item => {
       if(item.DateLastMessage && typeof(item.DateLastMessage) != 'object') {
         item.FormatedDateLastMessage = this.getFormattedDateLastMessage(item.DateLastMessage);
+        console.log(item.FormatedDateLastMessage);
       }
       // if(item.Users.length == 2) {
       //   item.Users.forEach(user => {
@@ -230,15 +221,7 @@ export class VocalListPage {
   }
 
   archiveMessage(id, index){
-    let request: ArchiveTalkRequest = {
-      Lang: params.Lang,
-      IdSender: params.User.Id,
-      IdTalk: id,
-      SentTime: new Date()
-    };
-    let urlArchive = url.ArchiveTalk();
-    let cookie = this.cookieService.GetAuthorizeCookie(urlArchive, params.User);
-    this.httpService.Post<ArchiveTalkRequest>(urlArchive, request, cookie).subscribe(
+    this.messageService.archiveTalk(id).subscribe(
       resp => {
         let response = resp.json() as Response<ActionResponse>;
         if(!response.HasError && response.Data.IsDone){
@@ -249,6 +232,29 @@ export class VocalListPage {
         }
       }
     );
+  }
+
+  showConfirm(type, idTalk, index) {
+    let confirm = this.alertCtrl.create({
+      title: `Êtes-vous sûr de vouloir ${type == 0 ? 'supprimer' : 'archiver'} cet conversation ?`,
+      buttons: [
+        {
+          text: 'Annuler',
+          handler: () => {
+          }
+        },
+        {
+          text: `${type == 0 ? 'Supprimer' : 'Archiver'}`,
+          handler: () => {
+            if(type == 0)
+              this.deleteMessage(idTalk, index);
+            else if(type == 1)
+              this.archiveMessage(idTalk, index);
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
 
   goToMessage(id) {

@@ -86,6 +86,9 @@ var url = {
     UnarchiveTalk() : string {
         return this.BaseUri + "/api/talk/unarchiveTalk";
     },
+    DeleteMessage() {
+        return this.BaseUri + "/api/talk/DeleteMessage";
+    },
     GetProfil() : string {
         return this.BaseUri + "/api/user/profil";
     },

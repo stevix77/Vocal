@@ -19,5 +19,6 @@ namespace Vocal.Model.DB
         public string TalkId { get; set; }
         public Message Parent { get; set; }
         public string Translate { get; set; }
+        public string ActiveFilter { get; set; }
     }
 }

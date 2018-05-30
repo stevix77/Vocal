@@ -27,6 +27,7 @@ export class ModalEditVocalPage {
   isSending: Boolean = false;
   FileValue: string;
   talkId: string;
+  activeFilter: string = '';
 
   constructor(public navCtrl: NavController, 
     public navParams: NavParams,
@@ -52,6 +53,7 @@ export class ModalEditVocalPage {
   }
 
   editVocalWithFilter(filter) {
+    this.activeFilter = filter;
     this.audioRecorder.editPlayback(filter);
   }
 
@@ -78,7 +80,7 @@ export class ModalEditVocalPage {
     if(this.navParams.get('isDM')) {
       this.sendVocal();
     } else {
-      this.navCtrl.push(SendVocalPage, {duration:this.navParams.get('duration')});
+      this.navCtrl.push(SendVocalPage, {duration:this.navParams.get('duration'), activeFilter: this.activeFilter});
     }
   }
 
@@ -89,12 +91,11 @@ export class ModalEditVocalPage {
         this.audioRecorder.getFile().then(fileValue => {
           this.FileValue = fileValue;
           let duration = this.navParams.get('duration');
-          this.messageService.sendMessage(this.talkId, MessageType.Vocal, null, duration, this.FileValue).subscribe(
+          this.messageService.sendMessage(this.talkId, MessageType.Vocal, null, duration, this.FileValue, this.activeFilter).subscribe(
             resp => {
               try {
                 let response = resp.json() as Response<SendMessageResponse>;
                 if(!response.HasError && response.Data.IsSent) {
-                  console.log(response);
                   this.talkService.LoadList().then(() => {
                     this.talkService.UpdateList(response.Data.Talk);
                     this.talkService.SaveList();
@@ -102,7 +103,6 @@ export class ModalEditVocalPage {
                   })
                 }
                 else {
-                  console.log(response);
                   this.events.publish("Error", response.ErrorMessage);
                 }
               } catch(err) {

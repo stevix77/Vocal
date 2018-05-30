@@ -27,6 +27,7 @@ import { MessagePage } from "../pages/message/message";
 import { Deeplinks } from '@ionic-native/deeplinks';
 import { Inscription } from "../pages/inscription/inscription";
 import { InitService } from "../services/initService";
+import { DraftService } from "../services/draftService";
 
 declare var WindowsAzure: any;
 
@@ -57,7 +58,7 @@ export class VocalApp {
               private toastCtrl: ToastController,
               private exceptionService: ExceptionService,
               private deeplinks: Deeplinks,
-              private initService: InitService, ) {
+              private initService: InitService, private draftService: DraftService) {
     this.initializeApp();
     events.subscribe("ErrorInit", (error) => this.showToast(error));
     events.subscribe("Error", (error) => this.showToast('Une erreur est survenue'));
@@ -254,6 +255,7 @@ export class VocalApp {
           this.init();
           this.initPushNotification();
           this.rootPage = VocalListPage;
+          this.draftService.init();
         }
         else
           this.rootPage = HomePage;
@@ -271,6 +273,14 @@ export class VocalApp {
         console.log(err);
       })
       if(this.config.get('isApp')) this.client = new WindowsAzure.MobileServiceClient("https://mobileappvocal.azurewebsites.net");
+      this.platform.registerBackButtonAction(() => {
+        let nav = this.nav.getActive().getNav();
+        if (nav.canGoBack()){ //Can we go back?
+          nav.pop();
+        }else{
+          this.platform.exitApp(); //Exit from app
+        }
+      });
     });
   }
 
@@ -337,47 +347,51 @@ export class VocalApp {
   }
 
   SubscribeHub() {
-    this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
+    if(!this.hubService.hasStarted) {
+      this.hubService.Start(this.talkService.Talks.map((item) => {return item.Id;}));
     
-    this.hubService.hubProxy.on(HubMethod[HubMethod.BeginTalk], (obj) => {
-      console.log(obj);
-      this.events.publish(HubMethod[HubMethod.BeginTalk], obj);
-    });
+      this.hubService.hubProxy.on(HubMethod[HubMethod.BeginTalk], (obj) => {
+        console.log(obj);
+        this.events.publish(HubMethod[HubMethod.BeginTalk], obj);
+      });
 
-    this.hubService.hubProxy.on(HubMethod[HubMethod.EndTalk], (obj) => {
-      this.events.publish(HubMethod[HubMethod.EndTalk], obj);
-    });
+      this.hubService.hubProxy.on(HubMethod[HubMethod.EndTalk], (obj) => {
+        this.events.publish(HubMethod[HubMethod.EndTalk], obj);
+      });
 
-    this.hubService.hubProxy.on(HubMethod[HubMethod.AddFriend], (obj) => {
-      console.log(obj);
-      let message = obj + " vous a ajouté dans sa liste d'amis";
-      this.showToast(message);
-    });
+      this.hubService.hubProxy.on(HubMethod[HubMethod.AddFriend], (obj) => {
+        console.log(obj);
+        let message = obj + " vous a ajouté dans sa liste d'amis";
+        this.showToast(message);
+      });
 
-    this.hubService.hubProxy.on(HubMethod[HubMethod.UpdateListenUser], (obj) => {
-      console.log(obj);
-      this.events.publish(HubMethod[HubMethod.UpdateListenUser], obj);
-    });
+      this.hubService.hubProxy.on(HubMethod[HubMethod.UpdateListenUser], (obj) => {
+        console.log(obj);
+        this.events.publish(HubMethod[HubMethod.UpdateListenUser], obj);
+      });
 
-    this.hubService.hubProxy.on(HubMethod[HubMethod.Receive], (obj) => {
-      if(obj.Message.User.Id != params.User.Id) {
-        let mess = 'Nouveau message de ' + obj.Message.User.Username;
-        this.showToast(mess);
-      }
-      let talk = this.talkService.Talks.find(x => x.Id == obj.Talk.Id);
-      if(talk != null) {
-        talk.DateLastMessage = obj.Message.SentTime;
-        talk.Duration = obj.Talk.Duration;
-        this.talkService.updateTalk(talk);
-        this.talkService.insertMessage(obj.Talk.Id, obj.Message);
-        this.events.publish('ActiveScroll');
-      } else {
-        obj.Talk.DateLastMessage = obj.Message.SentTime;
-        this.talkService.insertTalk(obj.Talk);
-        this.talkService.insertMessage(obj.Talk.Id, obj.Message);
-      }
-      this.events.publish(HubMethod[HubMethod.Receive], obj);
-    })
-    
+      this.hubService.hubProxy.on(HubMethod[HubMethod.Receive], (obj) => {
+        if(obj.Message.User.Id != params.User.Id) {
+          let mess = 'Nouveau message de ' + obj.Message.User.Username;
+          this.showToast(mess);
+        }
+        let talk = this.talkService.Talks.find(x => x.Id == obj.Talk.Id);
+        if(talk != null) {
+          talk.DateLastMessage = obj.Message.SentTime;
+          talk.Duration = obj.Talk.Duration;
+          this.talkService.updateTalk(talk);
+          this.talkService.insertMessage(obj.Talk.Id, obj.Message);
+          this.events.publish('ActiveScroll');
+        } else {
+          obj.Talk.DateLastMessage = obj.Message.SentTime;
+          obj.Talk.IsWriting = false;
+          obj.Talk.TextWriting = "";
+          obj.Talk.FormatedDateLastMessage = null;
+          this.talkService.insertTalk(obj.Talk);
+          this.talkService.insertMessage(obj.Talk.Id, obj.Message);
+        }
+        this.events.publish(HubMethod[HubMethod.Receive], obj);
+      })
+    }
   }
 }

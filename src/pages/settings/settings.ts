@@ -11,6 +11,7 @@ import { KeyStore } from '../../models/enums';
 import { Response } from '../../models/response';
 import { Request } from "../../models/request/request";
 import { SettingsChoices } from './settingsChoices/settingsChoices';
+import { SettingsBirthdayDate } from './settingsBirthdayDate/settingsBirthdayDate';
 import { SettingsMail } from './settingsMail/settingsMail';
 import { HomePage } from "../home/home";
 import { FriendsService } from "../../services/friendsService";
@@ -101,6 +102,10 @@ export class SettingsPage implements OnInit {
 
   SettingsMail() {
     this.navCtrl.push(SettingsMail, {Email: this.model.Settings.Email})
+  }
+
+  SettingsBirthdayDate() {
+    this.navCtrl.push(SettingsBirthdayDate, { BirthdayDate: this.model.Settings.BirthdayDate })
   }
 
   ngOnInit() {

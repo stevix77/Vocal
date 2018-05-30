@@ -14,5 +14,6 @@ namespace Vocal.Model.Response
         public List<UserListenResponse> Users { get; set; }
         public int? Duration { get; set; }
         public string Translation { get; set; }
+        public string ActiveFilter { get; set; }
     }
 }
