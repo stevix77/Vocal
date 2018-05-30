@@ -1,7 +1,7 @@
 import { HubMethod, PictureType, MessageType } from '../../models/enums';
 import { MessageResponse } from './../../models/response/messageResponse';
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, Events, Config, Content, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, Events, Config, Content, AlertController, Platform } from 'ionic-angular';
 import { params } from '../../services/params';
 import { Response } from '../../models/response';
 import { SendMessageResponse } from '../../models/response/sendMessageResponse';
@@ -20,6 +20,7 @@ import { url } from "../../services/url";
 import { ActionResponse } from "../../models/response/actionResponse";
 import { DraftService } from "../../services/draftService";
 import { AudioPlayer } from '../../services/audioplayer';
+import { AudioRecorder } from '../../services/audiorecorder';
 
 /**
  * Generated class for the MessagePage page.
@@ -55,9 +56,11 @@ export class MessagePage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
               public config: Config,
-              private toastCtrl: ToastController, 
               public alertCtrl: AlertController,
               public audioplayer: AudioPlayer,
+              public audiorecorder: AudioRecorder,
+              public plt: Platform,
+              private toastCtrl: ToastController, 
               private transfer: FileTransfer,
               private file: File,
               private events: Events,
@@ -319,6 +322,14 @@ export class MessagePage {
     }
   }
 
+  getFilePath(){
+    let path = '';
+    if(this.plt.is('ios')) path = this.file.tempDirectory;
+    if(this.plt.is('android')) path = this.file.externalCacheDirectory;
+
+    return path;
+  }
+
   playVocal(messId: string, index: number) {
     try {
       let message = this.Messages[index];
@@ -331,10 +342,9 @@ export class MessagePage {
       this.mediaObject = my_media.create(`${url.BaseUri}/docs/vocal/${uniqId}.mp3`);
       
       if(message.ActiveFilter !== undefined && message.ActiveFilter != ""){
-        console.log('play with filter');
         const fileTransfer: FileTransferObject = this.transfer.create();
-        fileTransfer.download(`${url.BaseUri}/docs/vocal/${uniqId}.mp3`, `${this.file.tempDirectory}${uniqId}.mp3`).then((entry) => {
-          this.audioplayer.playWithFilter(message.ActiveFilter, this.file, `${this.file.tempDirectory}`, `${uniqId}.mp3`);
+        fileTransfer.download(`${url.BaseUri}/docs/vocal/${uniqId}.mp3`, `${this.getFilePath()}${uniqId}.mp3`).then((entry) => {
+          this.audioplayer.playWithFilter(message.ActiveFilter, this.file, `${this.getFilePath()}`, `${uniqId}.mp3`);
           this.events.subscribe('audioplayer:ended', () => {
             this.Messages[index].IsPlaying = false;
             this.talkService.SaveMessages(this.model.talkId, this.Messages);
@@ -343,7 +353,6 @@ export class MessagePage {
           // handle error
         });
       } else {
-        console.log('play no filter');
         this.mediaObject.play();
         this.mediaObject.onStatusUpdate.subscribe(status => {
           if(status == 2) { //PLAYING
