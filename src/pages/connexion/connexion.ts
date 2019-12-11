@@ -9,6 +9,7 @@ import { PasswordForgotPage } from '../passwordForgot/passwordForgot';
 import { ExceptionService } from "../../services/exceptionService";
 import { InitService } from "../../services/initService";
 import { InitResponse } from "../../models/response/InitResponse";
+import { FeedPage } from '../feed/feed';
 
 @Component({
   selector: 'page-connexion',
@@ -52,7 +53,7 @@ export class Connexion {
                     let response = resp.json() as Response<InitResponse>;
                     this.initService.manageData(response);
                     this.events.publish("subscribeHub");
-                    this.navCtrl.push(VocalListPage);
+                    this.navCtrl.push(FeedPage);
                   },
                   error => {
                     this.events.publish("ErrorInit", error);
@@ -81,7 +82,7 @@ export class Connexion {
   }
 
   goToVocalListPage() {
-    this.navCtrl.push(VocalListPage);    
+    this.navCtrl.push(FeedPage);
   }
 
   goToForgotPassword() {

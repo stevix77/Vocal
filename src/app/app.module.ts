@@ -14,6 +14,7 @@ import { InscriptionEmailPage } from '../pages/inscription-email/inscription-ema
 import { InscriptionPasswordPage } from '../pages/inscription-password/inscription-password';
 import { InscriptionFindFriendsPage } from '../pages/inscription-find-friends/inscription-find-friends';
 import { VocalListPage } from '../pages/vocal-list/vocal-list';
+import { FeedPage } from '../pages/feed/feed';
 import { SettingsPage } from '../pages/settings/settings';
 
 import { SettingsChoices } from '../pages/settings/settingsChoices/settingsChoices';
@@ -102,6 +103,7 @@ let components = [
   InscriptionFindFriendsPage,
 
   VocalListPage,
+  FeedPage,
   SettingsPage,
   SettingsChoices,
   SettingsMail,
