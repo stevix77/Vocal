@@ -28,6 +28,7 @@ import { Deeplinks } from '@ionic-native/deeplinks';
 import { Inscription } from "../pages/inscription/inscription";
 import { InitService } from "../services/initService";
 import { DraftService } from "../services/draftService";
+import { FeedPage } from '../pages/feed/feed';
 
 declare var WindowsAzure: any;
 
@@ -254,7 +255,7 @@ export class VocalApp {
           params.User = user;
           this.init();
           this.initPushNotification();
-          this.rootPage = VocalListPage;
+          this.rootPage = FeedPage;
           this.draftService.init();
         }
         else

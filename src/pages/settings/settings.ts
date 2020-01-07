@@ -16,6 +16,7 @@ import { SettingsMail } from './settingsMail/settingsMail';
 import { HomePage } from "../home/home";
 import { FriendsService } from "../../services/friendsService";
 import { SettingsService } from "../../services/settingsService";
+import { FeedPage } from "../feed/feed";
 
 @Component({
   selector: "app-settings",
@@ -69,7 +70,7 @@ export class SettingsPage implements OnInit {
             this.friendsService.clear();
             this.settingsService.clear();
             this.navCtrl.remove(0, this.navCtrl.length()).then(() => {             
-              this.navCtrl.setRoot(HomePage);
+              this.navCtrl.setRoot(FeedPage);
             })
           }
         }
