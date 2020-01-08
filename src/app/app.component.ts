@@ -30,7 +30,7 @@ import { InitService } from "../services/initService";
 import { DraftService } from "../services/draftService";
 import { FeedPage } from '../pages/feed/feed';
 
-declare var WindowsAzure: any;
+declare const WindowsAzure: any;
 
 @Component({
   templateUrl: 'app.html',
