@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { FeedPage } from '../../pages/feed/feed';
+import { DiscoverPage } from '../../pages/discover/discover';
+import { SendVocalPage } from '../../pages/send-vocal/send-vocal';
+import { MessagePage } from '../../pages/message/message';
 
 /**
  * Generated class for the MainTabsComponent component.
@@ -12,11 +16,12 @@ import { Component } from '@angular/core';
 })
 export class MainTabsComponent {
 
-  text: string;
+  tab1Root = FeedPage;
+  tab2Root = DiscoverPage;
+  tab3Root = SendVocalPage;
+  tab4Root = MessagePage;
 
   constructor() {
-    console.log('Hello MainTabsComponent Component');
-    this.text = 'Hello World';
   }
 
 }

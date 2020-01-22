@@ -62,6 +62,7 @@ import { MessageService } from "../services/messageService";
 import { UserService } from "../services/userService";
 import { DraftService } from "../services/draftService";
 import { FileTransfer } from '@ionic-native/file-transfer';
+import { MainTabsComponent } from '../components/main-tabs/main-tabs';
 
 Pro.init('6a79ec67', {
   appVersion: '0.0.1'
@@ -124,7 +125,8 @@ let components = [
   SearchUsernamePage,
   SearchMailPage,
   PopoverFriendsAddedMePage,
-  ScanContactsPage
+  ScanContactsPage,
+  MainTabsComponent
 ];
 
 @NgModule({
