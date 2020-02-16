@@ -8,10 +8,6 @@
   <div text-center>
     <div class="profile-pic">
       <img [src]="getPicture()">
-      <div class="wrapper-button" padding (click)="presentActionSheetProfile()">
-        <ion-icon icon-only name="settings" color="light"></ion-icon>
-        Modifier sa photo
-      </div>
     </div>
     <h2>{{User.Firstname}} {{User.Lastname}}</h2>
     <span class="vocal-total">{{getDuration(totalDuration)}}h de vocal à votre actif</span>
