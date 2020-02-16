@@ -29,6 +29,7 @@ import { Inscription } from "../pages/inscription/inscription";
 import { InitService } from "../services/initService";
 import { DraftService } from "../services/draftService";
 import { FeedPage } from '../pages/feed/feed';
+import { AppUser } from '../models/appUser';
 
 declare const WindowsAzure: any;
 
@@ -40,6 +41,7 @@ export class VocalApp {
   @ViewChild(Nav) nav: Nav;
   rootPage: any;
   client : any;
+  user: AppUser;
   //pages: Array<{title: string, component: any}>;
 
   constructor(public platform: Platform, 
@@ -65,10 +67,6 @@ export class VocalApp {
     events.subscribe("Error", (error) => this.showToast('Une erreur est survenue'));
     events.subscribe("SubscribeHub", () => this.SubscribeHub());
     events.subscribe("alert", (e) => this.showAlert(e));
-    // used for an example of ngFor and navigation
-    // this.pages = [
-    //   { title: 'Home', component: HomePage }
-    // ];
   }
 
   SetLanguage() {
@@ -251,16 +249,18 @@ export class VocalApp {
       this.SetConfigIsApp();
       this.storeService.Get(KeyStore[KeyStore.User]).then(
       user => {
-        if(user != null) {
+        if(user !== null) {
+          this.user = user;
           params.User = user;
           this.init();
           this.initPushNotification();
-          this.rootPage = FeedPage;
+          // this.rootPage = FeedPage;
           this.draftService.init();
         }
-        else
+        else {
           this.rootPage = HomePage;
         }
+      }
       ).catch(error => {
         console.log(error);
         this.showToast(error);

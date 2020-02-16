@@ -191,7 +191,7 @@ export class VocalListPage {
       this.formatDateMessage(this.talkService.Talks);
     }
     else {  
-      //this.getVocalList();
+      this.getVocalList();
     }
   }
 

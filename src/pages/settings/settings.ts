@@ -17,6 +17,7 @@ import { HomePage } from "../home/home";
 import { FriendsService } from "../../services/friendsService";
 import { SettingsService } from "../../services/settingsService";
 import { FeedPage } from "../feed/feed";
+import { Connexion } from "../connexion/connexion";
 
 @Component({
   selector: "app-settings",
@@ -70,7 +71,7 @@ export class SettingsPage implements OnInit {
             this.friendsService.clear();
             this.settingsService.clear();
             this.navCtrl.remove(0, this.navCtrl.length()).then(() => {             
-              this.navCtrl.setRoot(FeedPage);
+              this.navCtrl.setRoot(Connexion);
             })
           }
         }
