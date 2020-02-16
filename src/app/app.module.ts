@@ -64,6 +64,7 @@ import { DraftService } from "../services/draftService";
 import { FileTransfer } from '@ionic-native/file-transfer';
 import { MainTabsComponent } from '../components/main-tabs/main-tabs';
 import { DiscoverPage } from '../pages/discover/discover';
+import { ProfilePage } from '../pages/profile/profile';
 
 Pro.init('6a79ec67', {
   appVersion: '0.0.1'
@@ -128,7 +129,8 @@ let components = [
   PopoverFriendsAddedMePage,
   ScanContactsPage,
   MainTabsComponent,
-  DiscoverPage
+  DiscoverPage,
+  ProfilePage
 ];
 
 @NgModule({
