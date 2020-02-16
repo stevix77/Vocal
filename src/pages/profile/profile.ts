@@ -23,11 +23,17 @@ export class ProfilePage {
     public navParams: NavParams
   ) {
     this.User = params.User;
-    debugger;
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ProfilePage');
+  }
+
+  getDuration(duration:number) {
+    var date = new Date(null);
+    date.setSeconds(duration);
+    //return date.toISOString().substr(14, 5);
+    return date;
   }
 
   getPicture() {

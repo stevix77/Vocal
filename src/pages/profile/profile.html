@@ -17,21 +17,6 @@
     <span class="vocal-total">{{getDuration(totalDuration)}}h de vocal à votre actif</span>
   </div>
 
-  <ion-list inset>
-    <ion-item (click)="showFriendsAddedMeList($event)">
-      <ion-badge>{{CountFriendsAddedMe}}</ion-badge>
-      Ils m'ont ajouté
-    </ion-item>
-    <ion-item (click)="goToAddFriend()">
-      <ion-icon name="add-circle"></ion-icon>
-      Ajouter un ami
-    </ion-item>
-    <ion-item (click)="goToFriendsList()">
-      <ion-icon name="list"></ion-icon>
-      Mes amis
-    </ion-item>
-  </ion-list>
-
   <div text-center>
     <button ion-button (click)="goToSettings()">Réglages</button>
   </div>
