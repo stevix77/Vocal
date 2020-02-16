@@ -4,6 +4,7 @@ import { DiscoverPage } from '../../pages/discover/discover';
 import { SendVocalPage } from '../../pages/send-vocal/send-vocal';
 import { MessagePage } from '../../pages/message/message';
 import { ModalEditVocalPage } from '../../pages/modal-edit-vocal/modal-edit-vocal';
+import { VocalListPage } from '../../pages/vocal-list/vocal-list';
 import { ProfilePage } from '../../pages/profile/profile';
 
 /**
@@ -21,7 +22,7 @@ export class MainTabsComponent {
   tab1Root = FeedPage;
   tab2Root = DiscoverPage;
   tab3Root = ModalEditVocalPage;
-  tab4Root = MessagePage;
+  tab4Root = VocalListPage;
   tab5Root = ProfilePage;
 
   constructor() {
