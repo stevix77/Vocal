@@ -28,6 +28,9 @@ export class ProfilePage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad ProfilePage');
   }
+  showSettings() {
+    console.warn('show settings');
+  }
 
   getDuration(duration:number) {
     var date = new Date(null);

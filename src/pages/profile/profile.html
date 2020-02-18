@@ -4,16 +4,15 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-content padding>
-  <div text-center>
-    <div class="profile-pic">
+<ion-content>
+  <ion-item>
+    <ion-thumbnail>
       <img [src]="getPicture()">
-    </div>
-    <h2>{{User.Firstname}} {{User.Lastname}}</h2>
-    <span class="vocal-total">{{getDuration(totalDuration)}}h de vocal à votre actif</span>
-  </div>
-
-  <div text-center>
-    <button ion-button (click)="goToSettings()">Réglages</button>
-  </div>
+    </ion-thumbnail>
+  <h2>{{User.Firstname}} {{User.Lastname}}</h2>
+  <span class="vocal-total">{{getDuration(totalDuration)}}h de vocal à votre actif</span>
+  </ion-item>
+  <ion-fab top right>
+    <button ion-fab mini (click)="showSettings()"><ion-icon name="settings"></ion-icon></button>
+  </ion-fab>
 </ion-content>

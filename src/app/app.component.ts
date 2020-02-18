@@ -27,9 +27,7 @@ import { Deeplinks } from '@ionic-native/deeplinks';
 import { Inscription } from "../pages/inscription/inscription";
 import { InitService } from "../services/initService";
 import { DraftService } from "../services/draftService";
-import { FeedPage } from '../pages/feed/feed';
 import { AppUser } from '../models/appUser';
-import { Connexion } from '../pages/connexion/connexion';
 
 declare const WindowsAzure: any;
 
@@ -249,17 +247,15 @@ export class VocalApp {
       this.SetConfigIsApp();
       this.storeService.Get(KeyStore[KeyStore.User]).then(
       user => {
-        debugger;
         if(user !== null) {
           this.user = user;
           params.User = user;
           this.init();
           this.initPushNotification();
-          // this.rootPage = FeedPage;
           this.draftService.init();
         }
         else {
-          this.rootPage = Homepage;
+          this.rootPage = HomePage;
         }
       }
       ).catch(error => {
