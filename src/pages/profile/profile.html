@@ -13,6 +13,6 @@
   <span class="vocal-total">{{getDuration(totalDuration)}}h de vocal à votre actif</span>
   </ion-item>
   <ion-fab top right>
-    <button ion-fab mini (click)="showSettings()"><ion-icon name="settings"></ion-icon></button>
+    <button ion-fab mini [navPush]="settingsPage"><ion-icon name="settings"></ion-icon></button>
   </ion-fab>
 </ion-content>
