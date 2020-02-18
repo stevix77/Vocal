@@ -5,7 +5,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HomePage } from '../pages/home/home';
-import { VocalListPage } from '../pages/vocal-list/vocal-list'
 import { StoreService } from '../services/storeService';
 import {url} from '../services/url';
 import {HttpService} from '../services/httpService';
@@ -30,6 +29,7 @@ import { InitService } from "../services/initService";
 import { DraftService } from "../services/draftService";
 import { FeedPage } from '../pages/feed/feed';
 import { AppUser } from '../models/appUser';
+import { Connexion } from '../pages/connexion/connexion';
 
 declare const WindowsAzure: any;
 
@@ -42,7 +42,6 @@ export class VocalApp {
   rootPage: any;
   client : any;
   user: AppUser;
-  //pages: Array<{title: string, component: any}>;
 
   constructor(public platform: Platform, 
               public statusBar: StatusBar, 
@@ -62,6 +61,7 @@ export class VocalApp {
               private exceptionService: ExceptionService,
               private deeplinks: Deeplinks,
               private initService: InitService, private draftService: DraftService) {
+
     this.initializeApp();
     events.subscribe("ErrorInit", (error) => this.showToast(error));
     events.subscribe("Error", (error) => this.showToast('Une erreur est survenue'));
@@ -249,6 +249,7 @@ export class VocalApp {
       this.SetConfigIsApp();
       this.storeService.Get(KeyStore[KeyStore.User]).then(
       user => {
+        debugger;
         if(user !== null) {
           this.user = user;
           params.User = user;
@@ -258,7 +259,7 @@ export class VocalApp {
           this.draftService.init();
         }
         else {
-          this.rootPage = HomePage;
+          this.rootPage = Homepage;
         }
       }
       ).catch(error => {
