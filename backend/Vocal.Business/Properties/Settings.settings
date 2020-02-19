@@ -1,0 +1,102 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Vocal.Business.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Salt" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Z4YQN?K/%.7</Value>
+    </Setting>
+    <Setting Name="CacheDuration" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="CacheKeyToken" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CacheToken</Value>
+    </Setting>
+    <Setting Name="HostHub" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://localhost:52847</Value>
+    </Setting>
+    <Setting Name="MailFrom" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">from@example.com</Value>
+    </Setting>
+    <Setting Name="MailHost" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="MailPort" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">25</Value>
+    </Setting>
+    <Setting Name="FormatSign" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{0}@{1}@{2}</Value>
+    </Setting>
+    <Setting Name="FormatToken" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{0}@{1}@{2}</Value>
+    </Setting>
+    <Setting Name="MailUsername" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">ddac79523d5ceb</Value>
+    </Setting>
+    <Setting Name="MailPassword" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">44509b4d06feb6</Value>
+    </Setting>
+    <Setting Name="UrlUpdatePassword" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://localhost:8017/account/resetpassword</Value>
+    </Setting>
+    <Setting Name="ValidityToken" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="TagUser" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">User</Value>
+    </Setting>
+    <Setting Name="Hubname" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Vocal</Value>
+    </Setting>
+    <Setting Name="TagTalk" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Talk:{0}</Value>
+    </Setting>
+    <Setting Name="Url" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PicturePath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PictureUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CacheKeyFriend" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CacheFriend_{0}</Value>
+    </Setting>
+    <Setting Name="CacheKeyContactAddedMe" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CacheContact_{0}</Value>
+    </Setting>
+    <Setting Name="CacheSettings" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">CacheSettings_{0}</Value>
+    </Setting>
+    <Setting Name="PictureProfilWidth" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">375</Value>
+    </Setting>
+    <Setting Name="PictureProfilHeight" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">280</Value>
+    </Setting>
+    <Setting Name="PictureTalkWidth" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">80</Value>
+    </Setting>
+    <Setting Name="PictureTalkHeight" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">80</Value>
+    </Setting>
+    <Setting Name="DefaultImageProfil" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">default.jpg</Value>
+    </Setting>
+    <Setting Name="DefaultImageTalk" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">default.jpg</Value>
+    </Setting>
+    <Setting Name="BackupPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DocsPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">D:\Projects\Vocal\Vocal.WebApi\docs</Value>
+    </Setting>
+    <Setting Name="CognitiveServiceKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">6486858a75b244759a4697c0a2420188</Value>
+    </Setting>
+    <Setting Name="CognitiveServiceUrlLongAudio" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">wss://speech.platform.bing.com/api/service/recognition/continuous</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

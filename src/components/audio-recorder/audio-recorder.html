@@ -1,0 +1,6 @@
+<!-- Generated template for the AudioRecorderComponent component -->
+<button btn-record-highlight ion-button icon-only round data-record (touchstart)="startRecording()" (touchend)="stopRecording()"><ion-icon name="mic"></ion-icon></button>
+
+<ion-fab right bottom *ngIf="!isApp">
+  <button ion-fab (click)="stopRecording()"><ion-icon name="square"></ion-icon></button>
+</ion-fab> 

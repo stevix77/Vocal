@@ -1,0 +1,55 @@
+<!--
+  Generated template for the ModalEditVocalPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-toolbar>
+    <ion-buttons>
+      <button ion-button icon-only (click)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <div text-center>
+    <button ion-button icon-only clear class="btn-play" (click)="startPlayback()">
+      <ion-icon name="play"></ion-icon>
+    </button>
+  </div>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-3>
+        <button ion-button icon-only (click)="editVocalWithFilter('alien')"><ion-icon name="ionitron"></ion-icon></button>
+      </ion-col>
+      <ion-col col-3>
+        <button ion-button icon-only (click)="editVocalWithFilter('giant')"><ion-icon name="sad"></ion-icon></button>
+      </ion-col>
+      <!-- <ion-col col-3>
+        <button ion-button icon-only (click)="editVocalWithFilter('alien')"><ion-icon name="disc"></ion-icon></button>
+      </ion-col>
+      <ion-col col-3>
+        <button ion-button icon-only (click)="editVocalWithFilter('robot')"><ion-icon name="disc"></ion-icon></button>
+      </ion-col>
+      <ion-col col-3>
+        <button ion-button icon-only (click)="editVocalWithFilter('thug')"><ion-icon name="disc"></ion-icon></button>
+      </ion-col> -->
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar (click)="goToSendVocal()">
+    <ion-title *ngIf="isSending == false">Envoyer</ion-title>
+    <ion-title *ngIf="isSending == true">Envoi en cours...</ion-title>
+    <ion-buttons end>
+      <ion-icon name="arrow-forward"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

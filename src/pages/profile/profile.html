@@ -1,0 +1,18 @@
+<!--
+  Generated template for the ProfilePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-content>
+  <ion-item>
+    <ion-thumbnail>
+      <img [src]="getPicture()">
+    </ion-thumbnail>
+  <h2>{{User.Firstname}} {{User.Lastname}}</h2>
+  <span class="vocal-total">{{getDuration(totalDuration)}}h de vocal à votre actif</span>
+  </ion-item>
+  <ion-fab top right>
+    <button ion-fab mini [navPush]="settingsPage"><ion-icon name="settings"></ion-icon></button>
+  </ion-fab>
+</ion-content>

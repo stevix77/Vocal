@@ -1,0 +1,94 @@
+<ion-header [class]="isRecording ? 'anime-hide' : ''">
+  <ion-navbar hideBackButton="true" color="primary">
+    <!-- <ion-avatar>
+      <img [src]="Picture" alt="">
+    </ion-avatar> -->
+    <ion-item no-margin no-padding no-lines color="primary">
+      <ion-avatar item-start>
+        <img [src]="Talk.Picture != null ? Talk.Picture : 'assets/default-picture-80x80.jpg'" alt="">
+      </ion-avatar>
+      <div class="name">
+        {{Talk.Name}} <span *ngIf="messUser != null">{{messUser}}</span>
+      </div>
+      <div class="total-vocal">
+        <span *ngIf="Talk != null">{{TalkDuration}}</span>
+      </div>
+    </ion-item>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="goToVocalList()"><ion-icon name="arrow-forward"></ion-icon></button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list class="message-list" [hidden]="isRecording" no-lines>
+    <ion-list-header>
+      Conversation
+    </ion-list-header>
+    <ion-item-sliding *ngFor="let mess of Messages; let i = index">
+      <ion-item no-margin no-padding no-lines [ngClass]="{'send': uid == mess.User.Id , 'received': uid != mess.User.Id, 'type-vocal': true}" *ngIf="mess.ContentType == 1">
+        <p>
+          <button *ngIf="!mess.IsPlaying" class="cta" ion-button clear large icon-only (click)="playVocal(mess.Id, i)"><ion-icon name="play"></ion-icon></button>
+          <button *ngIf="mess.IsPlaying" class="cta" ion-button clear large icon-only (click)="pauseVocal(mess.Id, i)"><ion-icon name="pause"></ion-icon></button>
+        </p>
+        <p class="duration" no-margin item-end>
+          {{getDuration(mess.Duration)}}
+          <small class="time">{{ mess.SentTime | date: 'HH:mm' }}</small>
+        </p>
+      </ion-item>
+      <ion-item no-margin no-padding no-lines [ngClass]="{'send': uid == mess.User.Id , 'received': uid != mess.User.Id, 'type-txt': true}" *ngIf="mess.ContentType == 2">
+        <p >{{mess.Content}}</p>
+        <p class="duration" no-margin item-end>
+          <small class="time">{{ mess.SentTime | date: 'HH:mm' }}</small>
+        </p>
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button icon-only (click)="trad(mess.Translation)" *ngIf="mess.ContentType == 1">Trad</button>
+        <button ion-button icon-only><ion-icon name="closed-captioning"></ion-icon></button>
+        <button ion-button icon-only><ion-icon name="share-alt"></ion-icon></button>
+        <button ion-button icon-only><ion-icon name="download"></ion-icon></button>
+        <button ion-button icon-only color="danger" (click)="showConfirmDelete(mess.Id, i)"><ion-icon name="trash"></ion-icon></button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  <div id="chat-window" class="chat-window">
+      <ion-grid>
+        <ion-row id="message-room">
+
+        </ion-row>
+      </ion-grid>
+  </div>
+
+  <div>
+  </div>
+
+</ion-content>
+
+
+<ion-footer>
+  <ion-toolbar text-center>
+    <form #form="ngForm" (ngSubmit)="sendMessage(form)" [hidden]="isRecording">
+      <!-- <ion-grid>
+        <ion-row>
+          <ion-col col-10> -->
+            <ion-item no-lines>
+              <input type="hidden" ng-model="model.talkId" value="{{model.talkId}}" ng-init="model.talkId=model.talkId"/>
+              <ion-input type="text" name="Message" (ionChange)="change()" [(ngModel)]="model.Message" placeholder="Envoyer un chat" required></ion-input>
+            </ion-item>
+          <!-- </ion-col> -->
+          <!-- <ion-col col-2>
+            <button ion-button icon-only round color="secondary" type="submit" [disabled]="!form.valid">
+                <ion-icon name="arrow-round-up"></ion-icon>
+            </button>
+          </ion-col> -->
+        <!-- </ion-row>
+      </ion-grid> -->
+    </form>
+    <audio-recorder [isDirectMessage]="isDirectMessage" [talkId]="model.talkId"></audio-recorder>
+  </ion-toolbar>
+</ion-footer>
+
+<div class="wrapper-record" [hidden]="!isTiming">
+  <div class="timer" data-timer><span>{{time}}</span></div>
+  <span class="subtitle">Enregistrement du vocal en cours ...</span>
+</div>

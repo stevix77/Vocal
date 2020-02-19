@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "1054724390279",
+    "firebase_url": "https://vocal-dev.firebaseio.com",
+    "project_id": "vocal-dev",
+    "storage_bucket": "vocal-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1054724390279:android:c8839d32b0308c9f",
+        "android_client_info": {
+          "package_name": "com.vocal.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1054724390279-bfac5mskge3k5h2edkpb2i3rjdeatt4j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCITTMVchNkfL-q2og9h-FcJfRUm-Y7om4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1054724390279:android:975d26d934e7613c",
+        "android_client_info": {
+          "package_name": "fr.vocal.Vocal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1054724390279-bfac5mskge3k5h2edkpb2i3rjdeatt4j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCITTMVchNkfL-q2og9h-FcJfRUm-Y7om4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

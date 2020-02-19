@@ -1,0 +1,14 @@
+page-home {
+  &.ion-page > ion-content{
+    background: $dark-black;
+  }
+  .wrapper-valign{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width: 100%;
+  }
+  .wrapper-logo img{
+    max-width: 140px;
+  }
+}

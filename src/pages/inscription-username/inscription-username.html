@@ -1,0 +1,32 @@
+<!--
+  Generated template for the InscriptionUsernamePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+    <ion-navbar color="primary">
+      <ion-title>Inscription</ion-title>
+    </ion-navbar>
+  </ion-header>
+
+
+<ion-content no-padding text-center>
+  <div class="header-form">
+    <h2>Choisissez un nom d'utilisateur</h2>
+    <small>Votre nom d'utilisateur permet à vos amis de vous ajouter sur Vocal</small>
+  </div>
+<form #form ="ngForm" (ngSubmit)="submit(form)" novalidate>
+  <ion-list>
+    <ion-item no-padding>
+      <ion-label stacked>Nom d'utilisateur</ion-label>
+      <ion-input type="text" [(ngModel)]="model.Username" name="Username" required></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <div margin>
+    <button round ion-button type="submit" [disabled]="!form.valid">Continuer</button>
+  </div>
+</form>
+
+</ion-content>
