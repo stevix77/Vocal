@@ -4,7 +4,6 @@ import { Timer } from './timer';
 import { Media, MediaObject } from '@ionic-native/media';
 import { File } from '@ionic-native/file';
 import { ExceptionService } from './exceptionService';
-import { typeSourceSpan } from '@angular/compiler';
 import { AudioPlayer } from './audioplayer';
 
 @Injectable()

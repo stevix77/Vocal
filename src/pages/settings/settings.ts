@@ -13,10 +13,8 @@ import { Request } from "../../models/request/request";
 import { SettingsChoices } from './settingsChoices/settingsChoices';
 import { SettingsBirthdayDate } from './settingsBirthdayDate/settingsBirthdayDate';
 import { SettingsMail } from './settingsMail/settingsMail';
-import { HomePage } from "../home/home";
 import { FriendsService } from "../../services/friendsService";
 import { SettingsService } from "../../services/settingsService";
-import { FeedPage } from "../feed/feed";
 import { Connexion } from "../connexion/connexion";
 
 @Component({

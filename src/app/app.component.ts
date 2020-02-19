@@ -247,6 +247,7 @@ export class VocalApp {
       this.SetConfigIsApp();
       this.storeService.Get(KeyStore[KeyStore.User]).then(
       user => {
+        debugger;
         if(user !== null) {
           this.user = user;
           params.User = user;

@@ -4,7 +4,6 @@ import {params} from '../../services/params';
 import { Response } from '../../models/response';
 import { UserResponse } from '../../models/response/userResponse';
 import {functions} from '../../services/functions';
-import { VocalListPage } from '../vocal-list/vocal-list';
 import { PasswordForgotPage } from '../passwordForgot/passwordForgot';
 import { ExceptionService } from "../../services/exceptionService";
 import { InitService } from "../../services/initService";
