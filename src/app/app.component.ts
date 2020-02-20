@@ -126,7 +126,7 @@ export class VocalApp {
         if(r == null || r != data.registrationId)
           this.RegisterToNH(data.registrationId);
       }).catch(error => {
-        console.log(error);
+        console.error(error);
         this.showToast(error.message);
         this.exceptionService.Add(error);
       })
@@ -247,7 +247,6 @@ export class VocalApp {
       this.SetConfigIsApp();
       this.storeService.Get(KeyStore[KeyStore.User]).then(
       user => {
-        debugger;
         if(user !== null) {
           this.user = user;
           params.User = user;
