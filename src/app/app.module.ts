@@ -23,7 +23,6 @@ import { SettingsBirthdayDate } from '../pages/settings/settingsBirthdayDate/set
 
 import { AudioRecorderComponent } from '../components/audio-recorder/audio-recorder';
 import { ModalEditVocalPage } from '../pages/modal-edit-vocal/modal-edit-vocal';
-import { ModalProfilePage } from '../pages/modal-profile/modal-profile';
 import { SendVocalPage } from '../pages/send-vocal/send-vocal';
 import { SelectFriendsComponent } from '../components/select-friends/select-friends';
 import { MessagePage } from '../pages/message/message';
@@ -119,7 +118,6 @@ let components = [
   SendVocalPage,
 
   SelectFriendsComponent,
-  ModalProfilePage,
 
   MessagePage,
   AudioFiltersPage,

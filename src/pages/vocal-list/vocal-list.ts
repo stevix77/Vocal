@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Events, ViewController, ModalController, Config } from 'ionic-angular';
 import { TalkResponse } from '../../models/response/talkResponse';
 import { ActionResponse } from '../../models/response/actionResponse';
-import { ModalProfilePage } from '../../pages/modal-profile/modal-profile';
 import { HubMethod, PictureType } from '../../models/enums';
 import { MessagePage } from '../message/message';
 import { params } from '../../services/params';
@@ -106,11 +105,6 @@ export class VocalListPage {
 
   stopTimer() {
     this.timer.stopTimer();
-  }
-
-  showProfile() {
-    let profileModal = this.modalCtrl.create(ModalProfilePage);
-    profileModal.present();
   }
 
   showAlert(message) {
