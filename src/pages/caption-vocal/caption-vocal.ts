@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { CaptionVocalPage } from '../caption-vocal/caption-vocal';
+import { SendVocalPage } from '../send-vocal/send-vocal';
 
 /**
- * Generated class for the RecordVocalPage page.
+ * Generated class for the CaptionVocalPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -11,20 +11,20 @@ import { CaptionVocalPage } from '../caption-vocal/caption-vocal';
 
 @IonicPage()
 @Component({
-  selector: 'page-record-vocal',
-  templateUrl: 'record-vocal.html',
+  selector: 'page-caption-vocal',
+  templateUrl: 'caption-vocal.html',
 })
-export class RecordVocalPage {
+export class CaptionVocalPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad RecordVocalPage');
+    console.log('ionViewDidLoad CaptionVocalPage');
   }
 
-  goToCaptionVocal() {
-    this.navCtrl.push(CaptionVocalPage);
+  goToSendVocal(){
+    this.navCtrl.push(SendVocalPage);
   }
 
 }
