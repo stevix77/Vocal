@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CryptService } from 'src/app/services/crypt.service';
+import { InitService } from 'src/app/services/init.service';
 
 @Component({
   selector: 'app-connexion',
@@ -6,20 +8,29 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./connexion.page.scss'],
 })
 export class ConnexionPage implements OnInit {
+  
   model = {
     Username: "",
     Password: "",
     ErrorUsername: "",
     ErrorPassword: ""
   };
-
-  constructor() { }
-
+  constructor(
+    private cryptService: CryptService,
+    private initService: InitService
+  ) {}
   ngOnInit() {
   }
 
   submitConnexion() {
-    console.warn('submit connexion');
+    if(this.model.Username !== "" && this.model.Password !== "") {
+      let pwd = this.cryptService.crypt(this.model.Password);
+      this.initService.connexion(this.model.Username, pwd).subscribe({
+        next: response => {
+          console.log(response);
+        }
+      })
+    }
   }
 
 }
