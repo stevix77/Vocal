@@ -7,9 +7,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ConnexionPage implements OnInit {
 
+  model = {
+    Username: "",
+    Password: "",
+    ErrorUsername: "",
+    ErrorPassword: ""
+  };
+  
   constructor() { }
 
   ngOnInit() {
+  }
+
+  submitConnexion() {
+    console.warn('submit connexion');
   }
 
 }
