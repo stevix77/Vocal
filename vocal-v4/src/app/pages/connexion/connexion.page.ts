@@ -12,10 +12,14 @@ export class ConnexionPage implements OnInit {
     ErrorUsername: "",
     ErrorPassword: ""
   };
-  
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  submitConnexion() {
+    console.warn('submit connexion');
   }
 
 }
