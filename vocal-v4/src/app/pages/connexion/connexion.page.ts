@@ -28,57 +28,11 @@ export class ConnexionPage implements OnInit {
     private initService: InitService,
     private toastCtrl: ToastController, 
     private exceptionService: ExceptionService,
-    private cryptService: CryptService,
-    private router: Router
+    private cryptService: CryptService
+    // private router: Router
   ) { }
 
   ngOnInit() {
-  }
-
-  submitConnexion() {
-    try {
-      if(this.model.Username !== "" && this.model.Password !== "") {
-        let pwd = this.cryptService.crypt(this.model.Password);
-        this.initService.connexion(this.model.Username, pwd).subscribe(
-          resp => {
-            try {
-              var response = resp.json() as Response<UserResponse>;
-              if(response.HasError) {
-                //this.events.publish("Error", response.ErrorMessage);
-              } else {
-                var appUser = this.initService.getAppUser(response.Data, this.model.Password); 
-                params.User = appUser;
-                this.initService.init().subscribe(
-                  resp => {
-                    let response = resp.json() as Response<InitResponse>;
-                    this.initService.manageData(response);
-                    // this.events.publish("subscribeHub");
-                    this.router.navigateByUrl('/feed');
-                  },
-                  error => {
-                    // this.events.publish("ErrorInit", error);
-                    this.exceptionService.add(error);
-                  }
-                ); 
-              }
-            } catch(err) {
-              // this.events.publish("Error", err.message);
-              this.exceptionService.add(err);
-            }
-          },
-          error => {
-            // this.events.publish("Error", error.message);
-            this.exceptionService.add(error);
-          }
-        )
-      } else {
-        this.model.ErrorUsername = this.model.Username == "" ? params.Resources.find(x => x.Key == "UsernameEmpty").Value : "";
-        this.model.ErrorPassword = this.model.Password == "" ? params.Resources.find(x => x.Key == "PasswordEmpty").Value : "";
-      }
-    } catch(err) {
-      // this.events.publish("Error", err.message);
-      this.exceptionService.add(err);
-    }
   }
 
 }

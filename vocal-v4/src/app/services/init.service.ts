@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ExceptionService } from './exception.service';
 import { HttpService } from './http.service';
-import { CookieService } from './cookie.service';
+// import { CookieService } from './cookie.service';
 import { StoreService } from './store.service';
 import { Request } from '../models/request/request';
 import { params } from './params';
 import { url } from './url';
 import { LoginRequest } from '../models/request/loginRequest';
 import { AppUser } from '../models/appUser';
-import { CryptService } from './crypt.service';
+// import { CryptService } from './crypt.service';
 import { InitResponse } from '../models/response/InitResponse';
 import { Response } from '../models/response';
 import { KeyStore } from '../models/enums';
@@ -20,18 +20,20 @@ import { KeyValueResponse } from '../models/response/keyValueResponse';
 export class InitService {
   Errors: Array<string> = new Array();
   constructor(private storeService: StoreService, 
-    private cookieService: CookieService,
+    // private cookieService: CookieService,
     private httpService: HttpService,
     private exceptionService: ExceptionService,
-    private cryptService: CryptService) { }
+    // private cryptService: CryptService
+    ) { }
 
   init() {
     try {
       let request = new Request();
       request.Lang = params.Lang;
       let urlInit = url.Init();
-      let cookie = this.cookieService.getAuthorizeCookie(urlInit, params.User)
-      return this.httpService.post(urlInit, request, cookie);
+      // let cookie = this.cookieService.getAuthorizeCookie(urlInit, params.User)
+      // return this.httpService.post(urlInit, request, cookie);
+      return this.httpService.post(urlInit, request);
     } catch (error) {
       // this.events.publish("ErrorInit", error);
       this.exceptionService.add(error);
@@ -53,7 +55,7 @@ export class InitService {
     user.Lastname = appUser.Lastname;
     user.Username = appUser.Username;
     user.Pictures = appUser.Pictures;
-    user.Token = this.cryptService.generateToken(appUser.Username, password);
+    // user.Token = this.cryptService.generateToken(appUser.Username, password);
     this.storeService.set(KeyStore[KeyStore.User], user);
     return user;
   }

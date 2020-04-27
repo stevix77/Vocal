@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { CookieStorage } from 'cookie-storage';
 import { AppUser } from '../models/appUser';
 import { Cookie } from '../models/cookie';
 import { CryptService } from './crypt.service';
@@ -8,7 +7,7 @@ import { CryptService } from './crypt.service';
   providedIn: 'root'
 })
 export class CookieService {
-  private cookieStorage = new CookieStorage();
+  // private cookieStorage = new CookieStorage();
   
   constructor(private cryptService: CryptService) { }
 
@@ -17,7 +16,7 @@ export class CookieService {
         let dt = new Date(), expires = new Date()
         expires.setTime(dt.getTime() + (2 * 60 * 1000));
         document.cookie = name + "=" + value + ";expires=" + expires.toUTCString();
-        this.cookieStorage.setItem(name, value)
+        // this.cookieStorage.setItem(name, value)
     }
 
     setAuthorizeCookie(url: string, user: AppUser) {
