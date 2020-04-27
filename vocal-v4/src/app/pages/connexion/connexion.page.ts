@@ -28,6 +28,9 @@ export class ConnexionPage implements OnInit {
       this.initService.connexion(this.model.Username, pwd).subscribe({
         next: response => {
           console.log(response);
+        },
+        error: err => {
+          console.error(err);
         }
       })
     }

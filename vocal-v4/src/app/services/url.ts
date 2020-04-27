@@ -6,7 +6,7 @@ var url = {
     BaseUri: "https://wsvocal.azurewebsites.net",
     //BaseUri: "http://localhost/Vocal.WebApi/api/",
     Login() : string {
-        return this.BaseUri + "/api/auth/login";
+        return this.BaseUri + "/auth/login";
     },
     Register() : string {
         return this.BaseUri + "/api/auth/register"

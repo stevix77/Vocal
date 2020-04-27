@@ -10,7 +10,7 @@ export class HttpService {
 
   post<T>(url: string, obj: T, cookie?: any) {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin' : '*',
-        'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
+        'Access-Control-Allow-Methods' : 'POST',
     'Accept': 'application/json'});
     if(cookie != null)
       headers.set('Set-Cookie', cookie)
