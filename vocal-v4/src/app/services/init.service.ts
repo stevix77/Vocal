@@ -33,7 +33,7 @@ export class InitService {
       let cookie = this.cookieService.getAuthorizeCookie(urlInit, params.User)
       return this.httpService.post(urlInit, request, cookie);
     } catch (error) {
-      this.events.publish("ErrorInit", error);
+      // this.events.publish("ErrorInit", error);
       this.exceptionService.add(error);
     }
   }
@@ -73,9 +73,11 @@ export class InitService {
   }
 
   saveData(data: any, error: KeyValueResponse<string, string>, key: KeyStore) {
-    if(error == null)
+    if(error == null) {
       this.storeService.set(KeyStore[key], data);
-    else
-      this.events.publish("ErrorInit", error.Value);
+    }
+    else {
+      // this.events.publish("ErrorInit", error.Value);
+    }
   }
 }
