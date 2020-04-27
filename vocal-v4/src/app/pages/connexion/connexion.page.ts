@@ -17,20 +17,7 @@ import { Router } from '@angular/router';
 })
 export class ConnexionPage implements OnInit {
 
-  model = {
-    Username: "",
-    Password: "",
-    ErrorUsername: "",
-    ErrorPassword: ""
-  };
-
-  constructor(
-    private initService: InitService,
-    private toastCtrl: ToastController, 
-    private exceptionService: ExceptionService,
-    private cryptService: CryptService
-    // private router: Router
-  ) { }
+  constructor() { }
 
   ngOnInit() {
   }
