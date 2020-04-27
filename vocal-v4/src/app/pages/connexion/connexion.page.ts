@@ -6,7 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./connexion.page.scss'],
 })
 export class ConnexionPage implements OnInit {
-
+  model = {
+    Username: "",
+    Password: "",
+    ErrorUsername: "",
+    ErrorPassword: ""
+  };
+  
   constructor() { }
 
   ngOnInit() {

@@ -1,15 +1,4 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-menu-toggle>
-      <ion-button>
-        <ion-icon name="menu"></ion-icon>
-      </ion-button>
-    </ion-menu-toggle>
-    <ion-title>Connexion</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content text-center>
+<ion-content [fullscreen]="true" class="ion-text-center">
   <form #form="ngForm" (ngSubmit)="submitConnexion()" novalidate>
     <ion-list>
 
