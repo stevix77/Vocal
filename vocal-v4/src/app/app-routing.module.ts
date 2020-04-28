@@ -11,12 +11,24 @@ const routes: Routes = [
   },
   {
     path: 'feed',
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
     loadChildren: () => import('./pages/feed/feed.module').then( m => m.FeedPageModule)
   },
   {
     path: 'password-forgot',
     loadChildren: () => import('./pages/password-forgot/password-forgot.module').then( m => m.PasswordForgotPageModule)
+  },
+  {
+    path: 'profile',
+    loadChildren: () => import('./pages/profile/profile.module').then( m => m.ProfilePageModule)
+  },
+  {
+    path: 'inbox',
+    loadChildren: () => import('./pages/inbox/inbox.module').then( m => m.InboxPageModule)
+  },
+  {
+    path: 'discover',
+    loadChildren: () => import('./pages/discover/discover.module').then( m => m.DiscoverPageModule)
   }
 ];
 
