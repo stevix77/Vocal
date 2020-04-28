@@ -9,93 +9,93 @@ var url = {
         return this.BaseUri + "/auth/login";
     },
     Register() : string {
-        return this.BaseUri + "/api/auth/register"
+        return this.BaseUri + "/auth/register"
     },
     AskPwd() : string {
-        return this.BaseUri + "/api/auth/askpassword"
+        return this.BaseUri + "/auth/askpassword"
     },
     GetListResources(lang: string) : string {
-        return this.BaseUri + "/api/resource/list/" + lang;
+        return this.BaseUri + "/resource/list/" + lang;
     },
     IsExistsUsername() : string {
-        return this.BaseUri + "/api/user/IsExistsUsername";
+        return this.BaseUri + "/user/IsExistsUsername";
     },
     IsExistsEmail() : string {
-        return this.BaseUri + "/api/user/IsExistsEmail";
+        return this.BaseUri + "/user/IsExistsEmail";
     },
     SearchContact() : string {
-        return this.BaseUri + "/api/search/contact";
+        return this.BaseUri + "/search/contact";
     },
     AddFriends() : string {
-        return this.BaseUri + "/api/friend/add";
+        return this.BaseUri + "/friend/add";
     },
     RemoveFriends() : string {
-        return this.BaseUri + "/api/friend/remove";
+        return this.BaseUri + "/friend/remove";
     },
     NotificationRegister() : string {
-        return this.BaseUri + "/api/notification/register"
+        return this.BaseUri + "/notification/register"
     },
     GetSettings() : string {
-        return this.BaseUri + "/api/user/me";
+        return this.BaseUri + "/user/me";
     },
     UpdateUser() : string {
-        return this.BaseUri + "/api/user/me/update"
+        return this.BaseUri + "/user/me/update"
     },
     SendMessage() : string {
-        return this.BaseUri + "/api/talk/SendMessage";
+        return this.BaseUri + "/talk/SendMessage";
     },
     Init() : string {
-        return this.BaseUri + "/api/home/init";
+        return this.BaseUri + "/home/init";
     },
     SearchPeople() : string {
-        return this.BaseUri + "/api/search/people";
+        return this.BaseUri + "/search/people";
     },
     SearchPeopleByMail() : string {
-        return this.BaseUri + "/api/search/people/mail";
+        return this.BaseUri + "/search/people/mail";
     },
     GetMessages() : string {
-        return this.BaseUri + "/api/talk/messages";
+        return this.BaseUri + "/talk/messages";
     },
     AddException() : string {
-        return this.BaseUri + "/api/error/add";
+        return this.BaseUri + "/error/add";
     },
     GetTalkList() : string {
-        return this.BaseUri + "/api/talk/list";
+        return this.BaseUri + "/talk/list";
     },
     GetFriends() : string {
-        return this.BaseUri + "/api/friend/getFriends";
+        return this.BaseUri + "/friend/getFriends";
     },
     GetAllUsers() : string {
-        return this.BaseUri + "/api/user/list";
+        return this.BaseUri + "/user/list";
     },
     BlockPeople() : string {
-        return this.BaseUri + "/api/user/block";
+        return this.BaseUri + "/user/block";
     },
     UnblockPeople() : string {
-        return this.BaseUri + "/api/user/unblock";
+        return this.BaseUri + "/user/unblock";
     },
     GetMessageById() : string {
-        return this.BaseUri + "/api/talk/message";
+        return this.BaseUri + "/talk/message";
     },
     DeleteTalk() : string {
-        return this.BaseUri + "/api/talk/deleteTalk";
+        return this.BaseUri + "/talk/deleteTalk";
     },
     ArchiveTalk() : string {
-        return this.BaseUri + "/api/talk/ArchiveTalk";
+        return this.BaseUri + "/talk/ArchiveTalk";
     },
     UnarchiveTalk() : string {
-        return this.BaseUri + "/api/talk/unarchiveTalk";
+        return this.BaseUri + "/talk/unarchiveTalk";
     },
     DeleteMessage() {
-        return this.BaseUri + "/api/talk/DeleteMessage";
+        return this.BaseUri + "/talk/DeleteMessage";
     },
     GetProfil() : string {
-        return this.BaseUri + "/api/user/profil";
+        return this.BaseUri + "/user/profil";
     },
     GetContactAddedMe() : string {
-        return this.BaseUri + "/api/friend/addedMe";
+        return this.BaseUri + "/friend/addedMe";
     },
     GetBlockedList() : string {
-        return this.BaseUri + "/api/user/block/list";
+        return this.BaseUri + "/user/block/list";
     }
 }
