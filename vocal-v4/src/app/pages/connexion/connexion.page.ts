@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CryptService } from 'src/app/services/crypt.service';
 import { InitService } from 'src/app/services/init.service';
+import { AuthService } from 'src/app/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-connexion',
@@ -17,7 +19,8 @@ export class ConnexionPage implements OnInit {
   };
   constructor(
     private cryptService: CryptService,
-    private initService: InitService
+    private authService: AuthService,
+    private router: Router
   ) {}
   ngOnInit() {
   }
@@ -25,12 +28,16 @@ export class ConnexionPage implements OnInit {
   submitConnexion() {
     if(this.model.Username !== "" && this.model.Password !== "") {
       let pwd = this.cryptService.crypt(this.model.Password);
-      this.initService.connexion(this.model.Username, pwd).subscribe({
+      this.authService.login().subscribe({
         next: response => {
-          console.log(response);
+          if(!response) {
+            console.warn('pas de login');
+          } else {
+            this.router.navigateByUrl('/feed');
+          }
         },
         error: err => {
-          console.error(err);
+          console.error(err)
         }
       })
     }
