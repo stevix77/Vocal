@@ -13,6 +13,10 @@ const routes: Routes = [
     path: 'feed',
     canActivate: [AuthGuard],
     loadChildren: () => import('./pages/feed/feed.module').then( m => m.FeedPageModule)
+  },
+  {
+    path: 'password-forgot',
+    loadChildren: () => import('./pages/password-forgot/password-forgot.module').then( m => m.PasswordForgotPageModule)
   }
 ];
 
