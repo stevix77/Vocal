@@ -14,7 +14,7 @@ export class InitService {
   connexion(username: string, password: string) {
     var obj = new LoginRequest(username, password);
     obj.Lang = params.Lang;
-    let urlConnect = url.Login();
+    let urlConnect = url.Signin();
     return this.httpService.post<LoginRequest>(urlConnect, obj);
   }
 }
