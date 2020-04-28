@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CryptService } from 'src/app/services/crypt.service';
-import { InitService } from 'src/app/services/init.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Router } from '@angular/router';
 
