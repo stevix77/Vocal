@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { stringify } from '@angular/compiler/src/util';
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +18,13 @@ export class HttpService {
     return this.http.post(url, obj, { headers: headers });
   }
 
-  get(url: string) {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin' : '*',
+  get(url: string, token: string = null) {
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Access-Control-Allow-Origin' : '*',
         'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
     'Accept': 'application/json' });
+    if(token != null) {
+      headers.append("Authorization", "Bearer " + token);
+    }
     return this.http.get(url, { headers: headers });
   }
 }

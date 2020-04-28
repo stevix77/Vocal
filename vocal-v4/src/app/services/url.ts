@@ -5,97 +5,114 @@ var url = {
     //BaseUri: "http://vocal.westeurope.cloudapp.azure.com",
     BaseUri: "https://wsvocal.azurewebsites.net",
     //BaseUri: "http://localhost/Vocal.WebApi/api/",
-    Login() : string {
+    
+    // Auth
+    Signin() : string {
         return this.BaseUri + "/auth/login";
     },
     Register() : string {
-        return this.BaseUri + "/api/auth/register"
+        return this.BaseUri + "/auth/register"
     },
     AskPwd() : string {
-        return this.BaseUri + "/api/auth/askpassword"
-    },
-    GetListResources(lang: string) : string {
-        return this.BaseUri + "/api/resource/list/" + lang;
-    },
-    IsExistsUsername() : string {
-        return this.BaseUri + "/api/user/IsExistsUsername";
-    },
-    IsExistsEmail() : string {
-        return this.BaseUri + "/api/user/IsExistsEmail";
-    },
-    SearchContact() : string {
-        return this.BaseUri + "/api/search/contact";
-    },
-    AddFriends() : string {
-        return this.BaseUri + "/api/friend/add";
-    },
-    RemoveFriends() : string {
-        return this.BaseUri + "/api/friend/remove";
-    },
-    NotificationRegister() : string {
-        return this.BaseUri + "/api/notification/register"
-    },
-    GetSettings() : string {
-        return this.BaseUri + "/api/user/me";
+        return this.BaseUri + "/auth/askpassword"
     },
     UpdateUser() : string {
-        return this.BaseUri + "/api/user/me/update"
+        return this.BaseUri + "/auth/update"
     },
-    SendMessage() : string {
-        return this.BaseUri + "/api/talk/SendMessage";
+
+    // User
+    IsExistsUsername(username: string) : string {
+        return this.BaseUri + "/user/IsExistsUsername/" + username;
     },
-    Init() : string {
-        return this.BaseUri + "/api/home/init";
+    IsExistsEmail(email: string) : string {
+        return this.BaseUri + "/api/user/IsExistsEmail/" + email;
     },
-    SearchPeople() : string {
-        return this.BaseUri + "/api/search/people";
+    GetProfil(userId: string) : string {
+        return this.BaseUri + "/user/profil/" + userId;
     },
-    SearchPeopleByMail() : string {
-        return this.BaseUri + "/api/search/people/mail";
+    BlockPeople(userId: string) : string {
+        return this.BaseUri + "/user/block/" + userId;
     },
-    GetMessages() : string {
-        return this.BaseUri + "/api/talk/messages";
-    },
-    AddException() : string {
-        return this.BaseUri + "/api/error/add";
-    },
-    GetTalkList() : string {
-        return this.BaseUri + "/api/talk/list";
-    },
-    GetFriends() : string {
-        return this.BaseUri + "/api/friend/getFriends";
-    },
-    GetAllUsers() : string {
-        return this.BaseUri + "/api/user/list";
-    },
-    BlockPeople() : string {
-        return this.BaseUri + "/api/user/block";
-    },
-    UnblockPeople() : string {
-        return this.BaseUri + "/api/user/unblock";
-    },
-    GetMessageById() : string {
-        return this.BaseUri + "/api/talk/message";
-    },
-    DeleteTalk() : string {
-        return this.BaseUri + "/api/talk/deleteTalk";
-    },
-    ArchiveTalk() : string {
-        return this.BaseUri + "/api/talk/ArchiveTalk";
-    },
-    UnarchiveTalk() : string {
-        return this.BaseUri + "/api/talk/unarchiveTalk";
-    },
-    DeleteMessage() {
-        return this.BaseUri + "/api/talk/DeleteMessage";
-    },
-    GetProfil() : string {
-        return this.BaseUri + "/api/user/profil";
-    },
-    GetContactAddedMe() : string {
-        return this.BaseUri + "/api/friend/addedMe";
+    UnblockPeople(userId: string) : string {
+        return this.BaseUri + "/user/unblock/" + userId;
     },
     GetBlockedList() : string {
-        return this.BaseUri + "/api/user/block/list";
+        return this.BaseUri + "/user/block/list";
+    },
+
+
+    // Follow
+
+    GetFollowers(pageNumber: number, pageSize: number) : string {
+        return this.BaseUri + "/follow/getfollowers/" + pageNumber + "/" + pageSize;
+    },
+    GetFollowing(pageNumber: number, pageSize: number) : string {
+        return this.BaseUri + "/follow/getfollowing/" + pageNumber + "/" + pageSize;
+    },
+    Follow(userId: string) {
+        return this.BaseUri + "/follow/" + userId;
+    },
+    UnFollow(userId: string) {
+        return this.BaseUri + "/follow/unfollow/" + userId;
+    },
+
+
+    // Notification
+    NotificationRegister() : string {
+        return this.BaseUri + "/notification/register"
+    },
+    DeleteNotificationRegistration(registrationId: string) : string {
+        return this.BaseUri + "/notification/registration/delete/" + registrationId;
+    },
+
+
+    // Search
+    SearchContact() : string {
+        return this.BaseUri + "/search/contact";
+    },
+    SearchPeople(keyword: string) : string {
+        return this.BaseUri + "/search/people/" + keyword;
+    },
+
+
+    // Talk
+    GetMessages(talkId: string) : string {
+        return this.BaseUri + "/talk/messages/" + talkId;
+    },
+    GetPublicMessages(userId: string) : string {
+        return this.BaseUri + "/talk/messages/public" + userId;
+    },
+    GetTalkList() : string {
+        return this.BaseUri + "/talk/list";
+    },
+    SendMessage() : string {
+        return this.BaseUri + "/talk/sendMessage";
+    },
+    SendMessageToTalk(talkId: string) : string {
+        return this.BaseUri + "/talk/sendMessage/talk/" + talkId;
+    },
+    SendMessageToUser(userId: string) : string {
+        return this.BaseUri + "/talk/sendMessage/user/" + userId;
+    },
+    GetMessageById(messageId: string) : string {
+        return this.BaseUri + "/talk/message/" + messageId;
+    },
+    CreateTalk() : string {
+        return this.BaseUri + "/talk/createTalk";
+    },
+    DeleteTalk(talkId: string) : string {
+        return this.BaseUri + "/talk/deleteTalk/" + talkId;
+    },
+    ArchiveTalk(talkId: string) : string {
+        return this.BaseUri + "/talk/ArchiveTalk/" + talkId;
+    },
+    UnarchiveTalk(talkId: string) : string {
+        return this.BaseUri + "/talk/unarchiveTalk/" + talkId;
+    },
+    DeleteMessage(talkId: string, messageId: string) {
+        return this.BaseUri + "/talk/" + talkId + "/DeleteMessage/" + messageId;
+    },
+    TranslateMessage(messageId: string) {
+        return this.BaseUri + "/talk/translate/" + messageId;
     }
 }
