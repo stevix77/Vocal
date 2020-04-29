@@ -1,9 +1,23 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>profile</ion-title>
+<ion-header *ngIf="isLoggedIn" [translucent]="true">
+  <ion-toolbar >
+    <ion-buttons slot="end">
+      <ion-button><ion-icon slot="icon-only" name="settings"></ion-icon></ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <div *ngIf="isLoggedIn; else loggedOut">
+    <ion-item>
+      <ion-thumbnail>
+        <!-- <img [src]="getPicture()"> -->
+      </ion-thumbnail>
+    </ion-item>
+    UTILISATEUR LOGGUÉ
+  </div>
+  <ng-template #loggedOut>
+    <div class="ion-text-center">
+      <ion-button>INSCRIPTION</ion-button>
+    </div>
+  </ng-template>
 </ion-content>
