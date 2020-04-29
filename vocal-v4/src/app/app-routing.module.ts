@@ -29,6 +29,10 @@ const routes: Routes = [
   {
     path: 'discover',
     loadChildren: () => import('./pages/discover/discover.module').then( m => m.DiscoverPageModule)
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./pages/register/register.module').then( m => m.RegisterPageModule)
   }
 ];
 
