@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { RegisterRequest } from 'src/app/models/request/registerRequest';
 import { CryptService } from 'src/app/services/crypt.service';
+import { HttpService } from 'src/app/services/http.service';
+import { url } from 'src/app/services/url';
+import { params } from 'src/app/services/params';
 
 @Component({
   selector: 'app-register',
@@ -9,7 +12,7 @@ import { CryptService } from 'src/app/services/crypt.service';
 })
 export class RegisterPage implements OnInit {
   model = {
-    BirthdayDate: new Date(),
+    BirthdayDate: undefined,
     BirthdayDateString: "",
     ErrorBirthdayDate: "",
     Email: "",
@@ -17,8 +20,11 @@ export class RegisterPage implements OnInit {
     Password: "",
     ErrorPassword: ""
   }
-  registerRequest: RegisterRequest;
-  constructor(private cryptService: CryptService) { }
+  registerRequest: RegisterRequest = new RegisterRequest();
+  constructor(
+    private cryptService: CryptService,
+    private httpService: HttpService
+  ) { }
 
   ngOnInit() {
   }
@@ -29,6 +35,16 @@ export class RegisterPage implements OnInit {
     this.registerRequest.Email = this.model.Email;
     const pwd = this.cryptService.crypt(this.model.Password);
     this.registerRequest.Password = pwd;
+    this.registerRequest.Lang = params.Lang;
+
+    this.httpService.post<RegisterRequest>(url.Register(), this.registerRequest).subscribe({
+      next: response => {
+        console.log(response);
+      },
+      error: err => {
+        console.error(err);
+      }
+    });
   }
 
 }
