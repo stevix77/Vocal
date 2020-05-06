@@ -1,9 +1,33 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>register</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-text-center ion-no-padding">
+  <form #form="ngForm" (ngSubmit)="submit()" novalidate>
+    <ion-list>
+      <ion-item class="ion-no-padding">
+        <ion-label position="stacked">Date d'anniversaire</ion-label>
+        <ion-datetime name="BirthdayDate" [(ngModel)]="model.BirthdayDateString"></ion-datetime>
+      </ion-item>
+      <ion-item class="ion-no-padding">
+        <ion-label position="stacked">Adresse e-mail</ion-label>
+        <ion-input type="email" required name="Email" [(ngModel)]="model.Email" ngControl="Email"></ion-input>
+      </ion-item>
+      <ion-item class="ion-no-padding">
+        <ion-label position="stacked">Mot de passe</ion-label>
+        <ion-input type="password" required name="Password" [(ngModel)]="model.Password" ngControl="Password" minlength="8"></ion-input>
+      </ion-item>
+    </ion-list>
 
+    <p>En appuyant sur je m'inscris et j'accepte, vous acceptez nos <a href="#">conditions d'utilisations du service</a> et notre <a href="#">politique de confidentialité</a>.</p>
+
+    <div margin>
+      <ion-button shape="round" type="submit" [disabled]="!form.valid">Je m'inscris et j'accepte</ion-button>
+    </div>
+
+  </form>
 </ion-content>

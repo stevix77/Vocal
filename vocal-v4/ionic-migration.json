@@ -15,7 +15,7 @@
     "ion-icon-attribute-is-active-removed": true,
     "ion-item-attributes-renamed": true,
     "ion-item-divider-ion-label-required": true,
-    "ion-item-ion-label-required": true,
+    "ion-item-ion-label-required": false,
     "ion-item-is-now-an-element": true,
     "ion-item-option-is-now-an-element": true,
     "ion-item-option-method-get-sliding-percent-renamed": true,
@@ -35,7 +35,7 @@
     "ion-range-attributes-renamed": true,
     "ion-segment-button-ion-label-required": true,
     "ion-spinner-attribute-values-renamed": true,
-    "ion-tabs-refactored": { "options": [true], "severity": "warning" },
+    "ion-tabs-refactored": false,
     "ion-text-is-now-an-element": true
   }
 }
