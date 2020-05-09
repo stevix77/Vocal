@@ -21,9 +21,9 @@ export class CookieService {
 
     setAuthorizeCookie(url: string, user: AppUser) {
         let cookie = new Cookie();
-        cookie.UserId = user.Id;
+        cookie.UserId = user.id;
         let timestamp = Math.round(new Date().getTime() / 1000).toString();
-        let sign = url + "@" + timestamp + "@" + user.Token;
+        let sign = url + "@" + timestamp + "@" + user.token;
         cookie.Timestamp = timestamp;
         cookie.Sign = this.cryptService.crypt(sign);
         this.setCookie("authorize", cookie);
@@ -31,9 +31,9 @@ export class CookieService {
 
     getAuthorizeCookie(url: string, user: AppUser) : string {
         let cookie = new Cookie();
-        cookie.UserId = user.Id;
+        cookie.UserId = user.id;
         let timestamp = Math.round(new Date().getTime() / 1000).toString();
-        let sign = url + "@" + timestamp + "@" + user.Token;
+        let sign = url + "@" + timestamp + "@" + user.token;
         cookie.Timestamp = timestamp;
         cookie.Sign = this.cryptService.crypt(sign);
         let json = JSON.stringify(cookie);

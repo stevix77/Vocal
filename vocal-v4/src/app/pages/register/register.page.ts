@@ -4,6 +4,11 @@ import { CryptService } from 'src/app/services/crypt.service';
 import { HttpService } from 'src/app/services/http.service';
 import { url } from 'src/app/services/url';
 import { params } from 'src/app/services/params';
+import { UserResponse } from 'src/app/models/response/userResponse';
+import { Response } from 'src/app/models/response';
+import { AppUser } from 'src/app/models/appUser';
+import { StoreService } from 'src/app/services/store.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -23,7 +28,9 @@ export class RegisterPage implements OnInit {
   registerRequest: RegisterRequest = new RegisterRequest();
   constructor(
     private cryptService: CryptService,
-    private httpService: HttpService
+    private httpService: HttpService,
+    private storeService: StoreService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -38,8 +45,17 @@ export class RegisterPage implements OnInit {
     this.registerRequest.Lang = params.Lang;
 
     this.httpService.post<RegisterRequest>(url.Register(), this.registerRequest).subscribe({
-      next: response => {
-        console.log(response);
+      next: (response:UserResponse) => {
+        let appUser = new AppUser();
+        appUser.email = response.email;
+        appUser.id = response.id;
+        appUser.firstname = response.firstname;
+        appUser.lastname = response.lastname;
+        appUser.username = response.username;
+        appUser.token = response.token;
+        this.storeService.set("user", appUser);
+        params.User = appUser;
+        this.router.navigateByUrl('/feed');
       },
       error: err => {
         console.error(err);
