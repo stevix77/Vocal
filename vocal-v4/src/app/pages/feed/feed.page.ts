@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { StoreService } from 'src/app/services/store.service';
 
 @Component({
   selector: 'app-feed',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FeedPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    private storeService: StoreService
+  ) { }
 
   ngOnInit() {
+    console.log(this.storeService.get('user'));
   }
 
 }

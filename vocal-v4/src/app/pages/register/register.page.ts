@@ -9,6 +9,7 @@ import { Response } from 'src/app/models/response';
 import { AppUser } from 'src/app/models/appUser';
 import { StoreService } from 'src/app/services/store.service';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -27,6 +28,7 @@ export class RegisterPage implements OnInit {
   }
   registerRequest: RegisterRequest = new RegisterRequest();
   constructor(
+    private authService: AuthService,
     private cryptService: CryptService,
     private httpService: HttpService,
     private storeService: StoreService,
@@ -55,7 +57,8 @@ export class RegisterPage implements OnInit {
         appUser.token = response.token;
         this.storeService.set("user", appUser);
         params.User = appUser;
-        this.router.navigateByUrl('/feed');
+        this.authService.isLoggedIn = true;
+        this.router.navigateByUrl('/profile');
       },
       error: err => {
         console.error(err);
