@@ -13,6 +13,9 @@ export class ProfilePage implements OnInit {
   ) { }
 
   ngOnInit() {
+  }
+  
+  ionViewWillEnter() {
     this.isLoggedIn = this.authService.isLoggedIn;
   }
 

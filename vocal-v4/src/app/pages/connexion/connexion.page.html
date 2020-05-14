@@ -1,20 +1,17 @@
 <ion-content [fullscreen]="true" class="ion-text-center">
-  <form #form="ngForm" (ngSubmit)="submitConnexion()" novalidate>
+  <form class="ion-vertical-center" #form="ngForm" (ngSubmit)="submitConnexion()" novalidate>
     <ion-list>
-
-    <ion-item no-padding>
-      <ion-label position="stacked">Nom d'utilisateur</ion-label>
-      <ion-input type="text" placeholder="" name="Username" required [(ngModel)]="model.Username" ></ion-input>
-    </ion-item>
-
-    <ion-item no-padding>
-      <ion-label position="stacked">Mot de passe</ion-label>
-      <ion-input type="password" placeholder="" name="Password" required minlength="8" [(ngModel)]="model.Password"></ion-input>
-    </ion-item>
-
+      <ion-item>
+        <ion-label position="stacked">Nom d'utilisateur</ion-label>
+        <ion-input type="text" placeholder="" name="Username" required [(ngModel)]="model.Username" ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Mot de passe</ion-label>
+        <ion-input type="password" placeholder="" name="Password" required minlength="8" [(ngModel)]="model.Password"></ion-input>
+      </ion-item>
     </ion-list>
     
-    <div>
+    <div class="ion-margin-top">
       <ion-button shape="round" type="submit" [disabled]="!form.valid">Connexion</ion-button>
     </div>
 

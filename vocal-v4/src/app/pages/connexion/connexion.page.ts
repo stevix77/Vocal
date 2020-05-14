@@ -24,21 +24,32 @@ export class ConnexionPage implements OnInit {
   ngOnInit() {
   }
 
-  submitConnexion() {
+  async submitConnexion() {
     if(this.model.Username !== "" && this.model.Password !== "") {
       let pwd = this.cryptService.crypt(this.model.Password);
-      this.authService.login().subscribe({
-        next: response => {
-          if(!response) {
-            console.warn('pas de login');
-          } else {
-            this.router.navigateByUrl('/feed');
-          }
-        },
-        error: err => {
-          console.error(err)
+      try {
+        const isLogged = await this.authService.login(this.model.Username, pwd);
+        if(!isLogged) {
+          console.error('afficher les erreurs de login');
+        } else {
+          this.router.navigateByUrl('/feed');
         }
-      })
+      } catch(e){
+        console.error(e);
+      }
+      // .subscribe({
+      //   next: response => {
+      //     if(!response) {
+      //       console.warn('pas de login');
+      //     } else {
+      //       console.log(response);
+      //       //this.router.navigateByUrl('/feed');
+      //     }
+      //   },
+      //   error: err => {
+      //     console.error(err)
+      //   }
+      // })
     }
   }
 

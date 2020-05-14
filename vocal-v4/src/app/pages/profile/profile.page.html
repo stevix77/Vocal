@@ -16,8 +16,13 @@
     UTILISATEUR LOGGUÉ
   </div>
   <ng-template #loggedOut>
-    <div class="ion-text-center">
-      <ion-button routerLink="/register">INSCRIPTION</ion-button>
+    <div class="logged-out ion-vertical-center">
+      <div class="ion-text-center">
+        <ion-button routerLink="/connexion">CONNEXION</ion-button>
+      </div>
+      <div class="ion-text-center">
+        <ion-button routerLink="/register">INSCRIPTION</ion-button>
+      </div>
     </div>
   </ng-template>
 </ion-content>
