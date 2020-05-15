@@ -33,6 +33,10 @@ const routes: Routes = [
   {
     path: 'register',
     loadChildren: () => import('./pages/register/register.module').then( m => m.RegisterPageModule)
+  },
+  {
+    path: 'params',
+    loadChildren: () => import('./pages/params/params.module').then( m => m.ParamsPageModule)
   }
 ];
 
