@@ -25,7 +25,6 @@
     "@ionic/angular": "^5.0.0",
     "@ionic/storage": "^2.2.0",
     "@types/crypto-js": "^3.1.45",
-    "cookie-storage": "^6.0.0",
     "cordova-ios": "5.1.1",
     "core-js": "^2.5.4",
     "crypto-js": "^4.0.0",

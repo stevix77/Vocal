@@ -9,7 +9,6 @@ import { resolve } from 'url';
 import { UserResponse } from '../models/response/userResponse';
 import { StoreService } from '../services/store.service';
 import { KeyStore } from '../models/enums';
-import { CookieService } from '../services/cookie.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +18,6 @@ export class AuthService {
   redirectUrl: string;
 
   constructor(
-    private cookieService: CookieService,
     private httpService: HttpService,
     private storeService: StoreService
   ) {}
