@@ -37,19 +37,6 @@ export class ConnexionPage implements OnInit {
       } catch(e){
         console.error(e);
       }
-      // .subscribe({
-      //   next: response => {
-      //     if(!response) {
-      //       console.warn('pas de login');
-      //     } else {
-      //       console.log(response);
-      //       //this.router.navigateByUrl('/feed');
-      //     }
-      //   },
-      //   error: err => {
-      //     console.error(err)
-      //   }
-      // })
     }
   }
 
