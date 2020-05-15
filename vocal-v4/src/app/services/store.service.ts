@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 export class StoreService {
   storage: Storage = new Storage(null);
   constructor() { }
-  get(key: string){
+  get(key: string): Promise<any>{
       return this.storage.get(key);
   }
 
