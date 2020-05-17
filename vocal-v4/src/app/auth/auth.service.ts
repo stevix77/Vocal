@@ -43,7 +43,9 @@ export class AuthService {
     })
   }
 
-  logout(): void {
+  logout(): Promise<void> {
     this.isLoggedIn = false;
+    params.User = null;
+    return this.storeService.clear();
   }
 }

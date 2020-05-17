@@ -25,7 +25,7 @@ export class StoreService {
       })
   }
 
-  clear() {
-      this.storage.clear();
+  clear(): Promise<void> {
+      return this.storage.clear();
   }
 }
