@@ -32,7 +32,7 @@ export class ConnexionPage implements OnInit {
         if(!isLogged) {
           console.error('afficher les erreurs de login');
         } else {
-          this.router.navigateByUrl('/feed');
+          this.router.navigate(['/feed']);
         }
       } catch(e){
         console.error(e);

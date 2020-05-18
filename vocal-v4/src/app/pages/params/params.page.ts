@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { AuthService } from 'src/app/auth/auth.service';
-import { async } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
 @Component({
@@ -32,7 +31,7 @@ export class ParamsPage implements OnInit {
           text: 'Déconnexion',
           handler: async () => {
             await this.authService.logout();
-            this.router.navigateByUrl('feed');
+            this.router.navigate(['feed']);
           }
         }
       ]

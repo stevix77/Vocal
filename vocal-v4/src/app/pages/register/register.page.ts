@@ -58,7 +58,7 @@ export class RegisterPage implements OnInit {
         this.storeService.set("user", appUser);
         params.User = appUser;
         this.authService.isLoggedIn = true;
-        this.router.navigateByUrl('/profile');
+        this.router.navigate(['/profile']);
       },
       error: err => {
         console.error(err);
