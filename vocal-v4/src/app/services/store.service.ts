@@ -11,8 +11,8 @@ export class StoreService {
       return this.storage.get(key);
   }
 
-  set(key: string, obj: any) {
-      this.storage.set(key, obj);
+  set(key: string, obj: any): Promise<any> {
+      return this.storage.set(key, obj);
   }
 
   remove(key: string) {

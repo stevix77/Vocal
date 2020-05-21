@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
-import { UserService } from 'src/app/store/user.service';
 import { UserResponse } from 'src/app/models/response/userResponse';
+import { UserStoreService } from 'src/app/store/user-store.service';
 
 @Component({
   selector: 'app-profile',
@@ -13,11 +13,11 @@ export class ProfilePage implements OnInit {
   user: UserResponse
   constructor(
     private authService: AuthService,
-    private userService: UserService
+    private userStoreService: UserStoreService
   ) { }
 
   ngOnInit() {
-    this.userService.getUser()
+    this.userStoreService.getUser()
       .then(user => {user})
   }
   

@@ -9,6 +9,8 @@ import { resolve } from 'url';
 import { UserResponse } from '../models/response/userResponse';
 import { StoreService } from '../services/store.service';
 import { KeyStore } from '../models/enums';
+import { UserApiService } from '../api/user-api.service';
+import { SigninResponse } from '../models/response/signinResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -18,25 +20,31 @@ export class AuthService {
   redirectUrl: string;
 
   constructor(
-    private httpService: HttpService,
-    private storeService: StoreService
+    private http: HttpService,
+    private store: StoreService,
+    private userApi: UserApiService
   ) {}
   
   login(login: string, password: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const obj = {
+      const params = {
         login,
         password
       }
-      let urlConnect = url.Signin();
-      this.httpService.post(urlConnect, obj).subscribe(
-      (user: UserResponse) => {
-        if(user.token) {
-          this.isLoggedIn = true;
-          this.storeService.set(KeyStore[KeyStore.User], user);
+      this.http.post(url.Signin(), params).subscribe(
+      async (response: string) => {
+        this.isLoggedIn = true;
+        const resp = {
+          id: "12345",
+          token: response
+        }
+        await this.store.set(KeyStore[KeyStore.Token], resp.token);
+        try {
+          const user = await this.userApi.getUser("12345", resp.token);
+          await this.store.set(KeyStore[KeyStore.User], user);
           resolve(true);
-        } else {
-          resolve(false);
+        } catch(err) {
+          reject(err);
         }
       },
       (err) => {
@@ -48,6 +56,6 @@ export class AuthService {
   logout(): Promise<void> {
     this.isLoggedIn = false;
     params.User = null;
-    return this.storeService.clear();
+    return this.store.clear();
   }
 }
