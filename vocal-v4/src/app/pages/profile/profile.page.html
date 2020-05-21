@@ -1,4 +1,4 @@
-<ion-header *ngIf="isLoggedIn" [translucent]="true">
+<ion-header *ngIf="isLoggedIn" class="ion-no-border" [translucent]="true">
   <ion-toolbar >
     <ion-buttons slot="end">
       <ion-button [routerLink]="['/params']"><ion-icon slot="icon-only" name="settings"></ion-icon></ion-button>
@@ -8,13 +8,35 @@
 
 <ion-content>
   <div *ngIf="isLoggedIn; else loggedOut">
-    <ion-item>
-      <ion-thumbnail>
-        <!-- <img [src]="getPicture()"> -->
-      </ion-thumbnail>
-    </ion-item>
-    UTILISATEUR LOGGUÉ
+    <div class="ion-margin-top">
+      <ion-avatar>
+        <img src="https://picsum.photos/id/237/200" alt="">
+      </ion-avatar>
+      <p class="ion-text-center">@tikfromparis</p>
+    </div>
   </div>
+  <ion-grid class="ion-text-center">
+    <ion-row>
+      <ion-col size="4"></ion-col>
+      <ion-col size="2">
+        <div>
+          <p>2,5h</p>
+        </div>
+      </ion-col>
+      <ion-col size="2">
+        <p>10h</p>
+      </ion-col>
+      <ion-col size="4"></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="2"></ion-col>
+      <ion-col class="stats-label" size="4">
+        <p>Écouté</p>
+      </ion-col>
+      <ion-col class="stats-label" size="4"><p>Enregistré</p></ion-col>
+      <ion-col size="2"></ion-col>
+    </ion-row>
+  </ion-grid>
   <ng-template #loggedOut>
     <div class="logged-out ion-vertical-center">
       <div class="ion-text-center">
