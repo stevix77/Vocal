@@ -22,12 +22,14 @@ export class AuthService {
     private storeService: StoreService
   ) {}
   
-  login(username: string, password: string): Promise<boolean> {
+  login(login: string, password: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const obj = new LoginRequest(username, password);
-      obj.Lang = params.Lang;
+      const obj = {
+        login,
+        password
+      }
       let urlConnect = url.Signin();
-      this.httpService.post<LoginRequest>(urlConnect, obj).subscribe(
+      this.httpService.post(urlConnect, obj).subscribe(
       (user: UserResponse) => {
         if(user.token) {
           this.isLoggedIn = true;

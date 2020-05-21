@@ -11,8 +11,8 @@ import { Router } from '@angular/router';
 export class ConnexionPage implements OnInit {
   
   model = {
-    Username: "",
-    Password: "",
+    mail: "",
+    password: "",
     ErrorUsername: "",
     ErrorPassword: ""
   };
@@ -25,10 +25,10 @@ export class ConnexionPage implements OnInit {
   }
 
   async submitConnexion() {
-    if(this.model.Username !== "" && this.model.Password !== "") {
-      let pwd = this.cryptService.crypt(this.model.Password);
+    if(this.model.mail !== "" && this.model.password !== "") {
+      let pwd = this.cryptService.crypt(this.model.password);
       try {
-        const isLogged = await this.authService.login(this.model.Username, pwd);
+        const isLogged = await this.authService.login(this.model.mail, pwd);
         if(!isLogged) {
           console.error('afficher les erreurs de login');
         } else {

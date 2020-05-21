@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/auth/auth.service';
+import { UserService } from 'src/app/store/user.service';
+import { UserResponse } from 'src/app/models/response/userResponse';
 
 @Component({
   selector: 'app-profile',
@@ -8,11 +10,15 @@ import { AuthService } from 'src/app/auth/auth.service';
 })
 export class ProfilePage implements OnInit {
   isLoggedIn = false;
+  user: UserResponse
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) { }
 
   ngOnInit() {
+    this.userService.getUser()
+      .then(user => {user})
   }
   
   ionViewWillEnter() {
