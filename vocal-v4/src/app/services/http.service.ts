@@ -20,7 +20,7 @@ export class HttpService {
         'Access-Control-Allow-Methods' : 'POST, GET, OPTIONS, PUT',
     'Accept': 'application/json' });
     if(token != null) {
-      headers.append("Authorization", "Bearer " + token);
+      headers = headers.append("Authorization", "Bearer " + token);
     }
     return this.http.get(url, { headers: headers });
   }
