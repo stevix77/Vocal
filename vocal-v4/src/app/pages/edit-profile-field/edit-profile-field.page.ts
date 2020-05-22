@@ -31,7 +31,7 @@ export class EditProfileFieldPage implements OnInit {
 
   async updateField() {
     if(this.value != this.data.value) {
-      await this.userApi.updateUserField(parseInt(this.data.updateType), this.value);
+      await this.userApi.updateUserField(parseInt(this.data.updateType), this.data.field, this.value);
     }
     this.router.navigate(['/edit-profile']);
   }

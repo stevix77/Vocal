@@ -31,14 +31,13 @@ export class UserApiService {
     })
   }
 
- async updateUserField(type: number, value): Promise<boolean> {
+ async updateUserField(type: number, field, value): Promise<boolean> {
     const token = await this.store.get(KeyStore[KeyStore.Token]);
-    const user = await this.store.get(KeyStore[KeyStore.User]);
     return new Promise((resolve, reject) => {
       this.http.patch(url.UpdateUser(), { updateType: type, value }, token)
         .subscribe({
           next: async () => {
-            // await this.userStore.updateUser(type, value);
+            await this.userStore.updateUser(field, value);
             resolve(true);
           },
           error: err => {

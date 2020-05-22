@@ -7,7 +7,6 @@ import { UserResponse } from '../models/response/userResponse';
   providedIn: 'root'
 })
 export class UserStoreService {
-  user: UserResponse;
   constructor(
     public storeService: StoreService
   ) { }
@@ -17,7 +16,12 @@ export class UserStoreService {
   }
 
   setUser(user: UserResponse): Promise<any> {
-    this.user = user;
     return this.storeService.storage.set(KeyStore[KeyStore.User], user);
+  }
+
+  async updateUser(field, value): Promise<any> {
+    const user = await this.getUser();
+    user[field] = value;
+    return this.setUser(user);
   }
 }
