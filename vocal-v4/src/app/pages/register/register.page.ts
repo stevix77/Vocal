@@ -51,10 +51,8 @@ export class RegisterPage implements OnInit {
         let appUser = new AppUser();
         appUser.email = response.email;
         appUser.id = response.id;
-        appUser.firstname = response.firstname;
         appUser.lastname = response.lastname;
         appUser.username = response.username;
-        appUser.token = response.token;
         this.storeService.set("user", appUser);
         params.User = appUser;
         this.authService.isLoggedIn = true;

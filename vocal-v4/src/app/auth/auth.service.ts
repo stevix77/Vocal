@@ -36,8 +36,7 @@ export class AuthService {
         this.isLoggedIn = true;
         await this.store.set(KeyStore[KeyStore.Token], response.token);
         try {
-          const user = await this.userApi.getUser(response.id, response.token);
-          await this.store.set(KeyStore[KeyStore.User], user);
+          await this.userApi.getUser(response.id, response.token);
           resolve(true);
         } catch(err) {
           reject(err);
