@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button default-href="profile"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Modifier le profil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="3">
+              Nom
+            </ion-col>
+            <ion-col size="9">
+              DJ Tik
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-label>
+      <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+    </ion-item>
+    <ion-item routerLink="/edit-profile-field" [queryParams]="{title:'Pseudo', value:'tikfromparis'}">
+      <ion-label>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="3">
+              Pseudo
+            </ion-col>
+            <ion-col size="9">
+              @tikfromparis
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

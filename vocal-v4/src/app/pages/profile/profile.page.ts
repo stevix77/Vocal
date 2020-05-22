@@ -10,7 +10,8 @@ import { UserStoreService } from 'src/app/store/user-store.service';
 })
 export class ProfilePage implements OnInit {
   isLoggedIn = false;
-  user: UserResponse
+  user: UserResponse;
+
   constructor(
     private authService: AuthService,
     private userStoreService: UserStoreService

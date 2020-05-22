@@ -37,6 +37,14 @@ const routes: Routes = [
   {
     path: 'params',
     loadChildren: () => import('./pages/params/params.module').then( m => m.ParamsPageModule)
+  },
+  {
+    path: 'edit-profile',
+    loadChildren: () => import('./pages/edit-profile/edit-profile.module').then( m => m.EditProfilePageModule)
+  },
+  {
+    path: 'edit-profile-field',
+    loadChildren: () => import('./pages/edit-profile-field/edit-profile-field.module').then( m => m.EditProfileFieldPageModule)
   }
 ];
 

@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button default-href="edit-profile"></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="data">{{data.title}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="editField()">Terminé</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label position="stacked">{{data.title}}</ion-label>
+    <ion-input [value]="data.value"></ion-input>
+  </ion-item>
+</ion-content>
