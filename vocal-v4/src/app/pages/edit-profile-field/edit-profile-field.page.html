@@ -13,6 +13,6 @@
 <ion-content>
   <ion-item>
     <ion-label position="stacked">{{data.title}}</ion-label>
-    <ion-input [value]="data.value"></ion-input>
+    <ion-input [value]="data.value" (ionChange)="updateValue($event)"></ion-input>
   </ion-item>
 </ion-content>

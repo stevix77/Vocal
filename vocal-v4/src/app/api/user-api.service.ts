@@ -35,7 +35,7 @@ export class UserApiService {
     const token = await this.store.get(KeyStore[KeyStore.Token]);
     const user = await this.store.get(KeyStore[KeyStore.User]);
     return new Promise((resolve, reject) => {
-      this.http.post(url.UpdateUser(), { updateType: type, value }, token)
+      this.http.patch(url.UpdateUser(), { updateType: type, value }, token)
         .subscribe({
           next: async () => {
             // await this.userStore.updateUser(type, value);

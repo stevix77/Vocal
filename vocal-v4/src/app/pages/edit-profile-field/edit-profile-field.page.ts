@@ -9,6 +9,8 @@ import { UserApiService } from 'src/app/api/user-api.service';
 })
 export class EditProfileFieldPage implements OnInit {
   data: any;
+  updatedValue = false;
+  value;
 
   constructor(
     private route: ActivatedRoute,
@@ -18,12 +20,19 @@ export class EditProfileFieldPage implements OnInit {
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      this.data = params
+      this.data = params;
+      this.value = this.data.value;
     })
   }
 
+  updateValue($event) {
+    this.value = $event.detail.value;
+  }
+
   async updateField() {
-    await this.userApi.updateUserField(this.data.updateType, this.data.value);
+    if(this.value != this.data.value) {
+      await this.userApi.updateUserField(parseInt(this.data.updateType), this.value);
+    }
     this.router.navigate(['/edit-profile']);
   }
 
