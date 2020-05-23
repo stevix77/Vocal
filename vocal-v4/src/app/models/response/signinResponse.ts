@@ -1,4 +1,13 @@
 export interface SigninResponse {
   id: string
-  token: string
+  email: string
+  username: string
+  lastname: string
+  pictures: [
+    {
+      key: number
+      value: string
+    }
+  ]
+  token: string,
 }

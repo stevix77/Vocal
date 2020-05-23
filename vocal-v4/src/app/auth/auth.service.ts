@@ -32,15 +32,18 @@ export class AuthService {
         password
       }
       this.http.post(url.Signin(), params).subscribe(
-      async (response: SigninResponse) => {
+      async (signin: SigninResponse) => {
         this.isLoggedIn = true;
-        await this.store.set(KeyStore[KeyStore.Token], response.token);
-        try {
-          await this.userApi.getUser(response.id, response.token);
-          resolve(true);
-        } catch(err) {
-          reject(err);
+        await this.store.set(KeyStore[KeyStore.Token], signin.token);
+        const user = {
+          id: signin.id,
+          email: signin.email,
+          username: signin.username,
+          lastname: signin.lastname,
+          pictures: signin.pictures
         }
+        await this.store.set(KeyStore[KeyStore.User], user);
+        resolve(true);
       },
       (err) => {
         reject(err);
