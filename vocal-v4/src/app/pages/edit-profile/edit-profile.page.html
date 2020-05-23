@@ -9,7 +9,7 @@
 
 <ion-content>
   <ion-list>
-    <ion-item>
+    <ion-item routerLink="/edit-profile-field" [queryParams]="lastnameParams">
       <ion-label>
         <ion-grid>
           <ion-row>
@@ -17,14 +17,13 @@
               Nom
             </ion-col>
             <ion-col size="9">
-              DJ Tik
+              {{user.lastname}}
             </ion-col>
           </ion-row>
         </ion-grid>
       </ion-label>
-      <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
     </ion-item>
-    <ion-item routerLink="/edit-profile-field" [queryParams]="pseudoParams">
+    <ion-item routerLink="/edit-profile-field" [queryParams]="usernameParams">
       <ion-label>
         <ion-grid>
           <ion-row>

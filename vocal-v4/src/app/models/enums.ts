@@ -7,7 +7,8 @@ export enum UpdateType {
     BirthdayDate = 5,
     Blocked = 6,
     Picture = 7,
-    Username = 8
+    Username = 8,
+    Lastname = 9
 }
 
 export enum KeyStore {

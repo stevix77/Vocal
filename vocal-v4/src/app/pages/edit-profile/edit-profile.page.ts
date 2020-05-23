@@ -17,7 +17,8 @@ export interface UpdateProfileFieldParams {
 })
 export class EditProfilePage implements OnInit {
   user: UserResponse = new UserResponse();
-  pseudoParams
+  usernameParams;
+  lastnameParams;
   constructor(
     private userStore: UserStoreService
   ) { }
@@ -36,7 +37,8 @@ export class EditProfilePage implements OnInit {
   }
 
   initQueryParams() {
-    this.pseudoParams = {title:'Pseudo', value:this.user.username, updateType: UpdateType.Username, field: "username"};
+    this.usernameParams = {title:'Pseudo', value: this.user.username, updateType: UpdateType.Username, field: "username"};
+    this.lastnameParams = {title:'Nom', value: this.user.lastname, updateType: UpdateType.Lastname, field: "lastname"};
   }
 
 }
