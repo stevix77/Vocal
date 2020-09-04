@@ -53,7 +53,7 @@
     "cordova-plugin-file": "^4.3.3",
     "cordova-plugin-file-transfer": "^1.7.1",
     "cordova-plugin-globalization": "^1.11.0",
-    "cordova-plugin-inappbrowser": "^1.7.2",
+    "cordova-plugin-inappbrowser": "^3.1.0",
     "cordova-plugin-ionic": "^4.2.0",
     "cordova-plugin-media": "^3.0.1",
     "cordova-plugin-ms-azure-mobile-apps": "^2.0.2",
